@@ -10,6 +10,9 @@ public class User {
     @Id 
     @GeneratedValue(strategy = GenerationType.AUTO)   
     private Integer id;
+    
+    // Nom + numero
+    private String identifiant;
     private String nom;
     private String prenom;
     private String telFixe;
@@ -17,6 +20,7 @@ public class User {
     private String mail1;
     private String mail2;
     private String motDePasse;
+    private String role;
 
     public Integer getId() {
         return id; 
@@ -25,6 +29,14 @@ public class User {
     public void setId(Integer id) {      
         this.id = id;    
     }
+    
+	public String getIdentifiant() {
+		return identifiant;
+	}
+
+	public void setIdentifiant(String identifiant) {
+		this.identifiant = identifiant;
+	}
 
 	public String getNom() {
 		return nom;
@@ -80,6 +92,14 @@ public class User {
 
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 
