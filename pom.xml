@@ -12,6 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.java>1.8</version.java>
 		<maven.compiler.plugin>3.1</maven.compiler.plugin>
+		<spring.version>4.0.0.RELEASE</spring.version>
 
 		<!-- DataSource configuration -->
 
@@ -91,6 +92,14 @@
 			</exclusions>
 		</dependency>
 
+	<!-- Test -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 
 	</dependencies>
