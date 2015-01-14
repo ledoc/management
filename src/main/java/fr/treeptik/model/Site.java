@@ -2,8 +2,17 @@ package fr.treeptik.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Site {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
 	// site ou secteur
 	private String type;
 	private String nom;
@@ -16,6 +25,14 @@ public class Site {
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
 	private List<Ouvrage> ouvrages;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getType() {
 		return type;

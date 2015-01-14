@@ -1,7 +1,8 @@
 package fr.treeptik.model;
 
-public class NappeSouterraine extends Ouvrage {
 
+
+public class NappeSouterraine extends Ouvrage {
 	private String numeroBSS;
 
 	// Mesure 1 (Repère NGF / Sol) : à indiquer

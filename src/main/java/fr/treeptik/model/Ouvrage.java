@@ -2,32 +2,51 @@ package fr.treeptik.model;
 
 import java.util.List;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public class Ouvrage {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	protected Integer id;
+
 	// Nom de la nappe / cours d'eau / réservoir / bassin
-	private String nom;
+	protected String nom;
 	// Si l'ouvrage est "lié" à un autre
-	private Boolean asservissement;
+	protected Boolean asservissement;
 	// Ouvrage auquel il est asservi
-	private Ouvrage ouvrageMaitre;
+	protected Ouvrage ouvrageMaitre;
 	// Côte repère NGF : à indiquer
-	private String coteRepereNGF;
+	protected String coteRepereNGF;
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
 	// historique NM
-	private String niveauManuel;
+	protected String niveauManuel;
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
-	private String mesure_Enregistreur;
-	private String photo;
-	private String code;
-	private String codeSite;
+	protected String mesure_Enregistreur;
+	protected String photo;
+	protected String code;
+	protected String codeSite;
 	// suivi de nappe souterraine, suivi d’eaux de surface (Vanne / Pompe :
 	// version 2) ;
-	private String type;
-	private Enregistreur enregistreur;
-	private List<Alerte> alertes;
-	private String croquisDynamique;
-	private String commentaire;
+	protected String type;
+	protected Enregistreur enregistreur;
+	protected List<Alerte> alertes;
+	protected String croquisDynamique;
+	protected String commentaire;
+
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getNom() {
 		return nom;
 	}
