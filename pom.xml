@@ -20,6 +20,11 @@
 		<database.user>root</database.user>
 		<database.password>root</database.password>
 		<datasource.class.name>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</datasource.class.name>
+		<deveryware.url>https://xmlrpc.deveryware.net:11110/</deveryware.url>
+		<deveryware.username>test-ah2d-sp</deveryware.username>
+		<!-- & remplacée par &amp; (caractère spécial) -->
+		<deveryware.password>sm_vmtwny[p55x4=9[&amp;53&amp;h8</deveryware.password>
+
 
 		<!-- Log4J configuration -->
 
@@ -79,20 +84,7 @@
 			<version>1.2.17</version>
 		</dependency>
 
-		<!-- Spring Data -->
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-			<version>1.4.2.RELEASE</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-	<!-- Test -->
+		<!-- Test -->
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -101,6 +93,27 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- IO utils -->
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<!-- XML RPC Handler -->
+
+		<dependency>
+			<groupId>org.apache.xmlrpc</groupId>
+			<artifactId>xmlrpc-client</artifactId>
+			<version>3.1.3</version>
+		</dependency>
 
 	</dependencies>
 
@@ -112,6 +125,13 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 
 		<plugins>
 			<plugin>
