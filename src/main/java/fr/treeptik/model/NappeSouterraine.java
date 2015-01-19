@@ -1,7 +1,6 @@
 package fr.treeptik.model;
 
 
-
 public class NappeSouterraine extends Ouvrage {
 	private String numeroBSS;
 

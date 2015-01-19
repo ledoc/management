@@ -17,7 +17,6 @@ public class Rapport {
 	private Date date;
 	private String nom;
 	private Integer taille;
-	private Ouvrage ouvrage;
 
 	public Integer getId() {
 		return id;
@@ -51,11 +50,4 @@ public class Rapport {
 		this.taille = taille;
 	}
 
-	public Ouvrage getOuvrage() {
-		return ouvrage;
-	}
-
-	public void setOuvrage(Ouvrage ouvrage) {
-		this.ouvrage = ouvrage;
-	}
 }

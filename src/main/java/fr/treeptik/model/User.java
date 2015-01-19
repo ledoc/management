@@ -1,35 +1,38 @@
 package fr.treeptik.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class User {
-    @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)   
-    private Integer id;
-    
-    // Nom + numero
-    private String identifiant;
-    private String nom;
-    private String prenom;
-    private String telFixe;
-    private String telPortable;
-    private String mail1;
-    private String mail2;
-    private String motDePasse;
-    private String role;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
 
-    public Integer getId() {
-        return id; 
-    }
+	// Nom + numero
+	private String identifiant;
+	private String nom;
+	private String prenom;
+	private String telFixe;
+	private String telPortable;
+	private String mail1;
+	private String mail2;
+	private String motDePasse;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-    public void setId(Integer id) {      
-        this.id = id;    
-    }
-    
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getIdentifiant() {
 		return identifiant;
 	}
@@ -94,13 +97,12 @@ public class User {
 		this.motDePasse = motDePasse;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
-
 
 }

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Enregistreur {
@@ -39,7 +40,13 @@ public class Enregistreur {
 	// croquis dynamique de l'ensemble
 	private String croquis;
 	//
+	@OneToMany
 	private List<Alerte> alertesActives;
+	@OneToMany(mappedBy="enregistreur")
+	private List<Mesure> mesures;
+	@OneToMany
+	private List<TrameDW> trameDWs;
+	
 
 	public Integer getId() {
 		return id;
@@ -133,4 +140,22 @@ public class Enregistreur {
 		this.alertesActives = alertesActives;
 	}
 
+	public List<Mesure> getMesures() {
+		return mesures;
+	}
+
+	public void setMesures(List<Mesure> mesures) {
+		this.mesures = mesures;
+	}
+
+	public List<TrameDW> getTrameDWs() {
+		return trameDWs;
+	}
+
+	public void setTrameDWs(List<TrameDW> trameDWs) {
+		this.trameDWs = trameDWs;
+	}
+
+	
+	
 }

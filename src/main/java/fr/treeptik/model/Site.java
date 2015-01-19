@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Site {
@@ -24,6 +25,7 @@ public class Site {
 	private String coordonneesGeographique;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
+	@OneToMany
 	private List<Ouvrage> ouvrages;
 
 	public Integer getId() {

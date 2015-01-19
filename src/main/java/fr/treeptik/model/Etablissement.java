@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Etablissement {
@@ -22,6 +23,7 @@ public class Etablissement {
 	private String telephone;
 	private String mail;
 	private String siteWeb;
+	@OneToMany
 	private List<Site> sites;
 
 	public Integer getId() {

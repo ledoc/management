@@ -2,12 +2,14 @@ package fr.treeptik.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
-@MappedSuperclass
+@Entity
 public class Ouvrage {
 
 	@Id
@@ -19,6 +21,7 @@ public class Ouvrage {
 	// Si l'ouvrage est "lié" à un autre
 	protected Boolean asservissement;
 	// Ouvrage auquel il est asservi
+	@OneToOne
 	protected Ouvrage ouvrageMaitre;
 	// Côte repère NGF : à indiquer
 	protected String coteRepereNGF;
@@ -33,12 +36,20 @@ public class Ouvrage {
 	// suivi de nappe souterraine, suivi d’eaux de surface (Vanne / Pompe :
 	// version 2) ;
 	protected String type;
+	@OneToOne
 	protected Enregistreur enregistreur;
-	protected List<Alerte> alertes;
+	
 	protected String croquisDynamique;
 	protected String commentaire;
-
+	@OneToMany
+	protected List<Alerte> alertes;
 	
+	@OneToMany
+	protected List<Document> documents;
+	@OneToMany
+	protected List<Rapport> rapports;
+	
+
 	public Integer getId() {
 		return id;
 	}
@@ -157,6 +168,22 @@ public class Ouvrage {
 
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
+	}
+
+	public List<Document> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<Document> documents) {
+		this.documents = documents;
+	}
+
+	public List<Rapport> getRapports() {
+		return rapports;
+	}
+
+	public void setRapports(List<Rapport> rapports) {
+		this.rapports = rapports;
 	}
 
 }
