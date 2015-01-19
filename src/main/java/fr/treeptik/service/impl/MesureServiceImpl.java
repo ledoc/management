@@ -2,6 +2,8 @@ package fr.treeptik.service.impl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,12 +14,13 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.service.MesureService;
 
 @Service
-public class MesureServiceImpl implements MesureService{
+public class MesureServiceImpl implements MesureService {
 
+	@Inject
 	private MesureDAO mesureDAO;
-	
+
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
-	
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Mesure findById(Integer id) throws ServiceException {
@@ -28,7 +31,6 @@ public class MesureServiceImpl implements MesureService{
 	public Mesure create(Mesure mesure) throws ServiceException {
 		logger.info("--CREATE MESURE --");
 		logger.debug("mesure : " + mesure);
-		
 		return mesureDAO.save(mesure);
 	}
 
@@ -43,7 +45,7 @@ public class MesureServiceImpl implements MesureService{
 	public void remove(Mesure mesure) throws ServiceException {
 		logger.info("--DELETE MESURE --");
 		logger.debug("mesure : " + mesure);
-		mesureDAO.delete(mesure);;
+		mesureDAO.delete(mesure);
 	}
 
 	@Override
@@ -51,14 +53,13 @@ public class MesureServiceImpl implements MesureService{
 		logger.info("--FINDALL MESURE --");
 		return mesureDAO.findAll();
 	}
-	
-	
+
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
 	// (en mètre)
 	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;
 	@Override
 	public float conversionSignalElectrique_HauteurEau(float intensite,
-			float profMax)  throws ServiceException {
+			float profMax) throws ServiceException {
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		float hauteurEau;
 		hauteurEau = (profMax / 16) * (intensite - 4);
