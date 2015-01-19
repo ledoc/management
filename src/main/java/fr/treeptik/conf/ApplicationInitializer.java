@@ -22,7 +22,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 @Order(HIGHEST_PRECEDENCE)
 public class ApplicationInitializer implements WebApplicationInitializer {
 
-	private Logger logger = Logger.getLogger(WebApplicationInitializer.class);
+	private Logger logger = Logger.getLogger(ApplicationInitializer.class);
 	
 	@Override
 	public void onStartup(ServletContext servletContext)
@@ -67,6 +67,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		ServletRegistration.Dynamic dispatcherServlet = servletContext
 				.addServlet("dispatcher", new DispatcherServlet(
 						dispatcherServletConfiguration));
+		
 		/**
 		 * Catch tout ce qui n'a pas de suffixe (.jsp, .do , .html, .json)
 		 * autrement dit toutes les requêtes REST mais pas api-docs et
@@ -76,6 +77,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		dispatcherServlet.addMapping("/");
 		dispatcherServlet.setLoadOnStartup(1);
 		dispatcherServlet.setAsyncSupported(true);
+		
 		return dispatcherServlet;
 	}
 
