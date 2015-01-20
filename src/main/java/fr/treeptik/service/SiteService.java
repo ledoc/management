@@ -14,7 +14,7 @@ public interface SiteService {
 
 		Site update(Site site) throws ServiceException;
 		
-		Site remove(Site site)
+		void remove(Site site)
 				throws ServiceException;
 
 		List<Site> findAll() throws ServiceException;

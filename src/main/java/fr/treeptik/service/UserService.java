@@ -14,7 +14,7 @@ public interface UserService {
 
 		User update(User user) throws ServiceException;
 		
-		User remove(User user)
+		void remove(User user)
 				throws ServiceException;
 
 		List<User> findAll() throws ServiceException;

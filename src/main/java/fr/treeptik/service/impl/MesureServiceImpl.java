@@ -29,28 +29,28 @@ public class MesureServiceImpl implements MesureService {
 
 	@Override
 	public Mesure create(Mesure mesure) throws ServiceException {
-		logger.info("--CREATE MESURE --");
+		logger.info("--CREATE mesure --");
 		logger.debug("mesure : " + mesure);
 		return mesureDAO.save(mesure);
 	}
 
 	@Override
 	public Mesure update(Mesure mesure) throws ServiceException {
-		logger.info("--UPDATE MESURE --");
+		logger.info("--UPDATE mesure --");
 		logger.debug("mesure : " + mesure);
 		return mesureDAO.saveAndFlush(mesure);
 	}
 
 	@Override
 	public void remove(Mesure mesure) throws ServiceException {
-		logger.info("--DELETE MESURE --");
+		logger.info("--DELETE mesure --");
 		logger.debug("mesure : " + mesure);
 		mesureDAO.delete(mesure);
 	}
 
 	@Override
 	public List<Mesure> findAll() throws ServiceException {
-		logger.info("--FINDALL MESURE --");
+		logger.info("--FINDALL mesure --");
 		return mesureDAO.findAll();
 	}
 
@@ -60,6 +60,8 @@ public class MesureServiceImpl implements MesureService {
 	@Override
 	public float conversionSignalElectrique_HauteurEau(float intensite,
 			float profMax) throws ServiceException {
+		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
+		
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		float hauteurEau;
 		hauteurEau = (profMax / 16) * (intensite - 4);
@@ -73,6 +75,8 @@ public class MesureServiceImpl implements MesureService {
 	@Override
 	public float conversionHauteurEau_CoteAltimetrique(float hauteurEau,
 			float dernier_calcul_Niveau_Eau, float derniere_HauteurEau) {
+		logger.info("--conversionHauteurEau_CoteAltimetrique mesure --");
+		
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		float niveauEau;
 		niveauEau = dernier_calcul_Niveau_Eau

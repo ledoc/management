@@ -14,7 +14,7 @@ public interface EnregistreurService {
 
 		Enregistreur update(Enregistreur enregistreur) throws ServiceException;
 		
-		Enregistreur remove(Enregistreur enregistreur)
+		void remove(Enregistreur enregistreur)
 				throws ServiceException;
 
 		List<Enregistreur> findAll() throws ServiceException;

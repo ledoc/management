@@ -14,7 +14,7 @@ public interface DocumentService {
 
 		Document update(Document document) throws ServiceException;
 		
-		Document remove(Document document)
+		void remove(Document document)
 				throws ServiceException;
 
 		List<Document> findAll() throws ServiceException;

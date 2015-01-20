@@ -14,7 +14,7 @@ public interface EtablissementService {
 
 		Etablissement update(Etablissement etablissement) throws ServiceException;
 		
-		Etablissement remove(Etablissement etablissement)
+		void remove(Etablissement etablissement)
 				throws ServiceException;
 
 		List<Etablissement> findAll() throws ServiceException;
