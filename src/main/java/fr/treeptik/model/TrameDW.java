@@ -1,6 +1,7 @@
 package fr.treeptik.model;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,10 @@ public class TrameDW {
 	// 1ere conversion
 	private String hauteurEau;
 
+//	public TrameDW(HashMap<String, Object> hashMapHistoryXmlRpc){
+//		
+//	}
+	
 	// niveau d’eau en mètre au moment de l’installation du capteur et de la
 	// mesure manuelle de référence Nm0
 	// private String niveauStatique;
@@ -38,6 +43,10 @@ public class TrameDW {
 	// private String coteAltimetrique;
 	// @OneToMany
 	// private List<Alerte> alertes;
+
+	public TrameDW() {
+		super();
+	}
 
 	public Integer getId() {
 		return id;
@@ -95,6 +104,14 @@ public class TrameDW {
 		this.hauteurEau = hauteurEau;
 	}
 
+	@Override
+	public String toString() {
+		return "TrameDW [id=" + id + ", mobile=" + mobile + ", enregistreur="
+				+ enregistreur + ", date=" + date + ", heure=" + heure
+				+ ", signalBrut=" + signalBrut + ", hauteurEau=" + hauteurEau
+				+ "]";
+	}
+
 	// public String getNiveauStatique() {
 	// return niveauStatique;
 	// }
@@ -118,5 +135,7 @@ public class TrameDW {
 	// public void setAlertes(List<Alerte> alertes) {
 	// this.alertes = alertes;
 	// }
+	
+	
 
 }

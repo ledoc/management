@@ -29,30 +29,32 @@ public class TrameDWServiceImpl implements TrameDWService {
 
 	@Override
 	public TrameDW create(TrameDW trameDW) throws ServiceException {
-		logger.info("--CREATE MESURE --");
+		logger.info("--CREATE trameDW --");
 		logger.debug("trameDW : " + trameDW);
 		return trameDWDAO.save(trameDW);
 	}
 
 	@Override
 	public TrameDW update(TrameDW trameDW) throws ServiceException {
-		logger.info("--UPDATE MESURE --");
+		logger.info("--UPDATE trameDW --");
 		logger.debug("trameDW : " + trameDW);
 		return trameDWDAO.saveAndFlush(trameDW);
 	}
 
 	@Override
 	public void remove(TrameDW trameDW) throws ServiceException {
-		logger.info("--DELETE MESURE --");
+		logger.info("--DELETE trameDW --");
 		logger.debug("trameDW : " + trameDW);
 		trameDWDAO.delete(trameDW);
 	}
 
 	@Override
 	public List<TrameDW> findAll() throws ServiceException {
-		logger.info("--FINDALL MESURE --");
+		logger.info("--FINDALL trameDW --");
 		return trameDWDAO.findAll();
 	}
 
+	
+	
 
 }

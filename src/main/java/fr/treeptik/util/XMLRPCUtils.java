@@ -28,7 +28,7 @@ public class XMLRPCUtils {
 		String url = env.getProperty("deveryware.url");
 
 		logger.debug("url : " + url);
-		XmlRpcClient server = new XmlRpcClient();
+		XmlRpcClient xmlRpcClient = new XmlRpcClient();
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 		try {
 			config.setServerURL(new URL(url));
@@ -36,14 +36,16 @@ public class XMLRPCUtils {
 			e.printStackTrace();
 		}
 		config.setEnabledForExtensions(true);
-		server.setConfig(config);
-		return server;
+		xmlRpcClient.setConfig(config);
+		return xmlRpcClient;
 	}
 
-	public String openSession(XmlRpcClient xmlRpcClient) {
+	public String openSession() {
 		logger.info("--openSession --");
 		String username = env.getProperty("deveryware.username");
 		String password = env.getProperty("deveryware.password");
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " username : "
 				+ username + " password : " + password);
 
@@ -65,8 +67,11 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] mobileList(XmlRpcClient xmlRpcClient, String sessionKey) {
+	public Object[] mobileList(String sessionKey) {
 		logger.info("--mobileList --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
@@ -82,9 +87,11 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] getDataHistory(XmlRpcClient xmlRpcClient, String mid,
-			String sessionKey) {
+	public Object[] getDataHistory(String mid, String sessionKey) {
 		logger.info("--getDataHistory --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey + " - mid : " + mid);
 
@@ -120,9 +127,11 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] getHistory(XmlRpcClient xmlRpcClient, String mid,
-			String sessionKey) {
+	public Object[] getHistory(String mid, String sessionKey) {
 		logger.info("--getHistory --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey + " - mid : " + mid);
 
@@ -130,14 +139,14 @@ public class XMLRPCUtils {
 		int nbPos = 2;
 		int state = -1;
 		int content = 17;
-		int port = 1;
+		int port = 0;
 		boolean compress = true;
 		try {
-			Object[] params = new Object[] { sessionKey, mid, nbPos, state, 17,
-					0, true };
+			Object[] params = new Object[] { sessionKey, mid, nbPos, state, content,
+					port, compress };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
+			logger.info(" = sessionKey : " + sessionKey + " - mid : " + mid
 					+ " - nbPos : " + nbPos + " - state : " + state
 					+ " - content : " + content + " - port : " + port
 					+ " - compress : " + compress);
@@ -151,9 +160,11 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] getUnifyHistory(XmlRpcClient xmlRpcClient, String mid,
-			String sessionKey) {
+	public Object[] getUnifyHistory(String mid, String sessionKey) {
 		logger.info("--getUnifiedHistory --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey + " - mid : " + mid);
 
@@ -194,9 +205,11 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] getEventHistory(XmlRpcClient xmlRpcClient, String mid,
-			String sessionKey) {
+	public Object[] getEventHistory(String mid, String sessionKey) {
 		logger.info("--getEventHistory --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey + " - mid : " + mid);
 
@@ -228,9 +241,11 @@ public class XMLRPCUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public HashMap<String, Object> waitForMessage(XmlRpcClient xmlRpcClient,
-			String sessionKey) {
+	public HashMap<String, Object> waitForMessage(String sessionKey) {
 		logger.info("--waitForMessage --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
@@ -253,9 +268,11 @@ public class XMLRPCUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public HashMap<String, Object> waitForMessages(XmlRpcClient xmlRpcClient,
-			String sessionKey) {
+	public HashMap<String, Object> waitForMessages(String sessionKey) {
 		logger.info("--waitForMessages --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
@@ -279,9 +296,11 @@ public class XMLRPCUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	public HashMap<String, Object> getInfo(XmlRpcClient xmlRpcClient,
-			String sessionKey) {
+	public HashMap<String, Object> getInfo(String sessionKey) {
 		logger.info("--getInfo --");
+
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
@@ -301,4 +320,9 @@ public class XMLRPCUtils {
 		return result;
 	}
 
+	public String extractAmperage(HashMap<String, Object> hashMapHistoryXmlRpc) {
+		byte[] arrayAmperage = (byte[]) hashMapHistoryXmlRpc.get("stream4");
+		String amperage = new String(arrayAmperage);
+		return amperage;
+	}
 }
