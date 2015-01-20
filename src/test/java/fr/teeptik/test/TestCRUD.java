@@ -124,14 +124,13 @@ public class TestCRUD {
 		/**
 		 * 
 		 */
-		Object[] listMobiles = xmlRPCUtils.getMobiles(xmlRpcClient, sessionKey);
+		Object[] listMobiles = xmlRPCUtils.mobileList(xmlRpcClient, sessionKey);
 		Mobile mobile = null;
 		for (Object mobileXmlRpc : listMobiles) {
 System.out.println(mobileXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> mobileHashMap = (HashMap<String, Object>) mobileXmlRpc;
 			Object seamless = mobileHashMap.get("seamless");
-			@SuppressWarnings("unchecked")
 			Object[] listSeamless = (Object[]) seamless;
 				for (Object object : listSeamless) {
 					System.out.println(object);

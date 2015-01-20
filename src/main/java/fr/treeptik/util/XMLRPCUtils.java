@@ -23,10 +23,11 @@ public class XMLRPCUtils {
 	private Environment env;
 
 	public XmlRpcClient getXMLRPCClient() {
-		logger.debug("--getXMLRPCClient --");
+		logger.info("--getXMLRPCClient --");
 
 		String url = env.getProperty("deveryware.url");
 
+		logger.debug("url : " + url);
 		XmlRpcClient server = new XmlRpcClient();
 		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 		try {
@@ -35,19 +36,18 @@ public class XMLRPCUtils {
 			e.printStackTrace();
 		}
 		config.setEnabledForExtensions(true);
-
 		server.setConfig(config);
 		return server;
 	}
 
 	public String openSession(XmlRpcClient xmlRpcClient) {
 		logger.info("--openSession --");
-		logger.debug("xmlRpcClient : " + xmlRpcClient);
-
 		String username = env.getProperty("deveryware.username");
 		String password = env.getProperty("deveryware.password");
-		String sessionKey = null;
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " username : "
+				+ username + " password : " + password);
 
+		String sessionKey = null;
 		try {
 
 			Object[] params = new Object[] { new String(username),
@@ -56,9 +56,7 @@ public class XMLRPCUtils {
 
 			sessionKey = (String) xmlRpcClient.execute(
 					"Deveryflow.openSession", params);
-
-			System.out.println("The key is: " + sessionKey);
-
+			logger.info("The DW key is: " + sessionKey);
 		} catch (Exception exception) {
 			System.err.println("JavaClient: " + exception);
 			exception.printStackTrace();
@@ -67,22 +65,19 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] getMobiles(XmlRpcClient xmlRpcClient, String sessionKey) {
-		logger.info("--getMobiles --");
+	public Object[] mobileList(XmlRpcClient xmlRpcClient, String sessionKey) {
+		logger.info("--mobileList --");
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
 		Object[] result = null;
-
 		try {
 			Object[] params = new Object[] { sessionKey, "33", true };
-
 			result = (Object[]) xmlRpcClient.execute("Deveryflow.mobileList",
 					params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return result;
 
 	}
@@ -96,6 +91,8 @@ public class XMLRPCUtils {
 		Object[] result = null;
 		int startDate = 0;
 		int endDate = 0;
+		int port = 1;
+		boolean compress = true;
 		try {
 			startDate = DateUnixConverter.stringToInt("16/01/2015 07:12:12");
 			endDate = DateUnixConverter.dateToInt(new Date());
@@ -104,12 +101,18 @@ public class XMLRPCUtils {
 		}
 		try {
 
-			Object[] params = new Object[] { sessionKey, mid, 1, startDate,
-					endDate, true };
+			Object[] params = new Object[] { sessionKey, mid, port, startDate,
+					endDate, compress };
+
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
+					+ " - port : " + port + " - startDate : "
+					+ DateUnixConverter.intToString(startDate) + "- endDate : "
+					+ DateUnixConverter.intToString(endDate) + " - compress : "
+					+ compress);
 
 			result = (Object[]) xmlRpcClient.execute(
 					"Deveryflow.getDataHistory", params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,22 +127,23 @@ public class XMLRPCUtils {
 				+ sessionKey + " - mid : " + mid);
 
 		Object[] result = null;
-		int startDate = 0;
-		int endDate = 0;
+		int nbPos = 2;
+		int state = -1;
+		int content = 17;
+		int port = 1;
+		boolean compress = true;
 		try {
-			startDate = DateUnixConverter.stringToInt("16/01/2015 07:12:12");
-			endDate = DateUnixConverter.dateToInt(new Date());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		try {
+			Object[] params = new Object[] { sessionKey, mid, nbPos, state, 17,
+					0, true };
 
-			Object[] params = new Object[] { sessionKey, mid, 2, -1, 17, 0,
-					true };
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
+					+ " - nbPos : " + nbPos + " - state : " + state
+					+ " - content : " + content + " - port : " + port
+					+ " - compress : " + compress);
 
 			result = (Object[]) xmlRpcClient.execute("Deveryflow.getHistory",
 					params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -154,8 +158,14 @@ public class XMLRPCUtils {
 				+ sessionKey + " - mid : " + mid);
 
 		Object[] result = null;
+		int findWay = 2;
 		int startDate = 0;
 		int endDate = 0;
+		int nbPos = 2;
+		int state = -1;
+		int content = 9;
+		int dataPort = 0;
+		boolean compress = true;
 		try {
 			startDate = DateUnixConverter.stringToInt("17/01/2015 07:12:12");
 			endDate = DateUnixConverter.dateToInt(new Date());
@@ -164,12 +174,19 @@ public class XMLRPCUtils {
 		}
 		try {
 
-			Object[] params = new Object[] { sessionKey, mid, 2, startDate,
-					endDate, 10, -1, 9, 0, true };
+			Object[] params = new Object[] { sessionKey, mid, findWay,
+					startDate, endDate, nbPos, state, content, dataPort, true };
+
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
+					+ " - findWay : " + findWay + " - startDate : "
+					+ DateUnixConverter.intToString(startDate) + "- endDate : "
+					+ DateUnixConverter.intToString(endDate) + " - nbPos : "
+					+ nbPos + " - state : " + state + " - content : " + content
+					+ " - dataPort : " + dataPort + " - compress : " + compress);
 
 			result = (Object[]) xmlRpcClient.execute(
 					"Deveryflow.getUnifyHistory", params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -196,9 +213,13 @@ public class XMLRPCUtils {
 
 			Object[] params = new Object[] { sessionKey, startDate, endDate };
 
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - startDate : "
+					+ DateUnixConverter.intToString(startDate) + "- endDate : "
+					+ DateUnixConverter.intToString(endDate));
+
 			result = (Object[]) xmlRpcClient.execute(
 					"Deveryflow.getEventHistory", params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -214,42 +235,48 @@ public class XMLRPCUtils {
 				+ sessionKey);
 
 		HashMap<String, Object> result = null;
+		int timeout = 30;
 		try {
+			Object[] params = new Object[] { sessionKey, timeout };
 
-			Object[] params = new Object[] { sessionKey, 30 };
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - timeout : "
+					+ timeout);
 
 			result = (HashMap<String, Object>) xmlRpcClient.execute(
 					"Deveryflow.waitForMessage", params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Object> waitForMessages(XmlRpcClient xmlRpcClient,
 			String sessionKey) {
-		logger.info("--waitForMessage --");
+		logger.info("--waitForMessages --");
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
 		HashMap<String, Object> result = null;
+		int timeout = 30;
+		int maxMessages = 10;
 		try {
+			Object[] params = new Object[] { sessionKey, timeout, maxMessages };
 
-			Object[] params = new Object[] { sessionKey, 30, 30 };
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - timeout : "
+					+ timeout + " - maxMessages : " + maxMessages);
 
 			result = (HashMap<String, Object>) xmlRpcClient.execute(
 					"Deveryflow.waitForMessages", params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Object> getInfo(XmlRpcClient xmlRpcClient,
@@ -259,13 +286,15 @@ public class XMLRPCUtils {
 				+ sessionKey);
 
 		HashMap<String, Object> result = null;
+		int type = 3;
 		try {
+			Object[] params = new Object[] { sessionKey, type };
 
-			Object[] params = new Object[] { sessionKey, 3 };
+			logger.debug("--XMLRPC PARAMS--");
+			logger.debug(" = sessionKey : " + sessionKey + " - type : " + type);
 
 			result = (HashMap<String, Object>) xmlRpcClient.execute(
 					"Deveryflow.getInfo", params);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
