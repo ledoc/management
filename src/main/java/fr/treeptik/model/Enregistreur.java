@@ -3,6 +3,7 @@ package fr.treeptik.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ public class Enregistreur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
+	private String mid;
 	// figer la chronique en cas de changement d'un quelconque composant.
 	// fiche passera en écriture libre
 	// Un bouton de liaison NM apparaîtra afin da faire correspondre la nouvelle
@@ -30,10 +31,10 @@ public class Enregistreur {
 	private String sim;
 	// type, marque/modele...
 	private String batterie;
-	//  % du niveau de batterie
+	//  % du niveau de la batterie
 	private Integer niveauBatterie;
 	
-	// marque/ modele , numero de serie..
+	// marque/ modele , numéro de serie..
 	private String panneauSolaire;
 	// nom, pleine echelle, longueur câble...
 	private String sonde;
@@ -42,9 +43,9 @@ public class Enregistreur {
 	//
 	@OneToMany
 	private List<Alerte> alertesActives;
-	@OneToMany(mappedBy="enregistreur")
+	@OneToMany(mappedBy="enregistreur", fetch = FetchType.EAGER)
 	private List<Mesure> mesures;
-	@OneToMany
+	@OneToMany(mappedBy="enregistreur", fetch = FetchType.EAGER)
 	private List<TrameDW> trameDWs;
 	
 
@@ -55,8 +56,14 @@ public class Enregistreur {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	
+	public String getMid() {
+		return mid;
+	}
+
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
 	
 	public Boolean getMaintenance() {
 		return maintenance;

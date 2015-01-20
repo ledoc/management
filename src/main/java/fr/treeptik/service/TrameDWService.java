@@ -14,7 +14,7 @@ public interface TrameDWService {
 
 		TrameDW update(TrameDW trameDW) throws ServiceException;
 		
-		TrameDW remove(TrameDW trameDW)
+		void remove(TrameDW trameDW)
 				throws ServiceException;
 
 		List<TrameDW> findAll() throws ServiceException;

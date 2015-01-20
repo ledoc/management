@@ -3,18 +3,29 @@ package fr.treeptik.model.deveryware;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Mobile implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+
 	private boolean valid;
 
 	/**
 	 * TODO : trouver la classe de cette bete là
 	 */
-	private Object seamless;
+	// private Object seamless;
 	private int period;
 	private int localizableStatus;
 	private String clientName;
@@ -27,14 +38,14 @@ public class Mobile implements Serializable {
 
 	// private String server;
 
-	public String getMid() {
-		return mid;
+	public Mobile() {
+		super();
 	}
 
 	public Mobile(HashMap<String, Object> xmlrpcHashMap) {
 		super();
 		this.valid = (boolean) xmlrpcHashMap.get("valid");
-		this.seamless = xmlrpcHashMap.get("seamless");
+		// this.seamless = xmlrpcHashMap.get("seamless");
 		this.period = (int) xmlrpcHashMap.get("period");
 		this.localizableStatus = (int) xmlrpcHashMap.get("localizableStatus");
 		this.clientName = (String) xmlrpcHashMap.get("clientName");
@@ -44,6 +55,18 @@ public class Mobile implements Serializable {
 		this.comment = (String) xmlrpcHashMap.get("comment");
 		this.type = (String) xmlrpcHashMap.get("type");
 		this.userName = (String) xmlrpcHashMap.get("userName");
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getMid() {
+		return mid;
 	}
 
 	public void setMid(String mid) {
@@ -122,21 +145,21 @@ public class Mobile implements Serializable {
 		this.localizableStatus = localizableStatus;
 	}
 
-	public Object getSeamless() {
-		return seamless;
-	}
-
-	public void setSeamless(Object seamless) {
-		this.seamless = seamless;
-	}
-
 	@Override
 	public String toString() {
-		return "Mobile [valid=" + valid + ", seamless=" + seamless
-				+ ", period=" + period + ", localizableStatus="
-				+ localizableStatus + ", clientName=" + clientName + ", mid="
-				+ mid + ", until=" + until + ", pid=" + pid + ", comment="
-				+ comment + ", type=" + type + ", userName=" + userName + "]";
+		return "Mobile [id=" + id + ", valid=" + valid + ", period=" + period
+				+ ", localizableStatus=" + localizableStatus + ", clientName="
+				+ clientName + ", mid=" + mid + ", until=" + until + ", pid="
+				+ pid + ", comment=" + comment + ", type=" + type
+				+ ", userName=" + userName + "]";
 	}
+
+	// public Object getSeamless() {
+	// return seamless;
+	// }
+	//
+	// public void setSeamless(Object seamless) {
+	// this.seamless = seamless;
+	// }
 
 }
