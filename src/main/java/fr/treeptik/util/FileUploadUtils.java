@@ -54,7 +54,7 @@ public class FileUploadUtils {
 			try {
 				byte[] bytes = file.getBytes();
 
-				String rootPath = System.getProperty("catalina.home");
+				String rootPath = System.getProperty("user.home");
 				File dir = new File(rootPath + File.separator + "doc");
 				if (!dir.exists())
 					dir.mkdirs();

@@ -4,9 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -15,6 +15,8 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.client.XmlRpcClient;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,8 +27,12 @@ import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
 import fr.treeptik.model.Mesure;
+import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.deveryware.Mobile;
 import fr.treeptik.service.MesureService;
+import fr.treeptik.service.MobileService;
+import fr.treeptik.service.TrameDWService;
+import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,6 +44,12 @@ public class TestCRUD {
 	private Logger logger = Logger.getLogger(XMLRPCUtils.class);
 	@Inject
 	private MesureService mesureService;
+
+	@Inject
+	private MobileService mobileService;
+	
+	@Inject
+	private TrameDWService trameDWService;
 
 	@Inject
 	private XMLRPCUtils xmlRPCUtils;
@@ -115,12 +127,19 @@ public class TestCRUD {
 		Object[] listMobiles = xmlRPCUtils.getMobiles(xmlRpcClient, sessionKey);
 		Mobile mobile = null;
 		for (Object mobileXmlRpc : listMobiles) {
-
+System.out.println(mobileXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> mobileHashMap = (HashMap<String, Object>) mobileXmlRpc;
+			Object seamless = mobileHashMap.get("seamless");
+			@SuppressWarnings("unchecked")
+			Object[] listSeamless = (Object[]) seamless;
+				for (Object object : listSeamless) {
+					System.out.println(object);
+				}
 
 			mobile = new Mobile(mobileHashMap);
-		}
+				}
+//			mobile = mobileService.create(mobile);
 		/**
 		 * 
 		 */
@@ -145,27 +164,37 @@ public class TestCRUD {
 
 		logger.info(history.length + " history retournée");
 		System.out.println(history);
+		TrameDW trameDW = new TrameDW();
 		for (Object dataXmlRpc : history) {
 			System.out.println(dataXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) dataXmlRpc;
 			for (Entry<String, Object> object2 : hashMapHistoryXmlRpc
 					.entrySet()) {
-				System.out.println(object2.getKey());
+				System.out.println("key : " + object2.getKey());
 				if (object2.getKey().equals("date")) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy HH:mm:ss");
 					int dateInt = (int) object2.getValue();
-					Long dateLong = (long) dateInt;
-					String dateString = dateFormat.format(new Date(
-							dateLong * 1000));
+					String dateString = DateUnixConverter.intToString(dateInt);
 					System.out.println("date  ==== " + dateString);
-				}
-				System.out.println(object2.getValue());
-				if (object2.getKey().contains("stream")) {
-					byte[] objet3 = (byte[]) object2.getValue();
-					System.out.println("decodage immediat : "
-							+ new String(objet3));
+
+					Date date = DateUnixConverter.intToDate(dateInt);
+					LocalDate dateTime = new LocalDate(date);
+					LocalTime localTime = new LocalTime(date);
+					trameDW.setDate(dateTime.toDate());
+					trameDW.setHeure(localTime.toDateTimeToday().toDate());
+				} else {
+
+					System.out.println(" value : " + object2.getValue());
+					mobile= mobileService.findByMid(mobile.getMid());
+					trameDW.setMobile(mobileService.findById(mobile.getId()));
+					if (object2.getKey().contains("stream4")) {
+						byte[] objet3 = (byte[]) object2.getValue();
+						System.out.println("valeur Byte[] : "
+								+ new String(objet3));
+						trameDW.setSignalBrut(new String(objet3));
+						
+//						trameDWService.create(trameDW);
+					}
 				}
 			}
 

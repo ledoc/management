@@ -52,6 +52,7 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 		UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver();
 		urlBasedViewResolver.setViewClass(JstlView.class);
 		urlBasedViewResolver.setSuffix(".html");
+		urlBasedViewResolver.setSuffix(".jsp");
 		viewResolvers.add(urlBasedViewResolver);
 
 		viewResolver.setViewResolvers(viewResolvers);

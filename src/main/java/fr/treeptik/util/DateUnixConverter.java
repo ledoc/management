@@ -26,7 +26,8 @@ public class DateUnixConverter {
 	}
 	
 	public static Date intToDate(Integer intUnix) throws ParseException {
-		Date date = new Date((long) intUnix); 
+		
+		Date date = new Date((long) intUnix* (long)1000); 
 		return date;
 
 	}
