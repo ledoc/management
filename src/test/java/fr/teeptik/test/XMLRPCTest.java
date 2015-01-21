@@ -3,6 +3,7 @@ package fr.teeptik.test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
@@ -30,8 +31,8 @@ import fr.treeptik.util.XMLRPCUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { ApplicationInitializer.class,
-		ApplicationConfiguration.class, DispatcherServletConfiguration.class })
+@ContextConfiguration(classes = { ApplicationInitializer.class, ApplicationConfiguration.class,
+		DispatcherServletConfiguration.class })
 public class XMLRPCTest {
 
 	private Logger logger = Logger.getLogger(XMLRPCTest.class);
@@ -58,7 +59,7 @@ public class XMLRPCTest {
 		logger.info("sessionKey : " + sessionKey);
 	}
 
-	// @Test
+//	 @Test
 	public void mobileListTest() throws Exception {
 
 		Object[] listMobilesXMLRPC = xmlRPCUtils.mobileList(sessionKey);
@@ -75,6 +76,7 @@ public class XMLRPCTest {
 
 			mobile = new Mobile(mobileHashMap);
 			logger.info(mobile);
+			mobileService.create(mobile);
 		}
 	}
 
@@ -100,10 +102,9 @@ public class XMLRPCTest {
 		mobile = mobileService.findByMid(MID);
 
 		Object[] history = xmlRPCUtils.getHistory(MID, sessionKey);
-System.out.println(history.length);
+		logger.info(history.length + " trame History récupérée");
 		TrameDW trameDW = new TrameDW();
 		for (Object dataXmlRpc : history) {
-System.out.println("coucou");
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) dataXmlRpc;
 			int dateInt = (int) hashMapHistoryXmlRpc.get("date");
@@ -111,44 +112,43 @@ System.out.println("coucou");
 			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
 			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
 			trameDW.setMobile(mobile);
-			trameDW.setSignalBrut(xmlRPCUtils
-					.extractAmperage(hashMapHistoryXmlRpc));
+			trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
 
 			logger.info(trameDW.toString());
 			trameDWService.create(trameDW);
+//			List<TrameDW> list = 
+					mobile.getTrameDWs().add(trameDW);
+//			list.add(trameDW);
+//			mobile.setTrameDWs(list);
+			mobileService.update(mobile);
 		}
 	}
 
 	// @Test
 	public void getUnifyHistoryTest() throws Exception {
 
-		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(MID,
-				sessionKey);
+		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(MID, sessionKey);
 
-		System.out
-				.println(unifyHistoryArray.length + " unifyHistory retournée");
+		System.out.println(unifyHistoryArray.length + " unifyHistory retournée");
 		System.out.println(unifyHistoryArray);
 		for (Object unifyHistoryXmlRpc : unifyHistoryArray) {
 			System.out.println(unifyHistoryXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapunifyHistoryXmlRpc = (HashMap<String, Object>) unifyHistoryXmlRpc;
-			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc
-					.entrySet()) {
+			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc.entrySet()) {
 				System.out.println("key : " + object3.getKey());
 				if (object3.getKey().equals("alertList")) {
 					@SuppressWarnings("unchecked")
 					Object[] alertList = (Object[]) object3.getValue();
 					for (Object object : alertList) {
-						System.out.println("le beau array alertlist : "
-								+ object);
+						System.out.println("le beau array alertlist : " + object);
 					}
 				}
 				System.out.println("value : " + object3.getValue());
 			}
 
 			@SuppressWarnings("unchecked")
-			Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc
-					.get("deviceDataList");
+			Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc.get("deviceDataList");
 			for (Object object : deviceDataList) {
 				System.out.println(object);
 			}
@@ -158,18 +158,15 @@ System.out.println("coucou");
 	// @Test
 	public void getEventHistoryTest() throws Exception {
 
-		Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(MID,
-				sessionKey);
+		Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(MID, sessionKey);
 
-		System.out.println(eventHistoryArray.length
-				+ " eventHistoryArray retournée");
+		System.out.println(eventHistoryArray.length + " eventHistoryArray retournée");
 		System.out.println(eventHistoryArray);
 		for (Object eventHistoryXmlRpc : eventHistoryArray) {
 			System.out.println(eventHistoryXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapEventHistoryXmlRpc = (HashMap<String, Object>) eventHistoryXmlRpc;
-			for (Entry<String, Object> object3 : hashMapEventHistoryXmlRpc
-					.entrySet()) {
+			for (Entry<String, Object> object3 : hashMapEventHistoryXmlRpc.entrySet()) {
 				System.out.println(object3.getKey());
 				System.out.println(object3.getValue());
 			}
@@ -180,20 +177,17 @@ System.out.println("coucou");
 	// @Test
 	public void waitForMessageTest() throws Exception {
 
-		HashMap<String, Object> waitForMessage = xmlRPCUtils
-				.waitForMessage(sessionKey);
+		HashMap<String, Object> waitForMessage = xmlRPCUtils.waitForMessage(sessionKey);
 
 		System.out.println(waitForMessage.size() + " waitForMessage retournée");
 		System.out.println(waitForMessage);
 		for (Entry<String, Object> object3 : waitForMessage.entrySet()) {
 			System.out.println("key : " + object3.getKey());
 			if (object3.getKey().equals("date")) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						"dd/MM/yyyy HH:mm:ss");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				int dateInt = (int) object3.getValue();
 				Long dateLong = (long) dateInt;
-				String dateString = dateFormat
-						.format(new Date(dateLong * 1000));
+				String dateString = dateFormat.format(new Date(dateLong * 1000));
 				System.out.println("date  ==== " + dateString);
 			}
 			System.out.println("value : " + object3.getValue());
@@ -206,21 +200,17 @@ System.out.println("coucou");
 	// @Test
 	public void waitForMessagesTest() throws Exception {
 
-		HashMap<String, Object> waitForMessages = xmlRPCUtils
-				.waitForMessages(sessionKey);
+		HashMap<String, Object> waitForMessages = xmlRPCUtils.waitForMessages(sessionKey);
 
-		System.out.println(waitForMessages.size()
-				+ " waitForMessages retournée");
+		System.out.println(waitForMessages.size() + " waitForMessages retournée");
 		System.out.println(waitForMessages);
 		for (Entry<String, Object> object3 : waitForMessages.entrySet()) {
 			System.out.println("key : " + object3.getKey());
 			if (object3.getKey().contains("ate")) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						"dd/MM/yyyy HH:mm:ss");
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				int dateInt = (int) object3.getValue();
 				Long dateLong = (long) dateInt;
-				String dateString = dateFormat
-						.format(new Date(dateLong * 1000));
+				String dateString = dateFormat.format(new Date(dateLong * 1000));
 				System.out.println("date  ==== " + dateString);
 			}
 			System.out.println("value : " + object3.getValue());
@@ -232,8 +222,7 @@ System.out.println("coucou");
 
 		HashMap<String, Object> getInfo = xmlRPCUtils.getInfo(sessionKey);
 
-		System.out.println("taille du resultat: " + getInfo.size()
-				+ " waitForMessage retournée");
+		System.out.println("taille du resultat: " + getInfo.size() + " waitForMessage retournée");
 		System.out.println(getInfo);
 		for (Entry<String, Object> object3 : getInfo.entrySet()) {
 			System.out.println("key : " + object3.getKey());

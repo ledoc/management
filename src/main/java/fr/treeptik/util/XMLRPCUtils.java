@@ -146,7 +146,7 @@ public class XMLRPCUtils {
 					port, compress };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.info(" = sessionKey : " + sessionKey + " - mid : " + mid
+			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
 					+ " - nbPos : " + nbPos + " - state : " + state
 					+ " - content : " + content + " - port : " + port
 					+ " - compress : " + compress);

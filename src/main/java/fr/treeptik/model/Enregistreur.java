@@ -15,6 +15,7 @@ public class Enregistreur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	//identifiant applicatif
 	private String mid;
 	// figer la chronique en cas de changement d'un quelconque composant.
 	// fiche passera en écriture libre
@@ -43,9 +44,9 @@ public class Enregistreur {
 	//
 	@OneToMany
 	private List<Alerte> alertesActives;
-	@OneToMany(mappedBy="enregistreur", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="enregistreur")
 	private List<Mesure> mesures;
-	@OneToMany(mappedBy="enregistreur", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="enregistreur")
 	private List<TrameDW> trameDWs;
 	
 
