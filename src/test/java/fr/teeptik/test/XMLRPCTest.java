@@ -3,16 +3,12 @@ package fr.teeptik.test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -96,10 +92,11 @@ public class XMLRPCTest {
 		}
 	}
 
-	@Test
+//	@Test
 	public void getHistoryTest() throws Exception {
 		Mobile mobile = new Mobile();
-		mobile = mobileService.findByMid(MID);
+		mobile = mobileService.findByMidWithJoinFechTrameDWs(MID);
+		System.out.println(mobile.getClientName());
 
 		Object[] history = xmlRPCUtils.getHistory(MID, sessionKey);
 		logger.info(history.length + " trame History récupérée");
@@ -111,20 +108,21 @@ public class XMLRPCTest {
 
 			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
 			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
+			System.out.println(mobile);
 			trameDW.setMobile(mobile);
 			trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
 
-			logger.info(trameDW.toString());
 			trameDWService.create(trameDW);
-//			List<TrameDW> list = 
-					mobile.getTrameDWs().add(trameDW);
-//			list.add(trameDW);
-//			mobile.setTrameDWs(list);
+			logger.info(trameDW.toString());
+			// List<TrameDW> list =
+			mobile.getTrameDWs().add(trameDW);
+			// list.add(trameDW);
+			// mobile.setTrameDWs(list);
 			mobileService.update(mobile);
 		}
 	}
 
-	// @Test
+//	 @Test
 	public void getUnifyHistoryTest() throws Exception {
 
 		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(MID, sessionKey);
@@ -138,7 +136,6 @@ public class XMLRPCTest {
 			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc.entrySet()) {
 				System.out.println("key : " + object3.getKey());
 				if (object3.getKey().equals("alertList")) {
-					@SuppressWarnings("unchecked")
 					Object[] alertList = (Object[]) object3.getValue();
 					for (Object object : alertList) {
 						System.out.println("le beau array alertlist : " + object);
@@ -147,7 +144,6 @@ public class XMLRPCTest {
 				System.out.println("value : " + object3.getValue());
 			}
 
-			@SuppressWarnings("unchecked")
 			Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc.get("deviceDataList");
 			for (Object object : deviceDataList) {
 				System.out.println(object);
