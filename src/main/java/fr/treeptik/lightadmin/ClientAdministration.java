@@ -8,9 +8,9 @@ import org.lightadmin.api.config.unit.EntityMetadataConfigurationUnit;
 import org.lightadmin.api.config.unit.FieldSetConfigurationUnit;
 import org.lightadmin.api.config.unit.ScreenContextConfigurationUnit;
 
-import fr.treeptik.model.User;
+import fr.treeptik.model.Client;
 
-public class UserAdministration extends AdministrationConfiguration<User> {
+public class ClientAdministration extends AdministrationConfiguration<Client> {
 
     public EntityMetadataConfigurationUnit configuration(
             EntityMetadataConfigurationUnitBuilder configurationBuilder) {
@@ -19,7 +19,7 @@ public class UserAdministration extends AdministrationConfiguration<User> {
 
     public ScreenContextConfigurationUnit screenContext(
             ScreenContextConfigurationUnitBuilder screenContextBuilder) {
-        return screenContextBuilder.screenName("Users Administration").build();
+        return screenContextBuilder.screenName("Clients Administration").build();
     }
 
     public FieldSetConfigurationUnit listView(

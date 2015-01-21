@@ -3,20 +3,20 @@ package fr.treeptik.service;
 import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.User;
+import fr.treeptik.model.Client;
 
-public interface UserService {
+public interface ClientService {
 
-		User findById(Integer id) throws ServiceException;
+		Client findById(Integer id) throws ServiceException;
 		
-		User create(User user)
+		Client create(Client client)
 				throws ServiceException;
 
-		User update(User user) throws ServiceException;
+		Client update(Client client) throws ServiceException;
 		
-		void remove(User user)
+		void remove(Client client)
 				throws ServiceException;
 
-		List<User> findAll() throws ServiceException;
+		List<Client> findAll() throws ServiceException;
 
 }

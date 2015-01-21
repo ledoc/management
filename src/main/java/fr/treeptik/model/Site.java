@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -25,6 +26,8 @@ public class Site {
 	private String coordonneesGeographique;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
+	@ManyToOne
+	private Client client;
 	@OneToMany
 	private List<Ouvrage> ouvrages;
 
@@ -82,6 +85,16 @@ public class Site {
 
 	public void setStationMeteo(String stationMeteo) {
 		this.stationMeteo = stationMeteo;
+	}
+	
+	
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
 	public List<Ouvrage> getOuvrages() {

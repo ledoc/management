@@ -11,9 +11,9 @@
 <body>
 	<div>
 		<c:url var="uploadFile" value="/client/uploadFile">
-		<c:param name="nom" value="${user.nom}" />
+		<c:param name="nom" value="${client.nom}" />
 		 </c:url>
-		<form:form method="POST" action="${uploadFile}" modelAttribute="user"
+		<form:form method="POST" action="${uploadFile}" modelAttribute="client"
 			enctype="multipart/form-data">
 			File to upload: <input type="file" name="file"><br /> Name:
 			<form:input name="nom" path="nom" />

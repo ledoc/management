@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import fr.treeptik.model.User;
+import fr.treeptik.model.Client;
 
 @Controller
 public class Test {
@@ -51,12 +51,12 @@ public class Test {
 	@RequestMapping(method = RequestMethod.GET, value = "/")
 	public String upload(Model model) {
 		clientName = new String();
-		model.addAttribute("user", new User());
+		model.addAttribute("client", new Client());
 		return "client/upload";
 	}
 
 	@RequestMapping(value = "/client/uploadFile", method = RequestMethod.POST)
-	public @ResponseBody String uploadFileHandler(@ModelAttribute User user,
+	public @ResponseBody String uploadFileHandler(@ModelAttribute Client client,
 			@RequestParam("nom") String nom, MultipartFile file) {
 		
 		String fileName = null;
