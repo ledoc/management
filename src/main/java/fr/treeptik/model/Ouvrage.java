@@ -28,12 +28,17 @@ public class Ouvrage {
 	@OneToOne
 	protected Ouvrage ouvrageMaitre;
 	// Côte repère NGF : à indiquer
-	protected String coteRepereNGF;
+	/**
+	 * Nivellement général de la France
+	 */
+	protected float coteRepereNGF;
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
 	// historique NM
-	protected String niveauManuel;
+	@OneToOne
+	protected Mesure niveauManuel;
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
-	protected String mesureEnregistreur;
+	@OneToOne
+	protected Mesure mesureEnregistreur;
 	protected String photo;
 	protected String code;
 	protected String codeSite;
@@ -44,10 +49,13 @@ public class Ouvrage {
 	protected TypeOuvrage typeOuvrage;
 	@OneToOne
 	protected Enregistreur enregistreur;
+	@OneToOne
 	private Mobile mobile;
 
 	protected String croquisDynamique;
 	protected String commentaire;
+	@OneToMany(mappedBy = "ouvrage")
+	protected List<Mesure> mesures;
 	@OneToMany
 	protected List<Alerte> alertes;
 
@@ -58,127 +66,30 @@ public class Ouvrage {
 	 * Spécifique À EAU DE SURFACE TODO : comprendre :( Côte Sol « berge » : à
 	 * indiquer
 	 */
-	private String coteSol;
+	private float coteSol;
 
 	/**
 	 * Spécifique à NAPPE SOUTERRAINE
 	 * 
-	 * @return
 	 */
 	private String numeroBSS;
 
 	// Mesure 1 (Repère NGF / Sol) : à indiquer
-	private String mesureRepereNGFSol;
+	private float mesureRepereNGFSol;
 	// Mesure 2 (Profondeur) : à indiquer
-	private String mesureProfondeur;
+	/**
+	 * longueur entre NGF et le fond de la nappe
+	 */
+	private float mesureProfondeur;
 
 	// Côte Sol NGF : à calculer = côte repère NGF – Mesure 1
-	private String coteSolNGF;
+	/**
+	 * this.coteRepereNGF-this.mesureRepereNGFSol
+	 */
+	private float coteSolNGF;
 
 	public Ouvrage() {
 		super();
-	}
-
-	/**
-	 * 
-	 * Constructeur spécifique aux EAUX DE SURFACE
-	 * 
-	 * @param id
-	 * @param nom
-	 * @param asservissement
-	 * @param ouvrageMaitre
-	 * @param coteRepereNGF
-	 * @param niveauManuel
-	 * @param mesureEnregistreur
-	 * @param photo
-	 * @param code
-	 * @param codeSite
-	 * @param typeOuvrage
-	 * @param enregistreur
-	 * @param croquisDynamique
-	 * @param commentaire
-	 * @param alertes
-	 * @param documents
-	 * @param rapports
-	 * @param coteSol
-	 */
-	public Ouvrage(Integer id, String nom, Boolean asservissement, Ouvrage ouvrageMaitre, String coteRepereNGF,
-			String niveauManuel, String mesureEnregistreur, String photo, String code, String codeSite,
-			TypeOuvrage typeOuvrage, Mobile mobile, Enregistreur enregistreur, String croquisDynamique,
-			String commentaire, List<Alerte> alertes, List<Document> documents, String coteSol) {
-		super();
-		this.id = id;
-		this.nom = nom;
-		this.asservissement = asservissement;
-		this.ouvrageMaitre = ouvrageMaitre;
-		this.coteRepereNGF = coteRepereNGF;
-		this.niveauManuel = niveauManuel;
-		this.mesureEnregistreur = mesureEnregistreur;
-		this.photo = photo;
-		this.code = code;
-		this.codeSite = codeSite;
-		this.typeOuvrage = typeOuvrage;
-		this.mobile = mobile;
-		this.enregistreur = enregistreur;
-		this.croquisDynamique = croquisDynamique;
-		this.commentaire = commentaire;
-		this.alertes = alertes;
-		this.documents = documents;
-		this.coteSol = coteSol;
-	}
-
-	/**
-	 * Constructeur spécifique aux NAPPES SOUTERRAINES
-	 * 
-	 * @param id
-	 * @param nom
-	 * @param asservissement
-	 * @param ouvrageMaitre
-	 * @param coteRepereNGF
-	 * @param niveauManuel
-	 * @param mesureEnregistreur
-	 * @param photo
-	 * @param code
-	 * @param codeSite
-	 * @param typeOuvrage
-	 * @param enregistreur
-	 * @param croquisDynamique
-	 * @param commentaire
-	 * @param alertes
-	 * @param documents
-	 * @param rapports
-	 * @param numeroBSS
-	 * @param mesureRepereNGFSol
-	 * @param mesureProfondeur
-	 * @param coteSolNGF
-	 */
-	public Ouvrage(Integer id, String nom, Boolean asservissement, Ouvrage ouvrageMaitre, String coteRepereNGF,
-			String niveauManuel, String mesureEnregistreur, String photo, String code, String codeSite,
-			TypeOuvrage typeOuvrage, Mobile mobile, Enregistreur enregistreur, String croquisDynamique,
-			String commentaire, List<Alerte> alertes, List<Document> documents, String numeroBSS,
-			String mesureRepereNGFSol, String mesureProfondeur, String coteSolNGF) {
-		super();
-		this.id = id;
-		this.nom = nom;
-		this.asservissement = asservissement;
-		this.ouvrageMaitre = ouvrageMaitre;
-		this.coteRepereNGF = coteRepereNGF;
-		this.niveauManuel = niveauManuel;
-		this.mesureEnregistreur = mesureEnregistreur;
-		this.photo = photo;
-		this.code = code;
-		this.codeSite = codeSite;
-		this.typeOuvrage = typeOuvrage;
-		this.mobile = mobile;
-		this.enregistreur = enregistreur;
-		this.croquisDynamique = croquisDynamique;
-		this.commentaire = commentaire;
-		this.alertes = alertes;
-		this.documents = documents;
-		this.numeroBSS = numeroBSS;
-		this.mesureRepereNGFSol = mesureRepereNGFSol;
-		this.mesureProfondeur = mesureProfondeur;
-		this.coteSolNGF = coteSolNGF;
 	}
 
 	public Integer getId() {
@@ -213,27 +124,45 @@ public class Ouvrage {
 		this.ouvrageMaitre = ouvrageMaitre;
 	}
 
-	public String getCoteRepereNGF() {
+	/**
+	 * Nivellement général de la France
+	 */
+	public float getCoteRepereNGF() {
 		return coteRepereNGF;
 	}
 
-	public void setCoteRepereNGF(String coteRepereNGF) {
+	/**
+	 * Nivellement général de la France
+	 */
+	public void setCoteRepereNGF(float coteRepereNGF) {
 		this.coteRepereNGF = coteRepereNGF;
 	}
 
-	public String getNiveauManuel() {
+	/**
+	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
+	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
+	 * 
+	 * @param niveauManuel
+	 */
+	public Mesure getNiveauManuel() {
 		return niveauManuel;
 	}
 
-	public void setNiveauManuel(String niveauManuel) {
+	/**
+	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
+	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
+	 * 
+	 * @param niveauManuel
+	 */
+	public void setNiveauManuel(Mesure niveauManuel) {
 		this.niveauManuel = niveauManuel;
 	}
 
-	public String getMesureEnregistreur() {
+	public Mesure getMesureEnregistreur() {
 		return mesureEnregistreur;
 	}
 
-	public void setMesureEnregistreur(String mesureEnregistreur) {
+	public void setMesureEnregistreur(Mesure mesureEnregistreur) {
 		this.mesureEnregistreur = mesureEnregistreur;
 	}
 
@@ -277,6 +206,14 @@ public class Ouvrage {
 		this.enregistreur = enregistreur;
 	}
 
+	public List<Mesure> getMesures() {
+		return mesures;
+	}
+
+	public void setMesures(List<Mesure> mesures) {
+		this.mesures = mesures;
+	}
+
 	public List<Alerte> getAlertes() {
 		return alertes;
 	}
@@ -317,11 +254,21 @@ public class Ouvrage {
 		this.typeOuvrage = typeOuvrage;
 	}
 
-	public String getCoteSol() {
+	/**
+	 * Mesure spécifique aux eaux de surface
+	 * 
+	 * @return
+	 */
+	public float getCoteSol() {
 		return coteSol;
 	}
 
-	public void setCoteSol(String coteSol) {
+	/**
+	 * Mesure spécifique aux eaux de surface
+	 * 
+	 * @return
+	 */
+	public void setCoteSol(float coteSol) {
 		this.coteSol = coteSol;
 	}
 
@@ -333,28 +280,51 @@ public class Ouvrage {
 		this.numeroBSS = numeroBSS;
 	}
 
-	public String getMesureRepereNGFSol() {
+	public float getMesureRepereNGFSol() {
 		return mesureRepereNGFSol;
 	}
 
-	public void setMesureRepereNGFSol(String mesureRepereNGFSol) {
+	public void setMesureRepereNGFSol(float mesureRepereNGFSol) {
 		this.mesureRepereNGFSol = mesureRepereNGFSol;
 	}
 
-	public String getMesureProfondeur() {
+	/**
+	 * longueur entre NGF et le fond de la nappe
+	 */
+	public float getMesureProfondeur() {
 		return mesureProfondeur;
 	}
 
-	public void setMesureProfondeur(String mesureProfondeur) {
+	/**
+	 * longueur entre NGF et le fond de la nappe
+	 */
+	public void setMesureProfondeur(float mesureProfondeur) {
 		this.mesureProfondeur = mesureProfondeur;
 	}
 
-	public String getCoteSolNGF() {
+	/**
+	 * this.coteRepereNGF-this.mesureRepereNGFSol (mesure1)
+	 */
+	public float getCoteSolNGF() {
 		return coteSolNGF;
 	}
 
-	public void setCoteSolNGF(String coteSolNGF) {
+	/**
+	 * this.coteRepereNGF-this.mesureRepereNGFSol (mesure1)
+	 */
+	public void setCoteSolNGF(float coteSolNGF) {
 		this.coteSolNGF = coteSolNGF;
+	}
+
+	@Override
+	public String toString() {
+		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement=" + asservissement + ", ouvrageMaitre="
+				+ ouvrageMaitre + ", coteRepereNGF=" + coteRepereNGF + ", niveauManuel=" + niveauManuel
+				+ ", mesureEnregistreur=" + mesureEnregistreur + ", photo=" + photo + ", code=" + code + ", codeSite="
+				+ codeSite + ", typeOuvrage=" + typeOuvrage + ", enregistreur=" + enregistreur + ", mobile=" + mobile
+				+ ", croquisDynamique=" + croquisDynamique + ", commentaire=" + commentaire + ", coteSol=" + coteSol
+				+ ", numeroBSS=" + numeroBSS + ", mesureRepereNGFSol=" + mesureRepereNGFSol + ", mesureProfondeur="
+				+ mesureProfondeur + ", coteSolNGF=" + coteSolNGF + "]";
 	}
 
 }

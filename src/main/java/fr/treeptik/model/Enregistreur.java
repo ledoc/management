@@ -3,7 +3,6 @@ package fr.treeptik.model;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +14,7 @@ public class Enregistreur {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	//identifiant applicatif
+	// identifiant applicatif
 	private String mid;
 	// figer la chronique en cas de changement d'un quelconque composant.
 	// fiche passera en écriture libre
@@ -32,9 +31,9 @@ public class Enregistreur {
 	private String sim;
 	// type, marque/modele...
 	private String batterie;
-	//  % du niveau de la batterie
+	// % du niveau de la batterie
 	private Integer niveauBatterie;
-	
+
 	// marque/ modele , numéro de serie..
 	private String panneauSolaire;
 	// nom, pleine echelle, longueur câble...
@@ -44,11 +43,8 @@ public class Enregistreur {
 	//
 	@OneToMany
 	private List<Alerte> alertesActives;
-	@OneToMany(mappedBy="enregistreur")
-	private List<Mesure> mesures;
-	@OneToMany(mappedBy="enregistreur")
-	private List<TrameDW> trameDWs;
-	
+//	@OneToMany(mappedBy = "enregistreur")
+//	private List<TrameDW> trameDWs;
 
 	public Integer getId() {
 		return id;
@@ -57,7 +53,7 @@ public class Enregistreur {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public String getMid() {
 		return mid;
 	}
@@ -65,7 +61,7 @@ public class Enregistreur {
 	public void setMid(String mid) {
 		this.mid = mid;
 	}
-	
+
 	public Boolean getMaintenance() {
 		return maintenance;
 	}
@@ -105,8 +101,6 @@ public class Enregistreur {
 	public void setBatterie(String batterie) {
 		this.batterie = batterie;
 	}
-	
-	
 
 	public Integer getNiveauBatterie() {
 		return niveauBatterie;
@@ -148,22 +142,12 @@ public class Enregistreur {
 		this.alertesActives = alertesActives;
 	}
 
-	public List<Mesure> getMesures() {
-		return mesures;
-	}
+//	 public List<TrameDW> getTrameDWs() {
+//	 return trameDWs;
+//	 }
+//	
+//	 public void setTrameDWs(List<TrameDW> trameDWs) {
+//	 this.trameDWs = trameDWs;
+//	 }
 
-	public void setMesures(List<Mesure> mesures) {
-		this.mesures = mesures;
-	}
-
-	public List<TrameDW> getTrameDWs() {
-		return trameDWs;
-	}
-
-	public void setTrameDWs(List<TrameDW> trameDWs) {
-		this.trameDWs = trameDWs;
-	}
-
-	
-	
 }

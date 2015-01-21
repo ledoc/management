@@ -2,30 +2,31 @@ package fr.treeptik.model.deveryware;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import fr.treeptik.model.TrameDW;
 
 @Entity
 public class Mobile implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
 	private boolean valid;
 
 	/**
 	 * TODO : trouver la classe de cette bete là
 	 */
-	// private Object seamless;
+
+	// private Class[] seamless;
 	private int period;
 	private int localizableStatus;
 	private String clientName;
@@ -35,6 +36,8 @@ public class Mobile implements Serializable {
 	private String comment;
 	private String type;
 	private String userName;
+	@OneToMany(mappedBy = "mobile")
+	private List<TrameDW> trameDWs;
 
 	// private String server;
 
@@ -145,13 +148,19 @@ public class Mobile implements Serializable {
 		this.localizableStatus = localizableStatus;
 	}
 
+	public List<TrameDW> getTrameDWs() {
+		return trameDWs;
+	}
+
+	public void setTrameDWs(List<TrameDW> trameDWs) {
+		this.trameDWs = trameDWs;
+	}
+
 	@Override
 	public String toString() {
-		return "Mobile [id=" + id + ", valid=" + valid + ", period=" + period
-				+ ", localizableStatus=" + localizableStatus + ", clientName="
-				+ clientName + ", mid=" + mid + ", until=" + until + ", pid="
-				+ pid + ", comment=" + comment + ", type=" + type
-				+ ", userName=" + userName + "]";
+		return "Mobile [id=" + id + ", valid=" + valid + ", period=" + period + ", localizableStatus="
+				+ localizableStatus + ", clientName=" + clientName + ", mid=" + mid + ", until=" + until + ", pid="
+				+ pid + ", comment=" + comment + ", type=" + type + ", userName=" + userName + "]";
 	}
 
 	// public Object getSeamless() {

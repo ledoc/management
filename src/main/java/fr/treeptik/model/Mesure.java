@@ -3,6 +3,8 @@ package fr.treeptik.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,57 +18,69 @@ public class Mesure {
 	private Integer id;
 
 	// niveaux d'eau, pluviometrie, niveau batterie
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private TypeMesure type;
 	private Date date;
 	@ManyToOne
-	private Enregistreur enregistreur;
-	private String valeur;
-	
-	
-	
+	private Ouvrage ouvrage;
+	private float valeur;
+
 	public Mesure() {
 		super();
 	}
-	public Mesure(Integer id, String type, Date date,
-			Enregistreur enregistreur, String valeur) {
+
+	public Mesure(Integer id, TypeMesure type, Date date, Ouvrage ouvrage, float valeur) {
 		super();
 		this.id = id;
 		this.type = type;
 		this.date = date;
-		this.enregistreur = enregistreur;
-		this.valeur = valeur;
-	}
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	public Enregistreur getEnregistreur() {
-		return enregistreur;
-	}
-	public void setEnregistreur(Enregistreur enregistreur) {
-		this.enregistreur = enregistreur;
-	}
-	public String getValeur() {
-		return valeur;
-	}
-	public void setValeur(String valeur) {
+		this.ouvrage = ouvrage;
 		this.valeur = valeur;
 	}
 
-	
-	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public TypeMesure getType() {
+		return type;
+	}
+
+	public void setType(TypeMesure type) {
+		this.type = type;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Ouvrage getOuvrage() {
+		return ouvrage;
+	}
+
+	public void setOuvrage(Ouvrage ouvrage) {
+		this.ouvrage = ouvrage;
+	}
+
+	public float getValeur() {
+		return valeur;
+	}
+
+	public void setValeur(float valeur) {
+		this.valeur = valeur;
+	}
+
+	@Override
+	public String toString() {
+		return "Mesure [id=" + id + ", type=" + type + ", date=" + date + ", valeur=" + valeur + "]";
+	}
+
 }

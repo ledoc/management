@@ -1,7 +1,6 @@
 package fr.treeptik.model;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,21 +20,21 @@ public class TrameDW {
 	private Integer id;
 	@ManyToOne
 	private Mobile mobile;
-	@ManyToOne
-	private Enregistreur enregistreur;
+	// @ManyToOne
+	// private Enregistreur enregistreur;
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	@Temporal(TemporalType.TIME)
 	private Date heure;
 	// milliAmpère
-	private String signalBrut;
+	private float signalBrut;
 	// 1ere conversion
 	private String hauteurEau;
 
-//	public TrameDW(HashMap<String, Object> hashMapHistoryXmlRpc){
-//		
-//	}
-	
+	// public TrameDW(HashMap<String, Object> hashMapHistoryXmlRpc){
+	//
+	// }
+
 	// niveau d’eau en mètre au moment de l’installation du capteur et de la
 	// mesure manuelle de référence Nm0
 	// private String niveauStatique;
@@ -56,13 +55,13 @@ public class TrameDW {
 		this.id = id;
 	}
 
-	public Enregistreur getEnregistreur() {
-		return enregistreur;
-	}
-
-	public void setEnregistreur(Enregistreur enregistreur) {
-		this.enregistreur = enregistreur;
-	}
+	// public Enregistreur getEnregistreur() {
+	// return enregistreur;
+	// }
+	//
+	// public void setEnregistreur(Enregistreur enregistreur) {
+	// this.enregistreur = enregistreur;
+	// }
 
 	public Mobile getMobile() {
 		return mobile;
@@ -88,11 +87,11 @@ public class TrameDW {
 		this.heure = heure;
 	}
 
-	public String getSignalBrut() {
+	public float getSignalBrut() {
 		return signalBrut;
 	}
 
-	public void setSignalBrut(String signalBrut) {
+	public void setSignalBrut(float signalBrut) {
 		this.signalBrut = signalBrut;
 	}
 
@@ -106,10 +105,8 @@ public class TrameDW {
 
 	@Override
 	public String toString() {
-		return "TrameDW [id=" + id + ", mobile=" + mobile + ", enregistreur="
-				+ enregistreur + ", date=" + date + ", heure=" + heure
-				+ ", signalBrut=" + signalBrut + ", hauteurEau=" + hauteurEau
-				+ "]";
+		return "TrameDW [id=" + id + ", date=" + date + ", heure=" + heure + ", signalBrut=" + signalBrut
+				+ ", hauteurEau=" + hauteurEau + "]";
 	}
 
 	// public String getNiveauStatique() {
@@ -135,7 +132,5 @@ public class TrameDW {
 	// public void setAlertes(List<Alerte> alertes) {
 	// this.alertes = alertes;
 	// }
-	
-	
 
 }

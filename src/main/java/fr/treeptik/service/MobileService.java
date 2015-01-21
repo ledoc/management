@@ -21,4 +21,5 @@ public interface MobileService {
 
 		Mobile findByMid(String mid) throws ServiceException;
 
+		public Mobile findByMidWithJoinFechTrameDWs(String mid) throws ServiceException;
 }
