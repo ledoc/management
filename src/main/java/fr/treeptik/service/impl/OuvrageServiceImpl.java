@@ -56,4 +56,17 @@ public class OuvrageServiceImpl implements OuvrageService {
 		return ouvrageDAO.findAll();
 	}
 
+	/**
+	 * Méthode spécifique pour récupérer les mesures associées à l'ouvrage dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Ouvrage findByIdWithJoinFechMesures(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFechMesures mesure --");
+		logger.info("id : " + id);
+		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFechMesures(id);
+		System.out.println(ouvrage);
+		return ouvrage;
+	}
+
 }

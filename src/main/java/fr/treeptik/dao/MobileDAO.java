@@ -11,6 +11,6 @@ public interface MobileDAO extends JpaRepository<Mobile, Integer> {
 
 	Mobile findByMid(String mid) throws DataAccessException;
 
-	@Query("select m from Mobile m join fetch m.trameDWs where m.mid = :mid")
+	@Query("select m from Mobile m left join fetch m.trameDWs where m.mid = :mid")
 	public Mobile findByMidWithJoinFechTrameDWs(@Param("mid") String mid) throws DataAccessException;
 }

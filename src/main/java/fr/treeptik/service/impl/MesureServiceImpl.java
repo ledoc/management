@@ -1,5 +1,6 @@
 package fr.treeptik.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.MesureDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Mesure;
+import fr.treeptik.model.TypeMesure;
 import fr.treeptik.service.MesureService;
 
 @Service
@@ -58,14 +60,17 @@ public class MesureServiceImpl implements MesureService {
 	// (en mètre)
 	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;
 	@Override
-	public float conversionSignalElectrique_HauteurEau(float intensite,
-			float profMax) throws ServiceException {
+	public float conversionSignalElectrique_HauteurEau(float intensite, float profMax) throws ServiceException {
 		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
-		
+
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		float hauteurEau;
 		hauteurEau = (profMax / 16) * (intensite - 4);
-
+		
+		Mesure mesure = new Mesure();
+		mesure.setDate(new Date());
+		mesure.setType(TypeMesure.NIVEAUDEAU);
+		mesure.setValeur(hauteurEau);
 		return hauteurEau;
 	}
 
@@ -73,16 +78,19 @@ public class MesureServiceImpl implements MesureService {
 	// Nm0 : mesure manuelle initiale
 	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
 	@Override
-	public float conversionHauteurEau_CoteAltimetrique(float hauteurEau,
-			float dernier_calcul_Niveau_Eau, float derniere_HauteurEau) {
+	public float conversionHauteurEau_CoteAltimetrique(float hauteurEau, float dernier_calcul_Niveau_Eau,
+			float derniere_HauteurEau) {
 		logger.info("--conversionHauteurEau_CoteAltimetrique mesure --");
-		
+
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		float niveauEau;
-		niveauEau = dernier_calcul_Niveau_Eau
-				+ (hauteurEau - derniere_HauteurEau);
+		niveauEau = dernier_calcul_Niveau_Eau + (hauteurEau - derniere_HauteurEau);
 
 		return niveauEau;
 	}
 
+
+	
+	
+	
 }

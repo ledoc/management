@@ -59,13 +59,21 @@ public class MobileServiceImpl implements MobileService {
 	@Override
 	public Mobile findByMid(String mid) throws ServiceException {
 		logger.info("--findByMid mobile --");
+		logger.debug("mid : " + mid);
 		return mobileDAO.findByMid(mid);
 	}
 
+	/**
+	 * Méthode spécifique pour récupérer les trameDWs associées au mobile dû au
+	 * FetchType.Lazy
+	 */
 	@Override
 	public Mobile findByMidWithJoinFechTrameDWs(String mid) throws ServiceException {
 		logger.info("--findByMidWithJoinFechTrameDWs mobile --");
-		return mobileDAO.findByMidWithJoinFechTrameDWs(mid);
+		logger.info("mid : " + mid);
+		Mobile mobile = mobileDAO.findByMidWithJoinFechTrameDWs(mid);
+		System.out.println(mobile);
+		return mobile;
 	}
 
 }
