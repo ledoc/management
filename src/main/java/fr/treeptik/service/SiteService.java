@@ -19,4 +19,6 @@ public interface SiteService {
 
 		List<Site> findAll() throws ServiceException;
 
+		void remove(Integer id) throws ServiceException;
+
 }

@@ -29,4 +29,6 @@ public interface MesureService {
 	float conversionHauteurEau_CoteAltimetrique(float hauteurEau,
 			float dernier_calcul_Niveau_Eau, float derniere_HauteurEau)
 			throws ServiceException;
+
+	void remove(Integer id) throws ServiceException;
 }

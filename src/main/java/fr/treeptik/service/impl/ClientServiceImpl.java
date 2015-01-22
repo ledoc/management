@@ -49,6 +49,14 @@ public class ClientServiceImpl implements ClientService {
 		logger.debug("client : " + client);
 		clientDAO.delete(client);
 	}
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE client --");
+		logger.debug("clientId : " + id);
+		clientDAO.delete(id);
+	}
+	
 
 	@Override
 	public List<Client> findAll() throws ServiceException {

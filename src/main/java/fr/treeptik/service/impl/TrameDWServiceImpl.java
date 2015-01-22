@@ -47,6 +47,14 @@ public class TrameDWServiceImpl implements TrameDWService {
 		logger.debug("trameDW : " + trameDW);
 		trameDWDAO.delete(trameDW);
 	}
+	
+
+	@Override
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE trameDW --");
+		logger.debug("trameDWId : " + id);
+		trameDWDAO.delete(id);
+	}
 
 	@Override
 	public List<TrameDW> findAll() throws ServiceException {

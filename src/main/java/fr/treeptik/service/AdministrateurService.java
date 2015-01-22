@@ -19,4 +19,6 @@ public interface AdministrateurService {
 
 		List<Administrateur> findAll() throws ServiceException;
 
+		void remove(Integer id) throws ServiceException;
+
 }

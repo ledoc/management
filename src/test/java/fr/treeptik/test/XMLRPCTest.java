@@ -1,4 +1,4 @@
-package fr.teeptik.test;
+package fr.treeptik.test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,10 +17,10 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
+import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.deveryware.DeviceState;
-import fr.treeptik.model.deveryware.Mobile;
-import fr.treeptik.service.MobileService;
+import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
@@ -35,7 +35,7 @@ public class XMLRPCTest {
 	@Inject
 	private XMLRPCUtils xmlRPCUtils;
 	@Inject
-	private MobileService mobileService;
+	private EnregistreurService enregistreurService;
 	@Inject
 	private TrameDWService trameDWService;
 
@@ -56,23 +56,23 @@ public class XMLRPCTest {
 	}
 
 //	 @Test
-	public void mobileListTest() throws Exception {
+	public void enregistreurListTest() throws Exception {
 
-		Object[] listMobilesXMLRPC = xmlRPCUtils.mobileList(sessionKey);
+		Object[] listEnregistreursXMLRPC = xmlRPCUtils.enregistreurList(sessionKey);
 
-		Mobile mobile = null;
-		for (Object mobileXmlRpc : listMobilesXMLRPC) {
+		Enregistreur enregistreur = null;
+		for (Object enregistreurXmlRpc : listEnregistreursXMLRPC) {
 			@SuppressWarnings("unchecked")
-			HashMap<String, Object> mobileHashMap = (HashMap<String, Object>) mobileXmlRpc;
-			Object seamless = mobileHashMap.get("seamless");
+			HashMap<String, Object> enregistreurHashMap = (HashMap<String, Object>) enregistreurXmlRpc;
+			Object seamless = enregistreurHashMap.get("seamless");
 			Object[] listSeamless = (Object[]) seamless;
 			for (Object object : listSeamless) {
 				System.out.println("seamlessClass : " + object);
 			}
 
-			mobile = new Mobile(mobileHashMap);
-			logger.info(mobile);
-			mobileService.create(mobile);
+			enregistreur = new Enregistreur(enregistreurHashMap);
+			logger.info(enregistreur);
+			enregistreurService.create(enregistreur);
 		}
 	}
 
@@ -94,9 +94,9 @@ public class XMLRPCTest {
 
 //	@Test
 	public void getHistoryTest() throws Exception {
-		Mobile mobile = new Mobile();
-		mobile = mobileService.findByMidWithJoinFechTrameDWs(MID);
-		System.out.println(mobile.getClientName());
+		Enregistreur enregistreur = new Enregistreur();
+		enregistreur = enregistreurService.findByMidWithJoinFechTrameDWs(MID);
+		System.out.println(enregistreur.getClientName());
 
 		Object[] history = xmlRPCUtils.getHistory(MID, sessionKey);
 		logger.info(history.length + " trame History récupérée");
@@ -108,17 +108,17 @@ public class XMLRPCTest {
 
 			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
 			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
-			System.out.println(mobile);
-			trameDW.setMobile(mobile);
+			System.out.println(enregistreur);
+			trameDW.setEnregistreur(enregistreur);
 			trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
 
 			trameDWService.create(trameDW);
 			logger.info(trameDW.toString());
 			// List<TrameDW> list =
-			mobile.getTrameDWs().add(trameDW);
+			enregistreur.getTrameDWs().add(trameDW);
 			// list.add(trameDW);
-			// mobile.setTrameDWs(list);
-			mobileService.update(mobile);
+			// enregistreur.setTrameDWs(list);
+			enregistreurService.update(enregistreur);
 		}
 	}
 

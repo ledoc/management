@@ -19,4 +19,8 @@ public interface EtablissementService {
 
 		List<Etablissement> findAll() throws ServiceException;
 
+		void remove(Integer id) throws ServiceException;
+
+		Etablissement findByIdWithJoinFechSites(Integer id) throws ServiceException;
+
 }

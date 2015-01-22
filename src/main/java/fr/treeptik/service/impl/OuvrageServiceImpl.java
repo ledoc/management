@@ -49,6 +49,15 @@ public class OuvrageServiceImpl implements OuvrageService {
 		logger.debug("ouvrage : " + ouvrage);
 		ouvrageDAO.delete(ouvrage);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE ouvrage --");
+		logger.debug("ouvrageId : " + id);
+		ouvrageDAO.delete(id);
+	}
+	
 
 	@Override
 	public List<Ouvrage> findAll() throws ServiceException {

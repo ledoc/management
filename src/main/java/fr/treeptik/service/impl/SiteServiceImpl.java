@@ -49,11 +49,22 @@ public class SiteServiceImpl implements SiteService {
 		logger.debug("site : " + site);
 		siteDAO.delete(site);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE site --");
+		logger.debug("siteId : " + id);
+		siteDAO.delete(id);
+	}
 
 	@Override
 	public List<Site> findAll() throws ServiceException {
 		logger.info("--FINDALL site --");
 		return siteDAO.findAll();
 	}
+	
+	
+	
 
 }

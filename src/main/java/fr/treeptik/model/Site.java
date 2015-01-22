@@ -3,6 +3,8 @@ package fr.treeptik.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +18,8 @@ public class Site {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	// site ou secteur
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private TypeSite type;
 	private String nom;
 
 	// A défaut, S (site) ou T (secteur), département et numéro d’ordre de
@@ -39,11 +42,11 @@ public class Site {
 		this.id = id;
 	}
 
-	public String getType() {
+	public TypeSite getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(TypeSite type) {
 		this.type = type;
 	}
 

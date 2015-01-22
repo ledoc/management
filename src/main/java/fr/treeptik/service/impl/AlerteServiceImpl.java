@@ -51,6 +51,14 @@ public class AlerteServiceImpl implements AlerteService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE alerte --");
+		logger.debug("alerteId : " + id);
+		alerteDAO.delete(id);
+	}
+	
+	@Override
 	public List<Alerte> findAll() throws ServiceException {
 		logger.info("--FINDALL alerte --");
 		return alerteDAO.findAll();

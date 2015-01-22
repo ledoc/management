@@ -1,6 +1,8 @@
 package fr.treeptik.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,10 +17,13 @@ public class Alerte {
 	private String code;
 	private Boolean activation;
 	private String intitule;
+
 	private String type;
 	// la tendance : + - > < =
-	private String tendance;
-	private String valeurCritique;
+	@Enumerated(EnumType.STRING)
+	private TendanceAlerte tendance;
+	private float valeurCritique;
+	//SMS Email ou les deux
 	private String modeEnvoi;
 	private String EmailOrSMSDEnvoi;
 	// Un lien vers l’API DW si il s’agit d’une alerte Données ou connexion, Mouvements ;
@@ -70,19 +75,19 @@ public class Alerte {
 		this.type = type;
 	}
 
-	public String getTendance() {
+	public TendanceAlerte getTendance() {
 		return tendance;
 	}
 
-	public void setTendance(String tendance) {
+	public void setTendance(TendanceAlerte tendance) {
 		this.tendance = tendance;
 	}
 
-	public String getValeurCritique() {
+	public float getValeurCritique() {
 		return valeurCritique;
 	}
 
-	public void setValeurCritique(String valeurCritique) {
+	public void setValeurCritique(float valeurCritique) {
 		this.valeurCritique = valeurCritique;
 	}
 

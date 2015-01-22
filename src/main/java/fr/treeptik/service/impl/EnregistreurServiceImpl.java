@@ -49,11 +49,39 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 		logger.debug("enregistreur : " + enregistreur);
 		enregistreurDAO.delete(enregistreur);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE enregistreur --");
+		logger.debug("enregistreurId : " + id);
+		enregistreurDAO.delete(id);
+	}
 
 	@Override
 	public List<Enregistreur> findAll() throws ServiceException {
 		logger.info("--FINDALL enregistreur --");
 		return enregistreurDAO.findAll();
+	}
+
+	@Override
+	public Enregistreur findByMid(String mid) throws ServiceException {
+		logger.info("--findByMid enregistreur --");
+		logger.debug("mid : " + mid);
+		return enregistreurDAO.findByMid(mid);
+	}
+
+	/**
+	 * Méthode spécifique pour récupérer les trameDWs associées au enregistreur dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Enregistreur findByMidWithJoinFechTrameDWs(String mid) throws ServiceException {
+		logger.info("--findByMidWithJoinFechTrameDWs enregistreur --");
+		logger.info("mid : " + mid);
+		Enregistreur enregistreur = enregistreurDAO.findByMidWithJoinFechTrameDWs(mid);
+		System.out.println(enregistreur);
+		return enregistreur;
 	}
 
 }

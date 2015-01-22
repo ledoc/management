@@ -21,4 +21,6 @@ public interface OuvrageService {
 
 		Ouvrage findByIdWithJoinFechMesures(Integer id) throws ServiceException;
 
+		void remove(Integer id) throws ServiceException;
+
 }

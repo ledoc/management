@@ -10,8 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import fr.treeptik.model.deveryware.Mobile;
-
 @Entity
 public class TrameDW {
 
@@ -19,7 +17,7 @@ public class TrameDW {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	@ManyToOne
-	private Mobile mobile;
+	private Enregistreur enregistreur;
 	// @ManyToOne
 	// private Enregistreur enregistreur;
 	@Temporal(TemporalType.DATE)
@@ -63,12 +61,12 @@ public class TrameDW {
 	// this.enregistreur = enregistreur;
 	// }
 
-	public Mobile getMobile() {
-		return mobile;
+	public Enregistreur getEnregistreur() {
+		return enregistreur;
 	}
 
-	public void setMobile(Mobile mobile) {
-		this.mobile = mobile;
+	public void setEnregistreur(Enregistreur enregistreur) {
+		this.enregistreur = enregistreur;
 	}
 
 	public Date getDate() {

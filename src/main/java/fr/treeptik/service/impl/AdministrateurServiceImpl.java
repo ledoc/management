@@ -49,6 +49,14 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 		logger.debug("administrateur : " + administrateur);
 		administrateurDAO.delete(administrateur);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE administrateur --");
+		logger.debug("administrateurId : " + id);
+		administrateurDAO.delete(id);
+	}
 
 	@Override
 	public List<Administrateur> findAll() throws ServiceException {

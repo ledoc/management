@@ -1,5 +1,6 @@
 package fr.treeptik.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -15,8 +16,9 @@ public class Etablissement {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	// Nom ou entite
 	private String nom;
+	// applicatif : par défaut le nom ou l'entité
+	private String codeEtablissement;
 	private String coordonneesGeographique;
 	private String formeJuridique;
 	private String siret;
@@ -40,6 +42,14 @@ public class Etablissement {
 
 	public void setNom(String nom) {
 		this.nom = nom;
+	}
+
+	public String getCodeEtablissement() {
+		return codeEtablissement;
+	}
+
+	public void setCodeEtablissement(String codeEtablissement) {
+		this.codeEtablissement = codeEtablissement;
 	}
 
 	public String getCoordonneesGeographique() {
@@ -91,11 +101,22 @@ public class Etablissement {
 	}
 
 	public List<Site> getSites() {
+		if(this.sites == null){
+			this.sites = new ArrayList<Site>();
+		}
 		return sites;
 	}
 
 	public void setSites(List<Site> sites) {
 		this.sites = sites;
+	}
+
+	@Override
+	public String toString() {
+		return "Etablissement [id=" + id + ", nom=" + nom + ", codeEtablissement=" + codeEtablissement
+				+ ", coordonneesGeographique=" + coordonneesGeographique + ", formeJuridique=" + formeJuridique
+				+ ", siret=" + siret + ", telephone=" + telephone + ", mail=" + mail + ", siteWeb=" + siteWeb
+				+ ", sites=" + sites + "]";
 	}
 
 }

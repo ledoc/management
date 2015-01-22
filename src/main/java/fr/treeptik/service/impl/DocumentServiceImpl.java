@@ -49,6 +49,15 @@ public class DocumentServiceImpl implements DocumentService {
 		logger.debug("document : " + document);
 		documentDAO.delete(document);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE document --");
+		logger.debug("documentId : " + id);
+		documentDAO.delete(id);
+	}
+	
 
 	@Override
 	public List<Document> findAll() throws ServiceException {

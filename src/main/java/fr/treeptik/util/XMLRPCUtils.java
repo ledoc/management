@@ -64,8 +64,8 @@ public class XMLRPCUtils {
 
 	}
 
-	public Object[] mobileList(String sessionKey) {
-		logger.info("--mobileList --");
+	public Object[] enregistreurList(String sessionKey) {
+		logger.info("--enregistreurList --");
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
@@ -74,7 +74,7 @@ public class XMLRPCUtils {
 		Object[] result = null;
 		try {
 			Object[] params = new Object[] { sessionKey, "33", true };
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.mobileList", params);
+			result = (Object[]) xmlRpcClient.execute("Deveryflow.enregistreurList", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -51,11 +51,32 @@ public class EtablissementServiceImpl implements EtablissementService {
 		logger.debug("etablissement : " + etablissement);
 		etablissementDAO.delete(etablissement);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE etablissement --");
+		logger.debug("etablissementId : " + id);
+		etablissementDAO.delete(id);
+	}
 
 	@Override
 	public List<Etablissement> findAll() throws ServiceException {
 		logger.info("--FINDALL etablissement --");
 		return etablissementDAO.findAll();
+	}
+	
+	/**
+	 * Méthode spécifique pour récupérer les mesures associées à l'ouvrage dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Etablissement findByIdWithJoinFechSites(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFechSites etablissement --");
+		logger.info("id : " + id);
+		Etablissement etablissement = etablissementDAO.findByIdWithJoinFechSites(id);
+		System.out.println(etablissement);
+		return etablissement;
 	}
 
 }

@@ -49,6 +49,13 @@ public class MesureServiceImpl implements MesureService {
 		logger.debug("mesure : " + mesure);
 		mesureDAO.delete(mesure);
 	}
+	
+	@Override
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE mesure --");
+		logger.debug("mesureId : " + id);
+		mesureDAO.delete(id);
+	}
 
 	@Override
 	public List<Mesure> findAll() throws ServiceException {

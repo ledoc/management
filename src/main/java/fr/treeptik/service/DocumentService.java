@@ -19,4 +19,6 @@ public interface DocumentService {
 
 		List<Document> findAll() throws ServiceException;
 
+		void remove(Integer id) throws ServiceException;
+
 }

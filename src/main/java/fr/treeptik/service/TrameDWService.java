@@ -19,4 +19,6 @@ public interface TrameDWService {
 
 		List<TrameDW> findAll() throws ServiceException;
 
+		void remove(Integer id) throws ServiceException;
+
 }

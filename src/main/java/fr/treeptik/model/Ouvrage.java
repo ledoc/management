@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import fr.treeptik.model.deveryware.Mobile;
-
 @Entity
 public class Ouvrage {
 
@@ -49,8 +47,6 @@ public class Ouvrage {
 	protected TypeOuvrage typeOuvrage;
 	@OneToOne
 	protected Enregistreur enregistreur;
-	@OneToOne
-	private Mobile mobile;
 
 	protected String croquisDynamique;
 	protected String commentaire;
@@ -190,14 +186,6 @@ public class Ouvrage {
 		this.codeSite = codeSite;
 	}
 
-	public Mobile getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(Mobile mobile) {
-		this.mobile = mobile;
-	}
-
 	public Enregistreur getEnregistreur() {
 		return enregistreur;
 	}
@@ -321,7 +309,7 @@ public class Ouvrage {
 		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement=" + asservissement + ", ouvrageMaitre="
 				+ ouvrageMaitre + ", coteRepereNGF=" + coteRepereNGF + ", niveauManuel=" + niveauManuel
 				+ ", mesureEnregistreur=" + mesureEnregistreur + ", photo=" + photo + ", code=" + code + ", codeSite="
-				+ codeSite + ", typeOuvrage=" + typeOuvrage + ", enregistreur=" + enregistreur + ", mobile=" + mobile
+				+ codeSite + ", typeOuvrage=" + typeOuvrage  + ", enregistreur=" + enregistreur
 				+ ", croquisDynamique=" + croquisDynamique + ", commentaire=" + commentaire + ", coteSol=" + coteSol
 				+ ", numeroBSS=" + numeroBSS + ", mesureRepereNGFSol=" + mesureRepereNGFSol + ", mesureProfondeur="
 				+ mesureProfondeur + ", coteSolNGF=" + coteSolNGF + "]";
