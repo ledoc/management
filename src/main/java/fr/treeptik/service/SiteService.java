@@ -21,4 +21,6 @@ public interface SiteService {
 
 		void remove(Integer id) throws ServiceException;
 
+		Site findByIdWithJoinFetchOuvrages(Integer id) throws ServiceException;
+
 }

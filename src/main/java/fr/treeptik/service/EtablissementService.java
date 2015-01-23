@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Etablissement;
+import fr.treeptik.model.Ouvrage;
 
 public interface EtablissementService {
 
@@ -21,6 +22,9 @@ public interface EtablissementService {
 
 		void remove(Integer id) throws ServiceException;
 
-		Etablissement findByIdWithJoinFechSites(Integer id) throws ServiceException;
+		Etablissement findByIdWithJoinFetchSites(Integer id) throws ServiceException;
+
+
+		List<Ouvrage> findAllOuvragesOfEtablissement(Integer id) throws ServiceException;
 
 }

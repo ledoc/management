@@ -3,6 +3,7 @@ package fr.treeptik.service.impl;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class SiteServiceImpl implements SiteService {
 
 	@Override
 	public Site findById(Integer id) throws ServiceException {
+		logger.info("--findById site --");
 		return siteDAO.findOne(id);
 	}
 
@@ -49,11 +51,11 @@ public class SiteServiceImpl implements SiteService {
 		logger.debug("site : " + site);
 		siteDAO.delete(site);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE site --");
+		logger.info("--DELETE site Id --");
 		logger.debug("siteId : " + id);
 		siteDAO.delete(id);
 	}
@@ -63,8 +65,25 @@ public class SiteServiceImpl implements SiteService {
 		logger.info("--FINDALL site --");
 		return siteDAO.findAll();
 	}
-	
-	
-	
+
+	/**
+	 * Méthode spécifique pour récupérer les sites associées à un etablissement
+	 * dû au FetchType.Lazy
+	 */
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public Site findByIdWithJoinFetchOuvrages(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFetchOuvrages site --");
+		logger.info("id : " + id);
+
+		Site site;
+		try {
+			site = siteDAO.findByIdWithJoinFetchOuvrages(id);
+		} catch (PersistenceException e) {
+			logger.error("Error EtablissementService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return site;
+	}
 
 }

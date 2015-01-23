@@ -21,4 +21,6 @@ public interface ClientService {
 
 		void remove(Integer id) throws ServiceException;
 
+		Client findByIdWithJoinFetchEtablissements(Integer id) throws ServiceException;
+
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.ClientDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Client;
+import fr.treeptik.model.Ouvrage;
 import fr.treeptik.service.ClientService;
 
 @Service
@@ -62,6 +63,18 @@ public class ClientServiceImpl implements ClientService {
 	public List<Client> findAll() throws ServiceException {
 		logger.info("--FINDALL client --");
 		return clientDAO.findAll();
+	}
+	
+	/**
+	 * Méthode spécifique pour récupérer les mesures associées à l'ouvrage dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Client findByIdWithJoinFetchEtablissements(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFetchEtablissements client --");
+		logger.info("id : " + id);
+		Client client = clientDAO.findByIdWithJoinFetchEtablissements(id);
+		return client;
 	}
 
 }
