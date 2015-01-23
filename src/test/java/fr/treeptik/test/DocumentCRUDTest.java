@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,7 +33,7 @@ public class DocumentCRUDTest {
 	@Inject
 	private DocumentService documentService;
 
-	// @Test
+	@Test
 	public void testCRUDDocument() throws Exception {
 		logger.info("--testCRUDMesure --");
 
@@ -40,12 +41,11 @@ public class DocumentCRUDTest {
 		String nom = "document Top Secret";
 		Integer taille = 100;
 		Ouvrage ouvrage = null;
-		
+
 		Date date2 = new Date();
 		String nom2 = "document Top Taupe Secret";
 		Integer taille2 = 10000;
 		Ouvrage ouvrage2 = null;
-		
 
 		Document document = new Document();
 
@@ -67,10 +67,11 @@ public class DocumentCRUDTest {
 		document2.setNom(nom2);
 		document2.setTaille(taille2);
 		document2.setOuvrage(ouvrage2);
-		
+
 		documentService.create(document2);
 
-		document2.setNom("Anonymous");;
+		document2.setNom("Anonymous");
+		;
 		documentService.update(document2);
 
 		document2 = documentService.findById(id);
@@ -78,8 +79,8 @@ public class DocumentCRUDTest {
 
 		List<Document> secondFindAll = documentService.findAll();
 
-		if (firstFindAll.size() + 1 != secondFindAll.size()){
-			fail("La collection doit être augmentée de 1");			
+		if (firstFindAll.size() + 1 != secondFindAll.size()) {
+			fail("La collection doit être augmentée de 1");
 		}
 
 		documentService.remove(document);
@@ -89,9 +90,9 @@ public class DocumentCRUDTest {
 
 		List<Document> thirdFindAll = documentService.findAll();
 
-		if (firstFindAll.size() != thirdFindAll.size()){
+		if (firstFindAll.size() != thirdFindAll.size()) {
 			fail("La collection doit avoir la même taille qu'à l'origine");
-			
+
 		}
 		documentService.remove(document2.getId());
 	}

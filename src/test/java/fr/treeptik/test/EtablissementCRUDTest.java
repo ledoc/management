@@ -20,7 +20,6 @@ import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Client;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeSite;
@@ -39,14 +38,10 @@ public class EtablissementCRUDTest {
 	@Inject
 	private EtablissementService etablissementService;
 
-	private Site site;
-	private Site site2;
-
 	@Before
-	public void createTwoSites() {
+	public void createFourSites() {
 		String coordonneesGeographique = "48.7736N/2.0276E";
 		String nom = "secteur de meyreuil";
-		Client client = null;
 		String code = "T-13-01";
 		String departement = "13";
 		TypeSite type = TypeSite.SECTEUR;
@@ -54,33 +49,54 @@ public class EtablissementCRUDTest {
 
 		String coordonneesGeographique2 = "38.7736N/6.0276E";
 		String nom2 = "secteur de velaux";
-		Client client2 = null;
 		String code2 = "T-13-02";
 		String departement2 = "13";
 		TypeSite type2 = TypeSite.SECTEUR;
 		String stationMeteo2 = "code Météo France2 + coordonnées géographiques";
 
-		site = new Site();
+		Site site = new Site();
 		site.setCoordonneesGeographique(coordonneesGeographique);
-		site.setClient(client);
 		site.setCode(code);
 		site.setDepartement(departement);
 		site.setNom(nom);
 		site.setStationMeteo(stationMeteo);
 		site.setType(type);
-
-		site2 = new Site();
+		
+		Site site2 = new Site();
 		site2.setCoordonneesGeographique(coordonneesGeographique2);
-		site2.setClient(client2);
 		site2.setCode(code2);
 		site2.setDepartement(departement2);
 		site2.setNom(nom2);
 		site2.setStationMeteo(stationMeteo2);
 		site2.setType(type2);
+		
+		String nom3 = "secteur de Gardanne";
+		String code3 = "T-13-03";
+		
+		Site site3 = new Site();
+		site3.setCoordonneesGeographique(coordonneesGeographique2);
+		site3.setCode(code3);
+		site3.setNom(nom3);
+		site3.setDepartement(departement2);
+		site3.setStationMeteo(stationMeteo2);
+		site3.setType(type2);
+		
+		String nom4 = "secteur de Aix";
+		String code4 = "T-13-04";
+		
+		Site site4 = new Site();
+		site3.setCoordonneesGeographique(coordonneesGeographique2);
+		site3.setCode(code4);
+		site3.setNom(nom4);
+		site3.setDepartement(departement2);
+		site3.setStationMeteo(stationMeteo2);
+		site3.setType(type2);
 
 		try {
 			siteService.create(site);
 			siteService.create(site2);
+			siteService.create(site3);
+			siteService.create(site4);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +104,7 @@ public class EtablissementCRUDTest {
 
 	@Test
 	public void testCRUDEtablissement() throws Exception {
-		logger.info("--testCRUDMesure --");
+		logger.info("--testCRUDEtablissement --");
 
 		String coordonneesGeographique = "48.7736N/2.0276E";
 		String formeJuridique = "Association";
@@ -112,14 +128,13 @@ public class EtablissementCRUDTest {
 		etablissement.setTelephone(telephone);
 		etablissement.setSiteWeb(siteWeb);
 
-		site = siteService.findById(site.getId());
-
+		Site site = siteService.findById(1);
 		etablissement.getSites().add(site);
-
 		etablissementService.create(etablissement);
-		Integer id = etablissement.getId();
 
-		etablissement = etablissementService.findById(id);
+		Integer id = etablissement.getId();
+		etablissement = etablissementService.findByIdWithJoinFetchSites(id);
+
 		assertNotNull("L'objet doit exister", etablissement);
 
 		List<Etablissement> firstFindAll = etablissementService.findAll();
@@ -132,43 +147,46 @@ public class EtablissementCRUDTest {
 		etablissement2.setCodeEtablissement(codeEtablissement + 1);
 		etablissement2.setSiret(siret + 1);
 		etablissement2.setTelephone(telephone2);
-		etablissement.setSiteWeb(siteWeb2);
+		etablissement2.setSiteWeb(siteWeb2);
 
-		site2 = siteService.findById(site2.getId());
-
-		etablissement2.getSites().add(site);
+		Site site2 = siteService.findById(2);
+		Site site3 = siteService.findById(3);
 		etablissement2.getSites().add(site2);
-
+		etablissement2.getSites().add(site3);
+		
 		etablissementService.create(etablissement2);
 
 		etablissement2.setNom(nom + 2);
 		etablissementService.update(etablissement2);
-
-		etablissement = etablissementService.findById(id);
+		
+		Integer id2 = etablissement2.getId();
+		etablissement2 = etablissementService.findById(id2);
+	
+		System.out.println(etablissement2.getNom());
 		assertNotNull("L'objet doit exister", etablissement2);
 
 		List<Etablissement> secondFindAll = etablissementService.findAll();
-
 		if (firstFindAll.size() + 1 != secondFindAll.size())
 			fail("La collection doit être augmentée de 1");
 
-
-		etablissement = etablissementService.findByIdWithJoinFechSites(id);
+		etablissement = etablissementService.findByIdWithJoinFetchSites(id);
 		
-		etablissement.getSites().add(site);
-		
+		Site site4 = siteService.findById(4);
+		etablissement.getSites().add(site4);
 		etablissementService.update(etablissement);
 
+		etablissement = etablissementService.findById(id);
 		etablissementService.remove(etablissement);
-		
+
+		etablissement = etablissementService.findById(id);
 		assertNull("L'objet ne doit pas exister", etablissement);
 
-		List<Etablissement> thirdFindAll = etablissementService.findAll();
-
-		if (firstFindAll.size() != thirdFindAll.size()) {
-			fail("La collection doit avoir la même taille qu'à l'origine");
-		}
-		etablissementService.remove(etablissement2.getId());
+		 List<Etablissement> thirdFindAll = etablissementService.findAll();
+		
+		 if (firstFindAll.size() != thirdFindAll.size()) {
+		 fail("La collection doit avoir la même taille qu'à l'origine");
+		 }
+		 etablissementService.remove(etablissement2.getId());
 
 	}
 }

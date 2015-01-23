@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -55,7 +56,7 @@ public class XMLRPCTest {
 		logger.info("sessionKey : " + sessionKey);
 	}
 
-//	 @Test
+	// @Test
 	public void enregistreurListTest() throws Exception {
 
 		Object[] listEnregistreursXMLRPC = xmlRPCUtils.enregistreurList(sessionKey);
@@ -92,7 +93,7 @@ public class XMLRPCTest {
 		}
 	}
 
-//	@Test
+	@Test
 	public void getHistoryTest() throws Exception {
 		Enregistreur enregistreur = new Enregistreur();
 		enregistreur = enregistreurService.findByMidWithJoinFechTrameDWs(MID);
@@ -114,15 +115,12 @@ public class XMLRPCTest {
 
 			trameDWService.create(trameDW);
 			logger.info(trameDW.toString());
-			// List<TrameDW> list =
 			enregistreur.getTrameDWs().add(trameDW);
-			// list.add(trameDW);
-			// enregistreur.setTrameDWs(list);
 			enregistreurService.update(enregistreur);
 		}
 	}
 
-//	 @Test
+	// @Test
 	public void getUnifyHistoryTest() throws Exception {
 
 		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(MID, sessionKey);

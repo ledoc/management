@@ -74,7 +74,7 @@ public class XMLRPCUtils {
 		Object[] result = null;
 		try {
 			Object[] params = new Object[] { sessionKey, "33", true };
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.enregistreurList", params);
+			result = (Object[]) xmlRpcClient.execute("Deveryflow.mobileList", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

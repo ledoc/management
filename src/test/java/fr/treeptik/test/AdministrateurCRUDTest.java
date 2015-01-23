@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,7 +31,7 @@ public class AdministrateurCRUDTest {
 	@Inject
 	private AdministrateurService administrateurService;
 
-	// @Test
+	@Test
 	public void testCRUDAdministrateur() throws Exception {
 		logger.info("--testCRUDMesure --");
 
@@ -53,7 +54,6 @@ public class AdministrateurCRUDTest {
 		String motDePasse2 = "aaa";
 
 		Administrateur administrateur = new Administrateur();
-
 		administrateur.setIdentifiant(identifiant);
 		administrateur.setMail1(mail1);
 		administrateur.setMail2(mail2);
@@ -85,10 +85,11 @@ public class AdministrateurCRUDTest {
 		administrateurService.create(administrateur2);
 
 		administrateur2.setNom("Anonymous");
-		;
+		
 		administrateurService.update(administrateur2);
 
-		administrateur2 = administrateurService.findById(id);
+		Integer id2 = administrateur2.getId();
+		administrateur2 = administrateurService.findById(id2);
 		assertNotNull("L'objet doit exister", administrateur2);
 
 		List<Administrateur> secondFindAll = administrateurService.findAll();

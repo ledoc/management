@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,8 +23,8 @@ import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeMesure;
 import fr.treeptik.model.TypeOuvrage;
-import fr.treeptik.service.MesureService;
 import fr.treeptik.service.EnregistreurService;
+import fr.treeptik.service.MesureService;
 import fr.treeptik.service.OuvrageService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,7 +43,7 @@ public class OuvrageCRUDTest {
 
 	private static final String MID = "gps://ORANGE/+33781916177";
 
-	// @Test
+	 @Test
 	public void testCRUDNappeSouterraine() throws Exception {
 		logger.info("--testCRUDNappeSouterraine --");
 		
@@ -104,7 +105,10 @@ public class OuvrageCRUDTest {
 		return nappe;
 	}
 
-	private Mesure createMesure(Enregistreur enregistreur, Ouvrage nappe) {
+	private Mesure createMesure(Enregistreur enregistreur, Ouvrage nappe) throws ServiceException {
+		if(enregistreur.getTrameDWs() == null){
+			throw new ServiceException("Pas de trames DW à analyser");
+		}
 		List<TrameDW> trameDWs = enregistreur.getTrameDWs();
 		TrameDW trameDW = trameDWs.get(trameDWs.size() - 1);
 
@@ -117,7 +121,7 @@ public class OuvrageCRUDTest {
 							mesureService.conversionSignalElectrique_HauteurEau(trameDW.getSignalBrut(),
 									nappe.getMesureProfondeur()), nappe.getNiveauManuel().getValeur(),
 							derniere_HauteurEau));
-			mesureService.create(mesure);
+			mesure = mesureService.create(mesure);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,7 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
-import fr.treeptik.model.Client;
+import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeSite;
@@ -34,13 +35,13 @@ public class SiteCRUDTest {
 	@Inject
 	private SiteService siteService;
 
-	// @Test
+	@Test
 	public void testCRUDSite() throws Exception {
 		logger.info("--testCRUDMesure --");
 
 		String coordonneesGeographique = "48.7736N/2.0276E";
 		String nom = "secteur de meyreuil";
-		Client client = null;
+		Etablissement etablissement = null;
 		String code = "T-13-01";
 		String departement = "13";
 		TypeSite type = TypeSite.SECTEUR;
@@ -49,7 +50,7 @@ public class SiteCRUDTest {
 		
 		String coordonneesGeographique2 = "38.7736N/6.0276E";
 		String nom2 = "secteur de velaux";
-		Client client2 = null;
+		Etablissement etablissement2 = null;
 		String code2 = "T-13-02";
 		String departement2 = "13";
 		TypeSite type2 = TypeSite.SECTEUR;
@@ -58,7 +59,7 @@ public class SiteCRUDTest {
 
 		Site site = new Site();
 		site.setCoordonneesGeographique(coordonneesGeographique);
-		site.setClient(client);
+//		site.setEtablissement(etablissement);
 		site.setCode(code);
 		site.setDepartement(departement);
 		site.setNom(nom);
@@ -76,7 +77,7 @@ public class SiteCRUDTest {
 
 		Site site2 = new Site();
 		site2.setCoordonneesGeographique(coordonneesGeographique2);
-		site2.setClient(client2);
+//		site2.setEtablissement(etablissement2);
 		site2.setCode(code2);
 		site2.setDepartement(departement2);
 		site2.setNom(nom2);
@@ -89,7 +90,8 @@ public class SiteCRUDTest {
 		site2.setNom(nom + 2);
 		siteService.update(site2);
 
-		site2 = siteService.findById(id);
+		Integer id2 = site2.getId();
+		site2 = siteService.findById(id2);
 		assertNotNull("L'objet doit exister", site2);
 
 		List<Site> secondFindAll = siteService.findAll();

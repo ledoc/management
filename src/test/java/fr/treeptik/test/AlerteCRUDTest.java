@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,7 +32,7 @@ public class AlerteCRUDTest {
 	@Inject
 	private AlerteService alerteService;
 
-	// @Test
+	@Test
 	public void testCRUDAlerte() throws Exception {
 		logger.info("--testCRUDMesure --");
 
@@ -44,7 +45,7 @@ public class AlerteCRUDTest {
 		TendanceAlerte tendance = TendanceAlerte.EGAL;
 		String type = "Niveau haut";
 		float valeurCritique = 4.6F;
-		
+
 		String code2 = "Godzilla";
 		Boolean activation2 = true;
 		String emailOrSMSDEnvoi2 = "0123456789";
@@ -57,7 +58,6 @@ public class AlerteCRUDTest {
 
 		Alerte alerte = new Alerte();
 
-		
 		alerte.setActivation(activation);
 		alerte.setEmailOrSMSDEnvoi(emailOrSMSDEnvoi);
 		alerte.setCode(code);
@@ -87,31 +87,30 @@ public class AlerteCRUDTest {
 		alerte2.setType(type2);
 		alerte2.setValeurCritique(valeurCritique2);
 
-		
 		alerteService.create(alerte2);
 
-		alerte2.setCode("ARMAGEDON");;
+		alerte2.setCode("ARMAGEDON");
+		;
 		alerteService.update(alerte2);
 
-		alerte2 = alerteService.findById(id);
+		Integer id2 = alerte2.getId();
+		alerte2 = alerteService.findById(id2);
 		assertNotNull("L'objet doit exister", alerte2);
 
 		List<Alerte> secondFindAll = alerteService.findAll();
-
-		if (firstFindAll.size() + 1 != secondFindAll.size()){
-			fail("La collection doit être augmentée de 1");			
+		if (firstFindAll.size() + 1 != secondFindAll.size()) {
+			fail("La collection doit être augmentée de 1");
 		}
 
 		alerteService.remove(alerte);
-
 		alerte = alerteService.findById(id);
 		assertNull("L'objet ne doit pas exister", alerte);
 
 		List<Alerte> thirdFindAll = alerteService.findAll();
 
-		if (firstFindAll.size() != thirdFindAll.size()){
+		if (firstFindAll.size() != thirdFindAll.size()) {
 			fail("La collection doit avoir la même taille qu'à l'origine");
-			
+
 		}
 		alerteService.remove(alerte2.getId());
 	}
