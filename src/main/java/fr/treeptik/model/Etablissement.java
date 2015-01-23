@@ -101,7 +101,7 @@ public class Etablissement {
 	}
 
 	public List<Site> getSites() {
-		if(this.sites == null){
+		if (this.sites == null) {
 			this.sites = new ArrayList<Site>();
 		}
 		return sites;
@@ -115,8 +115,68 @@ public class Etablissement {
 	public String toString() {
 		return "Etablissement [id=" + id + ", nom=" + nom + ", codeEtablissement=" + codeEtablissement
 				+ ", coordonneesGeographique=" + coordonneesGeographique + ", formeJuridique=" + formeJuridique
-				+ ", siret=" + siret + ", telephone=" + telephone + ", mail=" + mail + ", siteWeb=" + siteWeb
-				+ ", sites=" + sites + "]";
+				+ ", siret=" + siret + ", telephone=" + telephone + ", mail=" + mail + ", siteWeb=" + siteWeb + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((codeEtablissement == null) ? 0 : codeEtablissement.hashCode());
+		result = prime * result + ((coordonneesGeographique == null) ? 0 : coordonneesGeographique.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
+		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
+		result = prime * result + ((siret == null) ? 0 : siret.hashCode());
+		result = prime * result + ((telephone == null) ? 0 : telephone.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Etablissement other = (Etablissement) obj;
+		if (codeEtablissement == null) {
+			if (other.codeEtablissement != null)
+				return false;
+		} else if (!codeEtablissement.equals(other.codeEtablissement))
+			return false;
+		if (coordonneesGeographique == null) {
+			if (other.coordonneesGeographique != null)
+				return false;
+		} else if (!coordonneesGeographique.equals(other.coordonneesGeographique))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (mail == null) {
+			if (other.mail != null)
+				return false;
+		} else if (!mail.equals(other.mail))
+			return false;
+		if (nom == null) {
+			if (other.nom != null)
+				return false;
+		} else if (!nom.equals(other.nom))
+			return false;
+		if (siret == null) {
+			if (other.siret != null)
+				return false;
+		} else if (!siret.equals(other.siret))
+			return false;
+		if (telephone == null) {
+			if (other.telephone != null)
+				return false;
+		} else if (!telephone.equals(other.telephone))
+			return false;
+		return true;
 	}
 
 }

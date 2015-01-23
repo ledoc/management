@@ -115,6 +115,79 @@ public class Alerte {
 		this.lienAPIDW = lienAPIDW;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((EmailOrSMSDEnvoi == null) ? 0 : EmailOrSMSDEnvoi.hashCode());
+		result = prime * result + ((activation == null) ? 0 : activation.hashCode());
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((intitule == null) ? 0 : intitule.hashCode());
+		result = prime * result + ((lienAPIDW == null) ? 0 : lienAPIDW.hashCode());
+		result = prime * result + ((modeEnvoi == null) ? 0 : modeEnvoi.hashCode());
+		result = prime * result + ((tendance == null) ? 0 : tendance.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + Float.floatToIntBits(valeurCritique);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Alerte other = (Alerte) obj;
+		if (EmailOrSMSDEnvoi == null) {
+			if (other.EmailOrSMSDEnvoi != null)
+				return false;
+		} else if (!EmailOrSMSDEnvoi.equals(other.EmailOrSMSDEnvoi))
+			return false;
+		if (activation == null) {
+			if (other.activation != null)
+				return false;
+		} else if (!activation.equals(other.activation))
+			return false;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (intitule == null) {
+			if (other.intitule != null)
+				return false;
+		} else if (!intitule.equals(other.intitule))
+			return false;
+		if (lienAPIDW == null) {
+			if (other.lienAPIDW != null)
+				return false;
+		} else if (!lienAPIDW.equals(other.lienAPIDW))
+			return false;
+		if (modeEnvoi == null) {
+			if (other.modeEnvoi != null)
+				return false;
+		} else if (!modeEnvoi.equals(other.modeEnvoi))
+			return false;
+		if (tendance != other.tendance)
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		if (Float.floatToIntBits(valeurCritique) != Float.floatToIntBits(other.valeurCritique))
+			return false;
+		return true;
+	}
+
 	
 	
 }

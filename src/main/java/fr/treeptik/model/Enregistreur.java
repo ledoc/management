@@ -292,6 +292,43 @@ public class Enregistreur implements Serializable {
 				+ pid + ", comment=" + comment + ", type=" + type + ", userName=" + userName + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((mid == null) ? 0 : mid.hashCode());
+		result = prime * result + ((sim == null) ? 0 : sim.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Enregistreur other = (Enregistreur) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (mid == null) {
+			if (other.mid != null)
+				return false;
+		} else if (!mid.equals(other.mid))
+			return false;
+		if (sim == null) {
+			if (other.sim != null)
+				return false;
+		} else if (!sim.equals(other.sim))
+			return false;
+		return true;
+	}
+
 	// public Object getSeamless() {
 	// return seamless;
 	// }
@@ -299,5 +336,7 @@ public class Enregistreur implements Serializable {
 	// public void setSeamless(Object seamless) {
 	// this.seamless = seamless;
 	// }
+	
+	
 
 }
