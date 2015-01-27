@@ -8,7 +8,7 @@ import fr.treeptik.model.Site;
 
 public interface SiteDAO extends JpaRepository<Site, Integer> {
 
-	@Query("select s from Site s left join fetch s.sites where s.id = :id")
-	Site findByIdWithJoinFetchOuvrages(Integer id) throws DataAccessException;;
+	@Query("select s from Site s left join fetch s.ouvrages where s.id = :id")
+	Site findByIdWithJoinFetchOuvrages(Integer id) throws DataAccessException;
 
 }

@@ -45,8 +45,8 @@ public class Ouvrage {
 	// version 2) ;
 	@Enumerated(EnumType.STRING)
 	protected TypeOuvrage typeOuvrage;
-	@OneToOne
-	protected Enregistreur enregistreur;
+	@OneToMany
+	protected List<Enregistreur> enregistreurs;
 
 	protected String croquisDynamique;
 	protected String commentaire;
@@ -186,12 +186,12 @@ public class Ouvrage {
 		this.codeSite = codeSite;
 	}
 
-	public Enregistreur getEnregistreur() {
-		return enregistreur;
+	public List<Enregistreur> getEnregistreurs() {
+		return enregistreurs;
 	}
 
-	public void setEnregistreur(Enregistreur enregistreur) {
-		this.enregistreur = enregistreur;
+	public void setEnregistreurs(List<Enregistreur> enregistreurs) {
+		this.enregistreurs = enregistreurs;
 	}
 
 	public List<Mesure> getMesures() {
@@ -309,10 +309,10 @@ public class Ouvrage {
 		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement=" + asservissement + ", ouvrageMaitre="
 				+ ouvrageMaitre + ", coteRepereNGF=" + coteRepereNGF + ", niveauManuel=" + niveauManuel
 				+ ", mesureEnregistreur=" + mesureEnregistreur + ", photo=" + photo + ", code=" + code + ", codeSite="
-				+ codeSite + ", typeOuvrage=" + typeOuvrage  + ", enregistreur=" + enregistreur
-				+ ", croquisDynamique=" + croquisDynamique + ", commentaire=" + commentaire + ", coteSol=" + coteSol
-				+ ", numeroBSS=" + numeroBSS + ", mesureRepereNGFSol=" + mesureRepereNGFSol + ", mesureProfondeur="
-				+ mesureProfondeur + ", coteSolNGF=" + coteSolNGF + "]";
+				+ codeSite + ", typeOuvrage=" + typeOuvrage + ", croquisDynamique=" + croquisDynamique
+				+ ", commentaire=" + commentaire + ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
+				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol + ", mesureProfondeur=" + mesureProfondeur
+				+ ", coteSolNGF=" + coteSolNGF + "]";
 	}
 
 	@Override

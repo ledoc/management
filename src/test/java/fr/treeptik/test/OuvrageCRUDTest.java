@@ -59,7 +59,7 @@ public class OuvrageCRUDTest {
 
 	private void addMesure(Mesure mesure, Ouvrage nappe) {
 		try {
-			nappe = ouvrageService.findByIdWithJoinFechMesures(nappe.getId());
+			nappe = ouvrageService.findByIdWithJoinFetchMesures(nappe.getId());
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
@@ -149,7 +149,7 @@ public class OuvrageCRUDTest {
 			Enregistreur enregistreur = enregistreurService.findByMid(MID);
 			System.out.println(enregistreur);
 
-			nappe.setEnregistreur(enregistreur);
+			nappe.getEnregistreurs().add(enregistreur);
 
 			ouvrageService.update(nappe);
 

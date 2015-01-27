@@ -19,8 +19,12 @@ public interface OuvrageService {
 
 		List<Ouvrage> findAll() throws ServiceException;
 
-		Ouvrage findByIdWithJoinFechMesures(Integer id) throws ServiceException;
-
 		void remove(Integer id) throws ServiceException;
+
+		Ouvrage findByIdWithJoinFetchMesures(Integer id) throws ServiceException;
+
+		Ouvrage findByIdWithJoinFetchDocuments(Integer id) throws ServiceException;
+
+		Ouvrage findByIdWithJoinFetchEnregistreurs(Integer id) throws ServiceException;;
 
 }

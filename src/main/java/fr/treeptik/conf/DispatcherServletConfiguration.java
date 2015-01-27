@@ -97,7 +97,7 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 	public RequestMappingHandlerMapping requestMappingHandlerMapping() {
 		logger.debug("Creating requestMappingHandlerMapping");
 		RequestMappingHandlerMapping requestMappingHandlerMapping = new RequestMappingHandlerMapping();
-		requestMappingHandlerMapping.setUseSuffixPatternMatch(false);
+		requestMappingHandlerMapping.setUseSuffixPatternMatch(true);
 		Object[] interceptors = { localeChangeInterceptor() };
 		requestMappingHandlerMapping.setInterceptors(interceptors);
 		return requestMappingHandlerMapping;

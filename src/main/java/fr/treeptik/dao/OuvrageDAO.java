@@ -10,7 +10,12 @@ import fr.treeptik.model.Ouvrage;
 public interface OuvrageDAO extends JpaRepository<Ouvrage, Integer> {
 
 	@Query("select o from Ouvrage o left join fetch o.mesures where o.id = :id")
-	public Ouvrage findByIdWithJoinFechMesures(@Param("id") Integer id) throws DataAccessException;
+	public Ouvrage findByIdWithJoinFetchMesures(@Param("id") Integer id) throws DataAccessException;
 
-	
+	@Query("select o from Ouvrage o left join fetch o.documents where o.id = :id")
+	public Ouvrage findByIdWithJoinFetchDocuments(@Param("id") Integer id) throws DataAccessException;
+
+	@Query("select o from Ouvrage o left join fetch o.enregistreurs where o.id = :id")
+	public Ouvrage findByIdWithJoinFetchEnregistreurs(@Param("id") Integer id) throws DataAccessException;
+
 }

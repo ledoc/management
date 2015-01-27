@@ -15,7 +15,7 @@ public class Etablissement {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
+	
 	private String nom;
 	// applicatif : par défaut le nom ou l'entité
 	private String codeEtablissement;

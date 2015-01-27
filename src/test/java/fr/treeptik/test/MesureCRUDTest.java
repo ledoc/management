@@ -49,7 +49,7 @@ public class MesureCRUDTest {
 	public void testGetMesuresOfOuvrage() throws Exception {
 
 		logger.info("--testGetMesuresOfOuvrage --");
-		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFechMesures(1);
+		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchMesures(1);
 		System.out.println(ouvrage);
 		for (Mesure mesure : ouvrage.getMesures()) {
 			System.out.println(mesure);

@@ -49,7 +49,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 		logger.debug("ouvrage : " + ouvrage);
 		ouvrageDAO.delete(ouvrage);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
@@ -57,7 +57,6 @@ public class OuvrageServiceImpl implements OuvrageService {
 		logger.debug("ouvrageId : " + id);
 		ouvrageDAO.delete(id);
 	}
-	
 
 	@Override
 	public List<Ouvrage> findAll() throws ServiceException {
@@ -70,11 +69,30 @@ public class OuvrageServiceImpl implements OuvrageService {
 	 * FetchType.Lazy
 	 */
 	@Override
-	public Ouvrage findByIdWithJoinFechMesures(Integer id) throws ServiceException {
-		logger.info("--findByIdWithJoinFechMesures mesure --");
+	public Ouvrage findByIdWithJoinFetchMesures(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFetchMesures OuvrageService --");
 		logger.info("id : " + id);
-		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFechMesures(id);
-		System.out.println(ouvrage);
+		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchMesures(id);
+		return ouvrage;
+	}
+
+	/**
+	 * Méthode spécifique pour récupérer les mesures associées à l'ouvrage dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Ouvrage findByIdWithJoinFetchDocuments(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFetchDocuments OuvrageService --");
+		logger.info("id : " + id);
+		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchDocuments(id);
+		return ouvrage;
+	}
+
+	@Override
+	public Ouvrage findByIdWithJoinFetchEnregistreurs(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFetchEnregistreurs OuvrageService --");
+		logger.info("id : " + id);
+		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchEnregistreurs(id);
 		return ouvrage;
 	}
 

@@ -21,6 +21,7 @@ public class Administrateur {
 	private String mail1;
 	private String mail2;
 	private String motDePasse;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -75,6 +76,14 @@ public class Administrateur {
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
+	
+	@Override
+	public String toString() {
+		return "Administrateur [id=" + id + ", identifiant=" + identifiant + ", nom=" + nom + ", prenom=" + prenom
+				+ ", telFixe=" + telFixe + ", telPortable=" + telPortable + ", mail1=" + mail1 + ", mail2=" + mail2
+				+ ", motDePasse=" + motDePasse + "]";
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -146,6 +155,7 @@ public class Administrateur {
 			return false;
 		return true;
 	}
+
 	
 	
 	
