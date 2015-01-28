@@ -9,21 +9,23 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:url var="urlResources" value="/resources" />
 
 </section>
-<!-- end main content -->
-    </section>
+</section>
 <!-- end layout -->
-    <footer class="bg-white clearfix mt15 pt15 pb15">
-    <div class="col-lg-6 col-md-6 col-xs-6">
-        <p>© AH2D 2015</p>
-    </div>
+<footer class="bg-white clearfix mt15 pt15 pb15">
+	<div class="col-lg-6 col-md-6 col-xs-6">
+		<p>&copy; AH2D 2015</p>
+	</div>
 
-    <div class="col-lg-6 col-md-6 col-xs-6 text-right">
-        <a class="btn btn-social btn-xs btn-facebook mr5"><i class="fa fa-facebook"></i>Facebook </a>
-        <a class="btn btn-social btn-xs btn-twitter mr5"><i class="fa fa-twitter"></i>Twitter </a>
-    </div>
+	<div class="col-lg-6 col-md-6 col-xs-6 text-right">
+		<a class="btn btn-social btn-xs btn-facebook mr5"><i
+			class="fa fa-facebook"></i>Facebook </a> <a
+			class="btn btn-social btn-xs btn-twitter mr5"><i
+			class="fa fa-twitter"></i>Twitter </a>
+	</div>
 </footer>
 </div>
 <!-- end app -->
+
 <!-- core scripts -->
 <script src="${urlResources}/plugins/jquery-1.11.1.min.js"></script>
 <script src="${urlResources}/bootstrap/js/bootstrap.js"></script>
@@ -40,6 +42,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/plugins/gmaps.js"></script>
 <script src="${urlResources}/plugins/chosen/chosen.jquery.min.js"></script>
 <script src="${urlResources}/plugins/datatables/jquery.dataTables.js"></script>
+<script src="${urlResources}/js/bootstrap-datatables.js"></script>
 <script src="${urlResources}/plugins/icheck/icheck.js"></script>
 <script src="${urlResources}/plugins/hightcharts/js/highcharts.js"></script>
 <!-- /page level scripts -->
@@ -50,11 +53,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- /template scripts -->
 
 <!-- page script -->
-<script src="${urlResources}/js/bootstrap-datatables.js"></script>
 <script src="${urlResources}/js/datatables.js"></script>
 <script src="${urlResources}/js/maps.js"></script>
-
 <!-- /page script -->
+
+
+
 </body>
 
 </html>

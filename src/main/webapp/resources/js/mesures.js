@@ -7,7 +7,9 @@ var mesures = function () {
                 $reverseBtn = $('#js-reverseChart'),
                 chartHeight = $('.tools-inner').innerHeight() / 1.5,
                 chart;
-
+            if(!$chart.length){
+            	return;
+            }
 
             // chart constructor
 

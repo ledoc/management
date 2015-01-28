@@ -4,6 +4,12 @@ var googlemap = function () {
 
     return {
         init: function () {
+        	
+        	if(!$('#map').length){
+        		return;
+        	}
+        	
+        	
             map = new GMaps({
                 div: "#map",
                 lat: 48.8652902,

@@ -477,6 +477,16 @@ var sublime = function () {
             $sidebar.height($content.innerHeight());
         }
     }
+    
+    function initParsley(){
+    	var $form = $('#form');
+    	
+    	if(!$form.length){
+    		return;
+    	}
+    	
+    	$form.parsley()
+    }
 
     return {
         checkBreakout: checkBreakout,
@@ -513,6 +523,7 @@ var sublime = function () {
             initSortableLists();
             initIcheck();
             initResizeBox();
+            initParsley();
         }
     };
 }();

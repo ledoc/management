@@ -10,7 +10,7 @@
 		<!-- Dependencies properties -->
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.java>1.8</version.java>
+		<version.java>1.7</version.java>
 		<maven.compiler.plugin>3.1</maven.compiler.plugin>
 		<spring.version>4.0.0.RELEASE</spring.version>
 
@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 
