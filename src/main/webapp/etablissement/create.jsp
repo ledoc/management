@@ -13,13 +13,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <c:url var="urlResources" value="/resources" />
 
+<!-- content wrapper -->
 <div class="content-wrap bg-default clearfix row">
 	<div class="col-lg-12 col-md-12 col-xs-12">
 		<div class="bg-white p15 shadow content-inner">
 			<div class="panel">
 				<header class="panel-heading no-b col-lg-offset-2">
-				<h1 class="h3 text-primary mt0">Formulaire création</h1>
-				<p class="text-muted">Le formulaire permet de créer une entité.</p>
+				<h1 class="h3 text-primary mt0">Création d'établissement</h1>
+				<p class="text-muted">Le formulaire permet de créer un d'établissement.</p>
 				</header>
 				<div class="panel-body">
 					<c:url var="createEtablissement" value="/etablissement/create" />
@@ -28,8 +29,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						data-validate="parsley" data-show-errors="true">
 
 						<form:hidden path="id" />
-
-
+						
 						<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 							<div class="form-group">
 								<label for="nom">Nom</label>
@@ -72,10 +72,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:input type="tel" class="form-control" id="telephone"
 									path="telephone" placeholder="" data-parsley-required="true"
 									data-parsley-trigger="change" data-parsley-type="digits"
-									data-parsley-range="[10,11]"
+									data-parsley-length="[10,11]"
 									data-parsley-required-message="Champ requis"
 									data-parsley-type-message="Ne doit comporter que des chiffres"
-									data-parsley-range-message="comporte 10 chiffres minimum" />
+									data-parsley-length-message="comporte 10 chiffres minimum" />
 							</div>
 							<div class="form-group">
 								<label for="siret">Siret</label>
@@ -108,7 +108,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<label for="sites">Attacher un ou des sites</label>
 								<form:select multiple="true" id="sitesCombo" name="sitesCombo"
 									path="sites" items="${sitesCombo}" itemValue="id"
-									itemLabel="id"
+									itemLabel="nom"
 									data-placeholder=" Sélectionnez
 							un ou des sites"
 									class="form-control chosen">
@@ -130,4 +130,3 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- /content wrapper -->
 <a class="exit-offscreen"></a>
 <jsp:include page="/template/footer.jsp" />
-
