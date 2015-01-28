@@ -1,5 +1,7 @@
 package fr.treeptik.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
+import fr.treeptik.model.TypeSite;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
 
@@ -41,7 +44,9 @@ public class SiteController {
 		logger.info("--create formulaire SiteController--");
 
 		List<Ouvrage> ouvragesCombo;
+		List<TypeSite> typesSiteCombo = new ArrayList<TypeSite>(Arrays.asList(TypeSite.values()));
 		try {
+
 			ouvragesCombo = ouvrageService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -52,7 +57,7 @@ public class SiteController {
 		for (Ouvrage ouvrage : ouvragesCombo) {
 			ouvrageCache.put(ouvrage.getId(), ouvrage);
 		}
-
+		model.addAttribute("typesSiteCombo", typesSiteCombo);
 		model.addAttribute("site", new Site());
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		return "/site/create";
@@ -66,6 +71,7 @@ public class SiteController {
 		Site site = null;
 		List<Ouvrage> ouvragesCombo;
 		ouvrageCache = new HashMap<Integer, Ouvrage>();
+		List<TypeSite> typesSiteCombo = new ArrayList<TypeSite>(Arrays.asList(TypeSite.values()));
 
 		try {
 			site = siteService.findByIdWithJoinFetchOuvrages(id);
@@ -79,7 +85,7 @@ public class SiteController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-
+		model.addAttribute("typesSiteCombo", typesSiteCombo);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		model.addAttribute("site", site);
 		return "/site/create";
