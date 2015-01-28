@@ -1,5 +1,7 @@
 package fr.treeptik.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +23,12 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Ouvrage;
+import fr.treeptik.model.TypeOuvrage;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
 
 @Controller
+@RequestMapping("/ouvrage")
 public class OuvrageController {
 	
 	private Logger logger = Logger.getLogger(OuvrageController.class);
@@ -41,7 +45,10 @@ public class OuvrageController {
 	public String create(Model model) throws ControllerException {
 		logger.info("--create formulaire OuvrageController--");
 		
+		Ouvrage ouvrage = new Ouvrage();
+		ouvrage.setAsservissement(false);
 		List<Enregistreur> enregistreursCombo;
+		List<TypeOuvrage> typesOuvrageRadioButton = new ArrayList<TypeOuvrage>(Arrays.asList(TypeOuvrage.values()));
 		try {
 			enregistreursCombo = enregistreurService.findAll();
 		} catch (ServiceException e) {
@@ -54,8 +61,9 @@ public class OuvrageController {
 			enregistreurCache.put(enregistreur.getId(), enregistreur);
 		}
 
-		model.addAttribute("ouvrage", new Ouvrage());
+		model.addAttribute("ouvrage", ouvrage);
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
+		model.addAttribute("typesOuvrageRadioButton", typesOuvrageRadioButton);
 		return "/ouvrage/create";
 	}
 
