@@ -33,7 +33,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<div class="form-group">
 						<label for="identifiant">Identifiant</label>
 						<form:input type="text" class="form-control" id="identifiant"
-							path="identifiant" placeholder="" placeholder=""
+							path="identifiant" placeholder=""
 							data-parsley-required="true" data-parsley-trigger="change"
 							data-parsley-required-message="Champ requis"
 							data-parsley-mincheck="2"
@@ -61,7 +61,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<div class="form-group">
 						<label for="posteOccupe">Poste occupé</label>
 						<form:input type="text" class="form-control" id="posteOccupe"
-							path="posteOccupe" placeholder="" placeholder=""
+							path="posteOccupe" placeholder=""
 							data-parsley-required="true" data-parsley-trigger="change"
 							data-parsley-required-message="Champ requis"
 							data-parsley-mincheck="2"

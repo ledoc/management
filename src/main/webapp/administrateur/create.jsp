@@ -8,7 +8,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuUtilisateurActive" />
-		<jsp:param value="Solices - Détails Administrateur" name="titreOnglet" />
+	<jsp:param value="Solices - Détails Administrateur" name="titreOnglet" />
 </jsp:include>
 
 <!-- content wrapper -->
@@ -18,8 +18,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<div class="wrapper">
 		<section class="panel">
 			<header class="panel-heading no-b">
-				<h2 class="text-primary">Création d'un
-					Administrateur</h2>
+				<h2 class="text-primary">Création d'un Administrateur</h2>
 				<p class="text-muted">Le formulaire permet de créer un
 					Administrateur.</p>
 
@@ -31,7 +30,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				data-validate="parsley" data-show-errors="true">
 
 				<form:hidden path="id" />
-
+				
 				<div class="panel-body">
 					<div class="col-md-4">
 						<div class="form-group">
@@ -70,7 +69,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								data-parsley-mincheck="3"
 								data-parsley-mincheck-message="3 caractères minimum" />
 						</div>
-
 						<div class="form-group">
 							<label for="confirmation">Confirmation du mot de passe</label> <input
 								type="password" class="form-control" id="confirmation"
@@ -80,30 +78,25 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								data-parsley-equalto="#motDePasse"
 								data-parsley-equalto-message="Les valeurs sont différentes" />
 						</div>
-
-
-					<div class="form-group">
-						<label for="telFixe">Téléphone Fixe</label>
-						<form:input class="form-control" id="telFixe"
-							path="telFixe" placeholder="" data-parsley-required="true"
-							data-parsley-trigger="change" data-parsley-type="digits"
-							data-parsley-length="[10,11]"
-							data-parsley-required-message="Champ requis"
-							data-parsley-type-message="Ne doit comporter que des chiffres"
-							data-parsley-range-message="comporte 10 chiffres minimum" />
-					</div>
-
-					<div class="form-group">
-						<label for="telPortable">Téléphone Portable</label>
-						<form:input class="form-control" id="telPortable"
-							path="telPortable" placeholder="" 
-							data-parsley-trigger="change" data-parsley-type="digits"
-							data-parsley-length="[10,11]"
-							data-parsley-required-message="Champ requis"
-							data-parsley-type-message="Ne doit comporter que des chiffres"
-							data-parsley-range-message="comporte 10 chiffres minimum" />
-					</div>
-
+						<div class="form-group">
+							<label for="telFixe">Téléphone Fixe</label>
+							<form:input class="form-control" id="telFixe" path="telFixe"
+								placeholder="" data-parsley-required="true"
+								data-parsley-trigger="change" data-parsley-type="digits"
+								data-parsley-length="[10,11]"
+								data-parsley-required-message="Champ requis"
+								data-parsley-type-message="Ne doit comporter que des chiffres"
+								data-parsley-length-message="comporte 10 chiffres minimum" />
+						</div>
+						<div class="form-group">
+							<label for="telPortable">Téléphone Portable</label>
+							<form:input class="form-control" id="telPortable"
+								path="telPortable" placeholder="" data-parsley-trigger="change"
+								data-parsley-type="digits" data-parsley-length="[10,11]"
+								data-parsley-required-message="Champ requis"
+								data-parsley-type-message="Ne doit comporter que des chiffres"
+								data-parsley-length-message="comporte 10 chiffres minimum" />
+						</div>
 						<div class="form-group">
 							<label for="mail1">Email 1</label>
 							<form:input class="form-control" id="mail1" path="mail1"
@@ -112,7 +105,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								data-parsley-required-message="Champ requis"
 								data-parsley-type-message="Entrer une adresse email valide" />
 						</div>
-
 						<div class="form-group">
 							<label for="mail2">Email 2</label>
 							<form:input class="form-control" id="mail2" path="mail2"
@@ -120,7 +112,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								data-parsley-trigger="change" placeholder="my@email.fr"
 								data-parsley-type-message="Entrer une adresse email valide" />
 						</div>
-
 						<div class="pull-right">
 							<a href="<c:url  value="/administrateur/list" />"
 								class="btn btn-default btn-outline">Retour</a>
