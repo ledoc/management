@@ -63,7 +63,7 @@ public class ClientCRUDTest {
 		String nomSite = "secteur de meyreuil";
 		String code = "T-13-01";
 		String departement = "13";
-		TypeSite type = TypeSite.SECTEUR;
+		TypeSite typeSite = TypeSite.SECTEUR;
 		String stationMeteo = "code Météo France + coordonnées géographiques";
 		Site site = new Site();
 		site.setCoordonneesGeographique(coordonneesGeographique);
@@ -71,7 +71,7 @@ public class ClientCRUDTest {
 		site.setDepartement(departement);
 		site.setNom(nomSite);
 		site.setStationMeteo(stationMeteo);
-		site.setType(type);
+		site.setTypeSite(typeSite);
 
 		site = siteService.create(site);
 

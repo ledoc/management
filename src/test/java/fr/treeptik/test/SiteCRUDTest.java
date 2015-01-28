@@ -19,7 +19,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
-import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeSite;
@@ -41,19 +40,17 @@ public class SiteCRUDTest {
 
 		String coordonneesGeographique = "48.7736N/2.0276E";
 		String nom = "secteur de meyreuil";
-		Etablissement etablissement = null;
 		String code = "T-13-01";
 		String departement = "13";
-		TypeSite type = TypeSite.SECTEUR;
+		TypeSite typeSite = TypeSite.SECTEUR;
 		String stationMeteo = "code Météo France + coordonnées géographiques";
 		List<Ouvrage> ouvrages1 = new ArrayList<Ouvrage>();
 		
 		String coordonneesGeographique2 = "38.7736N/6.0276E";
 		String nom2 = "secteur de velaux";
-		Etablissement etablissement2 = null;
 		String code2 = "T-13-02";
 		String departement2 = "13";
-		TypeSite type2 = TypeSite.SECTEUR;
+		TypeSite typeSite2 = TypeSite.SECTEUR;
 		String stationMeteo2 = "code Météo France2 + coordonnées géographiques";
 		List<Ouvrage> ouvrages2 = new ArrayList<Ouvrage>();
 
@@ -65,7 +62,7 @@ public class SiteCRUDTest {
 		site.setNom(nom);
 		site.setOuvrages(ouvrages1);
 		site.setStationMeteo(stationMeteo);
-		site.setType(type);
+		site.setTypeSite(typeSite);
 
 		siteService.create(site);
 		Integer id = site.getId();
@@ -83,7 +80,7 @@ public class SiteCRUDTest {
 		site2.setNom(nom2);
 		site2.setOuvrages(ouvrages2);
 		site2.setStationMeteo(stationMeteo2);
-		site2.setType(type2);
+		site2.setTypeSite(typeSite2);
 		
 		siteService.create(site2);
 

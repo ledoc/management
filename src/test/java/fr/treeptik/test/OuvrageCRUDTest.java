@@ -33,7 +33,7 @@ import fr.treeptik.service.OuvrageService;
 		DispatcherServletConfiguration.class })
 public class OuvrageCRUDTest {
 
-	private Logger logger = Logger.getLogger(MesureCRUDTest.class);
+	private Logger logger = Logger.getLogger(OuvrageCRUDTest.class);
 	@Inject
 	private MesureService mesureService;
 	@Inject
@@ -74,7 +74,7 @@ public class OuvrageCRUDTest {
 
 	private Ouvrage createNappe() {
 		Ouvrage nappe = new Ouvrage();
-		nappe.setCode("Pz12");
+		nappe.setCodeOuvrage("Pz12");
 		nappe.setAsservissement(false);
 		nappe.setCodeSite("1001");
 		nappe.setNom("Nappe de Brie");

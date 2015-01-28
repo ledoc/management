@@ -44,14 +44,14 @@ public class EtablissementCRUDTest {
 		String nom = "secteur de meyreuil";
 		String code = "T-13-01";
 		String departement = "13";
-		TypeSite type = TypeSite.SECTEUR;
+		TypeSite typeSite = TypeSite.SECTEUR;
 		String stationMeteo = "code Météo France + coordonnées géographiques";
 
 		String coordonneesGeographique2 = "38.7736N/6.0276E";
 		String nom2 = "secteur de velaux";
 		String code2 = "T-13-02";
 		String departement2 = "13";
-		TypeSite type2 = TypeSite.SECTEUR;
+		TypeSite typeSite2 = TypeSite.SECTEUR;
 		String stationMeteo2 = "code Météo France2 + coordonnées géographiques";
 
 		Site site = new Site();
@@ -60,7 +60,7 @@ public class EtablissementCRUDTest {
 		site.setDepartement(departement);
 		site.setNom(nom);
 		site.setStationMeteo(stationMeteo);
-		site.setType(type);
+		site.setTypeSite(typeSite);
 		
 		Site site2 = new Site();
 		site2.setCoordonneesGeographique(coordonneesGeographique2);
@@ -68,7 +68,7 @@ public class EtablissementCRUDTest {
 		site2.setDepartement(departement2);
 		site2.setNom(nom2);
 		site2.setStationMeteo(stationMeteo2);
-		site2.setType(type2);
+		site2.setTypeSite(typeSite2);
 		
 		String nom3 = "secteur de Gardanne";
 		String code3 = "T-13-03";
@@ -79,7 +79,7 @@ public class EtablissementCRUDTest {
 		site3.setNom(nom3);
 		site3.setDepartement(departement2);
 		site3.setStationMeteo(stationMeteo2);
-		site3.setType(type2);
+		site3.setTypeSite(typeSite2);
 		
 		String nom4 = "secteur de Aix";
 		String code4 = "T-13-04";
@@ -90,7 +90,7 @@ public class EtablissementCRUDTest {
 		site3.setNom(nom4);
 		site3.setDepartement(departement2);
 		site3.setStationMeteo(stationMeteo2);
-		site3.setType(type2);
+		site3.setTypeSite(typeSite2);
 
 		try {
 			siteService.create(site);
