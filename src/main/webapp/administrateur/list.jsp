@@ -11,14 +11,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="Solices - Liste Administrateur" name="titreOnglet" />
 </jsp:include>
 
+<!-- start page content -->
 <!-- content wrapper -->
-<div class="content-wrap bg-white shadow rounded">
-
-	<!-- inner content wrapper -->
-	<div class="wrapper">
+<div class="content-wrap">
+	<div class="col-lg-12 bg-white shadow clearfix content-inner p15">
 		<section class="panel">
 			<header class="panel-heading no-b">
-				<h2 class="text-primary">Présentation Liste</h2>
+				<h1 class="h3 text-primary mt0">Liste des administrateurs</h1>
 
 				<p class="text-muted">La présentation liste permet d'afficher
 					une grande quantité d'informations de façon lisible et structurée</p>
@@ -37,6 +36,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<th>Identifiant</th>
 							<th>Nom</th>
 							<th>Prénom</th>
+							<th>Login</th>
 							<th>Téléphone Fixe</th>
 							<th>Email</th>
 							<th>Actions</th>
@@ -54,10 +54,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									href="${urlAdminstrateurUpdate}">${administrateur.identifiant}</a></td>
 								<td><c:out value="${administrateur.nom}" /></td>
 								<td><c:out value="${administrateur.prenom}" /></td>
+								<td><c:out value="${administrateur.login}" /></td>
 								<td><c:out value="${administrateur.telFixe}" /></td>
 								<td><c:out value="${administrateur.mail1}" /></td>
-								<td><a  data-toggle="modal"
-									data-target="#confirmModal"
+								<td><a data-toggle="modal" data-target="#confirmModal"
 									class="btn btn-outline btn-danger btn-xs js-confirm-btn"> <i
 										class="fa fa-remove"></i>
 								</a></td>
@@ -91,13 +91,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			</div>
 		</div>
 	</div>
-
+	<!-- /Fenetre modale -->
 </div>
 <!-- /content wrapper -->
+<a class="exit-offscreen"></a>
+<!-- end page content -->
 <jsp:include page="/template/footer.jsp" />
 
 <script type="text/javascript">
 	$('#confirmModal').modal();
 </script>
-
-

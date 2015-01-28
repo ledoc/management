@@ -16,6 +16,7 @@ public class Administrateur {
 	private String identifiant;
 	private String nom;
 	private String prenom;
+	private String login;
 	private String telFixe;
 	private String telPortable;
 	private String mail1;
@@ -45,6 +46,14 @@ public class Administrateur {
 	}
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+	
+	
+	public String getLogin() {
+		return login;
+	}
+	public void setLogin(String login) {
+		this.login = login;
 	}
 	public String getTelFixe() {
 		return telFixe;

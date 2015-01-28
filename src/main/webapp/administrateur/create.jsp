@@ -58,6 +58,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									data-parsley-mincheck-message="2 caractères minimum" />
 							</div>
 							<div class="form-group">
+								<label for="login">Login</label>
+								<form:input type="text" class="form-control" id="login" path="login"
+									placeholder="" data-parsley-required="true"
+									data-parsley-trigger="change"
+									data-parsley-required-message="Champ requis"
+									data-parsley-mincheck="2"
+									data-parsley-mincheck-message="2 caractères minimum" />
+							</div>
+							<div class="form-group">
 								<label for="motDePasse">Mot de passe</label>
 								<form:input type="password" class="form-control" id="motDePasse"
 									path="motDePasse" placeholder="" data-parsley-required="true"

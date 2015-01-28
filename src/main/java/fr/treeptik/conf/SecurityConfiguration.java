@@ -48,6 +48,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"Select login, password, 'true' as enabled from User where login=? and status=1")
 				.authoritiesByUsernameQuery(
 						"Select u.login, r.description From Role r join User u on u.role_id=r.id where u.login=?");
+		auth.jdbcAuthentication()
+		.dataSource(dataSource)
+		.usersByUsernameQuery(
+				"Select login, password, 'true' as enabled from User where login=? and status=1")
+		.authoritiesByUsernameQuery(
+				"Select u.login, r.description From Role r join User u on u.role_id=r.id where u.login=?");
 	}
 
 

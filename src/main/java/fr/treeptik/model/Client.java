@@ -20,6 +20,7 @@ public class Client {
 	private String identifiant;
 	private String nom;
 	private String prenom;
+	private String login;
 	private String posteOccupe;
 	private String telFixe;
 	private String telPortable;
@@ -59,6 +60,14 @@ public class Client {
 
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
+	}
+	
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
 	}
 
 	public String getPosteOccupe() {
