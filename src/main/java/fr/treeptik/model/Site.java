@@ -18,7 +18,7 @@ public class Site {
 	private Integer id;
 	// site ou secteur
 	@Enumerated(EnumType.STRING)
-	private TypeSite type;
+	private TypeSite typeSite;
 	private String nom;
 
 	// A défaut, S (site) ou T (secteur), département et numéro d’ordre de
@@ -39,12 +39,13 @@ public class Site {
 		this.id = id;
 	}
 
-	public TypeSite getType() {
-		return type;
+	public TypeSite getTypeSite() {
+		
+		return typeSite;
 	}
 
-	public void setType(TypeSite type) {
-		this.type = type;
+	public void setTypeSite(TypeSite typeSite) {
+		this.typeSite = typeSite;
 	}
 
 	public String getNom() {
@@ -97,7 +98,7 @@ public class Site {
 
 	@Override
 	public String toString() {
-		return "Site [id=" + id + ", type=" + type + ", nom=" + nom + ", code=" + code + ", departement=" + departement
+		return "Site [id=" + id + ", typeSite=" + typeSite + ", nom=" + nom + ", code=" + code + ", departement=" + departement
 				+ ", coordonneesGeographique=" + coordonneesGeographique + ", stationMeteo=" + stationMeteo
 				+ "]";
 	}
@@ -112,7 +113,7 @@ public class Site {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
 		result = prime * result + ((stationMeteo == null) ? 0 : stationMeteo.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((typeSite == null) ? 0 : typeSite.hashCode());
 		return result;
 	}
 
@@ -155,7 +156,7 @@ public class Site {
 				return false;
 		} else if (!stationMeteo.equals(other.stationMeteo))
 			return false;
-		if (type != other.type)
+		if (typeSite != other.typeSite)
 			return false;
 		return true;
 	}

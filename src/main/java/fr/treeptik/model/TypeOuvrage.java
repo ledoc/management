@@ -1,5 +1,21 @@
 package fr.treeptik.model;
 
 public enum TypeOuvrage {
-	NAPPE_SOUTERRAINE, EAU_DE_SURFACE;
+	NAPPE_SOUTERRAINE("Nappe souterraine"), EAU_DE_SURFACE("eau de surface");
+	
+	private String description;
+
+	private TypeOuvrage(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
 }
