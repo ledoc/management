@@ -100,6 +100,11 @@ a:hover {
 .main-navigation > ul > li .sub-menu {
   background-color: #525365;
 }
+
+aside h3 {
+    color: #FFFFFE;
+}
+
 @media screen and (min-width: 768px) {
   .small-menu .main-navigation > ul > li.open {
     background-color: #4a4b5b;

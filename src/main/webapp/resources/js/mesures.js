@@ -5,27 +5,22 @@ var mesures = function () {
             var reversed = true,
                 $chart = $('#charts'),
                 $reverseBtn = $('#js-reverseChart'),
+                chartHeight = $('.tools-inner').innerHeight() / 1.5,
                 chart;
 
-            function updateSerie(index, data){
-                var serieData = [];
-                $.each(data, function (i, line) {
-                    var item = {};
-                    item['x'] = Date.parse(line.date);
-                    item['y'] = parseFloat(line.valeur);
-                    serieData.push(item);
-                });
-                chart.series[index].update({
-                    data: serieData
-                })
-            }
+
+            // chart constructor
 
             $chart.highcharts({
                 chart: {
-                    zoomType: 'xy'
+                    zoomType: 'xy',
+                    height: chartHeight
                 },
                 title: {
                     text: ''
+                },
+                rangeSelector: {
+                    selected: 1
                 },
                 subtitle: {
                     text: ''
@@ -51,18 +46,7 @@ var mesures = function () {
                         }
                     },
                     min: 0,
-                    plotLines: [{
-                        value: 7.77,
-                        width: 2,
-                        color: '#FF604F',
-                        dashStyle: 'dash',
-                        label: {
-                            text: 'Alerte C1',
-                            align: 'right',
-                            y: 12,
-                            x: 0
-                        }
-                    }]
+                    plotLines: []
                 },
                     { // Secondary yAxis
                         labels: {
@@ -85,12 +69,15 @@ var mesures = function () {
                     shared: true
                 },
                 legend: {
-                    layout: 'vertical',
-                    align: 'left',
-                    x: 120,
+                    enabled: true,
                     verticalAlign: 'top',
-                    y: 80,
-                    floating: true,
+                    title: {
+                        text: 'Cliquez sur la légende pour afficher / cacher une courbe',
+                        style: {
+                            fontWeight: 'normal',
+                            color: '#b3b3b3'
+                        }
+                    },
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
                 series: [{
@@ -102,7 +89,6 @@ var mesures = function () {
                     tooltip: {
                         valueSuffix: ' mm'
                     }
-
                 }, {
                     name: 'Hauteur d\'eau',
                     type: 'line',
@@ -115,9 +101,24 @@ var mesures = function () {
                 }]
             });
 
-            // get data
+            // render chart
 
             chart = $chart.highcharts();
+
+            // get data
+
+            function updateSerie(index, data){
+                var serieData = [];
+                $.each(data, function (i, line) {
+                    var item = {};
+                    item.x = moment(line.date).unix();
+                    item.y = parseFloat(line.valeur);
+                    serieData.push(item);
+                });
+                chart.series[index].update({
+                    data: serieData
+                })
+            }
 
             $.getJSON('./js/data/hauteur_eau.json', function (data) {
                 updateSerie(1, data);
@@ -125,6 +126,21 @@ var mesures = function () {
 
             $.getJSON('./js/data/pluviometrie.json', function (data) {
                 updateSerie(0, data);
+            });
+
+            // todo manage alerts
+
+            function showAlert(){
+                // add plotline
+            }
+
+            function removeAlert(plotLineId){
+                return chart.yAxis[0].removePlotLine(plotLineId);
+            }
+
+            $('#js-show-alerts').chosen().change(function(e, params){
+                console.log($(this).textContent);
+                showAlert($(this).text(), params.selected)
             });
 
             // reverse rainfall chart
@@ -139,6 +155,22 @@ var mesures = function () {
                     reversed: true
                 });
                 reversed = true;
+            });
+
+            // change waterlevel chart display
+
+            $('#js-change-water-display').chosen().change(function(e){
+                chart.series[1].update({
+                    type: $(this).val()
+                })
+            });
+
+            // change rainfall chart display
+
+            $('#js-change-rainfall-display').chosen().change(function(e){
+                chart.series[0].update({
+                    type: $(this).val()
+                })
             });
         }
     };

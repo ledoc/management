@@ -288,9 +288,6 @@ var sublime = function () {
         });
     }
 
-    function initPlacehoderFallback() {
-        $('input, textarea').placeholder();
-    }
 
     function initHeaderSearch() {
         $(document).on("click", ".toggle-search", function () {
@@ -469,6 +466,18 @@ var sublime = function () {
         }
     }
 
+    function initResizeBox(){
+        if(!$.browser.mobile){
+            var $sidebar = $('.tools-inner');
+            var $content = $('.content-inner');
+            var $footer = $('footer');
+            var $wrapper = $('.main-content');
+
+            $content.height($wrapper.innerHeight() - $footer.innerHeight());
+            $sidebar.height($content.innerHeight());
+        }
+    }
+
     return {
         checkBreakout: checkBreakout,
         init: function () {
@@ -500,10 +509,10 @@ var sublime = function () {
             initFuelUX();
             initChosen();
             initBoxCollapse();
-            initPlacehoderFallback();
             initSlider();
             initSortableLists();
             initIcheck();
+            initResizeBox();
         }
     };
 }();

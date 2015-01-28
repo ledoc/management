@@ -2,11 +2,11 @@ var bootstrapDataTables = function () {
     return {
         init: function () {
             $.extend(true, $.fn.dataTable.defaults, {
-                "sDom": "<'datatable-top'<'pull-left'l><'pull-right'f>r>t<'datatable-bottom'<'pull-left'i><'pull-right'p>>",
+                "sDom": "<'datatable-top'<'pull-left'l><'pull-left pl15'f>r>t<'datatable-bottom'<'pull-left'i><'pull-right'p>>",
                 "sPaginationType": "bootstrap",
                 "oLanguage": {
                     "sLengthMenu": "_MENU_",
-                    "sSearch": '<i class="ti-search"></i>'
+                    "sSearch": '<i class="ti-search hidden-xs"></i>'
                 },
                 "language": {
                     "lengthMenu": "_MENU_ résultats par page",
