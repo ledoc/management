@@ -8,6 +8,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuSiteActive" />
+			<jsp:param value="Solices - Détail Site" name="titreOnglet" />
 </jsp:include>
 
 <!-- content wrapper -->
@@ -16,12 +17,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<!-- inner content wrapper -->
 	<div class="wrapper">
 		<section class="panel"> <header class="panel-heading no-b">
-		<h2 class="text-primary">Formulaire de création d'un Client</h2>
-		<p class="text-muted">Le formulaire permet de créer un Client.</p>
+		<h2 class="text-primary">Création d'un Site</h2>
+		<p class="text-muted">Le formulaire permet de créer un Site.</p>
 
 		</header> <!--En mode utilisateur mettre les champs en readonly--> <c:url
-			var="createSite" value="/site/create" /> <form:form
-			method="POST" action="${createSite}" modelAttribute="site">
+			var="createSite" value="/site/create" /> <form:form id="form"
+			method="POST" action="${createSite}" modelAttribute="site" role="form" class="parsley-form"
+				data-validate="parsley" data-show-errors="true">
 
 			<form:hidden path="id" />
 
@@ -31,32 +33,60 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<div class="form-group">
 						<label for="nom">Nom</label>
 						<form:input type="text" class="form-control" id="nom" path="nom"
-							placeholder="" />
+							placeholder="" data-parsley-required="true"
+							data-parsley-trigger="change"
+							data-parsley-required-message="Champ requis"
+							data-parsley-mincheck="2"
+							data-parsley-mincheck-message="2 caractères minimum"  />
 					</div>
+					
 					<div class="form-group">
-						<label for="type">Type</label>
-						<form:input type="text" class="form-control" id="type"
-							path="type" placeholder="" />
+						<label for="typesSiteCombo" >Choisir un type de site</label>
+						<form:select 
+							id="typesSiteCombo" name="typesSiteCombo"
+							path="typeSite" items="${typesSiteCombo}"
+							data-placeholder="Sélectionnez
+							un type"
+							class="form-control chosen" data-parsley-required="true">
+						</form:select>
 					</div>
 					<div class="form-group">
 						<label for="departement">Département</label>
-						<form:input type="text" class="form-control" id="departement"
-							path="departement" placeholder="" />
+						<form:input class="form-control" id="departement"
+							path="departement" placeholder=""  data-parsley-required="true"
+							data-parsley-type="digits"
+							data-parsley-type-message="numéro du département"
+							data-parsley-length="[2, 3]"
+							data-parsley-trigger="change"
+							data-parsley-required-message="Champ requis"
+							data-parsley-length-message="2 ou 3 chiffres" />
 					</div>
 					<div class="form-group">
 						<label for="coordonneesGeographique">Coordonnées géographiques</label>
 						<form:input type="text" class="form-control" id="coordonneesGeographique"
-							path="coordonneesGeographique" placeholder="" />
+							path="coordonneesGeographique" placeholder=""  data-parsley-required="true"
+							data-parsley-trigger="change"
+							data-parsley-required-message="Champ requis"
+							data-parsley-mincheck="2"
+							data-parsley-mincheck-message="2 caractères minimum"  />
 					</div>
 					<div class="form-group">
 						<label for="stationMeteo">Station météo</label>
 						<form:input type="text" class="form-control" id="stationMeteo"
-							path="stationMeteo" placeholder="" />
+							path="stationMeteo" placeholder=""  data-parsley-required="true"
+							data-parsley-trigger="change"
+							data-parsley-required-message="Champ requis"
+							data-parsley-mincheck="2"
+							data-parsley-mincheck-message="2 caractères minimum" />
 					</div>
 					<div class="form-group">
 						<label for="code">Code</label>
 						<form:input type="text" class="form-control" id="code"
-							path="code" placeholder="" />
+							path="code" placeholder=""  data-parsley-required="true"
+							data-parsley-trigger="change"
+							data-parsley-required-message="Champ requis"
+							data-parsley-mincheck="2"
+							data-parsley-mincheck-message="2 caractères minimum" />
 					</div>
 
 	
@@ -75,7 +105,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					</div>
 
 					<div class="pull-right">
-						<a href="liste.html" class="btn btn-default btn-outline">Retour</a>
+						<a href="<c:url  value="/site/list" />" class="btn btn-default btn-outline">Retour</a>
 						<button type="submit" class="btn btn-outline btn-primary">Créer</button>
 					</div>
 				</div>

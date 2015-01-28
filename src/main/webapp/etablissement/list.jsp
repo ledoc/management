@@ -8,6 +8,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuUtilisateurActive" />
+		<jsp:param value="Solices - Liste Etablissement" name="titreOnglet" />
 </jsp:include>
 
 <!-- content wrapper -->
@@ -22,8 +23,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			grande quantité d'informations de façon lisible et structurée</p>
 
 		<div class="pull-right mb15">
-			<a href="formulaire.html" class="btn btn-outline btn-primary btn-m">Créer
-				un utilisateur</a>
+			<a href="<c:url  value="/etablissement/create" />"
+				class="btn btn-outline btn-primary btn-m">Créer un établissement</a>
 		</div>
 		</header>
 		<div class="panel-body">
@@ -57,9 +58,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<td><c:out value="${etablissement.telephone}" /></td>
 							<td><c:out value="${etablissement.mail}" /></td>
 							<td><c:out value="${etablissement.siteWeb}" /></td>
-
-							<td><a href="${urlEtablissementDelete}"
-								class="btn btn-outline btn-danger btn-xs"> <i
+							<td><a data-toggle="modal" data-target="#confirmModal"
+								class="btn btn-outline btn-danger btn-xs js-confirm-btn"> <i
 									class="fa fa-remove"></i>
 							</a></td>
 						</tr>
@@ -72,8 +72,34 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	</div>
 	<!-- /inner content wrapper -->
 
+	<!-- Fenetre modale -->
+	<div id="confirmModal" class="modal fade bs-modal-sm" tabindex="-1"
+		role="dialog" aria-hidden="true" data-backdrop="false"
+		data-show="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+					<h4 class="modal-title">Confirmation de suppression</h4>
+				</div>
+				<div class="modal-body">
+					<p>Supprimer cette ligne ?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+					<a href="${urlEtablissementDelete}" class="btn btn-success">Confirmer</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </div>
 <!-- /content wrapper -->
 <jsp:include page="/template/footer.jsp" />
+
+<script type="text/javascript">
+	$('#confirmModal').modal();
+</script>
 
 
