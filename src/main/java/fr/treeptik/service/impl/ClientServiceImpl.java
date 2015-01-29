@@ -31,8 +31,9 @@ public class ClientServiceImpl implements ClientService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Client create(Client client) throws ServiceException {
 		logger.info("--CREATE client --");
-		
+
 		client.setRole(Role.CLIENT);
+		client = this.setIdentifiantWithCheck(client);
 
 		logger.debug("client : " + client);
 		return clientDAO.save(client);
@@ -53,6 +54,7 @@ public class ClientServiceImpl implements ClientService {
 		logger.debug("client : " + client);
 		clientDAO.delete(client);
 	}
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
@@ -60,23 +62,46 @@ public class ClientServiceImpl implements ClientService {
 		logger.debug("clientId : " + id);
 		clientDAO.delete(id);
 	}
-	
 
 	@Override
 	public List<Client> findAll() throws ServiceException {
 		logger.info("--FINDALL client --");
 		return clientDAO.findAll();
 	}
-	
+
 	/**
 	 * Méthode spécifique pour récupérer les mesures associées à l'ouvrage dû au
 	 * FetchType.Lazy
 	 */
 	@Override
-	public Client findByIdWithJoinFetchEtablissements(Integer id) throws ServiceException {
+	public Client findByIdWithJoinFetchEtablissements(Integer id)
+			throws ServiceException {
 		logger.info("--findByIdWithJoinFetchEtablissements client --");
 		logger.info("id : " + id);
 		Client client = clientDAO.findByIdWithJoinFetchEtablissements(id);
+		return client;
+	}
+
+	@Override
+	public Client setIdentifiantWithCheck(Client client)
+			throws ServiceException {
+		logger.info("--setIdentifiantWithCheck ClientServiceImpl --");
+
+		int i = 1;
+		List<Client> allClients = this.findAll();
+		client.setIdentifiant(client.getNom() + i);
+		for (Client client2 : allClients) {
+			if (client.getNom().equalsIgnoreCase(client2.getNom())) {
+				client.setIdentifiant(client.getNom() + i);
+				if (client.getIdentifiant().equalsIgnoreCase(
+						client2.getIdentifiant())) {
+					i++;
+					client.setIdentifiant(client.getNom() + i);
+					logger.info(client.getIdentifiant());
+				}
+			}
+		}
+		logger.debug("Client : " + client);
 		return client;
 	}
 

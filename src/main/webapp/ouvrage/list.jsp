@@ -96,6 +96,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- end page content -->
 <jsp:include page="/template/footer.jsp" />
 
+<!-- script pour passer l'URL de suppression d'une entité à la modal -->
 <script type="text/javascript">
 	$('#confirmModal').modal();
 	$('#confirmModal').on('show.bs.modal', function (e) {

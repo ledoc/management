@@ -30,15 +30,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 						<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 							<div class="form-group">
-								<label for="identifiant">Identifiant</label>
-								<form:input type="text" class="form-control" id="identifiant"
-									path="identifiant" placeholder="" data-parsley-required="true"
-									data-parsley-trigger="change"
-									data-parsley-required-message="Champ requis"
-									data-parsley-mincheck="2"
-									data-parsley-mincheck-message="2 caractères minimum" />
-							</div>
-							<div class="form-group">
 								<label for="nom">Nom</label>
 								<form:input type="text" class="form-control" id="nom" path="nom"
 									placeholder="" data-parsley-required="true"

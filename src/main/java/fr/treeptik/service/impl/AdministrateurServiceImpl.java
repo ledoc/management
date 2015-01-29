@@ -29,19 +29,21 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Administrateur create(Administrateur administrateur) throws ServiceException {
-		logger.info("--CREATE administrateur --");
-		
+	public Administrateur create(Administrateur administrateur)
+			throws ServiceException {
+		logger.info("--CREATE AdministrateurServiceImpl --");
+		administrateur = this.setIdentifiantWithCheck(administrateur);
 		administrateur.setRole(Role.ADMIN);
-		
+
 		logger.debug("administrateur : " + administrateur);
 		return administrateurDAO.save(administrateur);
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Administrateur update(Administrateur administrateur) throws ServiceException {
-		logger.info("--UPDATE administrateur --");
+	public Administrateur update(Administrateur administrateur)
+			throws ServiceException {
+		logger.info("--UPDATE AdministrateurServiceImpl --");
 		logger.debug("administrateur : " + administrateur);
 		return administrateurDAO.saveAndFlush(administrateur);
 	}
@@ -49,23 +51,46 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Administrateur administrateur) throws ServiceException {
-		logger.info("--DELETE administrateur --");
+		logger.info("--DELETE AdministrateurServiceImpl --");
 		logger.debug("administrateur : " + administrateur);
 		administrateurDAO.delete(administrateur);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE administrateur --");
+		logger.info("--DELETE AdministrateurServiceImpl --");
 		logger.debug("administrateurId : " + id);
 		administrateurDAO.delete(id);
 	}
 
 	@Override
 	public List<Administrateur> findAll() throws ServiceException {
-		logger.info("--FINDALL administrateur --");
+		logger.info("--FINDALL AdministrateurServiceImpl --");
 		return administrateurDAO.findAll();
 	}
 
+	@Override
+	public Administrateur setIdentifiantWithCheck(Administrateur administrateur)
+			throws ServiceException {
+		logger.info("--setIdentifiantWithCheck AdministrateurServiceImpl --");
+
+		int i = 1;
+		List<Administrateur> allAdministrateurs = this.findAll();
+		administrateur.setIdentifiant(administrateur.getNom() + i);
+		for (Administrateur administrateur2 : allAdministrateurs) {
+			if (administrateur.getNom().equalsIgnoreCase(
+					administrateur2.getNom())) {
+
+				if (administrateur.getIdentifiant().equalsIgnoreCase(
+						administrateur2.getIdentifiant())) {
+					i++;
+					administrateur.setIdentifiant(administrateur.getNom() + i);
+					logger.info(administrateur.getIdentifiant());
+				}
+			}
+		}
+		logger.debug("administrateur : " + administrateur);
+		return administrateur;
+	}
 }

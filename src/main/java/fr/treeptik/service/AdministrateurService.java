@@ -21,4 +21,7 @@ public interface AdministrateurService {
 
 		void remove(Integer id) throws ServiceException;
 
+		Administrateur setIdentifiantWithCheck(Administrateur administrateur)
+				throws ServiceException;
+
 }
