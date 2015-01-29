@@ -57,7 +57,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<td><c:out value="${administrateur.login}" /></td>
 								<td><c:out value="${administrateur.telFixe}" /></td>
 								<td><c:out value="${administrateur.mail1}" /></td>
-								<td><a data-toggle="modal" data-target="#confirmModal"
+								<td><a data-url="${urlAdminstrateurDelete}" data-toggle="modal" data-target="#confirmModal"
 									class="btn btn-outline btn-danger btn-xs js-confirm-btn"> <i
 										class="fa fa-remove"></i>
 								</a></td>
@@ -74,7 +74,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<div id="confirmModal" class="modal fade bs-modal-sm" tabindex="-1"
 		role="dialog" aria-hidden="true" data-backdrop="false"
 		data-show="false">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -86,7 +86,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-					<a href="${urlAdminstrateurDelete}" class="btn btn-success">Confirmer</a>
+					<a id="js-confirm-button" class="btn btn-success" >Confirmer</a>
 				</div>
 			</div>
 		</div>
@@ -100,4 +100,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <script type="text/javascript">
 	$('#confirmModal').modal();
+	$('#confirmModal').on('show.bs.modal', function (e) {
+		  var url = $(e.relatedTarget).data('url');
+		  var $confirmButton = $('#js-confirm-button');
+		  $confirmButton.attr('href', url);
+		});
 </script>

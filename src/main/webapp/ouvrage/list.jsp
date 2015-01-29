@@ -6,8 +6,6 @@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<c:url var="urlBase" value="/" />
-
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuOuvrageActive" />
 	<jsp:param value="Solices - Liste Ouvrage" name="titreOnglet" />
@@ -44,20 +42,20 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${etablissements}" var="etablissement">
-							<c:url var="urlEtablissementDelete"
-								value="/etablissement/delete/${etablissement.id}" />
-							<c:url var="urlEtablissementUpdate"
-								value="/etablissement/update/${etablissement.id}" />
+						<c:forEach items="${ouvrages}" var="etablissement">
+							<c:url var="urlOuvrageDelete"
+								value="/ouvrage/delete/${ouvrage.id}" />
+							<c:url var="urlOuvrageUpdate"
+								value="/ouvrage/update/${ouvrage.id}" />
 							<tr>
 								<td class="text-primary"><a
-									href="${urlEtablissementUpdate}">${etablissement.codeEtablissement}</a></td>
-								<td><c:out value="${etablissement.nom}" /></td>
+									href="${urlEtablissementUpdate}">${ouvrage.codeEtablissement}</a></td>
+								<td><c:out value="${ouvrage.nom}" /></td>
 								<td><c:out value="${etablissement.siret}" /></td>
 								<td><c:out value="${etablissement.telephone}" /></td>
 								<td><c:out value="${etablissement.mail}" /></td>
 								<td><c:out value="${etablissement.siteWeb}" /></td>
-								<td><a data-toggle="modal" data-target="#confirmModal"
+								<td><a data-url="${urlOuvrageDelete}" data-toggle="modal" data-target="#confirmModal"
 									class="btn btn-outline btn-danger btn-xs js-confirm-btn"> <i
 										class="fa fa-remove"></i>
 								</a></td>
@@ -74,7 +72,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<div id="confirmModal" class="modal fade bs-modal-sm" tabindex="-1"
 		role="dialog" aria-hidden="true" data-backdrop="false"
 		data-show="false">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
@@ -86,7 +84,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-					<a href="${urlClientDelete}" class="btn btn-success">Confirmer</a>
+					<a  id="js-confirm-button"class="btn btn-success">Confirmer</a>
 				</div>
 			</div>
 		</div>
@@ -100,4 +98,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <script type="text/javascript">
 	$('#confirmModal').modal();
+	$('#confirmModal').on('show.bs.modal', function (e) {
+		  var url = $(e.relatedTarget).data('url');
+		  var $confirmButton = $('#js-confirm-button');
+		  $confirmButton.attr('href', url);
+		});
 </script>
