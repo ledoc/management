@@ -1,6 +1,8 @@
 package fr.treeptik.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +24,8 @@ public class Administrateur {
 	private String mail1;
 	private String mail2;
 	private String motDePasse;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 	
 	public Integer getId() {
 		return id;
@@ -86,6 +90,12 @@ public class Administrateur {
 		this.motDePasse = motDePasse;
 	}
 	
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
+	}
 	@Override
 	public String toString() {
 		return "Administrateur [id=" + id + ", identifiant=" + identifiant + ", nom=" + nom + ", prenom=" + prenom

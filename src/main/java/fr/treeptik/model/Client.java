@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,6 +29,10 @@ public class Client {
 	private String mail1;
 	private String mail2;
 	private String motDePasse;
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	
 	@OneToMany
 	private List<Etablissement> etablissements;
 
@@ -116,6 +122,14 @@ public class Client {
 
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public List<Etablissement> getEtablissements() {
