@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 import org.apache.log4j.Logger;
-import org.lightadmin.api.config.LightAdmin;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,10 +26,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 	@Override
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
-
-		LightAdmin.configure(servletContext).baseUrl("/admin")
-				.backToSiteUrl("http://lightadmin.org")
-				.basePackage("fr.treeptik.lightadmin");
 
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(ApplicationConfiguration.class);
@@ -90,7 +85,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		FilterRegistration.Dynamic springSecurityFilter = servletContext
 				.addFilter("springSecurityFilterChain",
 						new DelegatingFilterProxy());
-		springSecurityFilter.addMappingForUrlPatterns(disps, false, "/client/*");
+		springSecurityFilter.addMappingForUrlPatterns(disps, false, "/*");
 
 		springSecurityFilter.setAsyncSupported(true);
 	}
