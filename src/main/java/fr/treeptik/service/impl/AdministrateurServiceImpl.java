@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.AdministrateurDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Administrateur;
+import fr.treeptik.model.Role;
 import fr.treeptik.service.AdministrateurService;
 
 @Service
@@ -30,6 +31,9 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Administrateur create(Administrateur administrateur) throws ServiceException {
 		logger.info("--CREATE administrateur --");
+		
+		administrateur.setRole(Role.ADMIN);
+		
 		logger.debug("administrateur : " + administrateur);
 		return administrateurDAO.save(administrateur);
 	}

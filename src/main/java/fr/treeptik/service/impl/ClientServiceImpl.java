@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.ClientDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Client;
-import fr.treeptik.model.Ouvrage;
+import fr.treeptik.model.Role;
 import fr.treeptik.service.ClientService;
 
 @Service
@@ -31,6 +31,9 @@ public class ClientServiceImpl implements ClientService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Client create(Client client) throws ServiceException {
 		logger.info("--CREATE client --");
+		
+		client.setRole(Role.CLIENT);
+
 		logger.debug("client : " + client);
 		return clientDAO.save(client);
 	}
