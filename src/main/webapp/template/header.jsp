@@ -5,6 +5,7 @@
 <%@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 
 <head>
@@ -52,8 +53,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!-- load modernizer -->
 <script src="${urlResources}/plugins/modernizr.js"></script>
-</head>
 
+<sec:authentication var="principal" property="principal" />
+</head>
 
 <body class="bg-default">
 	<div class="app bg-default horizontal-layout">
@@ -65,8 +67,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<!-- /toggle offscreen menu -->
 
 				<!-- logo -->
-				<a href="carto.html" class="navbar-brand"> <img
-					src="${urlResources}/img/logo_solices.png" alt="">
+				<a href="<c:url  value="/etablissement/list" />" class="navbar-brand">
+					<img src="${urlResources}/img/logo_solices.png" alt="">
 				</a>
 				<!-- /logo -->
 			</div>
@@ -75,14 +77,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 			<div class="collapse navbar-collapse pull-left" id="menu-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="<c:url  value="/client/list" />"
+					<li><a href="<c:url  value="/etablissement/list" />"
 						class="${param.menuAccueilActive}">Accueil</a></li>
-					<li><a href="<c:url  value="/client/list" />"
-						class="${param.menuUtilisateurActive}">Utilisateurs</a></li>
+					
+					<sec:authorize ifAllGranted="ADMIN">	
+						<li><a href="<c:url  value="/administrateur/list" />"
+							class="${param.menuAdministrateurActive}">Administrateurs</a></li>
+						<li><a href="<c:url  value="/client/list" />"
+							class="${param.menuClientActive}">Clients</a></li>
+					</sec:authorize>
+					
+					<li><a href="<c:url  value="/etablissement/list" />"
+						class="${param.menuEtablissementActive}">Etablissements</a></li>
 					<li><a href="<c:url  value="/site/list" />"
 						class="${param.menuSiteActive}">Sites</a></li>
-					<li><a href="<c:url  value="/ouvrage/list" />"
-						class="${param.menuOuvrageActive}">Ouvrages</a></li>
+					<li><a href="#" class="${param.menuOuvrageActive}">Ouvrages</a></li>
 					<li><a href="#" class="${param.menuMesureActive}">Mesures</a></li>
 					<li><a href="#" class="${param.menuDocumentActive}">Documents</a></li>
 					<li><a href="#" class="${param.menuMessagerieActive}">Messagerie</a></li>
@@ -91,7 +100,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<ul class="nav navbar-nav navbar-right">
 
 				<li class="off-right"><a href="#" data-toggle="dropdown"> <span
-						class="ml10">Philippe Leon</span> <i
+						class="ml10">${principal.username}</span> <i
 						class="ti-angle-down ti-caret"></i>
 				</a>
 					<ul class="dropdown-menu animated fadeInRight">
@@ -99,7 +108,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<li><a href="#">
 								<div class="badge bg-danger pull-right">3</div> <span>Messagerie</span>
 						</a></li>
-						<li><a href="#">Déconnexion</a></li>
+						<li><a href="<c:url value="/logout" />">Déconnexion</a></li>
 					</ul></li>
 			</ul>
 		</header>
@@ -107,4 +116,4 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 		<section class="layout">
 			<!-- /sidebar -->
-			<section class="main-content bg-default">
+			<section class="main-content bg-white rounded shadow">
