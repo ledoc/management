@@ -61,8 +61,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="departement">Département</label>
 									<form:input class="form-control" id="departement"
-										path="departement" placeholder="" data-parsley-length="[2, 3]"
-										data-parsley-trigger="change"
+										path="departement" placeholder=""
+										data-parsley-trigger="change" data-parsley-length="[2, 3]"
 										data-parsley-length-message="2 ou 3 chiffres" />
 								</div>
 								<div class="form-group">
@@ -77,7 +77,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 								<div class="form-group">
-									<label for="stationMeteo">Station météo</label>
+									<label for="stationMeteo">Codes des Stations météo</label>
 									<form:input type="text" class="form-control" id="stationMeteo"
 										path="stationMeteo" placeholder=""
 										data-parsley-required="true" data-parsley-trigger="change"
