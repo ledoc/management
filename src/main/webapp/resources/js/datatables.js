@@ -3,14 +3,10 @@ var demoDataTables = function () {
         init: function () {
             $('.list').dataTable({
                 "sPaginationType": "bootstrap",
-                //activer le tri sur les colonnes
-                "aoColumns": [
-                    null,
-                    null,
-                    {"bSortable": false},
-                    {"bSortable": false},
-                    {"bSortable": false}
-                ]
+                	'aoColumnDefs': [{
+                        'bSortable': false,
+                        'aTargets': ['nosort']
+                    }]
             });
             //select box pour le nombre de résultats à afficher
             $('.chosen').chosen({

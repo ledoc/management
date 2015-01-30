@@ -108,7 +108,6 @@ var mesures = function () {
             chart = $chart.highcharts();
 
             // get data
-
             function updateSerie(index, data){
                 var serieData = [];
                 $.each(data, function (i, line) {
@@ -122,11 +121,11 @@ var mesures = function () {
                 })
             }
 
-            $.getJSON('./js/data/hauteur_eau.json', function (data) {
+            $.getJSON('../resources/js/data/hauteur_eau.json', function (data) {
                 updateSerie(1, data);
             });
 
-            $.getJSON('./js/data/pluviometrie.json', function (data) {
+            $.getJSON('../resources/js/data/pluviometrie.json', function (data) {
                 updateSerie(0, data);
             });
 
