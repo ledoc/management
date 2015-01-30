@@ -22,14 +22,6 @@
 		<!-- & remplacée par &amp; (caractère spécial) -->
 		<deveryware.password>sm_vmtwny[p55x4=9[&amp;53&amp;h8</deveryware.password>
 
-
-		<!-- Log4J configuration -->
-
-		<log.level.solices>info</log.level.solices>
-		<log.level.other>info</log.level.other>
-		<log.level.hibernate>error</log.level.hibernate>
-
-
 	</properties>
 
 	<dependencies>
@@ -129,14 +121,22 @@
 				<database.url>jdbc:mysql://localhost:3306/solices?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false</database.url>
 				<database.user>root</database.user>
 				<database.password>root</database.password>
+				<!-- Log4J configuration -->
+				<log.level.solices>debug</log.level.solices>
+				<log.level.other>info</log.level.other>
+				<log.level.hibernate>error</log.level.hibernate>
 			</properties>
 		</profile>
 		<profile>
-			<id>prod</id>
+			<id>CloudUnit</id>
 			<properties>
-				<database.url>jdbc:mysql://localhost:3306/solices?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false</database.url>
-				<database.user>root</database.user>
-				<database.password>root</database.password>
+				<database.url>jdbc:mysql://solices-solices-mysql-5-5-1.mysql-5-5.cloud.unit/solices</database.url>
+				<database.user>adminfq1cs5kr</database.user>
+				<database.password>h56fab48</database.password>
+				<!-- Log4J configuration -->
+				<log.level.solices>info</log.level.solices>
+				<log.level.other>info</log.level.other>
+				<log.level.hibernate>error</log.level.hibernate>
 			</properties>
 		</profile>
 	</profiles>
@@ -163,6 +163,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
 			</plugin>
 
 			<plugin>
