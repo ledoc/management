@@ -7,14 +7,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuUtilisateurActive" />
+	<jsp:param value="active" name="menuAdministrateurActive" />
 	<jsp:param value="Solices - Liste Administrateur" name="titreOnglet" />
 </jsp:include>
 
 <!-- start page content -->
 <!-- content wrapper -->
-<div class="content-wrap">
-	<div class="col-lg-12 bg-white shadow clearfix content-inner p15">
+<div class="content-wrap clearfix pt15">
+	<div class="col-lg-12 col-md-12 col-xs-12">
 		<section class="panel">
 			<header class="panel-heading no-b">
 				<h1 class="h3 text-primary mt0">Liste des administrateurs</h1>

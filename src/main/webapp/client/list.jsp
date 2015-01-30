@@ -7,7 +7,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuUtilisateurActive" />
+	<jsp:param value="active" name="menuClientActive" />
 	<jsp:param value="Solices - Liste Client" name="titreOnglet" />
 </jsp:include>
 
@@ -15,7 +15,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- start page content -->
 <!-- content wrapper -->
 <div class="content-wrap">
-	<div class="col-lg-12 bg-white shadow clearfix content-inner p15">
+	<div class="content-wrap clearfix pt15">
 		<section class="panel">
 			<header class="panel-heading no-b">
 				<h1 class="h3 text-primary mt0">Liste des clients</h1>
@@ -29,37 +29,43 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</div>
 			</header>
 			<div class="panel-body">
-				<table class="table table-striped list no-m">
-					<thead>
-						<tr>
-							<th>Identifiant</th>
-							<th>Nom</th>
-							<th>Prénom</th>
-							<th>Login</th>
-							<th>Téléphone Fixe</th>
-							<th>Email</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach items="${clients}" var="client">
-							<c:url var="urlClientDelete" value="/client/delete/${client.id}" />
-							<c:url var="urlClientUpdate" value="/client/update/${client.id}" />
+			<c:if test="${empty clients }">
+                       <H2>Ooops !&nbsp;Liste vide.</H2>
+				</c:if>
+				<c:if test="${not empty clients }">
+			
+					<table class="table table-striped list no-m">
+						<thead>
 							<tr>
-								<td class="text-primary"><a href="${urlClientUpdate}">${client.identifiant}</a></td>
-								<td><c:out value="${client.nom}" /></td>
-								<td><c:out value="${client.prenom}" /></td>
-								<td><c:out value="${client.login}" /></td>
-								<td><c:out value="${client.telFixe}" /></td>
-								<td><c:out value="${client.mail1}" /></td>
-								<td><a data-url="${urlClientDelete}" data-toggle="modal" data-target="#confirmModal"
-									class="btn btn-outline btn-danger btn-xs js-confirm-btn"> <i
-										class="fa fa-remove"></i>
-								</a></td>
+								<th>Identifiant</th>
+								<th>Nom</th>
+								<th>Prénom</th>
+								<th>Login</th>
+								<th>Téléphone Fixe</th>
+								<th>Email</th>
+								<th>Actions</th>
 							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<c:forEach items="${clients}" var="client">
+								<c:url var="urlClientDelete" value="/client/delete/${client.id}" />
+								<c:url var="urlClientUpdate" value="/client/update/${client.id}" />
+								<tr>
+									<td class="text-primary"><a href="${urlClientUpdate}">${client.identifiant}</a></td>
+									<td><c:out value="${client.nom}" /></td>
+									<td><c:out value="${client.prenom}" /></td>
+									<td><c:out value="${client.login}" /></td>
+									<td><c:out value="${client.telFixe}" /></td>
+									<td><c:out value="${client.mail1}" /></td>
+									<td><a data-url="${urlClientDelete}" data-toggle="modal" data-target="#confirmModal"
+										class="btn btn-outline btn-danger btn-xs js-confirm-btn"> <i
+											class="fa fa-remove"></i>
+									</a></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</c:if>
 			</div>
 		</section>
 	</div>
