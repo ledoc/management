@@ -12,9 +12,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 </jsp:include>
 
 <!-- content wrapper -->
-<div class="content-wrap bg-default clearfix row">
+<div class="content-wrap clearfix pt15">
 	<div class="col-lg-12 col-md-12 col-xs-12">
-		<div class="bg-white p15 shadow content-inner">
 			<div class="panel">
 				<header class="panel-heading no-b col-lg-offset-2">
 					<h1 class="h3 text-primary mt0">Création d'un Ouvrage</h1>
@@ -142,7 +141,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			</div>
 		</div>
 	</div>
-</div>
 <!-- /content wrapper -->
 <a class="exit-offscreen"></a>
 <jsp:include page="/template/footer.jsp" />

@@ -7,16 +7,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuUtilisateurActive" />
+	<jsp:param value="active" name="menuEtablissementActive" />
 	<jsp:param value="Solices - Détails Etablissement" name="titreOnglet" />
 </jsp:include>
 
 <c:url var="urlResources" value="/resources" />
 
 <!-- content wrapper -->
-<div class="content-wrap bg-default clearfix row">
+<div class="content-wrap clearfix pt15">
 	<div class="col-lg-12 col-md-12 col-xs-12">
-		<div class="bg-white p15 shadow content-inner">
 			<div class="panel">
 				<header class="panel-heading no-b col-lg-offset-2">
 				<h1 class="h3 text-primary mt0">Création d'établissement</h1>
@@ -124,7 +123,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					</form:form>
 				</div>
 			</div>
-		</div>
 	</div>
 </div>
 <!-- /content wrapper -->
