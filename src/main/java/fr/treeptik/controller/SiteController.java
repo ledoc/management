@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -121,12 +123,20 @@ public class SiteController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list")
-	public String list(Model model) throws ControllerException {
+	public String list(Model model, HttpServletRequest request) throws ControllerException {
 		logger.info("--list SiteController--");
 
 		List<Site> sites = null;
 		try {
-			sites = siteService.findAll();
+			Boolean isAdmin = request.isUserInRole("ADMIN");
+			logger.debug("USER ROLE ADMIN : " + isAdmin);
+			if (isAdmin){
+				sites = siteService.findAll();
+			} else {
+				String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+				logger.debug("USER LOGIN : " + userLogin);
+				sites = siteService.findByClient(userLogin);
+			}
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);

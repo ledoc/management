@@ -85,6 +85,20 @@ public class EtablissementServiceImpl implements EtablissementService {
 	}
 
 	@Override
+	public List<Etablissement> findByClient(String login) throws ServiceException{
+		logger.info("--FINDALL etablissement by Client--");
+		List<Etablissement> etablissements;
+		try {
+			etablissements = etablissementDAO.findByClient(login);
+		} catch (PersistenceException e) {
+			logger.error("Error EtablissementService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return etablissements;
+	}
+	
+	
+	@Override
 	public List<Etablissement> findAll() throws ServiceException {
 		logger.info("--FINDALL etablissement --");
 		List<Etablissement> etablissements;

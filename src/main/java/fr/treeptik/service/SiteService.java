@@ -23,4 +23,8 @@ public interface SiteService {
 
 		Site findByIdWithJoinFetchOuvrages(Integer id) throws ServiceException;
 
+		Site setCodeWithCheck(Site site) throws ServiceException;
+
+		List<Site> findByClient(String userLogin);
+
 }

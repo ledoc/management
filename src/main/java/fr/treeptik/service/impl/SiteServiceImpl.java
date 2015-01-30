@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.SiteDAO;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Client;
 import fr.treeptik.model.Site;
 import fr.treeptik.service.SiteService;
 
@@ -72,7 +73,8 @@ public class SiteServiceImpl implements SiteService {
 	 */
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Site findByIdWithJoinFetchOuvrages(Integer id) throws ServiceException {
+	public Site findByIdWithJoinFetchOuvrages(Integer id)
+			throws ServiceException {
 		logger.info("--findByIdWithJoinFetchOuvrages site --");
 		logger.info("id : " + id);
 
@@ -84,6 +86,33 @@ public class SiteServiceImpl implements SiteService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return site;
+	}
+
+	@Override
+	public Site setCodeWithCheck(Site site) throws ServiceException {
+		logger.info("--setCodeWithCheck SiteServiceImpl --");
+
+		int i = 1;
+		List<Site> allSites = this.findAll();
+		site.setCode(site.getNom() + i);
+		for (Site site2 : allSites) {
+			if (site.getNom().equalsIgnoreCase(site2.getNom())) {
+				site.setCode(site.getNom() + i);
+				if (site.getCode().equalsIgnoreCase(site2.getCode())) {
+					i++;
+					site.setCode(site.getNom() + i);
+					logger.info(site.getCode());
+				}
+			}
+		}
+		logger.debug("Site : " + site);
+		return site;
+	}
+
+	@Override
+	public List<Site> findByClient(String userLogin) {
+		logger.info("--FINDALL bY CLIENT LOGIN --");
+		return siteDAO.findByClientLogin(userLogin);
 	}
 
 }

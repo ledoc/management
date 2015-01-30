@@ -27,4 +27,6 @@ public interface EtablissementService {
 
 		List<Ouvrage> findAllOuvragesOfEtablissement(Integer id) throws ServiceException;
 
+		List<Etablissement> findByClient(String login) throws ServiceException;
+
 }
