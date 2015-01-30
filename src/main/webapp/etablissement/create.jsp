@@ -54,7 +54,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="coordonneesGeographique">Coordonnées
-										géographiques</label>
+										géographiques (format Lambert93)</label>
 									<form:input type="text" class="form-control"
 										id="coordonneesGeographique" path="coordonneesGeographique"
 										placeholder="" data-parsley-required="true"
