@@ -44,7 +44,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		characterEncodingFilter.setEncoding("UTF-8");
 		characterEncodingFilter.setForceEncoding(true);
 
-		EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+		EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(
+				DispatcherType.REQUEST, DispatcherType.FORWARD);
 		FilterRegistration.Dynamic characterEncoding = servletContext
 				.addFilter("characterEncoding", characterEncodingFilter);
 		characterEncoding.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
@@ -52,7 +53,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		this.initSpring(servletContext, webApplicationContext);
 
 		this.initSpringSecurity(servletContext, disps);
-
 	}
 
 	/**
@@ -95,7 +95,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 				.addFilter("springSecurityFilterChain",
 						new DelegatingFilterProxy());
 		springSecurityFilter.addMappingForUrlPatterns(disps, false, "/*");
-
 		springSecurityFilter.setAsyncSupported(true);
 	}
 }

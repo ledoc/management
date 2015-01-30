@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.SiteDAO;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Client;
 import fr.treeptik.model.Site;
 import fr.treeptik.service.SiteService;
 

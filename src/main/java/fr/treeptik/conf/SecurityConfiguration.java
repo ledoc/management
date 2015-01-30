@@ -46,7 +46,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"Select login, motDePasse, 'true' as enabled from Client where login=? ")
 				.authoritiesByUsernameQuery(
 						"Select login, role From Client  where login=?");
-
 	}
 
 	@Override

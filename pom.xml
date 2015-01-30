@@ -11,8 +11,8 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.java>1.7</version.java>
-		<maven.compiler.plugin>3.1</maven.compiler.plugin>
 		<spring.version>4.0.0.RELEASE</spring.version>
+		<maven.compiler.plugin>3.1</maven.compiler.plugin>
 
 		<!-- DataSource configuration -->
 
@@ -131,8 +131,8 @@
 			<id>CloudUnit</id>
 			<properties>
 				<database.url>jdbc:mysql://solices-solices-mysql-5-5-1.mysql-5-5.cloud.unit/solices</database.url>
-				<database.user>adminfq1cs5kr</database.user>
-				<database.password>h56fab48</database.password>
+				<database.user>admin9p87qnpb</database.user>
+				<database.password>esoqcves</database.password>
 				<!-- Log4J configuration -->
 				<log.level.solices>info</log.level.solices>
 				<log.level.other>info</log.level.other>
