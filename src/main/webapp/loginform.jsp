@@ -51,11 +51,10 @@
 <script src="${urlResources}/plugins/modernizr.js"></script>
 </head>
 
-<body onload='document.loginForm.j_username.focus();'>
-	>
+<body  style="background-color: #B2DAF7;">
 	<div class="app">
 		<section class="layout">
-			<div class="cover" style="background-image: url(img/cover1.jpg)"></div>
+			<div class="cover" ></div>
 
 			<div class="overlay" style="background-color: #B2DAF7;"></div>
 
@@ -72,7 +71,7 @@
 								</div>
 								<div class="p15">
 
-									<form method="post" action="<c:url  value="/login" />">
+									<form method="post" action="<c:url value="/authentification" />" >
 										<c:if test="${param.error != null}">
 											<p>Invalid username and password.</p>
 										</c:if>
@@ -81,17 +80,9 @@
 										</c:if>
 
 										<input type="text" class="form-control input-lg mb25"
-											placeholder="login" name='username' autofocus> <input
+											placeholder="login" name='j_username' autofocus> <input
 											type="password" class="form-control input-lg mb25"
-											placeholder="password" name='password'>
-										<div class="show">
-											<div class="pull-right">
-												<a href="forgot.html">Mot de passe oublié</a>
-											</div>
-											<label class="checkbox"> <input type="checkbox"
-												value="remember-me">Rester connecté
-											</label>
-										</div>
+											placeholder="password" name='j_password'>
 										<input type="hidden" name="${_csrf.parameterName}"
 											value="${_csrf.token}" />
 										<button type="submit" name="submit"

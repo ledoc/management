@@ -15,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 public class ApplicationInitializer implements WebApplicationInitializer {
 
 	private Logger logger = Logger.getLogger(ApplicationInitializer.class);
-	
+
 	@Override
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
@@ -31,19 +32,27 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		webApplicationContext.register(ApplicationConfiguration.class);
 		webApplicationContext.setServletContext(servletContext);
 		webApplicationContext.refresh();
-	
+
 		servletContext.setAttribute(
 				WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
 				webApplicationContext);
 
 		EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST,
 				DispatcherType.FORWARD, DispatcherType.ASYNC);
-		
+
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+		characterEncodingFilter.setEncoding("UTF-8");
+		characterEncodingFilter.setForceEncoding(true);
+
+		EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+		FilterRegistration.Dynamic characterEncoding = servletContext
+				.addFilter("characterEncoding", characterEncodingFilter);
+		characterEncoding.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
 
 		this.initSpring(servletContext, webApplicationContext);
-		
+
 		this.initSpringSecurity(servletContext, disps);
-		
+
 	}
 
 	/**
@@ -62,7 +71,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		ServletRegistration.Dynamic dispatcherServlet = servletContext
 				.addServlet("dispatcher", new DispatcherServlet(
 						dispatcherServletConfiguration));
-		
+
 		/**
 		 * Catch tout ce qui n'a pas de suffixe (.jsp, .do , .html, .json)
 		 * autrement dit toutes les requêtes REST mais pas api-docs et
@@ -72,7 +81,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		dispatcherServlet.addMapping("/");
 		dispatcherServlet.setLoadOnStartup(1);
 		dispatcherServlet.setAsyncSupported(true);
-		
+
 		return dispatcherServlet;
 	}
 
