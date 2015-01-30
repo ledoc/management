@@ -28,6 +28,9 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+
+
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "fr.treeptik" })
