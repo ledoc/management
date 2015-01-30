@@ -6,6 +6,10 @@ var demoDataTables = function () {
                 	'aoColumnDefs': [{
                         'bSortable': false,
                         'aTargets': ['nosort']
+                    },
+                    {
+                        'bSearchable': false,
+                        'aTargets': ['nosearch']
                     }]
             });
             //select box pour le nombre de résultats à afficher
