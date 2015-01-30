@@ -56,7 +56,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/js/datatables.js"></script>
 <script src="${urlResources}/js/maps.js"></script>
 <!-- /page script -->
-
+<script src="${urlResources}/js/mesures.js"></script>
 
 
 </body>

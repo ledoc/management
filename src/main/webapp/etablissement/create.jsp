@@ -13,118 +13,122 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <c:url var="urlResources" value="/resources" />
 
-<!-- content wrapper -->
-<div class="content-wrap clearfix pt15">
-	<div class="col-lg-12 col-md-12 col-xs-12">
-			<div class="panel">
-				<header class="panel-heading no-b col-lg-offset-2">
-				<h1 class="h3 text-primary mt0">Création d'établissement</h1>
-				<p class="text-muted">Le formulaire permet de créer un d'établissement.</p>
-				</header>
-				<div class="panel-body">
-					<c:url var="createEtablissement" value="/etablissement/create" />
-					<form:form id="form" method="POST" action="${createEtablissement}"
-						modelAttribute="etablissement" role="form" class="parsley-form"
-						data-validate="parsley" data-show-errors="true">
+<section class="layout">
+	<!-- /sidebar -->
+	<section class="main-content bg-white rounded shadow">
+		<!-- content wrapper -->
+		<div class="content-wrap clearfix pt15">
+			<div class="col-lg-12 col-md-12 col-xs-12">
+				<div class="panel">
+					<header class="panel-heading no-b col-lg-offset-2">
+						<h1 class="h3 text-primary mt0">Création d'établissement</h1>
+						<p class="text-muted">Le formulaire permet de créer un
+							d'établissement.</p>
+					</header>
+					<div class="panel-body">
+						<c:url var="createEtablissement" value="/etablissement/create" />
+						<form:form id="form" method="POST" action="${createEtablissement}"
+							modelAttribute="etablissement" role="form" class="parsley-form"
+							data-validate="parsley" data-show-errors="true">
 
-						<form:hidden path="id" />
-						
-						<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
-							<div class="form-group">
-								<label for="nom">Nom</label>
-								<form:input type="text" class="form-control" id="nom" path="nom"
-									placeholder="" data-parsley-required="true"
-									data-parsley-trigger="change"
-									data-parsley-required-message="Champ requis"
-									data-parsley-mincheck="2"
-									data-parsley-mincheck-message="2 caractères minimum" />
-							</div>
-							<div class="form-group">
-								<label for="codeEtablissement">Code de l'établissement</label>
-								<form:input type="text" class="form-control"
-									id="codeEtablissement" path="codeEtablissement" placeholder=""
-									data-parsley-required="true" data-parsley-trigger="change"
-									data-parsley-required-message="Champ requis"
-									data-parsley-mincheck="2"
-									data-parsley-mincheck-message="2 caractères minimum" />
-							</div>
-							<div class="form-group">
-								<label for="coordonneesGeographique">Coordonnées
-									géographiques</label>
-								<form:input type="text" class="form-control"
-									id="coordonneesGeographique" path="coordonneesGeographique"
-									placeholder="" data-parsley-required="true"
-									data-parsley-trigger="change"
-									data-parsley-required-message="Champ requis"
-									data-parsley-mincheck="2"
-									data-parsley-mincheck-message="2 caractères minimum" />
-							</div>
-							<div class="form-group">
-								<label for="formeJuridique">Forme juridique</label>
-								<form:input type="text" class="form-control" id="formeJuridique"
-									path="formeJuridique" placeholder=""
-									data-parsley-trigger="change" data-parsley-mincheck="2"
-									data-parsley-mincheck-message="2 caractères minimum" />
-							</div>
-							<div class="form-group">
-								<label for="telephone">Téléphone</label>
-								<form:input type="tel" class="form-control" id="telephone"
-									path="telephone" placeholder="" data-parsley-required="true"
-									data-parsley-trigger="change" data-parsley-type="digits"
-									data-parsley-length="[10,11]"
-									data-parsley-required-message="Champ requis"
-									data-parsley-type-message="Ne doit comporter que des chiffres"
-									data-parsley-length-message="comporte 10 chiffres minimum" />
-							</div>
-							<div class="form-group">
-								<label for="siret">Siret</label>
-								<form:input type="text" class="form-control" id="siret"
-									path="siret" placeholder="" data-parsley-required="true"
-									data-parsley-trigger="change"
-									data-parsley-required-message="Champ requis"
-									data-parsley-mincheck="2"
-									data-parsley-mincheck-message="2 caractères minimum" />
-							</div>
-							<div class="form-group">
-								<label for="mail">Email</label>
-								<form:input class="form-control" id="mail" path="mail"
-									data-parsley-type="email" data-parsley-required="true"
-									data-parsley-trigger="change" placeholder="my@email.fr"
-									data-parsley-required-message="Champ requis"
-									data-parsley-type-message="Entrer une adresse email valide" />
-							</div>
+							<form:hidden path="id" />
 
-							<div class="form-group">
-								<label for="siteWeb">Site web</label>
-								<form:input class="form-control" id="siteWeb" path="siteWeb"
-									data-parsley-type="url"
-									data-parsley-type-message="Entrer une adresse web valide (voir l'exemple)"
-									data-parsley-required="true" data-parsley-trigger="change"
-									placeholder="http://website.fr" />
-							</div>
+							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
+								<div class="form-group">
+									<label for="nom">Nom</label>
+									<form:input type="text" class="form-control" id="nom"
+										path="nom" placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+								<div class="form-group">
+									<label for="codeEtablissement">Code de l'établissement</label>
+									<form:input type="text" class="form-control"
+										id="codeEtablissement" path="codeEtablissement" placeholder=""
+										data-parsley-required="true" data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+								<div class="form-group">
+									<label for="coordonneesGeographique">Coordonnées
+										géographiques</label>
+									<form:input type="text" class="form-control"
+										id="coordonneesGeographique" path="coordonneesGeographique"
+										placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+								<div class="form-group">
+									<label for="formeJuridique">Forme juridique</label>
+									<form:input type="text" class="form-control"
+										id="formeJuridique" path="formeJuridique" placeholder=""
+										data-parsley-trigger="change" data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+								<div class="form-group">
+									<label for="telephone">Téléphone</label>
+									<form:input type="tel" class="form-control" id="telephone"
+										path="telephone" placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change" data-parsley-type="digits"
+										data-parsley-length="[10,11]"
+										data-parsley-required-message="Champ requis"
+										data-parsley-type-message="Ne doit comporter que des chiffres"
+										data-parsley-length-message="comporte 10 chiffres minimum" />
+								</div>
+								<div class="form-group">
+									<label for="siret">Siret</label>
+									<form:input type="text" class="form-control" id="siret"
+										path="siret" placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+								<div class="form-group">
+									<label for="mail">Email</label>
+									<form:input class="form-control" id="mail" path="mail"
+										data-parsley-type="email" data-parsley-required="true"
+										data-parsley-trigger="change" placeholder="my@email.fr"
+										data-parsley-required-message="Champ requis"
+										data-parsley-type-message="Entrer une adresse email valide" />
+								</div>
 
-							<div class="form-group">
-								<label for="sites">Attacher un ou des sites</label>
-								<form:select multiple="true" id="sitesCombo" name="sitesCombo"
-									path="sites" items="${sitesCombo}" itemValue="id"
-									itemLabel="nom"
-									data-placeholder=" Sélectionnez
+								<div class="form-group">
+									<label for="siteWeb">Site web</label>
+									<form:input class="form-control" id="siteWeb" path="siteWeb"
+										data-parsley-type="url"
+										data-parsley-type-message="Entrer une adresse web valide (voir l'exemple)"
+										data-parsley-required="true" data-parsley-trigger="change"
+										placeholder="http://website.fr" />
+								</div>
+
+								<div class="form-group">
+									<label for="sites">Attacher un ou des sites</label>
+									<form:select multiple="true" id="sitesCombo" name="sitesCombo"
+										path="sites" items="${sitesCombo}" itemValue="id"
+										itemLabel="nom"
+										data-placeholder=" Sélectionnez
 							un ou des sites"
-									class="form-control chosen">
-								</form:select>
-							</div>
+										class="form-control chosen">
+									</form:select>
+								</div>
 
-							<div class="pull-right">
-								<a href="<c:url  value="/etablissement/list" />"
-									class="btn btn-default btn-outline">Retour</a>
-								<button type="submit" class="btn btn-outline btn-primary">Créer</button>
+								<div class="pull-right">
+									<a href="<c:url  value="/etablissement/list" />"
+										class="btn btn-default btn-outline">Retour</a>
+									<button type="submit" class="btn btn-outline btn-primary">Créer</button>
+								</div>
 							</div>
-						</div>
-					</form:form>
+						</form:form>
+					</div>
 				</div>
 			</div>
-	</div>
-</div>
-<!-- /content wrapper -->
-<a class="exit-offscreen"></a>
-<jsp:include page="/template/footer.jsp" />
+		</div>
+		<!-- /content wrapper -->
+		<a class="exit-offscreen"></a>
+		<jsp:include page="/template/footer.jsp" />

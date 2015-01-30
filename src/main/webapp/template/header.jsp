@@ -67,7 +67,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<!-- /toggle offscreen menu -->
 
 				<!-- logo -->
-				<a href="<c:url  value="/etablissement/list" />" class="navbar-brand">
+				<a href="<c:url  value="/carto/carto.jsp" />" class="navbar-brand">
 					<img src="${urlResources}/img/logo_solices.png" alt="">
 				</a>
 				<!-- /logo -->
@@ -77,7 +77,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 			<div class="collapse navbar-collapse pull-left" id="menu-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="<c:url  value="/etablissement/list" />"
+					<li><a href="<c:url  value="/carto/carto.jsp" />"
 						class="${param.menuAccueilActive}">Accueil</a></li>
 					
 					<sec:authorize ifAllGranted="ADMIN">	
@@ -92,7 +92,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<li><a href="<c:url  value="/site/list" />"
 						class="${param.menuSiteActive}">Sites</a></li>
 					<li><a href="#" class="${param.menuOuvrageActive}">Ouvrages</a></li>
-					<li><a href="#" class="${param.menuMesureActive}">Mesures</a></li>
+					<li><a href="<c:url  value="/mesure/mesure.jsp" />" class="${param.menuMesureActive}">Mesures</a></li>
 					<li><a href="#" class="${param.menuDocumentActive}">Documents</a></li>
 					<li><a href="#" class="${param.menuMessagerieActive}">Messagerie</a></li>
 				</ul>
@@ -112,8 +112,3 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					</ul></li>
 			</ul>
 		</header>
-
-
-		<section class="layout">
-			<!-- /sidebar -->
-			<section class="main-content bg-white rounded shadow">
