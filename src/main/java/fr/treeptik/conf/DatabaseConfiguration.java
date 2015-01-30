@@ -6,12 +6,16 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -35,6 +39,9 @@ public class DatabaseConfiguration {
 	@Inject
 	private Environment env;
 
+	@Value("classpath:/init-db.sql")
+	private Resource dataScript;
+	
 	@Bean
 	public DataSource dataSource() {
 		logger.info("Configuring Datasource");
@@ -58,9 +65,16 @@ public class DatabaseConfiguration {
 			final DataSource dataSource) {
 		final DataSourceInitializer initializer = new DataSourceInitializer();
 		initializer.setDataSource(dataSource);
+		initializer.setDatabasePopulator(databasePopulator());
 		return initializer;
 	}
 
+	private DatabasePopulator databasePopulator() {
+		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator.setSqlScriptEncoding("utf-8");
+		populator.addScript(dataScript);
+		return populator;
+	}
 
 	@Bean
 	public EntityManagerFactory entityManagerFactory() {

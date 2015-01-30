@@ -1,0 +1,1 @@
+INSERT IGNORE INTO Administrateur (id, identifiant, login, motDePasse, role) values (1, 'administrateur01', 'administrateur', 'solices2015', 'ADMIN');

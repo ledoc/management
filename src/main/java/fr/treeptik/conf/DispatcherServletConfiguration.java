@@ -42,7 +42,7 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 
 	@Autowired
 	private Environment env;
-
+	
 	@Bean
 	public ViewResolver contentNegotiatingViewResolver() {
 		logger.info("Configuring the ContentNegotiatingViewResolver");
