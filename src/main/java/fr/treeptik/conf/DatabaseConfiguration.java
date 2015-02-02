@@ -1,5 +1,6 @@
 package fr.treeptik.conf;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -13,8 +14,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -42,6 +43,17 @@ public class DatabaseConfiguration {
 	@Value("classpath:/init-db.sql")
 	private Resource dataScript;
 	
+	
+	@PostConstruct
+	protected void initializeDB() {
+		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator.addScript(dataScript);
+		populator.setSqlScriptEncoding("utf-8");
+		populator.setContinueOnError(true);
+		DatabasePopulatorUtils.execute(populator , dataSource());
+	}
+	
+	
 	@Bean
 	public DataSource dataSource() {
 		logger.info("Configuring Datasource");
@@ -60,21 +72,6 @@ public class DatabaseConfiguration {
 		return new HikariDataSource(config);
 	}
 
-	@Bean
-	public DataSourceInitializer dataSourceInitializer(
-			final DataSource dataSource) {
-		final DataSourceInitializer initializer = new DataSourceInitializer();
-		initializer.setDataSource(dataSource);
-		initializer.setDatabasePopulator(databasePopulator());
-		return initializer;
-	}
-
-	private DatabasePopulator databasePopulator() {
-		final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-		populator.setSqlScriptEncoding("utf-8");
-		populator.addScript(dataScript);
-		return populator;
-	}
 
 	@Bean
 	public EntityManagerFactory entityManagerFactory() {

@@ -1,2 +1,2 @@
 INSERT IGNORE INTO Administrateur (id, identifiant, login, motDePasse, role) values (1, 'administrateur01', 'administrateur', 'solices2015', 'ADMIN');
-INSERT IGNORE INTO Administrateur (id, identifiant, login, motDePasse, role) values (1, 'client01', 'client', 'client', 'CLIENT');
+INSERT IGNORE INTO Client (id, identifiant, login, motDePasse, role) values (1, 'client01', 'client', 'client', 'CLIENT');
