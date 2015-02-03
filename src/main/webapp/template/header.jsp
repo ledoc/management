@@ -91,7 +91,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						class="${param.menuEtablissementActive}">Etablissements</a></li>
 					<li><a href="<c:url  value="/site/list" />"
 						class="${param.menuSiteActive}">Sites</a></li>
-					<li><a href="#" class="${param.menuOuvrageActive}">Ouvrages</a></li>
+					<li><a href="<c:url  value="/ouvrage/list" />" class="${param.menuOuvrageActive}">Ouvrages</a></li>
+					<li><a href="<c:url  value="/enregistreur/list" />" class="${param.menuEnregistreurActive}">Enregistreurs</a></li>
 					<li><a href="<c:url  value="/mesure/mesure.jsp" />" class="${param.menuMesureActive}">Mesures</a></li>
 					<li><a href="#" class="${param.menuDocumentActive}">Documents</a></li>
 					<li><a href="#" class="${param.menuMessagerieActive}">Messagerie</a></li>
