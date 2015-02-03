@@ -25,6 +25,8 @@ public interface OuvrageService {
 
 		Ouvrage findByIdWithJoinFetchDocuments(Integer id) throws ServiceException;
 
-		Ouvrage findByIdWithJoinFetchEnregistreurs(Integer id) throws ServiceException;;
+		Ouvrage findByIdWithJoinFetchEnregistreurs(Integer id) throws ServiceException;
+
+		List<Ouvrage> findByClientLogin(String userLogin) throws ServiceException;
 
 }

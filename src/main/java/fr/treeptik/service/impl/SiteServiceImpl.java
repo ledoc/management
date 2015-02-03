@@ -24,14 +24,14 @@ public class SiteServiceImpl implements SiteService {
 
 	@Override
 	public Site findById(Integer id) throws ServiceException {
-		logger.info("--findById site --");
+		logger.info("--findById SiteServiceImpl --");
 		return siteDAO.findOne(id);
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Site create(Site site) throws ServiceException {
-		logger.info("--CREATE site --");
+		logger.info("--CREATE SiteServiceImpl --");
 		logger.debug("site : " + site);
 		return siteDAO.save(site);
 	}
@@ -39,7 +39,7 @@ public class SiteServiceImpl implements SiteService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Site update(Site site) throws ServiceException {
-		logger.info("--UPDATE site --");
+		logger.info("--UPDATE SiteServiceImpl --");
 		logger.debug("site : " + site);
 		return siteDAO.saveAndFlush(site);
 	}
@@ -47,7 +47,7 @@ public class SiteServiceImpl implements SiteService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Site site) throws ServiceException {
-		logger.info("--DELETE site --");
+		logger.info("--DELETE SiteServiceImpl --");
 		logger.debug("site : " + site);
 		siteDAO.delete(site);
 	}
@@ -55,15 +55,28 @@ public class SiteServiceImpl implements SiteService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE site Id --");
+		logger.info("--DELETE SiteServiceImpl Id --");
 		logger.debug("siteId : " + id);
 		siteDAO.delete(id);
 	}
 
 	@Override
 	public List<Site> findAll() throws ServiceException {
-		logger.info("--FINDALL site --");
+		logger.info("--FINDALL SiteServiceImpl --");
 		return siteDAO.findAll();
+	}
+	
+	@Override
+	public List<Site> findFreeSites() throws ServiceException {
+		logger.info("--findFreeSites SiteServiceImpl --");
+		List<Site> sites;
+		try {
+			sites = siteDAO.findFreeSites();
+		} catch (PersistenceException e) {
+			logger.error("Error SiteService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return sites;
 	}
 
 	/**
@@ -74,14 +87,14 @@ public class SiteServiceImpl implements SiteService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Site findByIdWithJoinFetchOuvrages(Integer id)
 			throws ServiceException {
-		logger.info("--findByIdWithJoinFetchOuvrages site --");
-		logger.info("id : " + id);
+		logger.info("--findByIdWithJoinFetchOuvrages SiteServiceImpl --");
+		logger.debug("id : " + id);
 
 		Site site;
 		try {
 			site = siteDAO.findByIdWithJoinFetchOuvrages(id);
 		} catch (PersistenceException e) {
-			logger.error("Error EtablissementService : " + e);
+			logger.error("Error SiteService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return site;
@@ -109,8 +122,9 @@ public class SiteServiceImpl implements SiteService {
 	}
 
 	@Override
-	public List<Site> findByClient(String userLogin) {
-		logger.info("--FINDALL bY CLIENT LOGIN --");
+	public List<Site> findByClientLogin(String userLogin) throws ServiceException  {
+		logger.info("--findByClientLogin userLogin SiteServiceImpl--");
+		logger.debug("userLogin : " + userLogin);
 		return siteDAO.findByClientLogin(userLogin);
 	}
 

@@ -21,7 +21,13 @@ public interface EnregistreurService {
 
 		Enregistreur findByMid(String mid) throws ServiceException;
 
-		public Enregistreur findByMidWithJoinFechTrameDWs(String mid) throws ServiceException;
+		public Enregistreur findByMidWithJoinFetchTrameDWs(String mid) throws ServiceException;
+
+		Enregistreur findByIdWithJoinFetchAlertesActives(Integer id)
+				throws ServiceException;
 
 		void remove(Integer id) throws ServiceException;
+
+		List<Enregistreur> findFreeEnregistreurs() throws ServiceException;
+
 }

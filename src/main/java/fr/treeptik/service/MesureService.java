@@ -31,4 +31,8 @@ public interface MesureService {
 			throws ServiceException;
 
 	void remove(Integer id) throws ServiceException;
+
+	List<Mesure> findByEnregistreurId(Integer id) throws ServiceException;
+
+	List<Mesure> findByOuvrageId(Integer id) throws ServiceException;
 }

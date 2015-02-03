@@ -8,25 +8,26 @@ import fr.treeptik.model.Ouvrage;
 
 public interface EtablissementService {
 
-		Etablissement findById(Integer id) throws ServiceException;
-		
-		Etablissement create(Etablissement etablissement)
-				throws ServiceException;
+	Etablissement findById(Integer id) throws ServiceException;
 
-		Etablissement update(Etablissement etablissement) throws ServiceException;
-		
-		void remove(Etablissement etablissement)
-				throws ServiceException;
+	Etablissement create(Etablissement etablissement) throws ServiceException;
 
-		List<Etablissement> findAll() throws ServiceException;
+	Etablissement update(Etablissement etablissement) throws ServiceException;
 
-		void remove(Integer id) throws ServiceException;
+	void remove(Etablissement etablissement) throws ServiceException;
 
-		Etablissement findByIdWithJoinFetchSites(Integer id) throws ServiceException;
+	List<Etablissement> findAll() throws ServiceException;
 
+	List<Etablissement> findFreeEtablissements() throws ServiceException;
 
-		List<Ouvrage> findAllOuvragesOfEtablissement(Integer id) throws ServiceException;
+	void remove(Integer id) throws ServiceException;
 
-		List<Etablissement> findByClient(String login) throws ServiceException;
+	Etablissement findByIdWithJoinFetchSites(Integer id)
+			throws ServiceException;
+
+	List<Ouvrage> findAllOuvragesOfEtablissement(Integer id)
+			throws ServiceException;
+
+	List<Etablissement> findByClientLogin(String login) throws ServiceException;
 
 }

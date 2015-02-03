@@ -29,7 +29,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Ouvrage create(Ouvrage ouvrage) throws ServiceException {
-		logger.info("--CREATE ouvrage --");
+		logger.info("--CREATE OuvrageServiceImpl --");
 		logger.debug("ouvrage : " + ouvrage);
 		return ouvrageDAO.save(ouvrage);
 	}
@@ -37,7 +37,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Ouvrage update(Ouvrage ouvrage) throws ServiceException {
-		logger.info("--UPDATE ouvrage --");
+		logger.info("--UPDATE OuvrageServiceImpl --");
 		logger.debug("ouvrage : " + ouvrage);
 		return ouvrageDAO.saveAndFlush(ouvrage);
 	}
@@ -45,7 +45,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Ouvrage ouvrage) throws ServiceException {
-		logger.info("--DELETE ouvrage --");
+		logger.info("--DELETE OuvrageServiceImpl --");
 		logger.debug("ouvrage : " + ouvrage);
 		ouvrageDAO.delete(ouvrage);
 	}
@@ -53,14 +53,14 @@ public class OuvrageServiceImpl implements OuvrageService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE ouvrage --");
+		logger.info("--DELETE OuvrageServiceImpl --");
 		logger.debug("ouvrageId : " + id);
 		ouvrageDAO.delete(id);
 	}
 
 	@Override
 	public List<Ouvrage> findAll() throws ServiceException {
-		logger.info("--FINDALL ouvrage --");
+		logger.info("--FINDALL OuvrageServiceImpl --");
 		return ouvrageDAO.findAll();
 	}
 
@@ -70,7 +70,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	 */
 	@Override
 	public Ouvrage findByIdWithJoinFetchMesures(Integer id) throws ServiceException {
-		logger.info("--findByIdWithJoinFetchMesures OuvrageService --");
+		logger.info("--findByIdWithJoinFetchMesures OuvrageServiceImpl --");
 		logger.info("id : " + id);
 		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchMesures(id);
 		return ouvrage;
@@ -82,7 +82,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	 */
 	@Override
 	public Ouvrage findByIdWithJoinFetchDocuments(Integer id) throws ServiceException {
-		logger.info("--findByIdWithJoinFetchDocuments OuvrageService --");
+		logger.info("--findByIdWithJoinFetchDocuments OuvrageServiceImpl --");
 		logger.info("id : " + id);
 		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchDocuments(id);
 		return ouvrage;
@@ -90,10 +90,16 @@ public class OuvrageServiceImpl implements OuvrageService {
 
 	@Override
 	public Ouvrage findByIdWithJoinFetchEnregistreurs(Integer id) throws ServiceException {
-		logger.info("--findByIdWithJoinFetchEnregistreurs OuvrageService --");
-		logger.info("id : " + id);
-		Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchEnregistreurs(id);
+		logger.info("--findByIdWithJoinFetchEnregistreurs OuvrageServiceImpl --");
+		logger.info("id : " + id);Ouvrage ouvrage = ouvrageDAO.findByIdWithJoinFetchEnregistreurs(id);
 		return ouvrage;
+	}
+	
+	@Override
+	public List<Ouvrage> findByClientLogin(String userLogin) throws ServiceException{
+		logger.info("--findByClient userLogin OuvrageServiceImpl--");
+		logger.debug("userLogin : " + userLogin);
+		return ouvrageDAO.findByClientLogin(userLogin);
 	}
 
 }

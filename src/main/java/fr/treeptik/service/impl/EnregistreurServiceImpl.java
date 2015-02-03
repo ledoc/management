@@ -3,6 +3,7 @@ package fr.treeptik.service.impl;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Enregistreur create(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--CREATE enregistreur --");
+		logger.info("--CREATE EnregistreurServiceImpl --");
 		logger.debug("enregistreur : " + enregistreur);
 		return enregistreurDAO.save(enregistreur);
 	}
@@ -37,7 +38,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Enregistreur update(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--UPDATE enregistreur --");
+		logger.info("--UPDATE EnregistreurServiceImpl --");
 		logger.debug("enregistreur : " + enregistreur);
 		return enregistreurDAO.saveAndFlush(enregistreur);
 	}
@@ -45,7 +46,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--DELETE enregistreur --");
+		logger.info("--DELETE EnregistreurServiceImpl --");
 		logger.debug("enregistreur : " + enregistreur);
 		enregistreurDAO.delete(enregistreur);
 	}
@@ -53,20 +54,33 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE enregistreur --");
+		logger.info("--DELETE EnregistreurServiceImpl --");
 		logger.debug("enregistreurId : " + id);
 		enregistreurDAO.delete(id);
 	}
 
 	@Override
 	public List<Enregistreur> findAll() throws ServiceException {
-		logger.info("--FINDALL enregistreur --");
+		logger.info("--FINDALL EnregistreurServiceImpl --");
 		return enregistreurDAO.findAll();
+	}
+	
+	@Override
+	public List<Enregistreur> findFreeEnregistreurs() throws ServiceException {
+		logger.info("--findFreeSites SiteServiceImpl --");
+		List<Enregistreur> enregistreurs;
+		try {
+			enregistreurs = enregistreurDAO.findFreeEnregistreurs();
+		} catch (PersistenceException e) {
+			logger.error("Error EnregistreurService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return enregistreurs;
 	}
 
 	@Override
 	public Enregistreur findByMid(String mid) throws ServiceException {
-		logger.info("--findByMid enregistreur --");
+		logger.info("--findByMid EnregistreurServiceImpl --");
 		logger.debug("mid : " + mid);
 		return enregistreurDAO.findByMid(mid);
 	}
@@ -76,12 +90,24 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	 * FetchType.Lazy
 	 */
 	@Override
-	public Enregistreur findByMidWithJoinFechTrameDWs(String mid) throws ServiceException {
+	public Enregistreur findByMidWithJoinFetchTrameDWs(String mid) throws ServiceException {
 		logger.info("--findByMidWithJoinFechTrameDWs enregistreur --");
 		logger.info("mid : " + mid);
 		Enregistreur enregistreur = enregistreurDAO.findByMidWithJoinFechTrameDWs(mid);
 		System.out.println(enregistreur);
 		return enregistreur;
 	}
-
+	
+	/**
+	 * Méthode spécifique pour récupérer les trameDWs associées au enregistreur dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Enregistreur findByIdWithJoinFetchAlertesActives(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFechAlertesActives enregistreur --");
+		logger.info("id : " + id);
+		Enregistreur enregistreur = enregistreurDAO.findByIdWithJoinFetchAlertesActives(id);
+		System.out.println(enregistreur);
+		return enregistreur;
+	}
 }

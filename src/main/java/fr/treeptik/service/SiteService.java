@@ -19,12 +19,13 @@ public interface SiteService {
 
 		List<Site> findAll() throws ServiceException;
 
+		List<Site> findFreeSites() throws ServiceException;
+		
 		void remove(Integer id) throws ServiceException;
 
 		Site findByIdWithJoinFetchOuvrages(Integer id) throws ServiceException;
 
 		Site setCodeWithCheck(Site site) throws ServiceException;
 
-		List<Site> findByClient(String userLogin);
-
+		List<Site> findByClientLogin(String userLogin) throws ServiceException;
 }
