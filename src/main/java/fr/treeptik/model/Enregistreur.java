@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Enregistreur implements Serializable {
@@ -18,7 +20,7 @@ public class Enregistreur implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	
+
 	// identifiant applicatif
 	private String mid;
 	// figer la chronique en cas de changement d'un quelconque composant.
@@ -27,11 +29,19 @@ public class Enregistreur implements Serializable {
 	// données reçu avec un Niveau Manuel
 	private Boolean maintenance;
 
+	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
+	// historique NM
+	@OneToOne
+	protected Mesure niveauManuel;
+	// Mesure Enregistreur : dernière mesure relevé avec date et heure
+	@OneToOne
+	protected Mesure mesureEnregistreur;
+
 	// modem : nom, modèle, numéro série…
 	private String modem;
 	// la transmission : mode (SMS, GPRS ou Satellite), opérateur (ORANGE, SFR,
 	// BOUYGUES, IRIDIUM…) ;
-	private String trasmission;
+	private String transmission;
 	// la SIM : numéro série, numéro d’appel ;
 	private String sim;
 	// type, marque/modele...
@@ -48,10 +58,16 @@ public class Enregistreur implements Serializable {
 	//
 	@OneToMany
 	private List<Alerte> alertesActives;
-//	@OneToMany(mappedBy = "enregistreur")
-//	private List<TrameDW> trameDWs;
-	
-	private boolean valid;
+	// @OneToMany(mappedBy = "enregistreur")
+	// private List<TrameDW> trameDWs;
+
+	@OneToMany
+	private List<Mesure> mesures;
+
+	/**
+	 * TODO pas mettre de valeur par defaut
+	 */
+	private Boolean valid = true;
 	/**
 	 * TODO : trouver la classe de cette bete là
 	 */
@@ -177,15 +193,50 @@ public class Enregistreur implements Serializable {
 		this.localizableStatus = localizableStatus;
 	}
 
-	
-	
-	
 	public Boolean getMaintenance() {
 		return maintenance;
 	}
 
 	public void setMaintenance(Boolean maintenance) {
 		this.maintenance = maintenance;
+	}
+
+	/**
+	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
+	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
+	 * 
+	 * @param niveauManuel
+	 */
+	public Mesure getNiveauManuel() {
+		return niveauManuel;
+	}
+
+	/**
+	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
+	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
+	 * 
+	 * @param niveauManuel
+	 */
+	public void setNiveauManuel(Mesure niveauManuel) {
+		this.niveauManuel = niveauManuel;
+	}
+
+	/**
+	 * récupérer la dernière mesure enregistrée
+	 * 
+	 * @return
+	 */
+	public Mesure getMesureEnregistreur() {
+		return mesureEnregistreur;
+	}
+
+	/**
+	 * affecter la dernière mesure enregistrée
+	 * 
+	 * @return
+	 */
+	public void setMesureEnregistreur(Mesure mesureEnregistreur) {
+		this.mesureEnregistreur = mesureEnregistreur;
 	}
 
 	public String getModem() {
@@ -196,12 +247,12 @@ public class Enregistreur implements Serializable {
 		this.modem = modem;
 	}
 
-	public String getTrasmission() {
-		return trasmission;
+	public String getTransmission() {
+		return transmission;
 	}
 
-	public void setTrasmission(String trasmission) {
-		this.trasmission = trasmission;
+	public void setTransmission(String transmission) {
+		this.transmission = transmission;
 	}
 
 	public String getSim() {
@@ -252,6 +303,14 @@ public class Enregistreur implements Serializable {
 		this.croquis = croquis;
 	}
 
+	public List<Mesure> getMesures() {
+		return mesures;
+	}
+
+	public void setMesures(List<Mesure> mesures) {
+		this.mesures = mesures;
+	}
+
 	public List<Alerte> getAlertesActives() {
 		return alertesActives;
 	}
@@ -284,12 +343,13 @@ public class Enregistreur implements Serializable {
 		this.trameDWs = trameDWs;
 	}
 
-	
 	@Override
 	public String toString() {
-		return "Enregistreur [id=" + id + ", valid=" + valid + ", period=" + period + ", localizableStatus="
-				+ localizableStatus + ", clientName=" + clientName + ", mid=" + mid + ", until=" + until + ", pid="
-				+ pid + ", comment=" + comment + ", type=" + type + ", userName=" + userName + "]";
+		return "Enregistreur [id=" + id + ", valid=" + valid + ", period="
+				+ period + ", localizableStatus=" + localizableStatus
+				+ ", clientName=" + clientName + ", mid=" + mid + ", until="
+				+ until + ", pid=" + pid + ", comment=" + comment + ", type="
+				+ type + ", userName=" + userName + "]";
 	}
 
 	@Override
@@ -336,7 +396,5 @@ public class Enregistreur implements Serializable {
 	// public void setSeamless(Object seamless) {
 	// this.seamless = seamless;
 	// }
-	
-	
 
 }

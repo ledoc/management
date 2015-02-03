@@ -19,20 +19,22 @@ public class Mesure {
 
 	// niveaux d'eau, pluviometrie, niveau batterie
 	@Enumerated(EnumType.STRING)
-	private TypeMesure type;
+	private TypeMesure typeMesure;
 	private Date date;
 	@ManyToOne
 	private Ouvrage ouvrage;
-	private float valeur;
+	@ManyToOne
+	private Enregistreur enregistreur;
+	private Float valeur;
 
 	public Mesure() {
 		super();
 	}
 
-	public Mesure(Integer id, TypeMesure type, Date date, Ouvrage ouvrage, float valeur) {
+	public Mesure(Integer id, TypeMesure typeMesure, Date date, Ouvrage ouvrage, Float valeur) {
 		super();
 		this.id = id;
-		this.type = type;
+		this.typeMesure = typeMesure;
 		this.date = date;
 		this.ouvrage = ouvrage;
 		this.valeur = valeur;
@@ -46,12 +48,12 @@ public class Mesure {
 		this.id = id;
 	}
 
-	public TypeMesure getType() {
-		return type;
+	public TypeMesure getTypeMesure() {
+		return typeMesure;
 	}
 
-	public void setType(TypeMesure type) {
-		this.type = type;
+	public void setTypeMesure(TypeMesure typeMesure) {
+		this.typeMesure = typeMesure;
 	}
 
 	public Date getDate() {
@@ -69,18 +71,26 @@ public class Mesure {
 	public void setOuvrage(Ouvrage ouvrage) {
 		this.ouvrage = ouvrage;
 	}
+	
+	public Enregistreur getEnregistreur() {
+		return enregistreur;
+	}
 
-	public float getValeur() {
+	public void setEnregistreur(Enregistreur enregistreur) {
+		this.enregistreur = enregistreur;
+	}
+
+	public Float getValeur() {
 		return valeur;
 	}
 
-	public void setValeur(float valeur) {
+	public void setValeur(Float valeur) {
 		this.valeur = valeur;
 	}
 
 	@Override
 	public String toString() {
-		return "Mesure [id=" + id + ", type=" + type + ", date=" + date + ", valeur=" + valeur + "]";
+		return "Mesure [id=" + id + ", typeMesure=" + typeMesure + ", date=" + date + ", valeur=" + valeur + "]";
 	}
 
 	@Override
@@ -89,7 +99,7 @@ public class Mesure {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((typeMesure == null) ? 0 : typeMesure.hashCode());
 		result = prime * result + Float.floatToIntBits(valeur);
 		return result;
 	}
@@ -113,7 +123,7 @@ public class Mesure {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (type != other.type)
+		if (typeMesure != other.typeMesure)
 			return false;
 		if (Float.floatToIntBits(valeur) != Float.floatToIntBits(other.valeur))
 			return false;

@@ -28,7 +28,7 @@ public class Site {
 	private String coordonneesGeographique;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
-	@OneToMany
+	@OneToMany(mappedBy="site")
 	private List<Ouvrage> ouvrages;
 
 	public Integer getId() {

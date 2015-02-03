@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -26,19 +27,14 @@ public class Ouvrage {
 	// version 2) ;
 	@Enumerated(EnumType.STRING)
 	protected TypeOuvrage typeOuvrage;
-	protected String codeSite;
+	@ManyToOne
+	protected Site site;
 	/**
 	 * Nivellement général de la France
 	 */
 	// Côte repère NGF : à indiquer
 	protected float coteRepereNGF;
-	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
-	// historique NM
-	@OneToOne
-	protected Mesure niveauManuel;
-	// Mesure Enregistreur : dernière mesure relevé avec date et heure
-	@OneToOne
-	protected Mesure mesureEnregistreur;
+
 	protected String commentaire;
 	// Si l'ouvrage est "lié" à un autre
 	protected boolean asservissement;
@@ -134,33 +130,7 @@ public class Ouvrage {
 		this.coteRepereNGF = coteRepereNGF;
 	}
 
-	/**
-	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
-	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
-	 * 
-	 * @param niveauManuel
-	 */
-	public Mesure getNiveauManuel() {
-		return niveauManuel;
-	}
-
-	/**
-	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
-	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
-	 * 
-	 * @param niveauManuel
-	 */
-	public void setNiveauManuel(Mesure niveauManuel) {
-		this.niveauManuel = niveauManuel;
-	}
-
-	public Mesure getMesureEnregistreur() {
-		return mesureEnregistreur;
-	}
-
-	public void setMesureEnregistreur(Mesure mesureEnregistreur) {
-		this.mesureEnregistreur = mesureEnregistreur;
-	}
+	
 
 	public String getPhoto() {
 		return photo;
@@ -178,8 +148,8 @@ public class Ouvrage {
 		this.codeOuvrage = codeOuvrage;
 	}
 
-	public String getCodeSite() {
-		return codeSite;
+	public Site getSite() {
+		return site;
 	}
 
 	/**
@@ -187,8 +157,8 @@ public class Ouvrage {
 	 * 
 	 * @param codeSite
 	 */
-	public void setCodeSite(String codeSite) {
-		this.codeSite = codeSite;
+	public void setSite(Site site) {
+		this.site = site;
 	}
 
 	public List<Enregistreur> getEnregistreurs() {
@@ -312,9 +282,8 @@ public class Ouvrage {
 	@Override
 	public String toString() {
 		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement=" + asservissement + ", ouvrageMaitre="
-				+ ouvrageMaitre + ", coteRepereNGF=" + coteRepereNGF + ", niveauManuel=" + niveauManuel
-				+ ", mesureEnregistreur=" + mesureEnregistreur + ", photo=" + photo + ", codeOuvrage=" + codeOuvrage
-				+ ", codeSite=" + codeSite + ", typeOuvrage=" + typeOuvrage + ", croquisDynamique=" + croquisDynamique
+				+ ouvrageMaitre + ", coteRepereNGF=" + coteRepereNGF + ", photo=" + photo + ", codeOuvrage=" + codeOuvrage
+				+ ", site=" + site.getId() + ", typeOuvrage=" + typeOuvrage + ", croquisDynamique=" + croquisDynamique
 				+ ", commentaire=" + commentaire + ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
 				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol + ", mesureProfondeur=" + mesureProfondeur
 				+ ", coteSolNGF=" + coteSolNGF + "]";
