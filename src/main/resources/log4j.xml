@@ -35,34 +35,23 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="fr.solices">
+	<logger name="fr.treeptik">
 		<level value="${log.level.solices}" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core">
-		<level value="${log.level.other}" />
-	</logger>
-
-	<logger name="org.springframework.beans">
-		<level value="${log.level.other}" />
-	</logger>
-
-	<logger name="org.springframework.context">
-		<level value="${log.level.other}" />
-	</logger>
-
-	<logger name="org.springframework.web">
+	<logger name="org.springframework">
 		<level value="${log.level.other}" />
 	</logger>
 
 	<logger name="org.hibernate">
-		<level value="${log.level.hibernate}" />
+		<level value="${log.level.other}" />
 	</logger>
 
-	<logger name="net.sf.ehcache">
+	<logger name="org.hibernate.SQL">
 		<level value="${log.level.solices}" />
 	</logger>
+
 
 	<!-- Root Logger -->
 	<root>

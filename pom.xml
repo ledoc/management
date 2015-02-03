@@ -121,7 +121,13 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
-			<version>1.4.2.RELEASE</version>
+			<version>1.7.1.RELEASE</version>
+			 <exclusions> 
+                <exclusion> 
+                    <artifactId>jcl-over-slf4j</artifactId> 
+                    <groupId>org.slf4j</groupId> 
+                </exclusion> 
+            </exclusions> 
 		</dependency>
 
 
@@ -223,7 +229,7 @@
 				<database.password>root</database.password>
 				<!-- Log4J configuration -->
 				<log.level.solices>debug</log.level.solices>
-				<log.level.other>info</log.level.other>
+				<log.level.other>warn</log.level.other>
 				<log.level.hibernate>error</log.level.hibernate>
 			</properties>
 		</profile>

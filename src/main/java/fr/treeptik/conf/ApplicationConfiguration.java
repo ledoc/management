@@ -14,7 +14,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySource({ "classpath:config.properties" })
-@ComponentScan(basePackages = { "fr.treeptik.cloudunit" })
+@ComponentScan(basePackages = { "fr.treeptik" })
 @Import(value = { SecurityConfiguration.class, DatabaseConfiguration.class })
 public class ApplicationConfiguration {
 
