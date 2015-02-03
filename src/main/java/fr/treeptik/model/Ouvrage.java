@@ -58,7 +58,7 @@ public class Ouvrage {
 	 * Spécifique À EAU DE SURFACE TODO : comprendre :( Côte Sol « berge » : à
 	 * indiquer
 	 */
-	private float coteSol;
+	private Float coteSol;
 
 	/**
 	 * Spécifique à NAPPE SOUTERRAINE
@@ -67,18 +67,18 @@ public class Ouvrage {
 	private String numeroBSS;
 
 	// Mesure 1 (Repère NGF / Sol) : à indiquer
-	private float mesureRepereNGFSol;
+	private Float mesureRepereNGFSol;
 	// Mesure 2 (Profondeur) : à indiquer
 	/**
 	 * longueur entre NGF et le fond de la nappe
 	 */
-	private float mesureProfondeur;
+	private Float mesureProfondeur;
 
 	// Côte Sol NGF : à calculer = côte repère NGF – Mesure 1
 	/**
 	 * this.coteRepereNGF-this.mesureRepereNGFSol
 	 */
-	private float coteSolNGF;
+	private Float coteSolNGF;
 
 	public Ouvrage() {
 		super();
@@ -119,14 +119,14 @@ public class Ouvrage {
 	/**
 	 * Nivellement général de la France
 	 */
-	public float getCoteRepereNGF() {
+	public Float getCoteRepereNGF() {
 		return coteRepereNGF;
 	}
 
 	/**
 	 * Nivellement général de la France
 	 */
-	public void setCoteRepereNGF(float coteRepereNGF) {
+	public void setCoteRepereNGF(Float coteRepereNGF) {
 		this.coteRepereNGF = coteRepereNGF;
 	}
 
@@ -222,7 +222,7 @@ public class Ouvrage {
 	 * 
 	 * @return
 	 */
-	public float getCoteSol() {
+	public Float getCoteSol() {
 		return coteSol;
 	}
 
@@ -231,7 +231,7 @@ public class Ouvrage {
 	 * 
 	 * @return
 	 */
-	public void setCoteSol(float coteSol) {
+	public void setCoteSol(Float coteSol) {
 		this.coteSol = coteSol;
 	}
 
@@ -243,39 +243,39 @@ public class Ouvrage {
 		this.numeroBSS = numeroBSS;
 	}
 
-	public float getMesureRepereNGFSol() {
+	public Float getMesureRepereNGFSol() {
 		return mesureRepereNGFSol;
 	}
 
-	public void setMesureRepereNGFSol(float mesureRepereNGFSol) {
+	public void setMesureRepereNGFSol(Float mesureRepereNGFSol) {
 		this.mesureRepereNGFSol = mesureRepereNGFSol;
 	}
 
 	/**
 	 * longueur entre NGF et le fond de la nappe
 	 */
-	public float getMesureProfondeur() {
+	public Float getMesureProfondeur() {
 		return mesureProfondeur;
 	}
 
 	/**
 	 * longueur entre NGF et le fond de la nappe
 	 */
-	public void setMesureProfondeur(float mesureProfondeur) {
+	public void setMesureProfondeur(Float mesureProfondeur) {
 		this.mesureProfondeur = mesureProfondeur;
 	}
 
 	/**
 	 * this.coteRepereNGF-this.mesureRepereNGFSol (mesure1)
 	 */
-	public float getCoteSolNGF() {
+	public Float getCoteSolNGF() {
 		return coteSolNGF;
 	}
 
 	/**
 	 * this.coteRepereNGF-this.mesureRepereNGFSol (mesure1)
 	 */
-	public void setCoteSolNGF(float coteSolNGF) {
+	public void setCoteSolNGF(Float coteSolNGF) {
 		this.coteSolNGF = coteSolNGF;
 	}
 

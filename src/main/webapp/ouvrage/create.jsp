@@ -29,19 +29,20 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							modelAttribute="ouvrage" role="form" class="parsley-form"
 							data-validate="parsley" data-show-errors="true">
 
-							<form:hidden path="id" class="activeInput" />
+							<form:hidden path="id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">
 									<label for="typeOuvrage">Type de l'ouvrage</label>
-									<div>
-										<form:radiobuttons class="activeInput" path="typeOuvrage"
-											items="${typesOuvrageRadioButton}" id="typeOuvrage"
-											itemLabel="description"
-											onchange="javascript:activateNappeOrSurface();"
-											data-parsley-required="true"
-											data-parsley-required-message="Champ requis" />
-									</div>
+									<form:select id="typesOuvrageCombo" name="typesOuvrageCombo"
+										path="typeOuvrage" items="${typesOuvrageCombo}"
+										data-placeholder="Sélectionnez 
+							un type"
+										itemLabel="description" data-parsley-required="true"
+										data-parsley-required-message="Champ requis"
+										onchange="javascript:activateNappeOrSurface();"
+										class="form-control chosen">
+									</form:select>
 								</div>
 								<div class="form-group">
 									<label for="nom">Nom</label>
@@ -69,14 +70,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="asservissement">Asservissement</label>
-									<form:radiobutton id="asservissement" path="asservissement"
-										label="oui" value="true" class="activeInput"
-										onchange="javascript:activateOuvrageMaitre();" />
-									<form:radiobutton id="asservissement" path="asservissement"
-										label="non" value="false" class="activeInput"
-										onchange="javascript:activateOuvrageMaitre();" />
+									<div class="form-group">
+										<form:select id="asservissement" path="asservissement"
+											class="form-control chosen"
+											onchange="javascript:activateOuvrageMaitre();">
+											<form:option value="true" label="Oui" />
+											<form:option value="false" label="Non" />
+										</form:select>
+									</div>
+
 								</div>
-								<div id="ouvrageMaitre" class="form-group">
+								<div style="display: none;" id="ouvrageMaitre"
+									class="form-group">
 									<label for="ouvrageMaitre">Ouvrage maître</label>
 									<form:input type="text" class="activeInput form-control"
 										id="ouvrageMaitre" path="ouvrageMaitre" placeholder=""
@@ -221,43 +226,38 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<script type="text/javascript">
 			function activateNappeOrSurface() {
 
-				if (document.getElementById("typeOuvrage1").checked == true) {
+				if ($('#typeOuvrage :selected').val() == 'NAPPESOUTERRAINE') {
+					console.log('nappe  ' + $('#typeOuvrage').value)
+					$('.nappesouterraine').attr('style', 'display: block;');
+					$('.nappesouterraine').attr('disabled', false);
+					$('.nappesouterraine').show();
 
-					$('#mesureRepereNGFSol *').attr('disabled', false);
-					$('#mesureRepereNGFSol *').show();
+					$('.eaudesurface').attr('style', 'display: none;');
+					$('.eaudesurface').attr('disabled', true);
+					$('.eaudesurface').hide();
+				}
+				if ($('#typeOuvrage :selected').val() == 'EAUDESURFACE') {
+					$('.nappesouterraine').attr('style', 'display: none;');
+					$('.nappesouterraine').attr('disabled', true);
+					$('.nappesouterraine').hide();
 
-					$('#mesureProfondeur *').attr('disabled', false);
-					$('#mesureProfondeur *').show();
-
-					$('#numeroBSS *').attr('disabled', false);
-					$('#numeroBSS *').show();
-
-					$('#coteSol *').attr('disabled', true);
-					$('#coteSol *').hide();
-				} else {
-
-					$('#mesureRepereNGFSol *').attr('disabled', true);
-					$('#mesureRepereNGFSol *').hide();
-
-					$('#mesureProfondeur *').attr('disabled', true);
-					$('#mesureProfondeur *').hide();
-
-					$('#numeroBSS *').attr('disabled', true);
-					$('#numeroBSS *').hide();
-
-					$('#coteSol *').attr('disabled', false);
-					$('#coteSol *').show();
+					$('.eaudesurface').attr('style', 'display: block;');
+					$('.eaudesurface').attr('disabled', false);
+					$('.eaudesurface').show();
 				}
 			}
 
 			function activateOuvrageMaitre() {
 
-				if (document.getElementById("asservissement").checked == true) {
-					$('#ouvrageMaitre *').attr('disabled', false);
-					$('#ouvrageMaitre *').show();
-				} else {
-					$('#ouvrageMaitre *').attr('disabled', true);
-					$('#ouvrageMaitre *').hide();
+				if ($('#asservissement :selected').val() == 'true') {
+					$('#ouvrageMaitre').attr('style', 'display: block;');
+					$('#ouvrageMaitre').attr('disabled', false);
+					$('#ouvrageMaitre').show();
+				}
+				if ($('#asservissement :selected').val() == 'false') {
+					$('#ouvrageMaitre').attr('style', 'display: none;');
+					$('#ouvrageMaitre').attr('disabled', true);
+					$('#ouvrageMaitre').hide();
 				}
 			}
 		</script>

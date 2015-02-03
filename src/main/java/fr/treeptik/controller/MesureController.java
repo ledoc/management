@@ -31,7 +31,6 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TypeMesure;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
-import fr.treeptik.service.OuvrageService;
 
 @Controller
 @RequestMapping("/mesure")

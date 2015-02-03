@@ -58,7 +58,7 @@ public class OuvrageController {
 		Ouvrage ouvrage = new Ouvrage();
 		List<Enregistreur> enregistreursCombo;
 		List<Site> sitesCombo;
-		List<TypeOuvrage> typesOuvrageRadioButton = new ArrayList<TypeOuvrage>(
+		List<TypeOuvrage> typesOuvrageCombo = new ArrayList<TypeOuvrage>(
 				Arrays.asList(TypeOuvrage.values()));
 		try {
 			sitesCombo = siteService.findAll();
@@ -81,7 +81,7 @@ public class OuvrageController {
 		model.addAttribute("ouvrage", ouvrage);
 		model.addAttribute("sitesCombo", sitesCombo);
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
-		model.addAttribute("typesOuvrageRadioButton", typesOuvrageRadioButton);
+		model.addAttribute("typesOuvrageCombo", typesOuvrageCombo);
 		return "/ouvrage/create";
 	}
 
@@ -94,9 +94,7 @@ public class OuvrageController {
 
 		List<Enregistreur> enregistreursCombo;
 		List<Site> sitesCombo;
-		List<TypeMesure> typesMesureCombo = new ArrayList<TypeMesure>(
-				Arrays.asList(TypeMesure.values()));
-		List<TypeOuvrage> typesOuvrageRadioButton = new ArrayList<TypeOuvrage>(
+		List<TypeOuvrage> typesOuvrageCombo = new ArrayList<TypeOuvrage>(
 				Arrays.asList(TypeOuvrage.values()));
 
 		enregistreurCache = new HashMap<Integer, Enregistreur>();
@@ -122,8 +120,7 @@ public class OuvrageController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		model.addAttribute("typesOuvrageRadioButton", typesOuvrageRadioButton);
-		model.addAttribute("typesMesureCombo", typesMesureCombo);
+		model.addAttribute("typesOuvrageCombo", typesOuvrageCombo);
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
 		model.addAttribute("ouvrage", ouvrage);
 		return "/ouvrage/create";

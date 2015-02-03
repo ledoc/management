@@ -31,8 +31,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 							<sec:authorize ifAllGranted="ADMIN">
 								<a href="<c:url  value="/mesure/create" />"
-									class="btn btn-outline btn-primary btn-m">Créer un
-									établissement</a>
+									class="btn btn-outline btn-primary btn-m">Créer une
+									mesure</a>
 							</sec:authorize>
 						</div>
 					</header>

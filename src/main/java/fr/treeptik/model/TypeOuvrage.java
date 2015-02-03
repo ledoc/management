@@ -1,7 +1,7 @@
 package fr.treeptik.model;
 
 public enum TypeOuvrage {
-	NAPPE_SOUTERRAINE("Nappe souterraine"), EAU_DE_SURFACE("eau de surface");
+	NAPPE_SOUTERRAINE("Nappe souterraine"), EAU_DE_SURFACE("Eau de surface");
 	
 	private String description;
 
