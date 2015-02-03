@@ -31,42 +31,56 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 					</header>
 					<div class="panel-body">
+						<c:if test="${empty ouvrages }">
 
-						<table class="table table-striped list no-m">
-							<thead>
-								<tr>
-									<th>Code de l'etablissement</th>
-									<th>Nom</th>
-									<th>siret</th>
-									<th>Téléphone</th>
-									<th>Email</th>
-									<th>Site web</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${ouvrages}" var="etablissement">
-									<c:url var="urlOuvrageDelete"
-										value="/ouvrage/delete/${ouvrage.id}" />
-									<c:url var="urlOuvrageUpdate"
-										value="/ouvrage/update/${ouvrage.id}" />
+							<H2>Ooops !&nbsp;Liste vide.</H2>
+						</c:if>
+						<c:if test="${not empty ouvrages }">
+							<table class="table table-striped list no-m">
+								<thead>
 									<tr>
-										<td class="text-primary"><a
-											href="${urlEtablissementUpdate}">${ouvrage.codeEtablissement}</a></td>
-										<td><c:out value="${ouvrage.nom}" /></td>
-										<td><c:out value="${etablissement.siret}" /></td>
-										<td><c:out value="${etablissement.telephone}" /></td>
-										<td><c:out value="${etablissement.mail}" /></td>
-										<td><c:out value="${etablissement.siteWeb}" /></td>
-										<td><a data-url="${urlOuvrageDelete}" data-toggle="modal"
-											data-target="#confirmModal"
-											class="btn btn-outline btn-danger btn-xs js-confirm-btn">
-												<i class="fa fa-remove"></i>
-										</a></td>
+										<th class="nosort nosearch">Code</th>
+										<th class="nosort nosearch">Nom</th>
+										<th>Type</th>
+										<th>numéro BSS</th>
+										<th>Code site</th>
+										<th>Asservissement</th>
+										<th>Ouvrage maître</th>
+										<th class="nosort nosearch">Croquis</th>
+										<th class="nosort nosearch">Actions</th>
 									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									<c:forEach items="${ouvrages}" var="ouvrage">
+										<c:url var="urlOuvrageDelete"
+											value="/ouvrage/delete/${ouvrage.id}" />
+										<c:url var="urlOuvrageUpdate"
+											value="/ouvrage/update/${ouvrage.id}" />
+										<tr>
+											<td class="text-primary"><a href="${urlOuvrageUpdate}">${ouvrage.codeOuvrage}</a></td>
+											<td><c:out value="${ouvrage.nom}" /></td>
+											<td><c:out value="${ouvrage.typeOuvrage.description}" /></td>
+											<td><c:out value="${ouvrage.numeroBSS}" /></td>
+											<td><c:out value="${ouvrage.site.code}" /></td>
+											<c:set var="asservissement" value="${ouvrage.asservissement}" />
+											<c:if test="${ asservissement == false }">
+												<td><c:out value="non" /></td>
+											</c:if>
+											<c:if test="${ asservissement == true }">
+												<td><c:out value="oui" /></td>
+											</c:if>
+											<td><c:out value="${ouvrage.ouvrageMaitre}" /></td>
+											<td class="text-primary"><a href="#">voir</a></td>
+											<td><a data-url="${urlOuvrageDelete}"
+												data-toggle="modal" data-target="#confirmModal"
+												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
+													<i class="fa fa-remove"></i>
+											</a></td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</c:if>
 					</div>
 				</section>
 			</div>
