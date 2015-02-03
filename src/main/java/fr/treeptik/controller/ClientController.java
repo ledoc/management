@@ -41,7 +41,7 @@ public class ClientController {
 
 		List<Etablissement> etablissementsCombo;
 		try {
-			etablissementsCombo = etablissementService.findAll();
+			etablissementsCombo = etablissementService.findFreeEtablissements();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -58,9 +58,9 @@ public class ClientController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id) throws ControllerException {
-		logger.info("--update ClientController--");
-		logger.debug("clientId : " + id);
+	public String update(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
+		logger.info("--update ClientController -- clientId : " + id);
 
 		Client client = null;
 		List<Etablissement> etablissementsCombo;
@@ -69,8 +69,8 @@ public class ClientController {
 		try {
 			client = clientService.findByIdWithJoinFetchEtablissements(id);
 
-			etablissementsCombo = etablissementService.findAll();
-
+			etablissementsCombo = etablissementService.findFreeEtablissements();
+			etablissementsCombo.addAll(client.getEtablissements());
 			for (Etablissement etablissement : etablissementsCombo) {
 				etablissementCache.put(etablissement.getId(), etablissement);
 			}
@@ -85,7 +85,8 @@ public class ClientController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id) throws ControllerException {
+	public String delete(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
 		logger.info("--delete ClientController--");
 		logger.debug("clientId : " + id);
 
@@ -99,7 +100,8 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Client client) throws ControllerException {
+	public String create(@ModelAttribute Client client)
+			throws ControllerException {
 		logger.info("--create ClientController--");
 		logger.debug("client : " + client);
 		logger.info(client.getEtablissements());
@@ -130,34 +132,40 @@ public class ClientController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) throws ControllerException {
-		binder.registerCustomEditor(List.class, "etablissements", new CustomCollectionEditor(List.class) {
-			protected Object convertElement(Object element) {
-				if (element instanceof Etablissement) {
-					logger.debug("Conversion d'Etablissement en Etablissement: " + element);
-					return element;
-				}
-				if (element instanceof String || element instanceof Integer) {
-					Etablissement etablissement;
-					if (element instanceof String) {
-						etablissement = etablissementCache.get(Integer.valueOf((String) element));
-					} else {
+		binder.registerCustomEditor(List.class, "etablissements",
+				new CustomCollectionEditor(List.class) {
+					protected Object convertElement(Object element) {
+						if (element instanceof Etablissement) {
+							logger.debug("Conversion d'Etablissement en Etablissement: "
+									+ element);
+							return element;
+						}
+						if (element instanceof String
+								|| element instanceof Integer) {
+							Etablissement etablissement;
+							if (element instanceof String) {
+								etablissement = etablissementCache.get(Integer
+										.valueOf((String) element));
+							} else {
 
-						etablissement = etablissementCache.get(element);
-						logger.debug("Recherche d'établissement pour l'Id : " + element + ": " + etablissement);
+								etablissement = etablissementCache.get(element);
+								logger.debug("Recherche d'établissement pour l'Id : "
+										+ element + ": " + etablissement);
+							}
+							return etablissement;
+						}
+						logger.debug("Problème avec l'element : " + element);
+						return null;
 					}
-					return etablissement;
-				}
-				logger.debug("Problème avec l'element : " + element);
-				return null;
-			}
-		});
+				});
 	}
 
 	public Map<Integer, Etablissement> getEtablissementCache() {
 		return etablissementCache;
 	}
 
-	public void setEtablissementCache(Map<Integer, Etablissement> etablissementCache) {
+	public void setEtablissementCache(
+			Map<Integer, Etablissement> etablissementCache) {
 		this.etablissementCache = etablissementCache;
 	}
 

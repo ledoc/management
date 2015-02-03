@@ -30,8 +30,7 @@ import fr.treeptik.service.SiteService;
 @RequestMapping("/etablissement")
 public class EtablissementController {
 
-	private Logger logger = Logger.getLogger(SiteController.class);
-	
+	private Logger logger = Logger.getLogger(EtablissementController.class);
 
 	@Inject
 	private EtablissementService etablissementService;
@@ -42,10 +41,11 @@ public class EtablissementController {
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String create(Model model) throws ControllerException {
 		logger.info("--create formulaire EtablissementController--");
-		
+
 		List<Site> sitesCombo;
 		try {
-			sitesCombo = siteService.findAll();
+			// ne renvoie que les sites libres
+			sitesCombo = siteService.findFreeSites();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -62,7 +62,8 @@ public class EtablissementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id) throws ControllerException {
+	public String update(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
 		logger.info("--update EtablissementController--");
 		logger.debug("etablissementId : " + id);
 
@@ -73,7 +74,10 @@ public class EtablissementController {
 		try {
 			etablissement = etablissementService.findByIdWithJoinFetchSites(id);
 
-			sitesCombo = siteService.findAll();
+			// ne renvoie que les sites libres et ceux déjà rattachés à
+			// l'établissement
+			sitesCombo = siteService.findFreeSites();
+			sitesCombo.addAll(etablissement.getSites());
 
 			for (Site site : sitesCombo) {
 				siteCache.put(site.getId(), site);
@@ -89,7 +93,8 @@ public class EtablissementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id) throws ControllerException {
+	public String delete(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
 		logger.info("--delete EtablissementController--");
 		logger.debug("etablissementId : " + id);
 
@@ -103,7 +108,8 @@ public class EtablissementController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Etablissement etablissement) throws ControllerException {
+	public String create(@ModelAttribute Etablissement etablissement)
+			throws ControllerException {
 		logger.info("--create EtablissementController--");
 		logger.debug("etablissement : " + etablissement);
 		logger.info(etablissement.getSites());
@@ -118,23 +124,24 @@ public class EtablissementController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list")
-	public String list(Model model, HttpServletRequest request) throws ControllerException {
+	public String list(Model model, HttpServletRequest request)
+			throws ControllerException {
 		logger.info("--list EtablissementController--");
 
 		List<Etablissement> etablissements = null;
 		try {
-			
+
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
-			if (isAdmin){
+			if (isAdmin) {
 				etablissements = etablissementService.findAll();
 			} else {
-				String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+				String userLogin = SecurityContextHolder.getContext()
+						.getAuthentication().getName();
 				logger.debug("USER LOGIN : " + userLogin);
-				etablissements = etablissementService.findByClient(userLogin);
+				etablissements = etablissementService.findByClientLogin(userLogin);
 			}
-			
-			
+
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -145,27 +152,32 @@ public class EtablissementController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) throws ControllerException {
-		binder.registerCustomEditor(List.class, "sites", new CustomCollectionEditor(List.class) {
-			protected Object convertElement(Object element) {
-				if (element instanceof Site) {
-					logger.info("Conversion d'un Site en Site: " + element);
-					return element;
-				}
-				if (element instanceof String || element instanceof Integer) {
-					Site site;
-					if (element instanceof String) {
-						site = siteCache.get(Integer.valueOf((String) element));
-					} else {
+		binder.registerCustomEditor(List.class, "sites",
+				new CustomCollectionEditor(List.class) {
+					protected Object convertElement(Object element) {
+						if (element instanceof Site) {
+							logger.info("Conversion d'un Site en Site: "
+									+ element);
+							return element;
+						}
+						if (element instanceof String
+								|| element instanceof Integer) {
+							Site site;
+							if (element instanceof String) {
+								site = siteCache.get(Integer
+										.valueOf((String) element));
+							} else {
 
-						site = siteCache.get(element);
-						logger.info("Recherche du site pour l'Id : " + element + ": " + site);
+								site = siteCache.get(element);
+								logger.info("Recherche du site pour l'Id : "
+										+ element + ": " + site);
+							}
+							return site;
+						}
+						logger.debug("Problème avec l'élement : " + element);
+						return null;
 					}
-					return site;
-				}
-				logger.debug("Problème avec l'élement : " + element);
-				return null;
-			}
-		});
+				});
 	}
 
 	public Map<Integer, Site> getSiteCache() {
