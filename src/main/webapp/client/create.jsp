@@ -20,7 +20,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">Création d'un Client</h1>
-						<p class="text-muted">Le formulaire permet de créer un Client.</p>
+						<p class="text-muted">Permet de créer ou mettre à jour un client.</p>
 					</header>
 					<div class="panel-body">
 						<c:url var="createClient" value="/client/create" />

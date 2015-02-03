@@ -22,8 +22,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">Création d'établissement</h1>
-						<p class="text-muted">Le formulaire permet de créer un
-							d'établissement.</p>
+						<p class="text-muted">Permet de créer ou mettre à jour un
+							établissement.</p>
 					</header>
 					<div class="panel-body">
 						<c:url var="createEtablissement" value="/etablissement/create" />
