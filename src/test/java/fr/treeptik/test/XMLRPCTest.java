@@ -96,7 +96,7 @@ public class XMLRPCTest {
 	@Test
 	public void getHistoryTest() throws Exception {
 		Enregistreur enregistreur = new Enregistreur();
-		enregistreur = enregistreurService.findByMidWithJoinFechTrameDWs(MID);
+		enregistreur = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 		System.out.println(enregistreur.getClientName());
 
 		Object[] history = xmlRPCUtils.getHistory(MID, sessionKey);

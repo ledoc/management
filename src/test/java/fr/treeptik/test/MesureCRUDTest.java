@@ -62,7 +62,7 @@ public class MesureCRUDTest {
 		logger.info("--testGetEnregistreur --");
 		Enregistreur enregistreur = enregistreurService.findByMid(MID);
 		System.out.println(enregistreur);
-		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFechTrameDWs(MID);
+		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 		List<TrameDW> trameDWs = enregistreur2.getTrameDWs();
 		System.out.println(trameDWs);
 	}
@@ -77,7 +77,7 @@ public class MesureCRUDTest {
 		float random3 = random1 + 2;
 
 		Mesure mesure1 = new Mesure();
-		mesure1.setType(TypeMesure.NIVEAUDEAU);
+		mesure1.setTypeMesure(TypeMesure.NIVEAUDEAU);
 		mesure1.setDate(new Date());
 		mesure1.setValeur(random1);
 
@@ -91,13 +91,13 @@ public class MesureCRUDTest {
 
 		Mesure mesure2 = new Mesure();
 
-		mesure2.setType(TypeMesure.NIVEAUDEAU);
+		mesure2.setTypeMesure(TypeMesure.NIVEAUDEAU);
 		mesure2.setDate(new Date());
 		mesure2.setValeur(random2);
 
 		mesureService.create(mesure2);
 
-		mesure2.setType(TypeMesure.NIVEAUDEAU);
+		mesure2.setTypeMesure(TypeMesure.NIVEAUDEAU);
 		mesure2.setDate(new Date());
 		mesure2.setValeur(random3);
 		mesureService.update(mesure2);

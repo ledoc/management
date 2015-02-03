@@ -95,7 +95,7 @@ public class EnregistreurCRUDTest {
 		logger.info("--testGetEnregistreur --");
 		Enregistreur enregistreur = enregistreurService.findByMid(MID);
 		System.out.println(enregistreur);
-		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFechTrameDWs(MID);
+		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 		List<TrameDW> trameDWs = enregistreur2.getTrameDWs();
 		System.out.println(trameDWs);
 	}
@@ -141,7 +141,7 @@ public class EnregistreurCRUDTest {
 		enregistreur.setPanneauSolaire(panneauSolaire);
 		enregistreur.setSim(sim);
 		enregistreur.setSonde(sonde);
-		enregistreur.setTrasmission(trasmission);
+		enregistreur.setTransmission(trasmission);
 
 		enregistreurService.update(enregistreur);
 		Integer id = enregistreur.getId();
@@ -151,7 +151,7 @@ public class EnregistreurCRUDTest {
 
 		List<Enregistreur> firstFindAll = enregistreurService.findAll();
 
-		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFechTrameDWs(MID);
+		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 
 		enregistreur2.getAlertesActives().add(alerte);
 		enregistreur2.setBatterie(batterie2);
@@ -163,7 +163,7 @@ public class EnregistreurCRUDTest {
 		enregistreur2.setPanneauSolaire(panneauSolaire2);
 		enregistreur2.setSim(sim2);
 		enregistreur2.setSonde(sonde2);
-		enregistreur2.setTrasmission(trasmission2);
+		enregistreur2.setTransmission(trasmission2);
 
 		enregistreurService.update(enregistreur2);
 
@@ -177,7 +177,7 @@ public class EnregistreurCRUDTest {
 		enregistreur3.setMid(mid3);
 		enregistreur3.setMaintenance(maintenance3);
 		enregistreur3.setModem(modem3);
-		enregistreur3.setTrasmission(trasmission3);
+		enregistreur3.setTransmission(trasmission3);
 
 		enregistreurService.create(enregistreur3);
 
