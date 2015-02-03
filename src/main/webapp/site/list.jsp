@@ -49,7 +49,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Nom</th>
 										<th>Département</th>
 										<th>Station météo</th>
-										<th class="nosort" >Actions</th>
+										<th class="nosort nosearch" >Actions</th>
 									</tr>
 								</thead>
 								<tbody>

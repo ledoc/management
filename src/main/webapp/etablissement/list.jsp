@@ -47,10 +47,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<tr>
 										<th>Code de l'établissement</th>
 										<th>Nom</th>
-										<th class="nosort">Téléphone</th>
-										<th class="nosort">Email</th>
-										<th class="nosort">Site web</th>
-										<th class="nosort">Actions</th>
+										<th >Téléphone</th>
+										<th >Email</th>
+										<th >Site web</th>
+										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -65,7 +65,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${etablissement.nom}" /></td>
 											<td><c:out value="${etablissement.telephone}" /></td>
 											<td><c:out value="${etablissement.mail}" /></td>
-											<td><c:out value="${etablissement.siteWeb}" /></td>
+											<td class="text-primary"><a
+												href="http://${etablissement.siteWeb}" target="_blank">${etablissement.siteWeb}</a></td>
 											<td><a data-url="${urlEtablissementDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">

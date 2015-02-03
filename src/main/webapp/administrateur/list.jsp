@@ -39,11 +39,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<tr>
 									<th>Identifiant</th>
 									<th>Nom</th>
-									<th class="nosort" >Prénom</th>
+									<th >Prénom</th>
 									<th>Login</th>
 									<th>Téléphone Fixe</th>
-									<th class="nosort nosearch" >Email</th>
-									<th class="nosort" >Actions</th>
+									<th >Email</th>
+									<th class="nosort nosearch" >Actions</th>
 								</tr>
 							</thead>
 							<tbody>
