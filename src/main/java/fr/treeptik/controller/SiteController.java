@@ -135,7 +135,7 @@ public class SiteController {
 			} else {
 				String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
 				logger.debug("USER LOGIN : " + userLogin);
-				sites = siteService.findByClient(userLogin);
+				sites = siteService.findByClientLogin(userLogin);
 			}
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
