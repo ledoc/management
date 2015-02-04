@@ -105,4 +105,11 @@ public class ClientServiceImpl implements ClientService {
 		return client;
 	}
 
+	@Override
+	public Client findClientByOuvrageId(Integer ouvrageId)
+			throws ServiceException {
+		logger.info("--findClientByOuvrageId ClientServiceImpl -- ouvrageId " + ouvrageId);
+		return clientDAO.findClientByOuvrageId(ouvrageId);
+	}
+
 }

@@ -7,22 +7,23 @@ import fr.treeptik.model.Client;
 
 public interface ClientService {
 
-		Client findById(Integer id) throws ServiceException;
-		
-		Client create(Client client)
-				throws ServiceException;
+	Client findById(Integer id) throws ServiceException;
 
-		Client update(Client client) throws ServiceException;
-		
-		void remove(Client client)
-				throws ServiceException;
+	Client create(Client client) throws ServiceException;
 
-		List<Client> findAll() throws ServiceException;
+	Client update(Client client) throws ServiceException;
 
-		void remove(Integer id) throws ServiceException;
+	void remove(Client client) throws ServiceException;
 
-		Client findByIdWithJoinFetchEtablissements(Integer id) throws ServiceException;
+	List<Client> findAll() throws ServiceException;
 
-		Client setIdentifiantWithCheck(Client Client) throws ServiceException;
+	void remove(Integer id) throws ServiceException;
+
+	Client findByIdWithJoinFetchEtablissements(Integer id)
+			throws ServiceException;
+
+	Client setIdentifiantWithCheck(Client Client) throws ServiceException;
+
+	Client findClientByOuvrageId(Integer ouvrageId) throws ServiceException;
 
 }
