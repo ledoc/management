@@ -20,7 +20,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">Création d'un Site</h1>
-						<p class="text-muted">Permet de créer ou mettre à jour un site.</p>
+						<p class="text-muted">Permet de créer ou mettre à jour un
+							site.</p>
 					</header>
 					<div class="panel-body">
 						<c:url var="createSite" value="/site/create" />
@@ -60,10 +61,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="departement">Département</label>
-									<form:input class="form-control" id="departement"
+									<form:input type="text" class="form-control" id="departement"
 										path="departement" placeholder=""
-										data-parsley-trigger="change" data-parsley-length="[2, 3]"
-										data-parsley-length-message="2 ou 3 chiffres" />
+										data-parsley-trigger="change" />
 								</div>
 								<div class="form-group">
 									<label for="coordonneesGeographique">Coordonnées
@@ -89,7 +89,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<label for="ouvrages">rattacher un ou des ouvrages</label>
 									<form:select autocomplete="true" multiple="true"
 										id="ouvragesCombo" name="ouvragesCombo" path="ouvrages"
-										items="${ouvragesCombo}" itemValue="id" itemLabel="nom"
+										items="${ouvragesCombo}" itemValue="id"
+										itemLabel="codeOuvrage"
 										data-placeholder=" Sélectionnez
 							une entité"
 										class="form-control chosen">
