@@ -16,7 +16,7 @@ public interface SiteDAO extends JpaRepository<Site, Integer> {
 			throws DataAccessException;
 
 	@Query("select s from Site s where s not in (select s2 from Etablissement e join e.sites s2)")
-	public List<Site> findFreeSites();
+	public List<Site> findFreeSites()throws DataAccessException;
 
 	@Query("select s from Client c join c.etablissements e join e.sites s where c.login = :userLogin")
 	List<Site> findByClientLogin(@Param("userLogin") String userLogin)
