@@ -106,17 +106,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-10 col-md-9 col-xs-12">
 				<div class="box-tab no-b p15 bg-white shadow content-inner">
 					<ul class="nav nav-tabs no-b">
-						<li class="active"><a href="#qualitatif" data-toggle="tab">Données
-								qualitatives</a></li>
-						<li><a href="#quantitatif" data-toggle="tab">Données
+						<li class="active"><a href="#quantitatif" data-toggle="tab">Données
 								quantitatives</a></li>
+						<li><a href="#qualitatif" data-toggle="tab">Données
+								qualitatives</a></li>
 					</ul>
 					<div class="tab-content text-center no-shadow">
-						<div class="tab-pane fade active in" id="qualitatif">
+						<div class="tab-pane fade active in" id="quantitatif">
 							<div id="charts"></div>
 						</div>
-						<div class="tab-pane fade" id="quantitatif">
-							<h1 class="text-muted bolder pb25 pt25">Quantitatif</h1>
+						<div class="tab-pane fade" id="qualitatif">
+							<h1 class="text-muted bolder pb25 pt25">Qualitatif</h1>
 						</div>
 					</div>
 				</div>

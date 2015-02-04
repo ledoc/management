@@ -14,6 +14,7 @@ import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,7 +47,8 @@ public class SiteController {
 		logger.info("--create formulaire SiteController--");
 
 		List<Ouvrage> ouvragesCombo;
-		List<TypeSite> typesSiteCombo = new ArrayList<TypeSite>(Arrays.asList(TypeSite.values()));
+		List<TypeSite> typesSiteCombo = new ArrayList<TypeSite>(
+				Arrays.asList(TypeSite.values()));
 		try {
 
 			ouvragesCombo = ouvrageService.findAll();
@@ -66,19 +68,24 @@ public class SiteController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id) throws ControllerException {
+	public String update(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
 		logger.info("--update SiteController--");
 		logger.debug("siteId : " + id);
 
 		Site site = null;
 		List<Ouvrage> ouvragesCombo;
 		ouvrageCache = new HashMap<Integer, Ouvrage>();
-		List<TypeSite> typesSiteCombo = new ArrayList<TypeSite>(Arrays.asList(TypeSite.values()));
+		List<TypeSite> typesSiteCombo = new ArrayList<TypeSite>(
+				Arrays.asList(TypeSite.values()));
 
 		try {
 			site = siteService.findByIdWithJoinFetchOuvrages(id);
 
-			ouvragesCombo = ouvrageService.findAll();
+			// ne renvoie que les sites libres et ceux déjà rattachés à
+			// l'établissement
+			ouvragesCombo = ouvrageService.findFreeOuvrages();
+			ouvragesCombo.addAll(site.getOuvrages());
 
 			for (Ouvrage ouvrage : ouvragesCombo) {
 				ouvrageCache.put(ouvrage.getId(), ouvrage);
@@ -94,7 +101,8 @@ public class SiteController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id) throws ControllerException {
+	public String delete(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
 		logger.info("--delete SiteController--");
 		logger.debug("siteId : " + id);
 
@@ -108,12 +116,51 @@ public class SiteController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Site site) throws ControllerException {
-		logger.info("--create SiteController--");
-		logger.debug("site : " + site);
-		logger.info(site.getOuvrages());
+	public String create(@ModelAttribute Site site, BindingResult result)
+			throws ControllerException {
+		logger.info("Erreurs : " + result.getAllErrors());
+
+		logger.info("--create SiteController-- site : " + site);
+		logger.info(" ouvrages : " + site.getOuvrages());
+
+		List<Ouvrage> ouvrages = site.getOuvrages();
 		try {
-			siteService.create(site);
+			// pour une update
+			if (site.getId() != null) {
+				logger.debug(" update d'un site : id = " + site.getId());
+				if (ouvrages != null) {
+					logger.debug("ouvrages actuelles : " + ouvrages);
+					Site siteInBase = siteService
+							.findByIdWithJoinFetchOuvrages(site.getId());
+					logger.debug("ouvrages avant update : "
+							+ siteInBase.getOuvrages());
+					if (!ouvrages.equals(siteInBase.getOuvrages())) {
+						logger.debug("La liste d'ouvrage a changée ");
+						for (Ouvrage ouvrage : ouvrages) {
+							logger.debug("ouvrage mis à jour : " + ouvrage);
+							ouvrage = ouvrageService.findById(ouvrage.getId());
+							ouvrage.setSite(site);
+							ouvrageService.update(ouvrage);
+						}
+					}
+					siteService.update(site);
+				} else {
+					site = siteService.create(site);
+				}
+				// pour la création d'un site
+			} else {
+				if (ouvrages != null) {
+					site = siteService.create(site);
+					for (Ouvrage ouvrage : ouvrages) {
+						ouvrage = ouvrageService.findById(ouvrage.getId());
+						ouvrage.setSite(site);
+						ouvrageService.update(ouvrage);
+					}
+				} else {
+					site = siteService.create(site);
+				}
+			}
+
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -123,17 +170,19 @@ public class SiteController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list")
-	public String list(Model model, HttpServletRequest request) throws ControllerException {
+	public String list(Model model, HttpServletRequest request)
+			throws ControllerException {
 		logger.info("--list SiteController--");
 
 		List<Site> sites = null;
 		try {
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
-			if (isAdmin){
+			if (isAdmin) {
 				sites = siteService.findAll();
 			} else {
-				String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+				String userLogin = SecurityContextHolder.getContext()
+						.getAuthentication().getName();
 				logger.debug("USER LOGIN : " + userLogin);
 				sites = siteService.findByClientLogin(userLogin);
 			}
@@ -147,27 +196,32 @@ public class SiteController {
 
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) throws ControllerException {
-		binder.registerCustomEditor(List.class, "sites", new CustomCollectionEditor(List.class) {
-			protected Object convertElement(Object element) {
-				if (element instanceof Ouvrage) {
-					logger.info("Conversion d'un Site en Site : " + element);
-					return element;
-				}
-				if (element instanceof String || element instanceof Integer) {
-					Ouvrage ouvrage;
-					if (element instanceof String) {
-						ouvrage = ouvrageCache.get(Integer.valueOf((String) element));
-					} else {
+		binder.registerCustomEditor(List.class, "ouvrages",
+				new CustomCollectionEditor(List.class) {
+					protected Object convertElement(Object element) {
+						if (element instanceof Ouvrage) {
+							logger.info("Conversion d'un ouvrage en ouvrage : "
+									+ element);
+							return element;
+						}
+						if (element instanceof String
+								|| element instanceof Integer) {
+							Ouvrage ouvrage;
+							if (element instanceof String) {
+								ouvrage = ouvrageCache.get(Integer
+										.valueOf((String) element));
+							} else {
 
-						ouvrage = ouvrageCache.get(element);
-						logger.info("Recherche du site pour l'Id : " + element + ": " + ouvrage);
+								ouvrage = ouvrageCache.get(element);
+								logger.info("Recherche du ouvrage pour l'Id : "
+										+ element + ": " + ouvrage);
+							}
+							return ouvrage;
+						}
+						logger.debug("Problème avec l'élement : " + element);
+						return null;
 					}
-					return ouvrage;
-				}
-				logger.debug("Problème avec l'élement : " + element);
-				return null;
-			}
-		});
+				});
 	}
 
 	public Map<Integer, Ouvrage> getOuvrageCache() {

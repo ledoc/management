@@ -30,7 +30,6 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
-import fr.treeptik.model.TypeMesure;
 import fr.treeptik.model.TypeOuvrage;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
@@ -152,9 +151,6 @@ public class OuvrageController {
 				+ ouvrage.getEnregistreurs());
 //		logger.info("niveau manuel : " + ouvrage.getNiveauManuel());
 		try {
-//			if (ouvrage.getNiveauManuel() != null) {
-//				mesureService.findById(ouvrage.getNiveauManuel().getId());
-//			}
 			ouvrageService.create(ouvrage);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());

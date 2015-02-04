@@ -28,5 +28,9 @@ public interface OuvrageService {
 		Ouvrage findByIdWithJoinFetchEnregistreurs(Integer id) throws ServiceException;
 
 		List<Ouvrage> findByClientLogin(String userLogin) throws ServiceException;
+		
+		List<Ouvrage> findByClientId(Integer userId) throws ServiceException;
+
+		List<Ouvrage> findFreeOuvrages() throws ServiceException;
 
 }
