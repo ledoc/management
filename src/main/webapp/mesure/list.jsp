@@ -24,15 +24,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b">
 						<h1 class="h3 text-primary mt0">Liste des mesures</h1>
 
-						<p class="text-muted">La présentation liste permet d'afficher
-							une grande quantité d'informations de façon lisible et structurée</p>
-
 						<div class="pull-right mb15">
 
 							<sec:authorize ifAllGranted="ADMIN">
 								<a href="<c:url  value="/mesure/create" />"
-									class="btn btn-outline btn-primary btn-m">Créer une
-									mesure</a>
+									class="btn btn-outline btn-primary btn-m">Créer une mesure</a>
 							</sec:authorize>
 						</div>
 					</header>

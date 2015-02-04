@@ -5,7 +5,8 @@
 <%@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <html>
 
 <head>
@@ -79,22 +80,24 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<ul class="nav navbar-nav">
 					<li><a href="<c:url  value="/carto/carto.jsp" />"
 						class="${param.menuAccueilActive}">Accueil</a></li>
-					
-					<sec:authorize ifAllGranted="ADMIN">	
+
+					<sec:authorize ifAllGranted="ADMIN">
 						<li><a href="<c:url  value="/administrateur/list" />"
 							class="${param.menuAdministrateurActive}">Administrateurs</a></li>
 						<li><a href="<c:url  value="/client/list" />"
 							class="${param.menuClientActive}">Clients</a></li>
 					</sec:authorize>
-					
+
 					<li><a href="<c:url  value="/etablissement/list" />"
 						class="${param.menuEtablissementActive}">Etablissements</a></li>
 					<li><a href="<c:url  value="/site/list" />"
 						class="${param.menuSiteActive}">Sites</a></li>
-					<li><a href="<c:url  value="/ouvrage/list" />" class="${param.menuOuvrageActive}">Ouvrages</a></li>
-					<li><a href="<c:url  value="/enregistreur/list" />" class="${param.menuEnregistreurActive}">Enregistreurs</a></li>
-					<li><a href="<c:url  value="/mesure/mesure.jsp" />" class="${param.menuMesureActive}">Mesures</a></li>
-					<li><a href="#" class="${param.menuDocumentActive}">Documents</a></li>
+					<li><a href="<c:url  value="/ouvrage/list" />"
+						class="${param.menuOuvrageActive}">Ouvrages</a></li>
+					<li><a href="<c:url  value="/mesure/mesure.jsp" />"
+						class="${param.menuMesureActive}">Mesures</a></li>
+					<li><a href="<c:url  value="/document/list" />"
+						class="${param.menuDocumentActive}">Documents</a></li>
 					<li><a href="#" class="${param.menuMessagerieActive}">Messagerie</a></li>
 				</ul>
 			</div>
@@ -109,6 +112,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<li><a href="#">
 								<div class="badge bg-danger pull-right">3</div> <span>Messagerie</span>
 						</a></li>
+						<sec:authorize ifAllGranted="ADMIN">
+							<li><a href="<c:url value="/administrateur/audit-log"/>">Historique
+									des actions</a></li>
+						</sec:authorize>
 						<li><a href="<c:url value="/logout" />">Déconnexion</a></li>
 					</ul></li>
 			</ul>

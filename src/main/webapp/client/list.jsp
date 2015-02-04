@@ -22,9 +22,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b">
 						<h1 class="h3 text-primary mt0">Liste des clients</h1>
 
-						<p class="text-muted">La présentation liste permet d'afficher
-							une grande quantité d'informations de façon lisible et structurée</p>
-
 						<div class="pull-right mb15">
 							<a href="<c:url  value="/client/create" />"
 								class="btn btn-outline btn-primary btn-m">Créer un client</a>

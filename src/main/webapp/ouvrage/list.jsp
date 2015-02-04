@@ -22,9 +22,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b">
 						<h1 class="h3 text-primary mt0">Liste des ouvrages</h1>
 
-						<p class="text-muted">La présentation liste permet d'afficher
-							une grande quantité d'informations de façon lisible et structurée</p>
-
 						<div class="pull-right mb15">
 							<a href="<c:url  value="/ouvrage/create" />"
 								class="btn btn-outline btn-primary btn-m">Créer un ouvrage</a>
@@ -43,10 +40,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th class="nosort nosearch">Nom</th>
 										<th>Type</th>
 										<th>numéro BSS</th>
-										<th>Code site</th>
+<!-- 										<th>Code site</th> -->
 										<th>Asservissement</th>
 										<th>Ouvrage maître</th>
-										<th class="nosort nosearch">Croquis</th>
+<!-- 										<th class="nosort nosearch">Croquis</th> -->
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -61,7 +58,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${ouvrage.nom}" /></td>
 											<td><c:out value="${ouvrage.typeOuvrage.description}" /></td>
 											<td><c:out value="${ouvrage.numeroBSS}" /></td>
-											<td><c:out value="${ouvrage.site.code}" /></td>
+<%-- 											<td><c:out value="${ouvrage.site.code}" /></td> --%>
 											<c:set var="asservissement" value="${ouvrage.asservissement}" />
 											<c:if test="${ asservissement == false }">
 												<td><c:out value="non" /></td>
@@ -70,7 +67,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<td><c:out value="oui" /></td>
 											</c:if>
 											<td><c:out value="${ouvrage.ouvrageMaitre}" /></td>
-											<td class="text-primary"><a href="#">voir</a></td>
+<!-- 											<td class="text-primary"><a href="#">voir</a></td> -->
 											<td><a data-url="${urlOuvrageDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
