@@ -12,13 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.EnregistreurDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
+import fr.treeptik.model.Ouvrage;
 import fr.treeptik.service.EnregistreurService;
+import fr.treeptik.service.OuvrageService;
 
 @Service
 public class EnregistreurServiceImpl implements EnregistreurService {
 
 	@Inject
 	private EnregistreurDAO enregistreurDAO;
+	@Inject
+	private OuvrageService ouvrageService;
 
 	private Logger logger = Logger.getLogger(EnregistreurServiceImpl.class);
 
@@ -54,8 +58,13 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE EnregistreurServiceImpl --");
-		logger.debug("enregistreurId : " + id);
+		logger.info("--DELETE EnregistreurServiceImpl --enregistreurId : " + id);
+		Enregistreur enregistreur = this.findById(id);
+		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(enregistreur.getOuvrage().getId());
+		boolean success = ouvrage.getEnregistreurs().remove(enregistreur);
+		
+		logger.debug("remove succes ? : " + success);
+		ouvrageService.update(ouvrage);
 		enregistreurDAO.delete(id);
 	}
 

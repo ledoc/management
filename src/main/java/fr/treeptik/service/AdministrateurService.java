@@ -24,4 +24,6 @@ public interface AdministrateurService {
 		Administrateur setIdentifiantWithCheck(Administrateur administrateur)
 				throws ServiceException;
 
+		List<String> getAuditLog() throws ServiceException;
+
 }

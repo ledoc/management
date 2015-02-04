@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -15,6 +16,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 @PropertySource({ "classpath:config.properties" })
 @ComponentScan(basePackages = { "fr.treeptik" })
+@EnableAspectJAutoProxy
 @Import(value = { SecurityConfiguration.class, DatabaseConfiguration.class })
 public class ApplicationConfiguration {
 

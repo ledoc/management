@@ -3,6 +3,7 @@ package fr.treeptik.controller;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -92,5 +93,20 @@ public class AdministrateurController {
 		model.addAttribute("administrateurs", administrateurs);
 		return "/administrateur/list";
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/audit-log")
+	public String getAuditLog(HttpServletResponse response,  Model model) throws ControllerException {
+		logger.info("-- get audit log --");
+		
+		try {
+		    
+		    model.addAttribute("logs", administrateurService.getAuditLog());
+		    
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
 
+		return "/administrateur/log";
+	}
 }

@@ -113,8 +113,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="badge bg-danger pull-right">3</div> <span>Messagerie</span>
 						</a></li>
 						<sec:authorize ifAllGranted="ADMIN">
-							<li><a href="<c:url value="/administrateur/audit-log"/>">Historique
-									des actions</a></li>
+							<li><a href="<c:url value="/administrateur/audit-log"/>">Historique des actions</a></li>
 						</sec:authorize>
 						<li><a href="<c:url value="/logout" />">Déconnexion</a></li>
 					</ul></li>
