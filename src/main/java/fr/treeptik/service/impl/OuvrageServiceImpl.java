@@ -3,9 +3,11 @@ package fr.treeptik.service.impl;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.OuvrageDAO;
@@ -35,7 +37,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
+	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = ServiceException.class)
 	public Ouvrage update(Ouvrage ouvrage) throws ServiceException {
 		logger.info("--UPDATE OuvrageServiceImpl --");
 		logger.debug("ouvrage : " + ouvrage);
@@ -100,6 +102,26 @@ public class OuvrageServiceImpl implements OuvrageService {
 		logger.info("--findByClient userLogin OuvrageServiceImpl--");
 		logger.debug("userLogin : " + userLogin);
 		return ouvrageDAO.findByClientLogin(userLogin);
+	}
+
+	@Override
+	public List<Ouvrage> findByClientId(Integer userId) throws ServiceException {
+		logger.info("--findByClient userId OuvrageServiceImpl--");
+		logger.debug("userId : " + userId);
+		return ouvrageDAO.findByClientId(userId);
+	}
+
+	@Override
+	public List<Ouvrage> findFreeOuvrages() throws ServiceException {
+		logger.info("--findFreeOuvrages OuvrageServiceImpl --");
+		List<Ouvrage> ouvrages;
+		try {
+			ouvrages = ouvrageDAO.findFreeOuvrages();
+		} catch (PersistenceException e) {
+			logger.error("Error OuvrageService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return ouvrages;
 	}
 
 }
