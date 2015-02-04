@@ -1,5 +1,6 @@
 package fr.treeptik.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Document {
+public class Document implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +20,11 @@ public class Document {
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	private String nom;
+	private String type;
+	private String path;
 	private Integer taille;
+	@ManyToOne
+	private Client client;
 	@ManyToOne
 	private Ouvrage ouvrage;
 
@@ -47,6 +52,23 @@ public class Document {
 		this.nom = nom;
 	}
 
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public Integer getTaille() {
 		return taille;
 	}
@@ -61,6 +83,16 @@ public class Document {
 
 	public void setOuvrage(Ouvrage ouvrage) {
 		this.ouvrage = ouvrage;
+	}
+
+	
+	
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
 	@Override

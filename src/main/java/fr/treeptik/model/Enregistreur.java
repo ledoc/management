@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -31,7 +32,7 @@ public class Enregistreur implements Serializable {
 
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
 	// historique NM
-	@OneToOne
+	@OneToOne(cascade=CascadeType.REMOVE)
 	protected Mesure niveauManuel;
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
 	@OneToOne
@@ -83,7 +84,8 @@ public class Enregistreur implements Serializable {
 	private String userName;
 	@OneToMany(mappedBy = "enregistreur")
 	private List<TrameDW> trameDWs;
-
+	@ManyToOne
+	private Ouvrage ouvrage;
 	// private String server;
 
 	public Enregistreur() {
@@ -119,6 +121,14 @@ public class Enregistreur implements Serializable {
 
 	public void setMid(String mid) {
 		this.mid = mid;
+	}
+
+	public Ouvrage getOuvrage() {
+		return ouvrage;
+	}
+
+	public void setOuvrage(Ouvrage ouvrage) {
+		this.ouvrage = ouvrage;
 	}
 
 	public String getComment() {

@@ -1,5 +1,6 @@
 package fr.treeptik.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Mesure {
+public class Mesure implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

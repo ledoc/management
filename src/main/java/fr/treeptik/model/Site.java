@@ -1,5 +1,6 @@
 package fr.treeptik.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,8 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+@SuppressWarnings("serial")
 @Entity
-public class Site {
+public class Site implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +30,7 @@ public class Site {
 	private String coordonneesGeographique;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
-	@OneToMany(mappedBy="site")
+	@OneToMany
 	private List<Ouvrage> ouvrages;
 
 	public Integer getId() {

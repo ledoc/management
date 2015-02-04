@@ -1,5 +1,6 @@
 package fr.treeptik.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -12,8 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+@SuppressWarnings("serial")
 @Entity
-public class Ouvrage {
+public class Ouvrage implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,17 +30,18 @@ public class Ouvrage {
 	@Enumerated(EnumType.STRING)
 	protected TypeOuvrage typeOuvrage;
 	@ManyToOne
-	protected Site site;
+	private Site site;
 	/**
 	 * Nivellement général de la France
 	 */
 	// Côte repère NGF : à indiquer
-	protected float coteRepereNGF;
+	protected Float coteRepereNGF;
 
 	protected String commentaire;
 	// Si l'ouvrage est "lié" à un autre
-	protected boolean asservissement;
+	protected Boolean asservissement;
 	// Ouvrage auquel il est asservi
+	
 	@OneToOne
 	protected Ouvrage ouvrageMaitre;
 
@@ -47,7 +50,7 @@ public class Ouvrage {
 
 	@OneToMany
 	protected List<Enregistreur> enregistreurs;
-	@OneToMany(mappedBy = "ouvrage")
+	@OneToMany
 	protected List<Mesure> mesures;
 	@OneToMany
 	protected List<Alerte> alertes;
@@ -99,6 +102,14 @@ public class Ouvrage {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+	
+	public Site getSite() {
+		return site;
+	}
+
+	public void setSite(Site site) {
+		this.site = site;
+	}
 
 	public Boolean getAsservissement() {
 		return asservissement;
@@ -130,8 +141,6 @@ public class Ouvrage {
 		this.coteRepereNGF = coteRepereNGF;
 	}
 
-	
-
 	public String getPhoto() {
 		return photo;
 	}
@@ -146,19 +155,6 @@ public class Ouvrage {
 
 	public void setCodeOuvrage(String codeOuvrage) {
 		this.codeOuvrage = codeOuvrage;
-	}
-
-	public Site getSite() {
-		return site;
-	}
-
-	/**
-	 * code du site ou de secteur de rattachement
-	 * 
-	 * @param codeSite
-	 */
-	public void setSite(Site site) {
-		this.site = site;
 	}
 
 	public List<Enregistreur> getEnregistreurs() {
@@ -281,11 +277,14 @@ public class Ouvrage {
 
 	@Override
 	public String toString() {
-		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement=" + asservissement + ", ouvrageMaitre="
-				+ ouvrageMaitre + ", coteRepereNGF=" + coteRepereNGF + ", photo=" + photo + ", codeOuvrage=" + codeOuvrage
-				+ ", site=" + site.getId() + ", typeOuvrage=" + typeOuvrage + ", croquisDynamique=" + croquisDynamique
-				+ ", commentaire=" + commentaire + ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
-				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol + ", mesureProfondeur=" + mesureProfondeur
+		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement="
+				+ asservissement + ", ouvrageMaitre=" + ouvrageMaitre
+				+ ", coteRepereNGF=" + coteRepereNGF + ", photo=" + photo
+				+ ", codeOuvrage=" + codeOuvrage + ", typeOuvrage="
+				+ typeOuvrage + ", croquisDynamique=" + croquisDynamique
+				+ ", commentaire=" + commentaire + ", coteSol=" + coteSol
+				+ ", numeroBSS=" + numeroBSS + ", mesureRepereNGFSol="
+				+ mesureRepereNGFSol + ", mesureProfondeur=" + mesureProfondeur
 				+ ", coteSolNGF=" + coteSolNGF + "]";
 	}
 
@@ -293,11 +292,14 @@ public class Ouvrage {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codeOuvrage == null) ? 0 : codeOuvrage.hashCode());
+		result = prime * result
+				+ ((codeOuvrage == null) ? 0 : codeOuvrage.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result + ((numeroBSS == null) ? 0 : numeroBSS.hashCode());
-		result = prime * result + ((typeOuvrage == null) ? 0 : typeOuvrage.hashCode());
+		result = prime * result
+				+ ((numeroBSS == null) ? 0 : numeroBSS.hashCode());
+		result = prime * result
+				+ ((typeOuvrage == null) ? 0 : typeOuvrage.hashCode());
 		return result;
 	}
 
