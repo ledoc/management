@@ -21,7 +21,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">Création d'un enregistreur</h1>
+						<h1 class="h3 text-primary mt0">Formulaire d'un enregistreur</h1>
 						<p class="text-muted">Permet de créer ou mettre à jour un
 							enregistreur.</p>
 					</header>
@@ -36,8 +36,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="text-primary">
 
-									<a href="<c:url  value="/trame/list/${enregistreur.id}" />">Trames
-										DW Bruts</a>
+<%-- 									<a href="<c:url  value="/trame/list/${enregistreur.id}" />">Trames --%>
+<!-- 										DW Bruts</a> -->
 								</div>
 								<div class="form-group">
 									<label for="mid">MID</label>
@@ -47,6 +47,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+								<div class="form-group">
+									<label for="ouvrage">Ouvrage </label>
+									<form:input readonly="true" type="text" class="form-control" id="ouvrage"
+										path="ouvrage.codeOuvrage" />
 								</div>
 								<div class="form-group">
 									<label for="niveauManuel">Niveau manuel</label>
@@ -64,9 +69,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="mesureEnregistreur">Dernière mesure</label>
 									<form:hidden path="mesureEnregistreur.id" />
-									<form:input type="text" class="transfertInput form-control"
-										id="mesureEnregistreur" path="mesureEnregistreur.valeur"
-										placeholder="" />
+									<input type="text" class="transfertInput form-control"
+										id="mesureEnregistreur" value="${mesureEnregistreur.valeur}" />
 								</div>
 								<div class="form-group">
 									<label for="sonde">Sonde</label>
@@ -96,12 +100,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 
 
-								<div class="form-group">
-									<label for="croquis">Croquis</label>
-									<form:input type="text" class="transfertInput form-control"
-										id="croquis" path="croquis" data-parsley-trigger="change"
-										placeholder="" />
-								</div>
+								<!-- 								<div class="form-group"> -->
+								<!-- 									<label for="croquis">Croquis</label> -->
+								<%-- 									<form:input type="text" class="transfertInput form-control" --%>
+								<%-- 										id="croquis" path="croquis" data-parsley-trigger="change" --%>
+								<%-- 										placeholder="" /> --%>
+								<!-- 								</div> -->
 
 
 
@@ -134,17 +138,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<form:radiobutton class="transfertInput" id="maintenance"
 											path="maintenance" label="non" value="false" />
 									</div>
-									<div class="form-group">
-										<label for="alertesActives">Attacher une ou des
-											alertes actives</label>
-										<form:select multiple="true" id="alertesCombo"
-											name="alertesCombo" path="alertesActives"
-											items="${alertesCombo}" itemValue="id" itemLabel="code"
-											data-placeholder=" Sélectionnez
-							un ou des alertes"
-											class="transfertInput form-control chosen">
-										</form:select>
-									</div>
+									<!-- 									<div class="form-group"> -->
+									<!-- 										<label for="alertesActives">Attacher une ou des -->
+									<!-- 											alertes actives</label> -->
+									<%-- 										<form:select multiple="true" id="alertesCombo" --%>
+									<%-- 											name="alertesCombo" path="alertesActives" --%>
+									<%-- 											items="${alertesCombo}" itemValue="id" itemLabel="code" --%>
+									<%-- 											data-placeholder=" Sélectionnez --%>
+									<%-- 							un ou des alertes" --%>
+									<%-- 											class="transfertInput form-control chosen"> --%>
+									<%-- 										</form:select> --%>
+									<!-- 									</div> -->
 								</div>
 							</div>
 						</form:form>
@@ -161,15 +165,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true">×</button>
-						<h4 class="modal-title">Nouveau niveau manuel</h4>
+						<h4 class="modal-title">Nouvelle mesure de niveau manuel</h4>
 					</div>
 					<div class="modal-body">
-						<p>Nouvelle mesure de niveau manuel.</p>
-						<div class="row">
-							<c:url var="createNiveauManuel" value="/enregistreur/update/niveau/manuel" />
+						<div>
+							<c:url var="createNiveauManuel" value="/enregistreur/init" />
 							<form:form id="form" method="POST" action="${createNiveauManuel}"
-								modelAttribute="enregistreur" role="form" class="parsley-form"
-								data-validate="parsley" data-show-errors="true">
+								modelAttribute="enregistreur" role="form"
+								class="parsley-form clearfix" data-validate="parsley"
+								data-show-errors="true">
 
 								<form:hidden id="data-id" path="id" />
 								<form:hidden id="data-mid" path="mid" />
@@ -192,7 +196,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										path="niveauManuel.typeMesure" items="${typesMesureCombo}"
 										data-placeholder="Sélectionnez 
 							un type"
-										itemLabel="description" data-parsley-required="true">
+										itemLabel="description" data-parsley-required="true"
+										class="form-control">
 									</form:select>
 								</div>
 
@@ -216,7 +221,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
-								<div class="modal-footer">
+								<div class="modal-footer col-xs-12 no-b">
 									<button type="button" class="btn btn-default"
 										data-dismiss="modal">Close</button>
 									<button id="validate-creation-niveau-manuel" type="submit"
