@@ -1,6 +1,12 @@
 package fr.treeptik.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -92,5 +98,28 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 		}
 		logger.debug("administrateur : " + administrateur);
 		return administrateur;
+	}
+	
+	@Override
+	public List<String> getAuditLog() throws ServiceException {
+	
+		ArrayList<String> logs = new ArrayList<String>();
+		Stream<String> lines = null;
+		try {
+			
+			lines = Files.lines(Paths.get(System.getProperty("rootPath"), "..", "..", "logs", "audit-msg.log"));
+			lines.forEach(s -> logs.add(s));
+			lines.close();	
+
+			// Reverse pour afficher les dernière actions en premier
+			Collections.reverse(logs);
+			 
+		} catch (IOException e) {
+			logger.error("Erreur read audit log " + e.getMessage());
+			throw new ServiceException(e.getMessage(), e);
+		}
+		
+		return logs;
+		
 	}
 }

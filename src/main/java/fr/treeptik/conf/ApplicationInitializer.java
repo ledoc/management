@@ -28,6 +28,10 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
 
+		// HACK pour avoir le chemin de l'application et retrouver les log facilement 
+		logger.debug("Context root path : " + servletContext.getRealPath("/"));
+		System.setProperty("rootPath", servletContext.getRealPath("/"));
+		
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(ApplicationConfiguration.class);
 		webApplicationContext.setServletContext(servletContext);
