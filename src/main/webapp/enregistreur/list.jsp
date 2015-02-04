@@ -24,9 +24,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b">
 						<h1 class="h3 text-primary mt0">Liste des enregistreurs</h1>
 
-						<p class="text-muted">La présentation liste permet d'afficher
-							une grande quantité d'informations de façon lisible et structurée</p>
-
 						<div class="pull-right mb15">
 
 							<sec:authorize ifAllGranted="ADMIN">
@@ -51,8 +48,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Dernière mesure</th>
 										<th>Niveau manuel</th>
 										<th>Maintenance</th>
-										<th>mesures</th>
-										<th>Croquis</th>
+<!-- 										<th>mesures</th> -->
+<!-- 										<th>Croquis</th> -->
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -79,9 +76,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<c:if test="${ maintenance == false }">
 												<td><c:out value="non" /></td>
 											</c:if>
-											<td class="text-primary"><a
-												href="${urlMesuresView}">voir</a></td>
-											<td><c:out value="${enregistreur.croquis}" /></td>
+<!-- 											<td class="text-primary"><a -->
+<%-- 												href="${urlMesuresView}">voir</a></td> --%>
+<%-- 											<td><c:out value="${enregistreur.croquis}" /></td> --%>
 											<td><a data-url="${urlEnregistreurDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
