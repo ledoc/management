@@ -54,7 +54,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlSiteDelete" value="/site/delete/${site.id}" />
 										<c:url var="urlSiteUpdate" value="/site/update/${site.id}" />
 										<tr>
-											<td class="text-primary"><a href="${urlSiteUpdate}">${site.code}</a></td>
+											<td class="text-primary"><a href="${urlSiteUpdate}">${site.codeSite}</a></td>
 											<td><c:out value="${site.typeSite}" /></td>
 											<td><c:out value="${site.nom}" /></td>
 											<td><c:out value="${site.departement}" /></td>
@@ -87,6 +87,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
+							<p class="text-muted">ATTENTION : Les ouvrages et
+								enregistreurs associés seront supprimés</p>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"

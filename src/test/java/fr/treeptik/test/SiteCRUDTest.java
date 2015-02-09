@@ -57,7 +57,7 @@ public class SiteCRUDTest {
 		Site site = new Site();
 		site.setCoordonneesGeographique(coordonneesGeographique);
 //		site.setEtablissement(etablissement);
-		site.setCode(code);
+		site.setCodeSite(code);
 		site.setDepartement(departement);
 		site.setNom(nom);
 		site.setOuvrages(ouvrages1);
@@ -75,7 +75,7 @@ public class SiteCRUDTest {
 		Site site2 = new Site();
 		site2.setCoordonneesGeographique(coordonneesGeographique2);
 //		site2.setEtablissement(etablissement2);
-		site2.setCode(code2);
+		site2.setCodeSite(code2);
 		site2.setDepartement(departement2);
 		site2.setNom(nom2);
 		site2.setOuvrages(ouvrages2);

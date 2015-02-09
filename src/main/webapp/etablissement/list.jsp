@@ -44,9 +44,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<tr>
 										<th>Code de l'établissement</th>
 										<th>Nom</th>
-										<th >Téléphone</th>
-										<th >Email</th>
-										<th >Site web</th>
+										<th>Téléphone</th>
+										<th>Email</th>
+										<th>Site web</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -92,6 +92,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
+							<p class="text-muted">ATTENTION : Les sites, ouvrages et
+								enregistreurs associés seront supprimés</p>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"

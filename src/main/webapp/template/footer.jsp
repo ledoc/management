@@ -45,6 +45,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/js/bootstrap-datatables.js"></script>
 <script src="${urlResources}/plugins/icheck/icheck.js"></script>
 <script src="${urlResources}/plugins/hightcharts/js/highcharts.js"></script>
+<script type="text/javascript" src="${urlResources}/js/bootstrap-filestyle.min.js"> </script>
 <!-- /page level scripts -->
 
 <!-- template scripts -->

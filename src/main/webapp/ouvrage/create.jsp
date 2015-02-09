@@ -65,31 +65,37 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 								<div class="form-group">
-									<label for="site">Site </label>
-									<form:input readonly="true" type="text" class="form-control"
-										id="site" path="site.code" />
+									<label for="site">Rattacher à un Site</label>
+									<form:select autocomplete="true" id="sitesCombo"
+										name="sitesCombo" path="site.id" itemValue="id"
+										items="${sitesCombo}" itemLabel="codeSite"
+										data-placeholder=" Sélectionnez 
+ 							un site"
+										class="form-control chosen">
+									</form:select>
+
+
 								</div>
+
 								<div class="checkbox checkbox-inline">
 									<form:checkbox id="asservissement" path="asservissement"
 										onchange="javascript:activateOuvrageMaitre();"
 										label="Asservissement" />
-
 								</div>
 								<div style="display: none;" id="ouvrageMaitre"
 									class="form-group">
 									<label for="ouvrageMaitre">Ouvrage maître</label>
-									<form:input type="text" class="form-control" id="ouvrageMaitre"
-										path="ouvrageMaitre" placeholder=""
-										data-parsley-trigger="change" data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+									<form:select autocomplete="true" id="ouvragesCombo"
+										name="ouvragesCombo" path="ouvrageMaitre.id"
+										class="form-control"
+										data-placeholder=" Sélectionnez
+							un ouvrage maître">
+										<form:option value=""></form:option>
+										<form:options items="${ouvragesCombo}" itemValue="id"
+											itemLabel="codeOuvrage" />
+
+									</form:select>
 								</div>
-								<!-- 								<div class="form-group"> -->
-								<!-- 									<label for="croquisDynamique">Croquis dynamique</label> -->
-								<%-- 									<form:input type="text" class="form-control" --%>
-								<%-- 										id="croquisDynamique" path="croquisDynamique" placeholder="" --%>
-								<%-- 										data-parsley-trigger="change" data-parsley-mincheck="2" --%>
-								<%-- 										data-parsley-mincheck-message="2 caractères minimum" /> --%>
-								<!-- 								</div> -->
 								<div class="form-group">
 									<label for="commentaire">Commentaire</label>
 									<form:textarea type="text" class="form-control"
@@ -108,6 +114,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<label for="coteSolNGF">Côte Sol / NGF</label>
 									<form:input type="text" class="form-control" id="coteSolNGF"
 										path="coteSolNGF" placeholder="" data-parsley-trigger="change"
+										step="any" data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
@@ -115,7 +123,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<label for="coteRepereNGF">Côte repère NGF</label>
 									<form:input type="text" class="form-control" id="coteRepereNGF"
 										path="coteRepereNGF" placeholder=""
-										data-parsley-trigger="change" data-parsley-mincheck="2"
+										data-parsley-trigger="change" step="any"
+										data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 								<div style="display: none;" class="eaudesurface form-group">
@@ -137,38 +148,44 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="mesureProfondeur">Mesure repère Profondeur
 										/NGF (nappe souterraine)</label>
-									<form:input type="text" class="form-control"
+									<form:input type="number" class="form-control"
 										id="mesureProfondeur" path="mesureProfondeur" placeholder=""
-										data-parsley-trigger="change" data-parsley-mincheck="2"
+										data-parsley-trigger="change" step="any"
+										data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="mesureRepereNGFSol">Mesure repère NGF / Sol
 										(nappe souterraine)</label>
-									<form:input type="text" class="form-control"
+									<form:input type="number" class="form-control"
 										path="mesureRepereNGFSol" placeholder=""
-										data-parsley-trigger="change" data-parsley-mincheck="2"
+										data-parsley-trigger="change" step="any"
+										data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 							</div>
 
 
-
+							<!--  tableaux des enregistreurs associés -->
 							<div class="col-lg-offset-2 col-lg-8 col-md-12 col-xs-12">
 
 								<c:set var="enregistreurs" value="${ouvrage.enregistreurs}" />
 								<c:if test="${empty enregistreurs }">
-								<sec:authorize ifAllGranted="ADMIN">
-									<c:if test="${not empty ouvrage.id}">
-										<div class="mb15">
-											<c:url var="urlEnregistreurCreate"
-												value="/enregistreur/create/${ouvrage.id}" />
-											<a id="creation-enregistreur"
-												href="${urlEnregistreurCreate }"
-												class="btn btn-outline btn-primary btn-s"> nouvel
-												enregistreur</a>
-										</div>
-									</c:if>
+									<sec:authorize ifAllGranted="ADMIN">
+										<c:if test="${not empty ouvrage.id}">
+											<div class="mb15">
+												<c:url var="urlEnregistreurCreate"
+													value="/enregistreur/create/${ouvrage.id}" />
+												<a id="creation-enregistreur"
+													href="${urlEnregistreurCreate }"
+													class="btn btn-outline btn-primary btn-s"> nouvel
+													enregistreur</a>
+											</div>
+										</c:if>
 									</sec:authorize>
 								</c:if>
 								<c:if test="${not empty enregistreurs }">
@@ -194,9 +211,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<th>Sonde</th>
 												<th>Dernière mesure</th>
 												<th>Niveau manuel</th>
-												<th>Maintenance</th>
-												<!-- 										<th>mesures</th> -->
-												<!-- 										<th>Croquis</th> -->
 												<th class="nosort nosearch">Actions</th>
 											</tr>
 										</thead>
@@ -213,19 +227,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 														href="${urlEnregistreurUpdate}">${enregistreur.mid}</a></td>
 													<td><c:out value="${enregistreur.sonde}" /></td>
 													<td><c:out
-															value="${enregistreur.mesureEnregistreur.valeur}" /></td>
+															value="${enregistreur.derniereMesure.valeur}" /></td>
 													<td><c:out value="${enregistreur.niveauManuel.valeur}" /></td>
-													<c:set var="maintenance"
-														value="${enregistreur.maintenance}" />
-													<c:if test="${ maintenance == true }">
-														<td><c:out value="oui" /></td>
-													</c:if>
-													<c:if test="${ maintenance == false }">
-														<td><c:out value="non" /></td>
-													</c:if>
-													<!-- 											<td class="text-primary"><a -->
-													<%-- 												href="${urlMesuresView}">voir</a></td> --%>
-													<%-- 											<td><c:out value="${enregistreur.croquis}" /></td> --%>
 													<td><a data-url="${urlEnregistreurDelete}"
 														data-toggle="modal" data-target="#confirmModal"
 														class="btn btn-outline btn-danger btn-xs js-confirm-btn">
@@ -237,6 +240,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									</table>
 								</c:if>
 							</div>
+							<!--  \tableaux des enregistreurs associés -->
 						</form:form>
 					</div>
 				</div>
@@ -310,17 +314,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			}
 
 			function activateOuvrageMaitre() {
-				console.log('coucou');
 				if ($('#asservissement').is(':checked')) {
 					$('#ouvrageMaitre').attr('style', 'display: block;');
 					$('#ouvrageMaitre').attr('disabled', false);
 					$('#ouvrageMaitre').show();
+					$('#ouvragesCombo').chosen({
+						allow_single_deselect : true
+					});
 				}
 				if (!$('#asservissement').is(':checked')) {
 					$('#ouvrageMaitre').attr('style', 'display: none;');
 					$('#ouvrageMaitre').attr('disabled', true);
 					$('#ouvrageMaitre').hide();
+					$('#ouvragesCombo option:first').prop('selected', true);
 
+					$('#ouvragesCombo').trigger("chosen:updated");
 				}
 				console.log($('#asservissement').is(':checked'));
 			}

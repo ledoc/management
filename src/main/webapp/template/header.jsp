@@ -84,12 +84,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<sec:authorize ifAllGranted="ADMIN">
 						<li><a href="<c:url  value="/administrateur/list" />"
 							class="${param.menuAdministrateurActive}">Administrateurs</a></li>
+					</sec:authorize>
+					<li><a href="<c:url  value="/etablissement/list" />"
+						class="${param.menuEtablissementActive}">Etablissements</a></li>
+					<sec:authorize ifAllGranted="ADMIN">
 						<li><a href="<c:url  value="/client/list" />"
 							class="${param.menuClientActive}">Clients</a></li>
 					</sec:authorize>
-
-					<li><a href="<c:url  value="/etablissement/list" />"
-						class="${param.menuEtablissementActive}">Etablissements</a></li>
 					<li><a href="<c:url  value="/site/list" />"
 						class="${param.menuSiteActive}">Sites</a></li>
 					<li><a href="<c:url  value="/ouvrage/list" />"
@@ -113,7 +114,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="badge bg-danger pull-right">3</div> <span>Messagerie</span>
 						</a></li>
 						<sec:authorize ifAllGranted="ADMIN">
-							<li><a href="<c:url value="/administrateur/audit-log"/>">Historique des actions</a></li>
+							<li><a href="<c:url value="/administrateur/audit-log"/>">Historique
+									des actions</a></li>
 						</sec:authorize>
 						<li><a href="<c:url value="/logout" />">Déconnexion</a></li>
 					</ul></li>

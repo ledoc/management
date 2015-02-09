@@ -47,13 +47,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										path="typeSite" items="${typesSiteCombo}"
 										data-placeholder="Sélectionnez
 							un type"
-										class="form-control chosen" data-parsley-required="true">
+										class="form-control" data-parsley-required="true">
 									</form:select>
 								</div>
 								<div class="form-group">
-									<label for="code">Code</label>
-									<form:input type="text" class="form-control" id="code"
-										path="code" placeholder="" data-parsley-required="true"
+									<label for="codeSite">Code</label>
+									<form:input type="text" class="form-control" id="codeSite"
+										path="codeSite" placeholder="" data-parsley-required="true"
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
@@ -86,15 +86,20 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 								<div class="form-group">
-									<label for="ouvrages">rattacher un ou des ouvrages</label>
-									<form:select autocomplete="true" multiple="true"
-										id="ouvragesCombo" name="ouvragesCombo" path="ouvrages"
-										items="${ouvragesCombo}" itemValue="id"
-										itemLabel="codeOuvrage"
+									<label for="etablissements">Rattacher à un
+										établissement</label>
+										
+									<form:select name="etablissementsCombo" path="etablissement.id"
+										data-parsley-required="true" data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
 										data-placeholder=" Sélectionnez
-							une entité"
-										class="form-control chosen">
+							un établissement"
+										class="form-control chosen-select">
+										
+										<form:options items="${etablissementsCombo}" itemValue="id"
+											itemLabel="codeEtablissement" />
 									</form:select>
+
 								</div>
 								<div class="pull-right">
 									<a href="<c:url  value="/site/list" />"

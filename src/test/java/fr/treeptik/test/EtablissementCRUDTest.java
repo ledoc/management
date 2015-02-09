@@ -56,7 +56,7 @@ public class EtablissementCRUDTest {
 
 		Site site = new Site();
 		site.setCoordonneesGeographique(coordonneesGeographique);
-		site.setCode(code);
+		site.setCodeSite(code);
 		site.setDepartement(departement);
 		site.setNom(nom);
 		site.setStationMeteo(stationMeteo);
@@ -64,7 +64,7 @@ public class EtablissementCRUDTest {
 		
 		Site site2 = new Site();
 		site2.setCoordonneesGeographique(coordonneesGeographique2);
-		site2.setCode(code2);
+		site2.setCodeSite(code2);
 		site2.setDepartement(departement2);
 		site2.setNom(nom2);
 		site2.setStationMeteo(stationMeteo2);
@@ -75,7 +75,7 @@ public class EtablissementCRUDTest {
 		
 		Site site3 = new Site();
 		site3.setCoordonneesGeographique(coordonneesGeographique2);
-		site3.setCode(code3);
+		site3.setCodeSite(code3);
 		site3.setNom(nom3);
 		site3.setDepartement(departement2);
 		site3.setStationMeteo(stationMeteo2);
@@ -86,7 +86,7 @@ public class EtablissementCRUDTest {
 		
 		Site site4 = new Site();
 		site3.setCoordonneesGeographique(coordonneesGeographique2);
-		site3.setCode(code4);
+		site3.setCodeSite(code4);
 		site3.setNom(nom4);
 		site3.setDepartement(departement2);
 		site3.setStationMeteo(stationMeteo2);
@@ -176,7 +176,7 @@ public class EtablissementCRUDTest {
 		etablissementService.update(etablissement);
 
 		etablissement = etablissementService.findById(id);
-		etablissementService.remove(etablissement);
+		//etablissementService.remove(etablissement);
 
 		etablissement = etablissementService.findById(id);
 		assertNull("L'objet ne doit pas exister", etablissement);

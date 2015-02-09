@@ -67,7 +67,7 @@ public class ClientCRUDTest {
 		String stationMeteo = "code Météo France + coordonnées géographiques";
 		Site site = new Site();
 		site.setCoordonneesGeographique(coordonneesGeographique);
-		site.setCode(code);
+		site.setCodeSite(code);
 		site.setDepartement(departement);
 		site.setNom(nomSite);
 		site.setStationMeteo(stationMeteo);

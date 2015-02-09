@@ -34,11 +34,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<form:hidden class="transfertInput" path="id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
-								<div class="text-primary">
-
-<%-- 									<a href="<c:url  value="/trame/list/${enregistreur.id}" />">Trames --%>
-<!-- 										DW Bruts</a> -->
-								</div>
 								<div class="form-group">
 									<label for="mid">MID</label>
 									<form:input type="text" class="transfertInput form-control"
@@ -50,8 +45,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="ouvrage">Ouvrage </label>
-									<form:input readonly="true" type="text" class="form-control" id="ouvrage"
-										path="ouvrage.codeOuvrage" />
+									<form:input readonly="true" type="text" class="form-control"
+										id="ouvrage" path="ouvrage.codeOuvrage" />
 								</div>
 								<div class="form-group">
 									<label for="niveauManuel">Niveau manuel</label>
@@ -67,10 +62,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 
 								<div class="form-group">
-									<label for="mesureEnregistreur">Dernière mesure</label>
-									<form:hidden path="mesureEnregistreur.id" />
+									<label for="derniereMesure">Dernière mesure</label>
+									<form:hidden path="derniereMesure.id" />
 									<input type="text" class="transfertInput form-control"
-										id="mesureEnregistreur" value="${mesureEnregistreur.valeur}" />
+										id="derniereMesure" value="${derniereMesure.valeur}" />
 								</div>
 								<div class="form-group">
 									<label for="sonde">Sonde</label>
@@ -98,19 +93,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change" data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
-
-
-								<!-- 								<div class="form-group"> -->
-								<!-- 									<label for="croquis">Croquis</label> -->
-								<%-- 									<form:input type="text" class="transfertInput form-control" --%>
-								<%-- 										id="croquis" path="croquis" data-parsley-trigger="change" --%>
-								<%-- 										placeholder="" /> --%>
-								<!-- 								</div> -->
-
-
-
 								<div class="pull-right">
-									<a href="<c:url  value="/enregistreur/list" />"
+									<a href="<c:url  value="/ouvrage/update/${enregistreur.ouvrage.id}" />"
 										class="btn btn-default btn-outline">Retour</a>
 									<button type="submit" class="btn btn-outline btn-primary">Créer</button>
 								</div>
@@ -138,17 +122,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<form:radiobutton class="transfertInput" id="maintenance"
 											path="maintenance" label="non" value="false" />
 									</div>
-									<!-- 									<div class="form-group"> -->
-									<!-- 										<label for="alertesActives">Attacher une ou des -->
-									<!-- 											alertes actives</label> -->
-									<%-- 										<form:select multiple="true" id="alertesCombo" --%>
-									<%-- 											name="alertesCombo" path="alertesActives" --%>
-									<%-- 											items="${alertesCombo}" itemValue="id" itemLabel="code" --%>
-									<%-- 											data-placeholder=" Sélectionnez --%>
-									<%-- 							un ou des alertes" --%>
-									<%-- 											class="transfertInput form-control chosen"> --%>
-									<%-- 										</form:select> --%>
-									<!-- 									</div> -->
 								</div>
 							</div>
 						</form:form>
@@ -178,8 +151,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:hidden id="data-id" path="id" />
 								<form:hidden id="data-mid" path="mid" />
 								<form:hidden id="data-maintenance" path="maintenance" />
-								<form:hidden id="data-mesureEnregistreur"
-									path="mesureEnregistreur" />
+								<form:hidden id="data-derniereMesure"
+									path="derniereMesure" />
 								<form:hidden id="data-modem" path="modem" />
 								<form:hidden id="data-transmission" path="transmission" />
 								<form:hidden id="data-sim" path="sim" />

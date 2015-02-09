@@ -5,6 +5,8 @@
 <%@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuOuvrageActive" />
@@ -23,8 +25,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des ouvrages</h1>
 
 						<div class="pull-right mb15">
-							<a href="<c:url  value="/ouvrage/create" />"
-								class="btn btn-outline btn-primary btn-m">Créer un ouvrage</a>
+							<sec:authorize ifAllGranted="ADMIN">
+								<a href="<c:url  value="/ouvrage/create" />"
+									class="btn btn-outline btn-primary btn-m">Créer un ouvrage</a>
+							</sec:authorize>
 						</div>
 					</header>
 					<div class="panel-body">
@@ -36,14 +40,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<table class="table table-striped list no-m">
 								<thead>
 									<tr>
-										<th class="nosort nosearch">Code</th>
-										<th class="nosort nosearch">Nom</th>
+										<th>Code</th>
+										<th>Nom</th>
 										<th>Type</th>
 										<th>numéro BSS</th>
-<!-- 										<th>Code site</th> -->
+										<!-- 										<th>Code site</th> -->
 										<th>Asservissement</th>
 										<th>Ouvrage maître</th>
-<!-- 										<th class="nosort nosearch">Croquis</th> -->
+										<!-- 										<th class="nosort nosearch">Croquis</th> -->
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -58,7 +62,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${ouvrage.nom}" /></td>
 											<td><c:out value="${ouvrage.typeOuvrage.description}" /></td>
 											<td><c:out value="${ouvrage.numeroBSS}" /></td>
-<%-- 											<td><c:out value="${ouvrage.site.code}" /></td> --%>
+											<%-- 											<td><c:out value="${ouvrage.site.code}" /></td> --%>
 											<c:set var="asservissement" value="${ouvrage.asservissement}" />
 											<c:if test="${ asservissement == false }">
 												<td><c:out value="non" /></td>
@@ -66,8 +70,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<c:if test="${ asservissement == true }">
 												<td><c:out value="oui" /></td>
 											</c:if>
-											<td><c:out value="${ouvrage.ouvrageMaitre}" /></td>
-<!-- 											<td class="text-primary"><a href="#">voir</a></td> -->
+											<td><c:out value="${ouvrage.ouvrageMaitre.codeOuvrage}" /></td>
+											<!-- 											<td class="text-primary"><a href="#">voir</a></td> -->
 											<td><a data-url="${urlOuvrageDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
@@ -96,6 +100,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
+							<p class="text-muted">ATTENTION : Tous les enregistreurs,
+								documents et ouvrages asservis seront supprimés</p>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"

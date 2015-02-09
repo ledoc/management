@@ -74,18 +74,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<label for="telephone">Téléphone</label>
 									<form:input type="tel" class="form-control" id="telephone"
 										path="telephone" placeholder="" data-parsley-required="true"
-										data-parsley-trigger="change" data-parsley-type="digits"
-										data-parsley-length="[10,11]"
 										data-parsley-required-message="Champ requis"
-										data-parsley-type-message="Ne doit comporter que des chiffres"
-										data-parsley-length-message="comporte 10 chiffres minimum" />
+										data-parsley-trigger="change" />
 								</div>
 								<div class="form-group">
 									<label for="siret">Siret</label>
 									<form:input type="text" class="form-control" id="siret"
-										path="siret" placeholder="" data-parsley-required="true"
-										data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis"
+										path="siret" placeholder="" data-parsley-trigger="change"
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
@@ -100,24 +95,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 								<div class="form-group">
 									<label for="siteWeb">Site web</label>
-									<form:input class="form-control" id="siteWeb" path="siteWeb"
+									<form:input  class="form-control" id="siteWeb" path="siteWeb"
 										data-parsley-type="url"
 										data-parsley-type-message="Entrer une adresse web valide (voir l'exemple)"
-										data-parsley-required="true" data-parsley-trigger="change"
-										placeholder="http://website.fr" />
+										data-parsley-trigger="change" placeholder="http://website.fr" />
 								</div>
-
-								<div class="form-group">
-									<label for="sites">Attacher un ou des sites</label>
-									<form:select multiple="true" id="sitesCombo" name="sitesCombo"
-										path="sites" items="${sitesCombo}" itemValue="id"
-										itemLabel="nom"
-										data-placeholder=" Sélectionnez
-							un ou des sites"
-										class="form-control chosen">
-									</form:select>
-								</div>
-
 								<div class="pull-right">
 									<a href="<c:url  value="/etablissement/list" />"
 										class="btn btn-default btn-outline">Retour</a>
