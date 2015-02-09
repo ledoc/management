@@ -85,7 +85,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -122,12 +121,12 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 			<version>1.7.1.RELEASE</version>
-			 <exclusions> 
-                <exclusion> 
-                    <artifactId>jcl-over-slf4j</artifactId> 
-                    <groupId>org.slf4j</groupId> 
-                </exclusion> 
-            </exclusions> 
+			<exclusions>
+				<exclusion>
+					<artifactId>jcl-over-slf4j</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- AOP -->
@@ -167,14 +166,6 @@
 			<version>1.2.17</version>
 		</dependency>
 
-		<!-- Test -->
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- IO utils -->
 
@@ -236,6 +227,7 @@
 				<log.level.solices>debug</log.level.solices>
 				<log.level.other>warn</log.level.other>
 				<log.level.hibernate>error</log.level.hibernate>
+				<upload.path>/uploadSolices</upload.path>
 			</properties>
 		</profile>
 		<profile>
@@ -248,6 +240,7 @@
 				<log.level.solices>info</log.level.solices>
 				<log.level.other>info</log.level.other>
 				<log.level.hibernate>error</log.level.hibernate>
+				<upload.path>/cloudunit/uploadSolices</upload.path>
 			</properties>
 		</profile>
 	</profiles>

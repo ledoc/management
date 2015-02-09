@@ -51,7 +51,7 @@
 		<appender-ref ref="audit-log"/>
 	</logger>
 	
-	<logger name="fr.treeptik" additivity="false">
+	<logger name="fr.treeptik">
 		<level value="${log.level.solices}" />
 	</logger>
 
