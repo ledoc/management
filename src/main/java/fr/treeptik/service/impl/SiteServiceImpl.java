@@ -106,14 +106,14 @@ public class SiteServiceImpl implements SiteService {
 
 		int i = 1;
 		List<Site> allSites = this.findAll();
-		site.setCode(site.getNom() + i);
+		site.setCodeSite(site.getNom() + i);
 		for (Site site2 : allSites) {
 			if (site.getNom().equalsIgnoreCase(site2.getNom())) {
-				site.setCode(site.getNom() + i);
-				if (site.getCode().equalsIgnoreCase(site2.getCode())) {
+				site.setCodeSite(site.getNom() + i);
+				if (site.getCodeSite().equalsIgnoreCase(site2.getCodeSite())) {
 					i++;
-					site.setCode(site.getNom() + i);
-					logger.info(site.getCode());
+					site.setCodeSite(site.getNom() + i);
+					logger.info(site.getCodeSite());
 				}
 			}
 		}

@@ -37,7 +37,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Etablissement create(Etablissement etablissement)
 			throws ServiceException {
-		logger.info("--CREATE etablissement --");
+		logger.info("--CREATE EtablissementService --");
 		logger.debug("etablissement : " + etablissement);
 		return etablissementDAO.save(etablissement);
 	}
@@ -46,7 +46,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Etablissement update(Etablissement etablissement)
 			throws ServiceException {
-		logger.info("--UPDATE etablissement --");
+		logger.info("--UPDATE EtablissementService --");
 		logger.debug("etablissement : " + etablissement);
 		try {
 
@@ -59,26 +59,18 @@ public class EtablissementServiceImpl implements EtablissementService {
 		return etablissement;
 	}
 
-	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Etablissement etablissement) throws ServiceException {
-		logger.info("--DELETE etablissement --");
-		logger.debug("etablissement : " + etablissement);
-		try {
-			etablissementDAO.delete(etablissement);
-		} catch (PersistenceException e) {
-			logger.error("Error EtablissementService : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
-	}
-
+	
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE etablissement --");
-		logger.debug("etablissementId : " + id);
+		logger.info("--DELETE EtablissementService -- etablissementId : " + id);
 		try {
+			
+			Etablissement etablissement = etablissementDAO.findOne(id);
+			etablissement.getClients().forEach(c -> c.getEtablissements().remove(etablissement));
+			
 			etablissementDAO.delete(id);
+			
 		} catch (PersistenceException e) {
 			logger.error("Error EtablissementService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
@@ -89,7 +81,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Override
 	public List<Etablissement> findByClientLogin(String login)
 			throws ServiceException {
-		logger.info("--FINDALL etablissement by Client--");
+		logger.info("--findByClientLogin EtablissementService -- login : " + login);
 		List<Etablissement> etablissements;
 		try {
 			etablissements = etablissementDAO.findByClientLogin(login);
@@ -102,7 +94,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 
 	@Override
 	public List<Etablissement> findAll() throws ServiceException {
-		logger.info("--FINDALL etablissement --");
+		logger.info("--FINDALL EtablissementService --");
 		List<Etablissement> etablissements;
 		try {
 			etablissements = etablissementDAO.findAll();
@@ -115,7 +107,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 
 	@Override
 	public List<Etablissement> findFreeEtablissements() throws ServiceException {
-		logger.info("--FINDALL etablissement --");
+		logger.info("--findFreeEtablissements EtablissementService --");
 		List<Etablissement> etablissements;
 		try {
 			etablissements = etablissementDAO.findFreeEtablissements();
@@ -134,8 +126,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Etablissement findByIdWithJoinFetchSites(Integer id)
 			throws ServiceException {
-		logger.info("--findByIdWithJoinFetchSites etablissement --");
-		logger.info("id : " + id);
+		logger.info("--findByIdWithJoinFetchSites EtablissementService -- id : " + id);
 
 		Etablissement etablissement;
 		try {
@@ -150,7 +141,7 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Override
 	public List<Ouvrage> findAllOuvragesOfEtablissement(Integer id)
 			throws ServiceException {
-		logger.info("--findAllOuvragesOfEtablissement etablissement --");
+		logger.info("--findAllOuvragesOfEtablissement EtablissementService --");
 		List<Ouvrage> ouvrages = new ArrayList<Ouvrage>();
 		List<Site> sites = new ArrayList<Site>();
 		Etablissement etablissement = this.findByIdWithJoinFetchSites(id);
@@ -166,5 +157,25 @@ public class EtablissementServiceImpl implements EtablissementService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return ouvrages;
+	}
+	
+	/**
+	 * Méthode spécifique pour récupérer les sites associées à un etablissement
+	 * dû au FetchType.Lazy
+	 */
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public Etablissement findByIdWithJoinFetchClients(Integer id)
+			throws ServiceException {
+		logger.info("--findByIdWithJoinFetchClients EtablissementService -- id : " + id);
+
+		Etablissement etablissement;
+		try {
+			etablissement = etablissementDAO.findByIdWithJoinFetchClients(id);
+		} catch (PersistenceException e) {
+			logger.error("Error EtablissementService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return etablissement;
 	}
 }

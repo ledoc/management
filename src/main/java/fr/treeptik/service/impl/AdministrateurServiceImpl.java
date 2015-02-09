@@ -38,11 +38,13 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 	public Administrateur create(Administrateur administrateur)
 			throws ServiceException {
 		logger.info("--CREATE AdministrateurServiceImpl --");
-		administrateur = this.setIdentifiantWithCheck(administrateur);
+		
 		administrateur.setRole(Role.ADMIN);
-
+		administrateur = administrateurDAO.save(administrateur);
+		administrateur.setIdentifiant("ID-"+administrateur.getId());
 		logger.debug("administrateur : " + administrateur);
-		return administrateurDAO.save(administrateur);
+		
+		return administrateur;
 	}
 
 	@Override
@@ -76,30 +78,6 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 		return administrateurDAO.findAll();
 	}
 
-	@Override
-	public Administrateur setIdentifiantWithCheck(Administrateur administrateur)
-			throws ServiceException {
-		logger.info("--setIdentifiantWithCheck AdministrateurServiceImpl --");
-
-		int i = 1;
-		List<Administrateur> allAdministrateurs = this.findAll();
-		administrateur.setIdentifiant(administrateur.getNom() + i);
-		for (Administrateur administrateur2 : allAdministrateurs) {
-			if (administrateur.getNom().equalsIgnoreCase(
-					administrateur2.getNom())) {
-
-				if (administrateur.getIdentifiant().equalsIgnoreCase(
-						administrateur2.getIdentifiant())) {
-					i++;
-					administrateur.setIdentifiant(administrateur.getNom() + i);
-					logger.info(administrateur.getIdentifiant());
-				}
-			}
-		}
-		logger.debug("administrateur : " + administrateur);
-		return administrateur;
-	}
-	
 	@Override
 	public List<String> getAuditLog() throws ServiceException {
 	

@@ -14,8 +14,6 @@ public interface EtablissementService {
 
 	Etablissement update(Etablissement etablissement) throws ServiceException;
 
-	void remove(Etablissement etablissement) throws ServiceException;
-
 	List<Etablissement> findAll() throws ServiceException;
 
 	List<Etablissement> findFreeEtablissements() throws ServiceException;
@@ -30,4 +28,5 @@ public interface EtablissementService {
 
 	List<Etablissement> findByClientLogin(String login) throws ServiceException;
 
+	Etablissement findByIdWithJoinFetchClients(Integer id) throws ServiceException;
 }

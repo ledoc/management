@@ -22,4 +22,8 @@ public interface EtablissementDAO extends JpaRepository<Etablissement, Integer> 
 	@Query("select e from Client c join c.etablissements e where c.login= :login")
 	public List<Etablissement> findByClientLogin(@Param("login") String login)
 			throws DataAccessException;
+
+	@Query("select e from Etablissement e left join fetch e.clients where e.id = :id")
+	public Etablissement findByIdWithJoinFetchClients(@Param("id") Integer id)
+			throws DataAccessException;
 }

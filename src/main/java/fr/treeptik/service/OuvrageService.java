@@ -14,9 +14,6 @@ public interface OuvrageService {
 
 		Ouvrage update(Ouvrage ouvrage) throws ServiceException;
 		
-		void remove(Ouvrage ouvrage)
-				throws ServiceException;
-
 		List<Ouvrage> findAll() throws ServiceException;
 
 		void remove(Integer id) throws ServiceException;

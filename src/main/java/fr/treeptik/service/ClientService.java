@@ -22,8 +22,8 @@ public interface ClientService {
 	Client findByIdWithJoinFetchEtablissements(Integer id)
 			throws ServiceException;
 
-	Client setIdentifiantWithCheck(Client Client) throws ServiceException;
-
 	Client findClientByOuvrageId(Integer ouvrageId) throws ServiceException;
+
+	Client findByIdWithJoinFetchDocuments(Integer id) throws ServiceException;
 
 }

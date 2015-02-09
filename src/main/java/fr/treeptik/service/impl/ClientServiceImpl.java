@@ -33,10 +33,10 @@ public class ClientServiceImpl implements ClientService {
 		logger.info("--CREATE client --");
 
 		client.setRole(Role.CLIENT);
-		client = this.setIdentifiantWithCheck(client);
-
+		client = clientDAO.save(client);
+		client.setIdentifiant("ID-"+client.getId());
 		logger.debug("client : " + client);
-		return clientDAO.save(client);
+		return client;
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	/**
-	 * Méthode spécifique pour récupérer les mesures associées à l'ouvrage dû au
+	 * Méthode spécifique pour réupérer les mesures associées à l'ouvrage dû au
 	 * FetchType.Lazy
 	 */
 	@Override
@@ -83,33 +83,21 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public Client setIdentifiantWithCheck(Client client)
-			throws ServiceException {
-		logger.info("--setIdentifiantWithCheck ClientServiceImpl --");
-
-		int i = 1;
-		List<Client> allClients = this.findAll();
-		client.setIdentifiant(client.getNom() + i);
-		for (Client client2 : allClients) {
-			if (client.getNom().equalsIgnoreCase(client2.getNom())) {
-				client.setIdentifiant(client.getNom() + i);
-				if (client.getIdentifiant().equalsIgnoreCase(
-						client2.getIdentifiant())) {
-					i++;
-					client.setIdentifiant(client.getNom() + i);
-					logger.info(client.getIdentifiant());
-				}
-			}
-		}
-		logger.debug("Client : " + client);
-		return client;
-	}
-
-	@Override
 	public Client findClientByOuvrageId(Integer ouvrageId)
 			throws ServiceException {
 		logger.info("--findClientByOuvrageId ClientServiceImpl -- ouvrageId " + ouvrageId);
 		return clientDAO.findClientByOuvrageId(ouvrageId);
 	}
 
+	
+	/**
+	 * Méthode spécifique pour récupérer les documents associées à l'ouvrage dû au
+	 * FetchType.Lazy
+	 */
+	@Override
+	public Client findByIdWithJoinFetchDocuments(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinFetchDocuments OuvrageServiceImpl -- id : " + id);
+		Client client = clientDAO.findByIdWithJoinFetchDocuments(id);
+		return client;
+	}
 }
