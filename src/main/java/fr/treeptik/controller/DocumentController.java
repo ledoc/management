@@ -1,9 +1,5 @@
 package fr.treeptik.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,10 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -80,12 +79,23 @@ public class DocumentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list")
-	public String list(Model model) throws ControllerException {
+	public String list(Model model, HttpServletRequest request)
+			throws ControllerException {
 		logger.info("--list DocumentController--");
 
 		List<Document> documents = null;
 		try {
-			documents = documentService.findAll();
+
+			Boolean isAdmin = request.isUserInRole("ADMIN");
+			logger.debug("USER ROLE ADMIN : " + isAdmin);
+			if (isAdmin) {
+				documents = documentService.findAll();
+			} else {
+				String userLogin = SecurityContextHolder.getContext()
+						.getAuthentication().getName();
+				logger.debug("USER LOGIN : " + userLogin);
+				documents = documentService.findByClientLogin(userLogin);
+			}
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -131,8 +141,7 @@ public class DocumentController {
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--delete DocumentController--");
-		logger.debug("documentId : " + id);
+		logger.info("--delete DocumentController-- documentId : " + id);
 
 		try {
 			documentService.remove(id);
@@ -144,60 +153,35 @@ public class DocumentController {
 	}
 
 	@RequestMapping(value = "/upload/file/{clientId}/{ouvrageId}", method = RequestMethod.POST)
-	public @ResponseBody String uploadFileHandler(
-			@PathVariable("clientId") Integer clientId,
-			@PathVariable("ouvrageId") Integer ouvrageId, MultipartFile file) throws ControllerException {
+	public String uploadFileHandler(@PathVariable("clientId") Integer clientId,
+			@PathVariable("ouvrageId") Integer ouvrageId, MultipartFile file)
+			throws ControllerException {
 
-		String fileName = null;
+		try {
+			documentService.uploadFileAndAssign(file, clientId, ouvrageId);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return "redirect:/document/list";
+	}
+
+	@RequestMapping(value = "/download/file/{documentId}", method = RequestMethod.GET)
+	public void downloadFile(@PathVariable("documentId") Integer documentId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws ControllerException {
+
+		logger.info("--downloadFile DocumentController-- documentId : "
+				+ documentId);
 		Document document = new Document();
-		Ouvrage ouvrage;
-		Client client;
-
-		if (!file.isEmpty()) {
-			try {
-				ouvrage = ouvrageService.findById(ouvrageId);
-				client = clientService.findById(clientId);
-
-				byte[] bytes = file.getBytes();
-
-				fileName = file.getOriginalFilename();
-				String rootPath = System.getProperty("user.home");
-				File dir = new File(rootPath + File.separator
-						+ client.getIdentifiant() + File.separator
-						+ ouvrage.getCodeOuvrage());
-
-				if (!dir.exists())
-					dir.mkdirs();
-
-				File serverFile = new File(dir.getAbsolutePath()
-						+ File.separator + fileName);
-				BufferedOutputStream stream = new BufferedOutputStream(
-						new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
-
-				logger.info("Emplacement du fichier sur le serveur : "
-						+ serverFile.getAbsolutePath());
-				logger.info("Upload réussie du fichier=" + fileName);
-
-				document.setOuvrage(ouvrage);
-				document.setClient(client);
-				document.setNom(fileName);
-				document.setPath(serverFile.getAbsolutePath());
-				document.setType(fileName.substring(fileName.lastIndexOf(".") +1 ,
-						fileName.length()).toUpperCase());
-				document.setDate(new Date());
-				document.setTaille((int) serverFile.length()/1000);
-
-				documentService.create(document);
-
-				return "redirect:/document/list";
-			} catch (ServiceException | IOException e) {
-				logger.error(e.getMessage());
-				throw new ControllerException(e.getMessage(), e);
-			}
-		} else {
-			return "Echec de l'upload " + fileName + " car le ficher est vide.";
+		try {
+			document = documentService.findById(documentId);
+			documentService.downloadFile(document, request, response);
+		} catch (ServiceException e) {
+			logger.error("Error DocumentController  -- downloadFile : "
+					+ document.getNom());
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
 		}
 	}
 
@@ -267,33 +251,77 @@ public class DocumentController {
 	public @ResponseBody List<Ouvrage> refreshOuvrage(
 			@PathVariable("clientId") Integer clientId)
 			throws ControllerException {
+		System.out.println("--refreshOuvrage DocumentController-- clientId : "
+				+ clientId);
+
 		List<Ouvrage> ouvragesOfClient;
 		try {
 			ouvragesOfClient = ouvrageService.findByClientId(clientId);
+			System.out.println("liste d'ouvrages renvoyée : "
+					+ ouvragesOfClient);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-
 		return ouvragesOfClient;
-
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/refresh/client/{ouvrageId}")
 	public @ResponseBody List<Client> findClientByOuvrageId(
 			@PathVariable("ouvrageId") Integer ouvrageId)
 			throws ControllerException {
+
+		System.out
+				.println("--findClientByOuvrageId DocumentController-- ouvrageId : "
+						+ ouvrageId);
+
 		List<Client> listClientTemp = new ArrayList<Client>();
 		Client clientOfOuvrage;
 		try {
 			clientOfOuvrage = clientService.findClientByOuvrageId(ouvrageId);
 			listClientTemp.add(clientOfOuvrage);
+			System.out.println("liste de client renvoyée : " + clientOfOuvrage);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
 		return listClientTemp;
+
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/init/ouvrage")
+	public @ResponseBody List<Ouvrage> initOuvrageCombobox()
+			throws ControllerException {
+		System.out.println("--initOuvrageCombobox DocumentController--");
+
+		List<Ouvrage> allOuvrages;
+		try {
+			allOuvrages = ouvrageService.findAll();
+			System.out.println("liste d'ouvrages renvoyée : " + allOuvrages);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return allOuvrages;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/init/client")
+	public @ResponseBody List<Client> initClientCombobox()
+			throws ControllerException {
+
+		System.out.println("--initClientCombobox DocumentController");
+
+		List<Client> allClients = new ArrayList<Client>();
+		try {
+			allClients = clientService.findAll();
+			System.out.println("liste de client renvoyée : " + allClients);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+
+		return allClients;
 
 	}
 

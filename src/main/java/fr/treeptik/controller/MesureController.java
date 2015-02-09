@@ -46,7 +46,7 @@ public class MesureController {
 	private Map<Integer, Enregistreur> enregistreurCache;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
-	public String create(Model model) throws ControllerException {
+	public String initForm(Model model) throws ControllerException {
 		logger.info("--create formulaire MesureController--");
 
 		List<Enregistreur> enregistreursCombo;

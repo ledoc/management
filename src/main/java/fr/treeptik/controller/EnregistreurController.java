@@ -89,7 +89,7 @@ public class EnregistreurController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create/{ouvrageId}")
-	public String create(Model model,
+	public String initForm(Model model,
 			@PathVariable("ouvrageId") Integer ouvrageId)
 			throws ControllerException {
 		logger.info("--create formulaire EnregistreurController-- ouvrageId = "
@@ -132,7 +132,7 @@ public class EnregistreurController {
 		logger.info("--create EnregistreurController--");
 		logger.debug("enregistreur : " + enregistreur);
 		logger.debug(" enregistreur Mesure Enregistreur "
-				+ enregistreur.getMesureEnregistreur());
+				+ enregistreur.getDerniereMesure());
 		Ouvrage ouvrage = new Ouvrage();
 		try {
 
@@ -141,9 +141,9 @@ public class EnregistreurController {
 							.getOuvrage().getId());
 
 			// TODO HACK A supprimer
-			if (enregistreur.getMesureEnregistreur() != null
-					&& enregistreur.getMesureEnregistreur().getId() == null) {
-				enregistreur.setMesureEnregistreur(null);
+			if (enregistreur.getDerniereMesure() != null
+					&& enregistreur.getDerniereMesure().getId() == null) {
+				enregistreur.setDerniereMesure(null);
 			}
 			if (enregistreur.getNiveauManuel() != null
 					&& enregistreur.getNiveauManuel().getId() == null) {
@@ -164,7 +164,7 @@ public class EnregistreurController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/ouvrage/list";
+		return "redirect:/ouvrage/update/" + ouvrage.getId() ;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
@@ -208,10 +208,6 @@ public class EnregistreurController {
 		logger.debug("enregistreurId : " + id);
 		Integer ouvrageId;
 		try {
-
-			// if(enregistreurService.findById(id).getMesures() != null) {
-			// enre
-			// }
 			ouvrageId = enregistreurService.findById(id).getOuvrage().getId();
 
 			enregistreurService.remove(id);
