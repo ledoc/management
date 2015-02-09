@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,6 +24,7 @@ import fr.treeptik.model.Client;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.service.ClientService;
 import fr.treeptik.service.EtablissementService;
+import fr.treeptik.spring.ClientValidator;
 
 @Controller
 @RequestMapping("/client")
@@ -34,14 +36,26 @@ public class ClientController {
 	private ClientService clientService;
 	@Inject
 	private EtablissementService etablissementService;
+
+	@Inject
+	private ClientValidator clientValidator;
+
 	private Map<Integer, Etablissement> etablissementCache;
 
+	/**
+	 * 
+	 * Init Create en GET
+	 * 
+	 * @param model
+	 * @return
+	 * @throws ControllerException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
-	public String create(Model model) throws ControllerException {
+	public String initForm(Model model) throws ControllerException {
 
 		List<Etablissement> etablissementsCombo;
 		try {
-			etablissementsCombo = etablissementService.findFreeEtablissements();
+			etablissementsCombo = etablissementService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -57,6 +71,59 @@ public class ClientController {
 		return "/client/create";
 	}
 
+	/**
+	 *
+	 * Create En POST
+	 * 
+	 * @param client
+	 * @return
+	 * @throws ControllerException
+	 */
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public String create(@ModelAttribute Client client, Model model,
+			BindingResult result) throws ControllerException {
+		logger.info("--create ClientController--");
+		logger.debug("client : " + client);
+
+		try {
+
+			clientValidator.validate(client, result);
+
+			if (result.hasErrors()) {
+
+				List<Etablissement> etablissementsCombo = etablissementService
+						.findAll();
+				
+				etablissementCache = new HashMap<Integer, Etablissement>();
+
+				for (Etablissement etablissement : etablissementsCombo) {
+					etablissementCache
+							.put(etablissement.getId(), etablissement);
+				}
+
+				model.addAttribute("client", client);
+				model.addAttribute("etablissementsCombo", etablissementsCombo);
+				return "/client/create";
+			}
+
+			clientService.create(client);
+
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return "redirect:/client/list";
+
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param model
+	 * @param id
+	 * @return
+	 * @throws ControllerException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
@@ -69,8 +136,7 @@ public class ClientController {
 		try {
 			client = clientService.findByIdWithJoinFetchEtablissements(id);
 
-			etablissementsCombo = etablissementService.findFreeEtablissements();
-			etablissementsCombo.addAll(client.getEtablissements());
+			etablissementsCombo = etablissementService.findAll();
 			for (Etablissement etablissement : etablissementsCombo) {
 				etablissementCache.put(etablissement.getId(), etablissement);
 			}
@@ -84,6 +150,14 @@ public class ClientController {
 		return "/client/create";
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param model
+	 * @param id
+	 * @return
+	 * @throws ControllerException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
@@ -99,22 +173,13 @@ public class ClientController {
 		return "redirect:/client/list";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Client client)
-			throws ControllerException {
-		logger.info("--create ClientController--");
-		logger.debug("client : " + client);
-		logger.info(client.getEtablissements());
-		try {
-			clientService.create(client);
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return "redirect:/client/list";
-
-	}
-
+	/**
+	 * 
+	 * 
+	 * @param model
+	 * @return
+	 * @throws ControllerException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/list")
 	public String list(Model model) throws ControllerException {
 		logger.info("--list ClientController--");
@@ -135,6 +200,20 @@ public class ClientController {
 		binder.registerCustomEditor(List.class, "etablissements",
 				new CustomCollectionEditor(List.class) {
 					protected Object convertElement(Object element) {
+						List<Etablissement> etablissements = null;
+						try {
+							etablissementCache = new HashMap<Integer, Etablissement>();
+							etablissements = etablissementService
+									.findAll();
+						} catch (ServiceException e) {
+							logger.error(e.getMessage());
+						}
+
+						for (Etablissement etablissement : etablissements) {
+							etablissementCache.put(etablissement.getId(),
+									etablissement);
+						}
+
 						if (element instanceof Etablissement) {
 							logger.debug("Conversion d'Etablissement en Etablissement: "
 									+ element);
