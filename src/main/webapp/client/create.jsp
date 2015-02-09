@@ -20,7 +20,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">Création d'un Client</h1>
-						<p class="text-muted">Permet de créer ou mettre à jour un client.</p>
+						<p class="text-muted">Permet de créer ou mettre à jour un
+							client.</p>
 					</header>
 					<div class="panel-body">
 						<c:url var="createClient" value="/client/create" />
@@ -28,9 +29,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							modelAttribute="client" role="form" class="parsley-form"
 							data-validate="parsley" data-show-errors="true">
 
+
 							<form:hidden path="id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
+								<form:errors path="*"
+									cssClass="alert alert-danger alert-dismissible fade in"
+									element="div" />
 								<div class="form-group">
 									<label for="nom">Nom</label>
 									<form:input type="text" class="form-control" id="nom"
@@ -52,8 +57,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="login">Login</label>
 									<form:input type="text" class="form-control" id="login"
-										path="login" placeholder="" data-parsley-trigger="change"
-										data-parsley-mincheck="2"
+										path="login" placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change" data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
 								<div class="form-group">
@@ -105,7 +110,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<form:select autocomplete="true" multiple="true"
 										id="etablissementsCombo" name="etablissementsCombo"
 										path="etablissements" items="${etablissementsCombo}"
-										itemValue="id" itemLabel="nom"
+										itemValue="id" itemLabel="codeEtablissement"
 										data-placeholder=" Sélectionnez
 							une entité"
 										class="form-control chosen">

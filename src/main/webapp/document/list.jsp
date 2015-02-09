@@ -5,6 +5,8 @@
 <%@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuDocumentActive" />
@@ -23,45 +25,57 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des documents</h1>
 
 						<div class="pull-right mb15">
-							<a href="<c:url  value="/document/assign" />"
-								class="btn btn-outline btn-primary btn-m">Télécharger un document</a>
+							<sec:authorize ifAllGranted="ADMIN">
+								<a href="<c:url  value="/document/assign" />"
+									class="btn btn-outline btn-primary btn-m">Télécharger un
+									document</a>
+							</sec:authorize>
 						</div>
 					</header>
 					<div class="panel-body">
 
-						<table class="table table-striped list no-m">
-							<thead>
-								<tr>
-									<th class="nosort nosearch">Nom</th>
-									<th class="nosort nosearch">Ouvrage</th>
-									<th>Type</th>
-									<th>Date</th>
-									<th>taille</th>
-									<th class="nosort nosearch">Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${documents}" var="document">
-									<c:url var="urlDocumentDelete"
-										value="/document/delete/${document.id}" />
-									<c:url var="urlDocumentUpdate"
-										value="/document/update/${document.id}" />
+						<c:if test="${empty documents }">
+
+							<H2>Ooops !&nbsp;Liste vide.</H2>
+						</c:if>
+						<c:if test="${not empty documents }">
+
+							<table class="table table-striped list no-m">
+								<thead>
 									<tr>
-										<td class="text-primary"><a
-											href="${urlDocumentUpdate}">${document.nom}</a></td>
-										<td><c:out value="${document.ouvrage.codeOuvrage}" /></td>
-										<td><c:out value="${document.type}" /></td>
-										<td><c:out value="${document.date}" /></td>
-										<td><c:out value="${document.taille}" /></td>
-										<td><a data-url="${urlDocumentDelete}" data-toggle="modal"
-											data-target="#confirmModal"
-											class="btn btn-outline btn-danger btn-xs js-confirm-btn">
-												<i class="fa fa-remove"></i>
-										</a></td>
+										<th>Nom</th>
+										<th>Client</th>
+										<th>Ouvrage</th>
+										<th>Type</th>
+										<th>Date</th>
+										<th>taille</th>
+										<th class="nosort nosearch">Actions</th>
 									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									<c:forEach items="${documents}" var="document">
+										<c:url var="urlDocumentDelete"
+											value="/document/delete/${document.id}" />
+										<c:url var="urlDocumentDownload"
+											value="/document/download/file/${document.id}" />
+										<tr>
+											<td class="text-primary"><a
+												href="${urlDocumentDownload}">${document.nom}</a></td>
+											<td><c:out value="${document.client.identifiant}" /></td>
+											<td><c:out value="${document.ouvrage.codeOuvrage}" /></td>
+											<td><c:out value="${document.type}" /></td>
+											<td><c:out value="${document.date}" /></td>
+											<td><c:out value="${document.taille}" /></td>
+											<td><a data-url="${urlDocumentDelete}"
+												data-toggle="modal" data-target="#confirmModal"
+												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
+													<i class="fa fa-remove"></i>
+											</a></td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</c:if>
 					</div>
 				</section>
 			</div>
