@@ -4,10 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @SuppressWarnings("serial")
@@ -27,8 +29,11 @@ public class Etablissement implements Serializable {
 	private String telephone;
 	private String mail;
 	private String siteWeb;
-	@OneToMany
+	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="etablissement")
 	private List<Site> sites;
+	
+	@ManyToMany(mappedBy="etablissements")
+	private List<Client> clients;
 
 	public Integer getId() {
 		return id;
@@ -101,6 +106,15 @@ public class Etablissement implements Serializable {
 	public void setSiteWeb(String siteWeb) {
 		this.siteWeb = siteWeb;
 	}
+	
+
+	public List<Client> getClients() {
+		return clients;
+	}
+
+	public void setClients(List<Client> clients) {
+		this.clients = clients;
+	}
 
 	public List<Site> getSites() {
 		if (this.sites == null) {
@@ -120,17 +134,14 @@ public class Etablissement implements Serializable {
 				+ ", siret=" + siret + ", telephone=" + telephone + ", mail=" + mail + ", siteWeb=" + siteWeb + "]";
 	}
 
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codeEtablissement == null) ? 0 : codeEtablissement.hashCode());
-		result = prime * result + ((coordonneesGeographique == null) ? 0 : coordonneesGeographique.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((mail == null) ? 0 : mail.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result + ((siret == null) ? 0 : siret.hashCode());
-		result = prime * result + ((telephone == null) ? 0 : telephone.hashCode());
+		result = prime * result + ((nom == null) ? 0 : nom.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -143,42 +154,18 @@ public class Etablissement implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Etablissement other = (Etablissement) obj;
-		if (codeEtablissement == null) {
-			if (other.codeEtablissement != null)
-				return false;
-		} else if (!codeEtablissement.equals(other.codeEtablissement))
-			return false;
-		if (coordonneesGeographique == null) {
-			if (other.coordonneesGeographique != null)
-				return false;
-		} else if (!coordonneesGeographique.equals(other.coordonneesGeographique))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (mail == null) {
-			if (other.mail != null)
-				return false;
-		} else if (!mail.equals(other.mail))
-			return false;
 		if (nom == null) {
 			if (other.nom != null)
 				return false;
-		} else if (!nom.equals(other.nom))
-			return false;
-		if (siret == null) {
-			if (other.siret != null)
-				return false;
-		} else if (!siret.equals(other.siret))
-			return false;
-		if (telephone == null) {
-			if (other.telephone != null)
-				return false;
-		} else if (!telephone.equals(other.telephone))
+		} else if (!nom.equalsIgnoreCase(other.nom))
 			return false;
 		return true;
 	}
+
 
 }

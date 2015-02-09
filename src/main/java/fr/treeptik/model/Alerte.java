@@ -8,7 +8,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
+@SuppressWarnings("serial")
 @Entity
 public class Alerte implements Serializable {
 
@@ -31,7 +33,8 @@ public class Alerte implements Serializable {
 	// Un lien vers l’API DW si il s’agit d’une alerte Données ou connexion, Mouvements ;
 	private String lienAPIDW;
 
-	
+	@ManyToOne
+	private Ouvrage ouvrage;
 	/**
 	 * TODO : prise de connaissance - voir pour quelle version
 	 */
@@ -188,6 +191,14 @@ public class Alerte implements Serializable {
 		if (Float.floatToIntBits(valeurCritique) != Float.floatToIntBits(other.valeurCritique))
 			return false;
 		return true;
+	}
+
+	public Ouvrage getOuvrage() {
+		return ouvrage;
+	}
+
+	public void setOuvrage(Ouvrage ouvrage) {
+		this.ouvrage = ouvrage;
 	}
 
 	

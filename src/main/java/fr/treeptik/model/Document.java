@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@SuppressWarnings("serial")
 @Entity
 public class Document implements Serializable {
 
@@ -99,10 +100,8 @@ public class Document implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result + ((taille == null) ? 0 : taille.hashCode());
+		result = prime * result + ((nom == null) ? 0 : nom.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -115,11 +114,6 @@ public class Document implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Document other = (Document) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -128,16 +122,11 @@ public class Document implements Serializable {
 		if (nom == null) {
 			if (other.nom != null)
 				return false;
-		} else if (!nom.equals(other.nom))
-			return false;
-		if (taille == null) {
-			if (other.taille != null)
-				return false;
-		} else if (!taille.equals(other.taille))
+		} else if (!nom.equalsIgnoreCase(other.nom))
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

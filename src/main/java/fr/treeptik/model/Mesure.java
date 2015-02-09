@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+@SuppressWarnings("serial")
 @Entity
 public class Mesure implements Serializable {
 
@@ -24,8 +25,10 @@ public class Mesure implements Serializable {
 	private Date date;
 	@ManyToOne
 	private Ouvrage ouvrage;
+	
 	@ManyToOne
 	private Enregistreur enregistreur;
+	
 	private Float valeur;
 
 	public Mesure() {

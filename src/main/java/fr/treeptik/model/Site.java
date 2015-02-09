@@ -3,12 +3,14 @@ package fr.treeptik.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @SuppressWarnings("serial")
@@ -25,14 +27,17 @@ public class Site implements Serializable {
 
 	// A défaut, S (site) ou T (secteur), département et numéro d’ordre de
 	// création ex: S-77-01.
-	private String code;
+	private String codeSite;
 	private String departement;
 	private String coordonneesGeographique;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
-	@OneToMany
-	private List<Ouvrage> ouvrages;
+	@ManyToOne
+	private Etablissement etablissement;
 
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy="site")
+	private List<Ouvrage> ouvrages;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -42,7 +47,7 @@ public class Site implements Serializable {
 	}
 
 	public TypeSite getTypeSite() {
-		
+
 		return typeSite;
 	}
 
@@ -58,12 +63,12 @@ public class Site implements Serializable {
 		this.nom = nom;
 	}
 
-	public String getCode() {
-		return code;
+	public String getCodeSite() {
+		return codeSite;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setCodeSite(String code) {
+		this.codeSite = code;
 	}
 
 	public String getDepartement() {
@@ -93,6 +98,14 @@ public class Site implements Serializable {
 	public List<Ouvrage> getOuvrages() {
 		return ouvrages;
 	}
+	
+	public Etablissement getEtablissement() {
+		return etablissement;
+	}
+	
+	public void setEtablissement(Etablissement etablissement) {
+		this.etablissement = etablissement;
+	}
 
 	public void setOuvrages(List<Ouvrage> ouvrages) {
 		this.ouvrages = ouvrages;
@@ -100,22 +113,19 @@ public class Site implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Site [id=" + id + ", typeSite=" + typeSite + ", nom=" + nom + ", code=" + code + ", departement=" + departement
-				+ ", coordonneesGeographique=" + coordonneesGeographique + ", stationMeteo=" + stationMeteo
-				+ "]";
+		return "Site [id=" + id + ", typeSite=" + typeSite + ", nom=" + nom
+				+ ", codeSite=" + codeSite + ", departement=" + departement
+				+ ", coordonneesGeographique=" + coordonneesGeographique
+				+ ", stationMeteo=" + stationMeteo + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result + ((coordonneesGeographique == null) ? 0 : coordonneesGeographique.hashCode());
-		result = prime * result + ((departement == null) ? 0 : departement.hashCode());
+		result = prime * result
+				+ ((codeSite == null) ? 0 : codeSite.toUpperCase().hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result + ((stationMeteo == null) ? 0 : stationMeteo.hashCode());
-		result = prime * result + ((typeSite == null) ? 0 : typeSite.hashCode());
 		return result;
 	}
 
@@ -128,40 +138,19 @@ public class Site implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Site other = (Site) obj;
-		if (code == null) {
-			if (other.code != null)
+		if (codeSite == null) {
+			if (other.codeSite != null)
 				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		if (coordonneesGeographique == null) {
-			if (other.coordonneesGeographique != null)
-				return false;
-		} else if (!coordonneesGeographique.equals(other.coordonneesGeographique))
-			return false;
-		if (departement == null) {
-			if (other.departement != null)
-				return false;
-		} else if (!departement.equals(other.departement))
+		} else if (!codeSite.equalsIgnoreCase(other.codeSite))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (nom == null) {
-			if (other.nom != null)
-				return false;
-		} else if (!nom.equals(other.nom))
-			return false;
-		if (stationMeteo == null) {
-			if (other.stationMeteo != null)
-				return false;
-		} else if (!stationMeteo.equals(other.stationMeteo))
-			return false;
-		if (typeSite != other.typeSite)
-			return false;
 		return true;
 	}
 
 	
+
 }

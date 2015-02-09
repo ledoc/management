@@ -3,6 +3,7 @@ package fr.treeptik.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @SuppressWarnings("serial")
 @Entity
@@ -30,6 +33,7 @@ public class Ouvrage implements Serializable {
 	@Enumerated(EnumType.STRING)
 	protected TypeOuvrage typeOuvrage;
 	@ManyToOne
+	@JsonIgnore
 	private Site site;
 	/**
 	 * Nivellement général de la France
@@ -41,20 +45,27 @@ public class Ouvrage implements Serializable {
 	// Si l'ouvrage est "lié" à un autre
 	protected Boolean asservissement;
 	// Ouvrage auquel il est asservi
-	
-	@OneToOne
+
+	@ManyToOne
 	protected Ouvrage ouvrageMaitre;
+	@JsonIgnore
+	@OneToMany(mappedBy = "ouvrageMaitre")
+	private List<Ouvrage> ouvrageFils;
 
 	protected String photo;
 	protected String croquisDynamique;
 
-	@OneToMany
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "ouvrage")
 	protected List<Enregistreur> enregistreurs;
-	@OneToMany
+	@JsonIgnore
+	@OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "ouvrage")
 	protected List<Mesure> mesures;
-	@OneToMany
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "ouvrage")
 	protected List<Alerte> alertes;
-	@OneToMany
+	@JsonIgnore
+	@OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "ouvrage")
 	protected List<Document> documents;
 
 	/**
@@ -102,7 +113,7 @@ public class Ouvrage implements Serializable {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	
+
 	public Site getSite() {
 		return site;
 	}
@@ -278,28 +289,25 @@ public class Ouvrage implements Serializable {
 	@Override
 	public String toString() {
 		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement="
-				+ asservissement + ", ouvrageMaitre=" + ouvrageMaitre
-				+ ", coteRepereNGF=" + coteRepereNGF + ", photo=" + photo
-				+ ", codeOuvrage=" + codeOuvrage + ", typeOuvrage="
-				+ typeOuvrage + ", croquisDynamique=" + croquisDynamique
-				+ ", commentaire=" + commentaire + ", coteSol=" + coteSol
-				+ ", numeroBSS=" + numeroBSS + ", mesureRepereNGFSol="
-				+ mesureRepereNGFSol + ", mesureProfondeur=" + mesureProfondeur
-				+ ", coteSolNGF=" + coteSolNGF + "]";
+				+ asservissement + ", coteRepereNGF=" + coteRepereNGF
+				+ ", photo=" + photo + ", codeOuvrage=" + codeOuvrage
+				+ ", typeOuvrage=" + typeOuvrage + ", croquisDynamique="
+				+ croquisDynamique + ", commentaire=" + commentaire
+				+ ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
+				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol
+				+ ", mesureProfondeur=" + mesureProfondeur + ", coteSolNGF="
+				+ coteSolNGF + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((codeOuvrage == null) ? 0 : codeOuvrage.hashCode());
+		result = prime
+				* result
+				+ ((codeOuvrage == null) ? 0 : codeOuvrage.toUpperCase()
+						.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
-		result = prime * result
-				+ ((numeroBSS == null) ? 0 : numeroBSS.hashCode());
-		result = prime * result
-				+ ((typeOuvrage == null) ? 0 : typeOuvrage.hashCode());
 		return result;
 	}
 
@@ -315,26 +323,22 @@ public class Ouvrage implements Serializable {
 		if (codeOuvrage == null) {
 			if (other.codeOuvrage != null)
 				return false;
-		} else if (!codeOuvrage.equals(other.codeOuvrage))
+		} else if (!codeOuvrage.equalsIgnoreCase(other.codeOuvrage))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (nom == null) {
-			if (other.nom != null)
-				return false;
-		} else if (!nom.equals(other.nom))
-			return false;
-		if (numeroBSS == null) {
-			if (other.numeroBSS != null)
-				return false;
-		} else if (!numeroBSS.equals(other.numeroBSS))
-			return false;
-		if (typeOuvrage != other.typeOuvrage)
-			return false;
 		return true;
+	}
+
+	public List<Ouvrage> getOuvrageFils() {
+		return ouvrageFils;
+	}
+
+	public void setOuvrageFils(List<Ouvrage> ouvrageFils) {
+		this.ouvrageFils = ouvrageFils;
 	}
 
 }

@@ -35,8 +35,8 @@ public class Enregistreur implements Serializable {
 	@OneToOne(cascade=CascadeType.REMOVE)
 	protected Mesure niveauManuel;
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
-	@OneToOne
-	protected Mesure mesureEnregistreur;
+	@OneToOne(cascade=CascadeType.REMOVE)
+	protected Mesure derniereMesure;
 
 	// modem : nom, modèle, numéro série…
 	private String modem;
@@ -57,12 +57,12 @@ public class Enregistreur implements Serializable {
 	// croquis dynamique de l'ensemble
 	private String croquis;
 	//
-	@OneToMany
+	@OneToMany(cascade=CascadeType.REMOVE)
 	private List<Alerte> alertesActives;
 	// @OneToMany(mappedBy = "enregistreur")
 	// private List<TrameDW> trameDWs;
 
-	@OneToMany
+	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="enregistreur")
 	private List<Mesure> mesures;
 
 	/**
@@ -236,8 +236,8 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
-	public Mesure getMesureEnregistreur() {
-		return mesureEnregistreur;
+	public Mesure getDerniereMesure() {
+		return derniereMesure;
 	}
 
 	/**
@@ -245,8 +245,8 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
-	public void setMesureEnregistreur(Mesure mesureEnregistreur) {
-		this.mesureEnregistreur = mesureEnregistreur;
+	public void setDerniereMesure(Mesure mesureEnregistreur) {
+		this.derniereMesure = mesureEnregistreur;
 	}
 
 	public String getModem() {
@@ -367,8 +367,8 @@ public class Enregistreur implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((mid == null) ? 0 : mid.hashCode());
-		result = prime * result + ((sim == null) ? 0 : sim.hashCode());
+		result = prime * result + ((mid == null) ? 0 : mid.toUpperCase().hashCode());
+		result = prime * result + ((sim == null) ? 0 : sim.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -389,12 +389,12 @@ public class Enregistreur implements Serializable {
 		if (mid == null) {
 			if (other.mid != null)
 				return false;
-		} else if (!mid.equals(other.mid))
+		} else if (!mid.equalsIgnoreCase(other.mid))
 			return false;
 		if (sim == null) {
 			if (other.sim != null)
 				return false;
-		} else if (!sim.equals(other.sim))
+		} else if (!sim.equalsIgnoreCase(other.sim))
 			return false;
 		return true;
 	}
