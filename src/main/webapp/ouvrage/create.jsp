@@ -86,9 +86,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
  							un site"
 										class="form-control chosen">
 									</form:select>
-
-
 								</div>
+								<div class="form-group">
+									<label for="coordonneesGeographique">Coordonnées
+										géographiques (format Lambert93)</label>
+									<form:input type="text" class="form-control"
+										id="coordonneesGeographique" path="coordonneesGeographique"
+										placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum" />
+								</div>
+
 
 								<div class="checkbox checkbox-inline">
 									<form:checkbox id="asservissement" path="asservissement"

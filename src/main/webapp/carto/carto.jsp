@@ -22,6 +22,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<div class="bg-white shadow tools-inner">
 					<header>
 						<h1 class="h3 p15 text-primary mt0">Cartographie</h1>
+						<c:url var="mapUrl" value="/carto" />
+						<a class="relayUrl" href="${mapUrl}"></a>
+						<c:url var="resourcesUrl" value="/resources" />
+						<a class="resourcesUrl" href="${resourcesUrl}"></a>
+						<c:url var="ouvrageUrl" value="/ouvrage/update/" />
+						<a class="ouvrageUrl" href="${ouvrageUrl}"></a>
+						<c:url var="siteUrl" value="/site/update/" />
+						<a class="siteUrl" href="${siteUrl}"></a>
+						<c:url var="etablissementUrl" value="/etablissement/update/" />
+						<a class="etablissementUrl" href="${etablissementUrl}"></a>
 
 						<h3 class="h5 p15">
 							<strong>Filtrer par:</strong>
@@ -30,30 +40,30 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<nav role="navigation">
 						<div class="no-padding">
 							<div class="form-group ml15 mr15">
-								<select data-placeholder="Etablissement"
-									class="chosen form-control js-find-location text-uppercase">
+								<select id="etablissement" data-placeholder="Etablissement"
+									class="form-control chosen js-find-location text-uppercase">
 									<option value=""></option>
-									<option value="32 bd paul vaillant couturier 93100 Montreuil">AH2D</option>
-									<option
-										value="12 rue Léopold Frison 51000 chalons-en-champagne">MORGAGNI-ZEIMETT
-									</option>
+									<c:forEach items="${etablissementsCombo}" var="etablissement">
+										<option value="${etablissement.id}">${etablissement.codeEtablissement}</option>
+									</c:forEach>
 								</select>
 							</div>
 							<div class="form-group ml15 mr15">
-								<select data-placeholder="Site"
-									class="chosen form-control js-find-location">
+								<select id="site" data-placeholder="Site"
+									class="chosen form-control js-find-location  text-uppercase">
 									<option value=""></option>
-									<option>Montreuil</option>
-									<option>Marcilly sur Seine</option>
+									<c:forEach items="${sitesCombo}" var="site">
+										<option value="${site.id}">${site.codeSite}</option>
+									</c:forEach>
 								</select>
 							</div>
 							<div class="form-group ml15 mr15">
-								<select data-placeholder="Ouvrage"
-									class="chosen form-control js-find-location">
+								<select id="ouvrage" data-placeholder="Ouvrage"
+									class="chosen form-control js-find-location  text-uppercase">
 									<option value=""></option>
-									<option>M1-PZ1</option>
-									<option>M1-PZ2</option>
-									<option>M53-PZ1</option>
+									<c:forEach items="${ouvragesCombo}" var="ouvrage">
+										<option value="${ouvrage.id}">${ouvrage.codeOuvrage}</option>
+									</c:forEach>
 								</select>
 							</div>
 						</div>

@@ -68,7 +68,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<!-- /toggle offscreen menu -->
 
 				<!-- logo -->
-				<a href="<c:url  value="/carto/carto.jsp" />" class="navbar-brand">
+				<a href="<c:url  value="/carto/carto" />" class="navbar-brand">
 					<img src="${urlResources}/img/logo_solices.png" alt="">
 				</a>
 				<!-- /logo -->
@@ -78,7 +78,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 			<div class="collapse navbar-collapse pull-left" id="menu-collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="<c:url  value="/carto/carto.jsp" />"
+					<li><a href="<c:url  value="/carto/carto" />"
 						class="${param.menuAccueilActive}">Accueil</a></li>
 
 					<sec:authorize ifAllGranted="ADMIN">

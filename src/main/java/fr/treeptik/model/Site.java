@@ -30,6 +30,8 @@ public class Site implements Serializable {
 	private String codeSite;
 	private String departement;
 	private String coordonneesGeographique;
+	private Float latitude;
+	private Float longitude;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
 	@ManyToOne
@@ -79,13 +81,35 @@ public class Site implements Serializable {
 		this.departement = departement;
 	}
 
+	
+	
 	public String getCoordonneesGeographique() {
 		return coordonneesGeographique;
 	}
 
 	public void setCoordonneesGeographique(String coordonneesGeographique) {
 		this.coordonneesGeographique = coordonneesGeographique;
+		this.setLatitude();
+		this.setLongitude();
 	}
+	
+	public Float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude() {
+		this.latitude = Float.valueOf(this.coordonneesGeographique.substring(0, this.coordonneesGeographique.lastIndexOf("/")));
+	}
+
+	public Float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude() {
+		
+		this.longitude = Float.valueOf(this.coordonneesGeographique.substring(this.coordonneesGeographique.lastIndexOf("/") + 1, this.coordonneesGeographique.length()));
+	}
+
 
 	public String getStationMeteo() {
 		return stationMeteo;

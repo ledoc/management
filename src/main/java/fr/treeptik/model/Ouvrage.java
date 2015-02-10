@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,7 +26,6 @@ public class Ouvrage implements Serializable {
 	// Nom de la nappe / cours d'eau / réservoir / bassin
 	protected String nom;
 	protected String codeOuvrage;
-	// D-type
 	// suivi de nappe souterraine, suivi d’eaux de surface (Vanne / Pompe :
 	// version 2) ;
 	@Enumerated(EnumType.STRING)
@@ -35,6 +33,9 @@ public class Ouvrage implements Serializable {
 	@ManyToOne
 	@JsonIgnore
 	private Site site;
+	private String coordonneesGeographique;
+	private Float latitude;
+	private Float longitude;
 	/**
 	 * Nivellement général de la France
 	 */
@@ -124,6 +125,36 @@ public class Ouvrage implements Serializable {
 
 	public Boolean getAsservissement() {
 		return asservissement;
+	}
+
+	public String getCoordonneesGeographique() {
+		return coordonneesGeographique;
+	}
+
+	public void setCoordonneesGeographique(String coordonneesGeographique) {
+		this.coordonneesGeographique = coordonneesGeographique;
+		this.setLatitude();
+		this.setLongitude();
+	}
+
+	public Float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude() {
+		this.latitude = Float.valueOf(this.coordonneesGeographique.substring(0,
+				this.coordonneesGeographique.lastIndexOf("/")));
+	}
+
+	public Float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude() {
+
+		this.longitude = Float.valueOf(this.coordonneesGeographique.substring(
+				this.coordonneesGeographique.lastIndexOf("/") + 1,
+				this.coordonneesGeographique.length()));
 	}
 
 	public void setAsservissement(Boolean asservissement) {
@@ -286,13 +317,16 @@ public class Ouvrage implements Serializable {
 		this.coteSolNGF = coteSolNGF;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Ouvrage [id=" + id + ", nom=" + nom + ", asservissement="
-				+ asservissement + ", coteRepereNGF=" + coteRepereNGF
-				+ ", photo=" + photo + ", codeOuvrage=" + codeOuvrage
-				+ ", typeOuvrage=" + typeOuvrage + ", croquisDynamique="
-				+ croquisDynamique + ", commentaire=" + commentaire
+		return "Ouvrage [id=" + id + ", nom=" + nom + ", codeOuvrage="
+				+ codeOuvrage + ", typeOuvrage=" + typeOuvrage + ", site="
+				+ site + ", coordonneesGeographique=" + coordonneesGeographique
+				+ ", latitude=" + latitude + ", longitude=" + longitude
+				+ ", coteRepereNGF=" + coteRepereNGF + ", commentaire="
+				+ commentaire + ", asservissement=" + asservissement
+				+ ", photo=" + photo + ", croquisDynamique=" + croquisDynamique
 				+ ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
 				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol
 				+ ", mesureProfondeur=" + mesureProfondeur + ", coteSolNGF="

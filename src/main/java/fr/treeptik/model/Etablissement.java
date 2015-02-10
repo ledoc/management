@@ -23,7 +23,10 @@ public class Etablissement implements Serializable {
 	private String nom;
 	// applicatif : par défaut le nom ou l'entité
 	private String codeEtablissement;
+	// latitude/longitude
 	private String coordonneesGeographique;
+	private Float latitude;
+	private Float longitude;
 	private String formeJuridique;
 	private String siret;
 	private String telephone;
@@ -65,6 +68,25 @@ public class Etablissement implements Serializable {
 
 	public void setCoordonneesGeographique(String coordonneesGeographique) {
 		this.coordonneesGeographique = coordonneesGeographique;
+		this.setLatitude();
+		this.setLongitude();
+	}
+	
+	public Float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude() {
+		this.latitude = Float.valueOf(this.coordonneesGeographique.substring(0, this.coordonneesGeographique.lastIndexOf("/")));
+	}
+
+	public Float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude() {
+		
+		this.longitude = Float.valueOf(this.coordonneesGeographique.substring(this.coordonneesGeographique.lastIndexOf("/") + 1, this.coordonneesGeographique.length()));
 	}
 
 	public String getFormeJuridique() {
@@ -73,6 +95,8 @@ public class Etablissement implements Serializable {
 
 	public void setFormeJuridique(String formeJuridique) {
 		this.formeJuridique = formeJuridique;
+		this.setLatitude();
+		this.setLongitude();
 	}
 
 	public String getSiret() {
@@ -127,14 +151,20 @@ public class Etablissement implements Serializable {
 		this.sites = sites;
 	}
 
+
+
+
+
 	@Override
 	public String toString() {
-		return "Etablissement [id=" + id + ", nom=" + nom + ", codeEtablissement=" + codeEtablissement
-				+ ", coordonneesGeographique=" + coordonneesGeographique + ", formeJuridique=" + formeJuridique
-				+ ", siret=" + siret + ", telephone=" + telephone + ", mail=" + mail + ", siteWeb=" + siteWeb + "]";
+		return "Etablissement [id=" + id + ", nom=" + nom
+				+ ", codeEtablissement=" + codeEtablissement
+				+ ", coordonneesGeographique=" + coordonneesGeographique
+				+ ", latitude=" + latitude + ", longitude=" + longitude
+				+ ", formeJuridique=" + formeJuridique + ", siret=" + siret
+				+ ", telephone=" + telephone + ", mail=" + mail + ", siteWeb="
+				+ siteWeb + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
