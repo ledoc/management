@@ -79,14 +79,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="site">Rattacher à un Site</label>
-									<form:select autocomplete="true" id="sitesCombo"
-										name="sitesCombo" path="site.id" itemValue="id"
-										items="${sitesCombo}" itemLabel="codeSite"
-										data-placeholder=" Sélectionnez 
- 							un site"
-										class="form-control chosen">
+									<form:select class="form-control chosen-select" data-placeholder="Choisir un etablissement ..."  
+										data-parsley-required="true" data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis" 
+										path="site.id">
+										<form:option value=""></form:option>
+										<form:options items="${sitesCombo}"  itemValue="id" itemLabel="codeSite"/> 
 									</form:select>
-
 
 								</div>
 
