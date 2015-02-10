@@ -108,8 +108,8 @@ public class SiteController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		site.setEtablissement(null);
 		model.addAttribute("site", site);
+		
 		model.addAttribute("typesSiteCombo", typesSiteCombo);
 		model.addAttribute("etablissementsCombo", etablissementsCombo);
 		return "/site/create";
