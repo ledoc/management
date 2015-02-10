@@ -33,7 +33,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "fr.treeptik" })
+@ComponentScan(basePackages = { "fr.treeptik.controller" })
 @PropertySource({ "classpath:/config.properties" })
 public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 

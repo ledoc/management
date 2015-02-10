@@ -66,7 +66,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			ServletContext servletContext,
 			AnnotationConfigWebApplicationContext rootContext) {
 		logger.debug("Configuring Spring Web application context");
+		
 		AnnotationConfigWebApplicationContext dispatcherServletConfiguration = new AnnotationConfigWebApplicationContext();
+		
 		dispatcherServletConfiguration.setParent(rootContext);
 		dispatcherServletConfiguration
 				.register(DispatcherServletConfiguration.class);

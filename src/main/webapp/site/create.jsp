@@ -100,16 +100,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<label for="etablissements">Rattacher à un
 										établissement</label>
 
-									<form:select id="etablissementsCombo"
-										name="etablissementsCombo" path="etablissement.id"
+									<form:select class="form-control chosen-select" data-placeholder="Choisir un etablissement ..."  
 										data-parsley-required="true" data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis"
-										data-placeholder=" Sélectionnez
-							un établissement"
-										class="form-control chosen-select"
-										items="${etablissementsCombo}" itemValue="id"
-										itemLabel="codeEtablissement">
-
+										data-parsley-required-message="Champ requis" 
+										path="etablissement.id">
+										<form:option value=""></form:option>
+										<form:options items="${etablissementsCombo}"  itemValue="id" itemLabel="codeEtablissement"/> 
 									</form:select>
 
 								</div>
