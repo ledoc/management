@@ -7,17 +7,16 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@Configuration
+
 @PropertySource({ "classpath:config.properties" })
 @ComponentScan(basePackages = { "fr.treeptik" })
 @EnableAspectJAutoProxy
-@Import(value = { SecurityConfiguration.class, DatabaseConfiguration.class })
+@EnableWebMvc
 public class ApplicationConfiguration {
 
 	private Logger logger = Logger.getLogger(ApplicationConfiguration.class);
