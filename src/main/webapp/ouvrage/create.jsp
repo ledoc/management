@@ -9,7 +9,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuUtilisateurActive" />
+	<jsp:param value="active" name="menuOuvrageActive" />
 	<jsp:param value="Solices - Détail Ouvrage" name="titreOnglet" />
 </jsp:include>
 
