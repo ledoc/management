@@ -86,7 +86,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
-							<p class="text-muted">ATTENTION : Tous les établissements, sites et ouvrages associés seront supprimés</p>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"

@@ -97,17 +97,11 @@ public class OuvrageController {
 				+ ouvrage.getEnregistreurs());
 		try {
 
-			// // TODO HACK A supprimer
-			// if (ouvrage.getSite() != null && ouvrage.getSite().getId() ==
-			// null) {
-			// ouvrage.setSite(null);
-			// }
+			if (ouvrage.getOuvrageMaitre() != null
+					&& ouvrage.getOuvrageMaitre().getId() == null) {
+				ouvrage.setOuvrageMaitre(null);
+			}
 
-			 if (ouvrage.getOuvrageMaitre() != null && ouvrage.getOuvrageMaitre().getId() ==
-						 null) {
-						 ouvrage.setOuvrageMaitre(null);
-						 }
-			
 			ouvrageService.create(ouvrage);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -130,10 +124,9 @@ public class OuvrageController {
 
 		try {
 			ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(id);
-			// On ne propose que les ouvrages du site comme ouvrages maitres
 
-				ouvragesCombo = ouvrageService.findAll();
-				ouvragesCombo.remove(ouvrage);
+			ouvragesCombo = ouvrageService.findAll();
+			ouvragesCombo.remove(ouvrage);
 			enregistreursCombo = enregistreurService.findFreeEnregistreurs();
 			enregistreursCombo.addAll(ouvrage.getEnregistreurs());
 			sitesCombo = siteService.findAll();

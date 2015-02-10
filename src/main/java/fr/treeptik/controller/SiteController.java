@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeSite;
 import fr.treeptik.service.EtablissementService;
 import fr.treeptik.service.SiteService;
+import fr.treeptik.spring.EtablissementCustomEditor;
 
 @Controller
 @RequestMapping("/site")
@@ -31,6 +34,9 @@ public class SiteController {
 
 	private Logger logger = Logger.getLogger(SiteController.class);
 
+	@Inject
+	private EtablissementCustomEditor etablissementCustomEditor;
+	
 	@Inject
 	private SiteService siteService;
 	@Inject
@@ -44,8 +50,8 @@ public class SiteController {
 				Arrays.asList(TypeSite.values()));
 
 		List<Etablissement> etablissementsCombo;
-		
-		Site site =new Site();
+
+		Site site = new Site();
 
 		try {
 			etablissementsCombo = etablissementService.findAll();
@@ -57,11 +63,31 @@ public class SiteController {
 		model.addAttribute("site", site);
 		model.addAttribute("typesSiteCombo", typesSiteCombo);
 		model.addAttribute("etablissementsCombo", etablissementsCombo);
-		
-		
+
 		return "/site/create";
 	}
 
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public String create(@ModelAttribute Site site, BindingResult result)
+			throws ControllerException {
+		logger.info("Erreurs : " + result.getAllErrors());
+
+		logger.info("--create SiteController-- site : " + site
+				+ " -- ouvrages : " + site.getOuvrages());
+
+		logger.info("--create SiteController-- etablissment : "
+				+ site.getEtablissement());
+		try {
+			site = siteService.create(site);
+
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return "redirect:/site/list";
+
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
@@ -81,7 +107,7 @@ public class SiteController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		
+
 		site.setEtablissement(null);
 		model.addAttribute("site", site);
 		model.addAttribute("typesSiteCombo", typesSiteCombo);
@@ -101,62 +127,6 @@ public class SiteController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 		return "redirect:/site/list";
-	}
-
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Site site, BindingResult result)
-			throws ControllerException {
-		logger.info("Erreurs : " + result.getAllErrors());
-
-		logger.info("--create SiteController-- site : " + site
-				+ " -- ouvrages : " + site.getOuvrages());
-
-		logger.info("--create SiteController-- etablissment : "
-				+ site.getEtablissement());
-		// List<Ouvrage> ouvrages = site.getOuvrages();
-		try {
-			// pour une update
-			// if (site.getId() != null) {
-			// logger.debug(" update d'un site : id = " + site.getId());
-			// if (ouvrages != null) {
-			// logger.debug("ouvrages actuelles : " + ouvrages);
-			// Site siteInBase = siteService
-			// .findByIdWithJoinFetchOuvrages(site.getId());
-			// logger.debug("ouvrages avant update : "
-			// + siteInBase.getOuvrages());
-			// if (!ouvrages.equals(siteInBase.getOuvrages())) {
-			// logger.debug("La liste d'ouvrage a changée ");
-			// for (Ouvrage ouvrage : ouvrages) {
-			// logger.debug("ouvrage mis à jour : " + ouvrage);
-			// ouvrage = ouvrageService.findById(ouvrage.getId());
-			// ouvrage.setSite(site);
-			// ouvrageService.update(ouvrage);
-			// }
-			// }
-			// siteService.update(site);
-			// } else {
-			// site = siteService.create(site);
-			// }
-			// // pour la création d'un site
-			// } else {
-			// if (ouvrages != null) {
-			// site = siteService.create(site);
-			// for (Ouvrage ouvrage : ouvrages) {
-			// ouvrage = ouvrageService.findById(ouvrage.getId());
-			// ouvrage.setSite(site);
-			// ouvrageService.update(ouvrage);
-			// }
-			// } else {
-			site = siteService.create(site);
-			// }
-			// }
-
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return "redirect:/site/list";
-
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list")
@@ -184,5 +154,9 @@ public class SiteController {
 		return "/site/list";
 	}
 
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) throws ControllerException {
+		binder.registerCustomEditor(Etablissement.class, "etablissement", etablissementCustomEditor);
+	}
 
 }

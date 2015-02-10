@@ -17,14 +17,27 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<!-- /sidebar -->
 	<section class="main-content bg-white rounded shadow">
 		<!-- content wrapper -->
+
+		<c:if test="${empty ouvrage.id}">
+			<c:set var="labelCreateUpdate" value="Créer" />
+			<c:set var="textCreateUpdate" value="Création" />
+		</c:if>
+		<c:if test="${not empty ouvrage.id}">
+			<c:set var="labelCreateUpdate" value="Mettre à jour" />
+			<c:set var="textCreateUpdate" value="Mise à jour" />
+		</c:if>
+
+
 		<div class="content-wrap clearfix pt15">
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">Création d'un Ouvrage</h1>
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+							Ouvrage</h1>
 						<p class="text-muted">Pour ajouter un ou des enregistreurs
 							l'ouvrage doit d'abord être créer</p>
 					</header>
+
 					<div class="panel-body">
 						<c:url var="createOuvrage" value="/ouvrage/create" />
 						<form:form id="form" method="POST" action="${createOuvrage}"
@@ -106,7 +119,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="pull-right">
 									<a href="<c:url  value="/ouvrage/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">Créer</button>
+									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
 								</div>
 							</div>
 							<div class="col-md-4">

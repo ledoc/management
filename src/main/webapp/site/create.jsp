@@ -15,12 +15,23 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<!-- /sidebar -->
 	<section class="main-content bg-white rounded shadow">
 		<!-- content wrapper -->
+
+		<c:if test="${empty site.id}">
+			<c:set var="labelCreateUpdate" value="Créer" />
+			<c:set var="textCreateUpdate" value="Création" />
+		</c:if>
+		<c:if test="${not empty site.id}">
+			<c:set var="labelCreateUpdate" value="Mettre à jour" />
+			<c:set var="textCreateUpdate" value="Mise à jour" />
+		</c:if>
+
+
 		<div class="content-wrap clearfix pt15">
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">Création d'un Site</h1>
-						<p class="text-muted">Permet de créer ou mettre à jour un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un Site</h1>
+						<p class="text-muted">Permet de ${labelCreateUpdate} un
 							site.</p>
 					</header>
 					<div class="panel-body">
@@ -88,23 +99,26 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="etablissements">Rattacher à un
 										établissement</label>
-										
-									<form:select name="etablissementsCombo" path="etablissement.id"
+
+									<form:select id="etablissementsCombo"
+										name="etablissementsCombo" path="etablissement.id"
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-placeholder=" Sélectionnez
 							un établissement"
-										class="form-control chosen-select">
-										
-										<form:options items="${etablissementsCombo}" itemValue="id"
-											itemLabel="codeEtablissement" />
+										class="form-control chosen-select"
+										items="${etablissementsCombo}" itemValue="id"
+										itemLabel="codeEtablissement">
+
 									</form:select>
 
 								</div>
 								<div class="pull-right">
+
+
 									<a href="<c:url  value="/site/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">Créer</button>
+									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
 								</div>
 							</div>
 						</form:form>
