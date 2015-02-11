@@ -100,4 +100,10 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 		return logs;
 		
 	}
+
+	@Override
+	public Administrateur findByLogin(String userLogin) throws ServiceException {
+		logger.info("--findByLogin AdministrateurServiceImpl --");
+		return administrateurDAO.findByLogin(userLogin);
+	}
 }

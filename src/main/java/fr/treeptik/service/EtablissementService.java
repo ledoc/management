@@ -20,13 +20,16 @@ public interface EtablissementService {
 
 	void remove(Integer id) throws ServiceException;
 
+	Etablissement findByIdWithJoinFetchClients(Integer id) throws ServiceException;
+	
 	Etablissement findByIdWithJoinFetchSites(Integer id)
-			throws ServiceException;
+			throws ServiceException;	
+	
+//	Etablissement findByIdWithJoinFetchClientsAndSites(Integer id)
+//			throws ServiceException;
 
 	List<Ouvrage> findAllOuvragesOfEtablissement(Integer id)
 			throws ServiceException;
 
 	List<Etablissement> findByClientLogin(String login) throws ServiceException;
-
-	Etablissement findByIdWithJoinFetchClients(Integer id) throws ServiceException;
 }

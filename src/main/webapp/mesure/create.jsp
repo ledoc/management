@@ -5,6 +5,8 @@
 <%@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuMesureActive" />
@@ -12,6 +14,27 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 </jsp:include>
 
 <c:url var="urlResources" value="/resources" />
+<!-- Seulement une visualisation pour les clients -->
+<sec:authorize ifAllGranted="ADMIN">
+	<c:set var="readOnlyValue" value="false"></c:set>
+	<c:if test="${empty mesure.id}">
+		<c:set var="sentenceCreateUpdate" value="créer" />
+		<c:set var="labelCreateUpdate" value="Créer" />
+		<c:set var="textCreateUpdate" value="Création" />
+	</c:if>
+	<c:if test="${not empty mesure.id}">
+		<c:set var="sentenceCreateUpdate" value="mettre à jour" />
+		<c:set var="labelCreateUpdate" value="Mettre à jour" />
+		<c:set var="textCreateUpdate" value="Mise à jour" />
+	</c:if>
+</sec:authorize>
+<sec:authorize ifAllGranted="CLIENT">
+	<c:set var="readOnlyValue" value="true"></c:set>
+	<c:set var="sentenceCreateUpdate" value="visualiser" />
+	<c:set var="labelCreateUpdate" value="OK" />
+	<c:set var="textCreateUpdate" value="Détails" />
+</sec:authorize>
+
 
 <section class="layout">
 	<!-- /sidebar -->
@@ -23,7 +46,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">Création d'une mesure
 							manuelle</h1>
-						<p class="text-muted">Le formulaire permet de créer une mesure
+						<p class="text-muted">Le formulaire permet de ${sentenceCreateUpdate} une mesure
 							manuelle.</p>
 					</header>
 					<div class="panel-body">

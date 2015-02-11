@@ -13,19 +13,33 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="Solices - Détail Ouvrage" name="titreOnglet" />
 </jsp:include>
 
+<!-- Seulement une visualisation pour les clients -->
+<sec:authorize ifAllGranted="ADMIN">
+	<c:set var="readOnlyValue" value="false"></c:set>
+	<c:if test="${empty ouvrage.id}">
+		<c:set var="sentenceCreateUpdate" value="créer" />
+		<c:set var="labelCreateUpdate" value="Créer" />
+		<c:set var="textCreateUpdate" value="Création" />
+	</c:if>
+	<c:if test="${not empty ouvrage.id}">
+		<c:set var="sentenceCreateUpdate" value="mettre à jour" />
+		<c:set var="labelCreateUpdate" value="Mettre à jour" />
+		<c:set var="textCreateUpdate" value="Mise à jour" />
+	</c:if>
+</sec:authorize>
+<sec:authorize ifAllGranted="CLIENT">
+	<c:set var="readOnlyValue" value="true"></c:set>
+	<c:set var="sentenceCreateUpdate" value="visualiser" />
+	<c:set var="labelCreateUpdate" value="OK" />
+	<c:set var="textCreateUpdate" value="Détails" />
+</sec:authorize>
+
 <section class="layout">
 	<!-- /sidebar -->
 	<section class="main-content bg-white rounded shadow">
 		<!-- content wrapper -->
 
-		<c:if test="${empty ouvrage.id}">
-			<c:set var="labelCreateUpdate" value="Créer" />
-			<c:set var="textCreateUpdate" value="Création" />
-		</c:if>
-		<c:if test="${not empty ouvrage.id}">
-			<c:set var="labelCreateUpdate" value="Mettre à jour" />
-			<c:set var="textCreateUpdate" value="Mise à jour" />
-		</c:if>
+
 
 
 		<div class="content-wrap clearfix pt15">
@@ -53,7 +67,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										path="typeOuvrage" data-parsley-required="true"
 										data-parsley-required-message="Champ requis"
 										onchange="javascript:activateNappeOrSurface();"
-										class="form-control chosen">
+										class="form-control chosen" disabled="${readOnlyValue }" >
 										<form:option value="NONE" label="--- Choisir un type ---" />
 										<form:options items="${typesOuvrageCombo}"
 											itemLabel="description" />
@@ -66,7 +80,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required="true"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="codeOuvrage">Code de l'ouvrage</label>
@@ -75,16 +89,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="site">Rattacher à un Site</label>
-									<form:select class="form-control chosen-select" data-placeholder="Choisir un etablissement ..."  
+									<form:select class="form-control chosen-select"
+										data-placeholder="Choisir un etablissement ..."
 										data-parsley-required="true" data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis" 
-										path="site.id">
+										data-parsley-required-message="Champ requis" path="site.id" readonly="${readOnlyValue }" >
 										<form:option value=""></form:option>
-										<form:options items="${sitesCombo}"  itemValue="id" itemLabel="codeSite"/> 
+										<form:options items="${sitesCombo}" itemValue="id"
+											itemLabel="codeSite" />
 									</form:select>
 
 
@@ -98,12 +113,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div class="checkbox checkbox-inline">
 									<form:checkbox id="asservissement" path="asservissement"
 										onchange="javascript:activateOuvrageMaitre();"
-										label="Asservissement" />
+										label="Asservissement" disabled="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" id="ouvrageMaitre"
 									class="form-group">
@@ -112,7 +127,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										name="ouvragesCombo" path="ouvrageMaitre.id"
 										class="form-control"
 										data-placeholder=" Sélectionnez
-							un ouvrage maître">
+							un ouvrage maître" readonly="${readOnlyValue }" >
 										<form:option value=""></form:option>
 										<form:options items="${ouvragesCombo}" itemValue="id"
 											itemLabel="codeOuvrage" />
@@ -124,7 +139,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<form:textarea type="text" class="form-control"
 										id="commentaire" path="commentaire" placeholder=""
 										data-parsley-trigger="change" data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div class="pull-right">
 									<a href="<c:url  value="/ouvrage/list" />"
@@ -140,7 +155,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										step="any" data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="coteRepereNGF">Côte repère NGF</label>
@@ -150,7 +165,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="eaudesurface form-group">
 									<label for="coteSol">Côte Sol Berge (eau de surface)</label>
@@ -159,14 +174,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="numeroBSS">Numéro BSS (nappe souterraine)</label>
 									<form:input type="text" class="form-control" path="numeroBSS"
 										placeholder="" data-parsley-trigger="change"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="mesureProfondeur">Mesure repère Profondeur
@@ -177,7 +192,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="mesureRepereNGFSol">Mesure repère NGF / Sol
@@ -188,7 +203,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
 								</div>
 							</div>
 

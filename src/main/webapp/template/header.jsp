@@ -56,6 +56,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/plugins/modernizr.js"></script>
 
 <sec:authentication var="principal" property="principal" />
+<c:url var="urlGetPrincipalId" value="/client/principal/id" />
+
 </head>
 
 <body class="bg-default">
@@ -73,8 +75,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</a>
 				<!-- /logo -->
 			</div>
-
-
 
 			<div class="collapse navbar-collapse pull-left" id="menu-collapse">
 				<ul class="nav navbar-nav">
@@ -109,7 +109,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						class="ti-angle-down ti-caret"></i>
 				</a>
 					<ul class="dropdown-menu animated fadeInRight">
-						<li><a href="#">Mon compte</a></li>
+						<sec:authorize ifAllGranted="CLIENT">
+							<c:url var="urlClientUpdate"
+								value="/client/update/${userSession.id}" />
+							<li><a href="${urlClientUpdate}">Mon compte</a></li>
+						</sec:authorize>
+						<sec:authorize ifAllGranted="ADMIN">
+							<c:url var="urlAdministrateurUpdate"
+								value="/administrateur/update/${userSession.id}" />
+							<li><a href="${urlAdministrateurUpdate}">Mon compte</a></li>
+						</sec:authorize>
 						<li><a href="#">
 								<div class="badge bg-danger pull-right">3</div> <span>Messagerie</span>
 						</a></li>

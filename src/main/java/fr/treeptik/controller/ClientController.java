@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomCollectionEditor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +20,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Administrateur;
 import fr.treeptik.model.Client;
 import fr.treeptik.model.Etablissement;
+import fr.treeptik.service.AdministrateurService;
 import fr.treeptik.service.ClientService;
 import fr.treeptik.service.EtablissementService;
 import fr.treeptik.spring.ClientValidator;
@@ -34,6 +40,8 @@ public class ClientController {
 
 	@Inject
 	private ClientService clientService;
+	@Inject
+	private AdministrateurService administrateurService;
 	@Inject
 	private EtablissementService etablissementService;
 
@@ -93,7 +101,7 @@ public class ClientController {
 
 				List<Etablissement> etablissementsCombo = etablissementService
 						.findAll();
-				
+
 				etablissementCache = new HashMap<Integer, Etablissement>();
 
 				for (Etablissement etablissement : etablissementsCombo) {
@@ -125,8 +133,8 @@ public class ClientController {
 	 * @throws ControllerException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id)
-			throws ControllerException {
+	public String update(HttpServletRequest request, Model model,
+			@PathVariable("id") Integer id) throws ControllerException {
 		logger.info("--update ClientController -- clientId : " + id);
 
 		Client client = null;
@@ -134,13 +142,28 @@ public class ClientController {
 		etablissementCache = new HashMap<Integer, Etablissement>();
 
 		try {
-			client = clientService.findByIdWithJoinFetchEtablissements(id);
 
+			Boolean isAdmin = request.isUserInRole("ADMIN");
+			logger.debug("USER ROLE ADMIN : " + isAdmin);
+			if (!isAdmin) {
+				
+				
+				client = (Client) request.getSession().getAttribute("userSession");
+				logger.debug("USER LOGIN : " + client.getLogin() );
+
+				if (id != client.getId()) {
+					throw new ControllerException(
+							"Le client essaie d'éditer une fiche ne lui appartenant pas !!!");
+				}
+			}
+
+			client = clientService.findByIdWithJoinFetchEtablissements(id);
+			
 			etablissementsCombo = etablissementService.findAll();
 			for (Etablissement etablissement : etablissementsCombo) {
 				etablissementCache.put(etablissement.getId(), etablissement);
 			}
-		} catch (NumberFormatException | ServiceException e) {
+		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
@@ -203,8 +226,7 @@ public class ClientController {
 						List<Etablissement> etablissements = null;
 						try {
 							etablissementCache = new HashMap<Integer, Etablissement>();
-							etablissements = etablissementService
-									.findAll();
+							etablissements = etablissementService.findAll();
 						} catch (ServiceException e) {
 							logger.error(e.getMessage());
 						}
@@ -239,13 +261,36 @@ public class ClientController {
 				});
 	}
 
-	public Map<Integer, Etablissement> getEtablissementCache() {
-		return etablissementCache;
-	}
+	@RequestMapping(method = RequestMethod.GET, value = "/principal/id")
+	public @ResponseBody Integer getPrincipalId(HttpServletRequest request,
+			HttpServletResponse response, Model model)
+			throws ControllerException {
+		logger.info("-- getPrincipalId AdministrateurController --");
 
-	public void setEtablissementCache(
-			Map<Integer, Etablissement> etablissementCache) {
-		this.etablissementCache = etablissementCache;
+		Client client;
+		Administrateur admininstrateur;
+
+		try {
+
+			Boolean isAdmin = request.isUserInRole("ADMIN");
+			logger.debug("USER ROLE ADMIN : " + isAdmin);
+			String userLogin = SecurityContextHolder.getContext()
+					.getAuthentication().getName();
+			logger.debug("USER LOGIN : " + userLogin);
+
+			if (isAdmin) {
+				admininstrateur = administrateurService.findByLogin(userLogin);
+				return admininstrateur.getId();
+			} else {
+				client = clientService.findByLogin(userLogin);
+				return client.getId();
+			}
+
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+
 	}
 
 }

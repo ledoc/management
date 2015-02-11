@@ -59,18 +59,17 @@ public class EtablissementServiceImpl implements EtablissementService {
 		return etablissement;
 	}
 
-	
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE EtablissementService -- etablissementId : " + id);
 		try {
-			
+
 			Etablissement etablissement = etablissementDAO.findOne(id);
-			etablissement.getClients().forEach(c -> c.getEtablissements().remove(etablissement));
-			
+			etablissement.getClients().forEach(
+					c -> c.getEtablissements().remove(etablissement));
 			etablissementDAO.delete(id);
-			
+
 		} catch (PersistenceException e) {
 			logger.error("Error EtablissementService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
@@ -81,7 +80,8 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Override
 	public List<Etablissement> findByClientLogin(String login)
 			throws ServiceException {
-		logger.info("--findByClientLogin EtablissementService -- login : " + login);
+		logger.info("--findByClientLogin EtablissementService -- login : "
+				+ login);
 		List<Etablissement> etablissements;
 		try {
 			etablissements = etablissementDAO.findByClientLogin(login);
@@ -105,17 +105,25 @@ public class EtablissementServiceImpl implements EtablissementService {
 		return etablissements;
 	}
 
+	/**
+	 * Méthode spécifique pour récupérer les clients associées à un
+	 * établissement dû au FetchType.Lazy
+	 */
 	@Override
-	public List<Etablissement> findFreeEtablissements() throws ServiceException {
-		logger.info("--findFreeEtablissements EtablissementService --");
-		List<Etablissement> etablissements;
+	@Transactional(rollbackFor = ServiceException.class)
+	public Etablissement findByIdWithJoinFetchClients(Integer id)
+			throws ServiceException {
+		logger.info("--findByIdWithJoinFetchClients EtablissementService -- id : "
+				+ id);
+
+		Etablissement etablissement;
 		try {
-			etablissements = etablissementDAO.findFreeEtablissements();
+			etablissement = etablissementDAO.findByIdWithJoinFetchClients(id);
 		} catch (PersistenceException e) {
 			logger.error("Error EtablissementService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
-		return etablissements;
+		return etablissement;
 	}
 
 	/**
@@ -126,7 +134,8 @@ public class EtablissementServiceImpl implements EtablissementService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Etablissement findByIdWithJoinFetchSites(Integer id)
 			throws ServiceException {
-		logger.info("--findByIdWithJoinFetchSites EtablissementService -- id : " + id);
+		logger.info("--findByIdWithJoinFetchSites EtablissementService -- id : "
+				+ id);
 
 		Etablissement etablissement;
 		try {
@@ -138,10 +147,47 @@ public class EtablissementServiceImpl implements EtablissementService {
 		return etablissement;
 	}
 
+//	/**
+//	 * Méthode spécifique pour récupérer les sites et clients associées à un
+//	 * établissement dû au FetchType.Lazy
+//	 */
+//	@Override
+//	@Transactional(rollbackFor = ServiceException.class)
+//	public Etablissement findByIdWithJoinFetchClientsAndSites(Integer id)
+//			throws ServiceException {
+//		logger.info("--findByIdWithJoinFetchClientsAndSites EtablissementService -- id : "
+//				+ id);
+//
+//		Etablissement etablissement;
+//		try {
+//			etablissement = etablissementDAO
+//					.findByIdWithJoinFetchClientsAndSites(id);
+//		} catch (PersistenceException e) {
+//			logger.error("Error EtablissementService : " + e);
+//			throw new ServiceException(e.getLocalizedMessage(), e);
+//		}
+//		return etablissement;
+//	}
+
+	@Override
+	public List<Etablissement> findFreeEtablissements() throws ServiceException {
+		logger.info("--findFreeEtablissements EtablissementService --");
+		
+		List<Etablissement> etablissements;
+		try {
+			etablissements = etablissementDAO.findFreeEtablissements();
+		} catch (PersistenceException e) {
+			logger.error("Error EtablissementService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return etablissements;
+	}
+
 	@Override
 	public List<Ouvrage> findAllOuvragesOfEtablissement(Integer id)
 			throws ServiceException {
 		logger.info("--findAllOuvragesOfEtablissement EtablissementService --");
+		
 		List<Ouvrage> ouvrages = new ArrayList<Ouvrage>();
 		List<Site> sites = new ArrayList<Site>();
 		Etablissement etablissement = this.findByIdWithJoinFetchSites(id);
@@ -157,25 +203,5 @@ public class EtablissementServiceImpl implements EtablissementService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return ouvrages;
-	}
-	
-	/**
-	 * Méthode spécifique pour récupérer les sites associées à un etablissement
-	 * dû au FetchType.Lazy
-	 */
-	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public Etablissement findByIdWithJoinFetchClients(Integer id)
-			throws ServiceException {
-		logger.info("--findByIdWithJoinFetchClients EtablissementService -- id : " + id);
-
-		Etablissement etablissement;
-		try {
-			etablissement = etablissementDAO.findByIdWithJoinFetchClients(id);
-		} catch (PersistenceException e) {
-			logger.error("Error EtablissementService : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
-		return etablissement;
 	}
 }

@@ -19,11 +19,13 @@ public interface ClientDAO extends JpaRepository<Client, Integer> {
 	@Query("select c from Client c left join fetch c.documents where c.id = :id")
 	public Client findByIdWithJoinFetchDocuments(@Param("id") Integer id) throws DataAccessException;
 
-	public Long countByLogin(String login);
+	public Long countByLogin(String login) throws DataAccessException;
 
-	public Long countByIdentifiant(String identifiant);
+	public Long countByIdentifiant(String identifiant) throws DataAccessException;
 
 	@Query("select count(c) from Client c Where c.login = :login and c.id != :id")
-	public Long countByLoginAndID(@Param("login") String login, @Param("id") Integer id);
+	public Long countByLoginAndID(@Param("login") String login, @Param("id") Integer id) throws DataAccessException;
 
+	Client findByLogin(String userlogin) throws DataAccessException;
+	
 }

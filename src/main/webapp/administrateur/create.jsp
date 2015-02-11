@@ -10,30 +10,30 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="active" name="menuAdministrateurActive" />
 	<jsp:param value="Solices - Détails Administrateur" name="titreOnglet" />
 </jsp:include>
-
+		
+	<c:if test="${empty administrateur.id}">
+		<c:set var="sentenceCreateUpdate" value="créer" />
+		<c:set var="labelCreateUpdate" value="Créer" />
+		<c:set var="textCreateUpdate" value="Création" />
+	</c:if>
+	<c:if test="${not empty administrateur.id}">
+		<c:set var="sentenceCreateUpdate" value="mettre à jour" />
+		<c:set var="labelCreateUpdate" value="Mettre à jour" />
+		<c:set var="textCreateUpdate" value="Mise à jour" />
+	</c:if>
 
 <section class="layout">
+
 	<!-- /sidebar -->
 	<section class="main-content bg-white rounded shadow">
+
 		<!-- content wrapper -->
-		
-		
-		<c:if test="${empty administrateur.id}">
-			<c:set var="labelCreateUpdate" value="Créer" />
-			<c:set var="textCreateUpdate" value="Création" />
-		</c:if>
-		<c:if test="${not empty administrateur.id}">
-			<c:set var="labelCreateUpdate" value="Mettre à jour" />
-			<c:set var="textCreateUpdate" value="Mise à jour" />
-		</c:if>
-
-
 		<div class="content-wrap clearfix pt15">
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un Administrateur</h1>
-						<p class="text-muted">Permet de ${labelCreateUpdate} un
+						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							administrateur.</p>
 					</header>
 					<div class="panel-body">

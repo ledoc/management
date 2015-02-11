@@ -135,19 +135,18 @@ var googlemap = function() {
 															.attr('href'));
 
 													marker.infoWindow.content = '<h6 class="mt10 mb0">'
-														+ marker.itemName
-														+ '</h6>'
-														+ '<div class="mt10 mb10">'
-														+ '<a href="'
-														+ url
-														+ marker.itemId
-														+ '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa '
-														+ 'fa-edit"></i></a>'
-														+ '<a class="btn btn-primary btn-sm btn-outline mr5"><i class="fa '
-														+ 'fa-line-chart"></i></a>'
-														+ '</div>';
-													
-													
+															+ marker.itemName
+															+ '</h6>'
+															+ '<div class="mt10 mb10">'
+															+ '<a href="'
+															+ url
+															+ marker.itemId
+															+ '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa '
+															+ 'fa-edit"></i></a>'
+															+ '<a class="btn btn-primary btn-sm btn-outline mr5"><i class="fa '
+															+ 'fa-line-chart"></i></a>'
+															+ '</div>';
+
 													marker.icon = ($(
 															'.resourcesUrl')
 															.attr('href') + marker.iconPath)

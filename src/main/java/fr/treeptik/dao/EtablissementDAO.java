@@ -15,6 +15,14 @@ public interface EtablissementDAO extends JpaRepository<Etablissement, Integer> 
 	public Etablissement findByIdWithJoinFetchSites(@Param("id") Integer id)
 			throws DataAccessException;
 
+	@Query("select e from Etablissement e left join fetch e.clients where e.id = :id")
+	public Etablissement findByIdWithJoinFetchClients(@Param("id") Integer id)
+			throws DataAccessException;
+
+//	@Query("select e from Etablissement e left join fetch e.clients left join fetch e.sites where e.id = :id")
+//	public Etablissement findByIdWithJoinFetchClientsAndSites(@Param("id") Integer id)
+//			throws DataAccessException;
+	
 	@Query("select e from Etablissement e  where e not in (select e2 from Client c join c.etablissements e2)")
 	public List<Etablissement> findFreeEtablissements()
 			throws DataAccessException;
@@ -23,7 +31,4 @@ public interface EtablissementDAO extends JpaRepository<Etablissement, Integer> 
 	public List<Etablissement> findByClientLogin(@Param("login") String login)
 			throws DataAccessException;
 
-	@Query("select e from Etablissement e left join fetch e.clients where e.id = :id")
-	public Etablissement findByIdWithJoinFetchClients(@Param("id") Integer id)
-			throws DataAccessException;
 }

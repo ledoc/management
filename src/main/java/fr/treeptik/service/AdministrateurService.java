@@ -23,4 +23,6 @@ public interface AdministrateurService {
 
 		List<String> getAuditLog() throws ServiceException;
 
+		Administrateur findByLogin(String userLogin) throws ServiceException;
+
 }

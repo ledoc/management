@@ -1,4 +1,4 @@
-package fr.treeptik.controller;
+package fr.treeptik.spring;
 
 import javax.inject.Inject;
 

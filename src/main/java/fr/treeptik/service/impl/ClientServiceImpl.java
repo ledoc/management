@@ -30,7 +30,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Client create(Client client) throws ServiceException {
-		logger.info("--CREATE client --");
+		logger.info("--CREATE ClientServiceImpl --");
 
 		client.setRole(Role.CLIENT);
 		client = clientDAO.save(client);
@@ -42,7 +42,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Client update(Client client) throws ServiceException {
-		logger.info("--UPDATE client --");
+		logger.info("--UPDATE ClientServiceImpl --");
 		logger.debug("client : " + client);
 		return clientDAO.saveAndFlush(client);
 	}
@@ -50,7 +50,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Client client) throws ServiceException {
-		logger.info("--DELETE client --");
+		logger.info("--DELETE ClientServiceImpl --");
 		logger.debug("client : " + client);
 		clientDAO.delete(client);
 	}
@@ -58,14 +58,14 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE client --");
+		logger.info("--DELETE ClientServiceImpl --");
 		logger.debug("clientId : " + id);
 		clientDAO.delete(id);
 	}
 
 	@Override
 	public List<Client> findAll() throws ServiceException {
-		logger.info("--FINDALL client --");
+		logger.info("--FINDALL ClientServiceImpl --");
 		return clientDAO.findAll();
 	}
 
@@ -76,7 +76,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public Client findByIdWithJoinFetchEtablissements(Integer id)
 			throws ServiceException {
-		logger.info("--findByIdWithJoinFetchEtablissements client --");
+		logger.info("--findByIdWithJoinFetchEtablissements ClientServiceImpl --");
 		logger.info("id : " + id);
 		Client client = clientDAO.findByIdWithJoinFetchEtablissements(id);
 		return client;
@@ -96,8 +96,14 @@ public class ClientServiceImpl implements ClientService {
 	 */
 	@Override
 	public Client findByIdWithJoinFetchDocuments(Integer id) throws ServiceException {
-		logger.info("--findByIdWithJoinFetchDocuments OuvrageServiceImpl -- id : " + id);
+		logger.info("--findByIdWithJoinFetchDocuments ClientServiceImpl -- id : " + id);
 		Client client = clientDAO.findByIdWithJoinFetchDocuments(id);
 		return client;
+	}
+	
+	@Override
+	public Client findByLogin(String userLogin) throws ServiceException {
+		logger.info("--findByLogin ClientServiceImpl --");
+		return clientDAO.findByLogin(userLogin);
 	}
 }

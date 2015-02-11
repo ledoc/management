@@ -26,4 +26,6 @@ public interface ClientService {
 
 	Client findByIdWithJoinFetchDocuments(Integer id) throws ServiceException;
 
+	Client findByLogin(String userLogin) throws ServiceException;
+
 }

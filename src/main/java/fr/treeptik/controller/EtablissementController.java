@@ -1,6 +1,5 @@
 package fr.treeptik.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -87,7 +86,7 @@ public class EtablissementController {
 		try {
 			clientsCombo = clientService.findAll();
 			etablissement = etablissementService
-					.findByIdWithJoinFetchClients(id);
+					.findByIdWithJoinFetchSites(id);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);

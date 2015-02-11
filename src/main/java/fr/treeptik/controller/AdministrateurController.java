@@ -18,6 +18,7 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Administrateur;
 import fr.treeptik.service.AdministrateurService;
+import fr.treeptik.spring.AdministrateurValidator;
 
 @Controller
 @RequestMapping("/administrateur")
@@ -124,4 +125,7 @@ public class AdministrateurController {
 
 		return "/administrateur/log";
 	}
+
+	
+	
 }

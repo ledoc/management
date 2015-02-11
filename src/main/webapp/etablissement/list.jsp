@@ -34,11 +34,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 					</header>
 					<div class="panel-body">
+
 						<c:if test="${empty etablissements }">
 
 							<H2>Ooops !&nbsp;Liste vide.</H2>
 						</c:if>
 						<c:if test="${not empty etablissements }">
+
 							<table class="table table-striped list no-m">
 								<thead>
 									<tr>

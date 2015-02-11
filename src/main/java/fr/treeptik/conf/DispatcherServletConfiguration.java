@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,6 +29,8 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import fr.treeptik.spring.SessionHandlerInterceptor;
+
 
 
 
@@ -43,8 +46,11 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 	// 10 Mo max file size
 	private static final int MAX_UPLOAD_SIZE = 300 * 1000 * 1000;
 
-	@Autowired
+	@Inject
 	private Environment env;
+	
+	@Inject
+	private SessionHandlerInterceptor sessionHandlerInterceptor;
 	
 	@Bean
 	public ViewResolver contentNegotiatingViewResolver() {
@@ -101,7 +107,7 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 		logger.debug("Creating requestMappingHandlerMapping");
 		RequestMappingHandlerMapping requestMappingHandlerMapping = new RequestMappingHandlerMapping();
 		requestMappingHandlerMapping.setUseSuffixPatternMatch(true);
-		Object[] interceptors = { localeChangeInterceptor() };
+		Object[] interceptors = { localeChangeInterceptor(), sessionHandlerInterceptor };
 		requestMappingHandlerMapping.setInterceptors(interceptors);
 		return requestMappingHandlerMapping;
 	}

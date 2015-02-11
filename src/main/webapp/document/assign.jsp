@@ -5,6 +5,8 @@
 <%@
 taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
 	<jsp:param value="active" name="menuDocumentActive" />
@@ -12,6 +14,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 </jsp:include>
 
 <c:url var="urlResources" value="/resources" />
+<!-- Seulement une visualisation pour les clients -->
+<sec:authorize ifAllGranted="ADMIN">
+	<c:set var="readOnlyValue" value="false"></c:set>
+</sec:authorize>
+<sec:authorize ifAllGranted="CLIENT">
+	<c:set var="readOnlyValue" value="true"></c:set>
+</sec:authorize>
 
 
 <section class="layout">
@@ -35,9 +44,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<form method="post" id="form" enctype="multipart/form-data">
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">
-									<label for="file">Choisir un fichier :</label> <input
-										id="file" type="file" name="file" class="filestyle"
-										data-input="false" data-buttonText="&nbspChoisir un fichier">
+									<label for="file">Choisir un fichier :</label> <input id="file"
+										type="file" name="file" class="filestyle" data-input="false"
+										data-buttonText="&nbspChoisir un fichier">
 								</div>
 								<div class="form-group">
 									<label for="client">Choisir un client :</label>
@@ -114,7 +123,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									$select.html(output.join(''));
 									$select.chosen({
 										allow_single_deselect : true
-									},{disable_search_threshold: 10});
+									}, {
+										disable_search_threshold : 10
+									});
 								});
 			}
 
@@ -183,8 +194,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													}
 
 													$select.selected = false;
-													$select.chosen({disable_search_threshold: 10}).trigger(
-															"chosen:updated");
+													$select
+															.chosen(
+																	{
+																		disable_search_threshold : 10
+																	})
+															.trigger(
+																	"chosen:updated");
 												});
 							});
 		</script>
