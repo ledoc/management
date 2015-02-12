@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Etablissement;
@@ -12,15 +13,17 @@ import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
 import fr.treeptik.service.MapService;
 
-public class MapServiceImpl implements  MapService {
+@Service
+public class MapServiceImpl implements MapService {
 
 	private Logger logger = Logger.getLogger(MapServiceImpl.class);
-	
+
 	@Override
 	public Marker transformOuvrageInMarker(Ouvrage ouvrage)
 			throws ServiceException {
-		logger.info("--transformOuvrageInMarker MapServiceImpl-- ouvrage : " + ouvrage);
-		
+		logger.info("--transformOuvrageInMarker MapServiceImpl-- ouvrage : "
+				+ ouvrage);
+
 		Marker marker = new Marker();
 		marker.setType("ouvrage");
 		marker.setItemId(ouvrage.getId());
@@ -37,8 +40,9 @@ public class MapServiceImpl implements  MapService {
 	@Override
 	public Marker transformEtablissementInMarker(Etablissement etablissement)
 			throws ServiceException {
-		logger.info("--transformEtablissementInMarker MapServiceImpl-- etablissement : " + etablissement);
-		
+		logger.info("--transformEtablissementInMarker MapServiceImpl-- etablissement : "
+				+ etablissement);
+
 		Marker marker = new Marker();
 		marker.setType("etablissement");
 		marker.setItemId(etablissement.getId());
@@ -57,7 +61,6 @@ public class MapServiceImpl implements  MapService {
 	public Marker transformSiteInMarker(Site site) throws ServiceException {
 		logger.info("--transformSiteInMarker MapServiceImpl-- site : " + site);
 
-		
 		Marker marker = new Marker();
 		marker.setType("site");
 		marker.setItemId(site.getId());

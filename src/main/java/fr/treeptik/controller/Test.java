@@ -1,7 +1,9 @@
 package fr.treeptik.controller;
 
+import org.springframework.stereotype.Controller;
 
-//@Controller
+
+@Controller
 public class Test {
 
 //	private static final Logger logger = Logger.getLogger(Test.class);
@@ -17,6 +19,9 @@ public class Test {
 //
 //	@SuppressWarnings("unused")
 //	public static void main(String[] args) {
+//		System.out.println("coucou");
+//
+//		
 //		float intensite = 200;
 //		float profMax = 6;
 //		float dernier_calcul_Niveau_Eau = 8;
@@ -32,6 +37,7 @@ public class Test {
 //		// System.out.println("niveauEau = " + niveauEau);
 //
 //	}
+	
 //
 //	@RequestMapping(method = RequestMethod.GET, value = "/")
 //	public String upload(Model model) {

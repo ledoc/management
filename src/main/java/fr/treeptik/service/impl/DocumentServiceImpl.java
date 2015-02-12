@@ -28,7 +28,6 @@ import fr.treeptik.dao.DocumentDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Client;
 import fr.treeptik.model.Document;
-import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.service.ClientService;
 import fr.treeptik.service.DocumentService;
@@ -63,27 +62,11 @@ public class DocumentServiceImpl implements DocumentService {
 	}
 
 	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = ServiceException.class)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ServiceException.class)
 	public Document update(Document document) throws ServiceException {
 		logger.info("--UPDATE document --");
 		logger.debug("document : " + document);
 		return documentDAO.saveAndFlush(document);
-	}
-
-	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor = ServiceException.class)
-	public void remove(Document document) throws ServiceException {
-		logger.info("--DELETE document --");
-		logger.debug("document : " + document);
-		Path path = Paths.get(document.getPath());
-		try {
-			Files.delete(path);
-		} catch (IOException e) {
-			logger.error("Error DocumentService : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
-		documentDAO.delete(document);
-
 	}
 
 	@Override
@@ -99,7 +82,6 @@ public class DocumentServiceImpl implements DocumentService {
 			logger.error("Error DocumentService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
-
 		documentDAO.delete(id);
 	}
 
@@ -122,10 +104,7 @@ public class DocumentServiceImpl implements DocumentService {
 		}
 		return documents;
 	}
-	
-	
-	
-	
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void uploadFileAndAssign(MultipartFile file, Integer clientId,
@@ -199,7 +178,6 @@ public class DocumentServiceImpl implements DocumentService {
 			response.setHeader(headerKey, headerValue);
 
 			IOUtils.copy(inputStream, response.getOutputStream());
-
 			response.flushBuffer();
 
 		} catch (IOException ex) {

@@ -1,17 +1,24 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.PostLoad;
+import javax.persistence.PostUpdate;
+import javax.persistence.Transient;
 
 @Entity
 public class Enregistreur implements Serializable {
@@ -32,11 +39,11 @@ public class Enregistreur implements Serializable {
 
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
 	// historique NM
-	@OneToOne(cascade=CascadeType.REMOVE)
-	protected Mesure niveauManuel;
+	@Transient
+	private Mesure niveauManuel;
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
-	@OneToOne(cascade=CascadeType.REMOVE)
-	protected Mesure derniereMesure;
+	@Transient
+	private Mesure derniereMesure;
 
 	// modem : nom, modèle, numéro série…
 	private String modem;
@@ -57,12 +64,12 @@ public class Enregistreur implements Serializable {
 	// croquis dynamique de l'ensemble
 	private String croquis;
 	//
-	@OneToMany(cascade=CascadeType.REMOVE)
+	@OneToMany(cascade = CascadeType.REMOVE)
 	private List<Alerte> alertesActives;
 	// @OneToMany(mappedBy = "enregistreur")
 	// private List<TrameDW> trameDWs;
 
-	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="enregistreur")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "enregistreur")
 	private List<Mesure> mesures;
 
 	/**
@@ -86,6 +93,7 @@ public class Enregistreur implements Serializable {
 	private List<TrameDW> trameDWs;
 	@ManyToOne
 	private Ouvrage ouvrage;
+
 	// private String server;
 
 	public Enregistreur() {
@@ -105,6 +113,14 @@ public class Enregistreur implements Serializable {
 		this.comment = (String) xmlrpcHashMap.get("comment");
 		this.type = (String) xmlrpcHashMap.get("type");
 		this.userName = (String) xmlrpcHashMap.get("userName");
+	}
+
+	@PostUpdate
+	@PostLoad
+	public void setDynamicMesures() {
+		Mesure mesureFantoche= new Mesure();
+		this.setNiveauManuel(mesureFantoche);
+		this.setDerniereMesure(mesureFantoche);
 	}
 
 	public Integer getId() {
@@ -228,7 +244,29 @@ public class Enregistreur implements Serializable {
 	 * @param niveauManuel
 	 */
 	public void setNiveauManuel(Mesure niveauManuel) {
-		this.niveauManuel = niveauManuel;
+		List<Date> dates = new ArrayList<Date>();
+		if (this.mesures != null) {
+
+			List<Mesure> listNiveauxManuels = this.mesures
+					.stream()
+					.filter(m -> {
+						return m.getTypeMesure()
+								.equals(TypeMesure.NIVEAUMANUEL);
+					}).collect(Collectors.toList());
+
+			for (Mesure mesure : listNiveauxManuels) {
+				dates.add(mesure.getDate());
+			}
+
+			Date date = Collections.max(dates);
+			for (Mesure mesure : listNiveauxManuels) {
+				if (mesure.getDate() == date) {
+					this.niveauManuel = mesure;
+				}
+			}
+		}
+
+		System.out.println("niveauManuel : " + this.niveauManuel);
 	}
 
 	/**
@@ -236,6 +274,7 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
+
 	public Mesure getDerniereMesure() {
 		return derniereMesure;
 	}
@@ -245,8 +284,29 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
-	public void setDerniereMesure(Mesure mesureEnregistreur) {
-		this.derniereMesure = mesureEnregistreur;
+	public void setDerniereMesure(Mesure derniereMesure) {
+		List<Date> dates = new ArrayList<Date>();
+		if (this.mesures != null) {
+
+			List<Mesure> listMesuresAutomatiques = this.mesures
+					.stream()
+					.filter(m -> {
+						return !m.getTypeMesure().equals(
+								TypeMesure.NIVEAUMANUEL);
+					}).collect(Collectors.toList());
+
+			for (Mesure mesure : listMesuresAutomatiques) {
+				dates.add(mesure.getDate());
+			}
+
+			Date date = Collections.max(dates);
+			for (Mesure mesure : listMesuresAutomatiques) {
+				if (mesure.getDate() == date) {
+					this.derniereMesure = mesure;
+				}
+			}
+		}
+		System.out.println("derniereMesure : " + this.derniereMesure);
 	}
 
 	public String getModem() {
@@ -367,8 +427,10 @@ public class Enregistreur implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((mid == null) ? 0 : mid.toUpperCase().hashCode());
-		result = prime * result + ((sim == null) ? 0 : sim.toUpperCase().hashCode());
+		result = prime * result
+				+ ((mid == null) ? 0 : mid.toUpperCase().hashCode());
+		result = prime * result
+				+ ((sim == null) ? 0 : sim.toUpperCase().hashCode());
 		return result;
 	}
 

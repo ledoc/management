@@ -46,7 +46,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
 							Ouvrage</h1>
 						<p class="text-muted">Pour ajouter un ou des enregistreurs
 							l'ouvrage doit d'abord être créer</p>
@@ -64,13 +64,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="typeOuvrage">Type de l'ouvrage</label>
 									<form:select id="typeOuvrage" name="typeOuvrage"
-										path="typeOuvrage" data-parsley-required="true"
+										path="typeOuvrage.id" data-parsley-required="true"
 										data-parsley-required-message="Champ requis"
 										onchange="javascript:activateNappeOrSurface();"
-										class="form-control chosen" disabled="${readOnlyValue }" >
+										class="form-control chosen" disabled="${readOnlyValue }">
 										<form:option value="NONE" label="--- Choisir un type ---" />
 										<form:options items="${typesOuvrageCombo}"
-											itemLabel="description" />
+											itemValue="id" itemLabel="description" />
 									</form:select>
 								</div>
 								<div class="form-group">
@@ -80,7 +80,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required="true"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="codeOuvrage">Code de l'ouvrage</label>
@@ -89,14 +90,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<label for="site">Rattacher à un Site</label>
+									<label for="site">Rattacher à un site</label>
 									<form:select class="form-control chosen-select"
 										data-placeholder="Choisir un etablissement ..."
 										data-parsley-required="true" data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis" path="site.id" readonly="${readOnlyValue }" >
+										data-parsley-required-message="Champ requis" path="site.id"
+										readonly="${readOnlyValue }">
 										<form:option value=""></form:option>
 										<form:options items="${sitesCombo}" itemValue="id"
 											itemLabel="codeSite" />
@@ -113,7 +116,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="checkbox checkbox-inline">
 									<form:checkbox id="asservissement" path="asservissement"
@@ -127,7 +131,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										name="ouvragesCombo" path="ouvrageMaitre.id"
 										class="form-control"
 										data-placeholder=" Sélectionnez
-							un ouvrage maître" readonly="${readOnlyValue }" >
+							un ouvrage maître"
+										readonly="${readOnlyValue }">
 										<form:option value=""></form:option>
 										<form:options items="${ouvragesCombo}" itemValue="id"
 											itemLabel="codeOuvrage" />
@@ -139,7 +144,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<form:textarea type="text" class="form-control"
 										id="commentaire" path="commentaire" placeholder=""
 										data-parsley-trigger="change" data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="pull-right">
 									<a href="<c:url  value="/ouvrage/list" />"
@@ -149,61 +155,67 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="coteSolNGF">Côte Sol / NGF</label>
+									<label for="coteSolNGF">Cote Sol / NGF</label>
 									<form:input type="text" class="form-control" id="coteSolNGF"
 										path="coteSolNGF" placeholder="" data-parsley-trigger="change"
 										step="any" data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<label for="coteRepereNGF">Côte repère NGF</label>
+									<label for="coteRepereNGF">Cote repère NGF</label>
 									<form:input type="text" class="form-control" id="coteRepereNGF"
 										path="coteRepereNGF" placeholder=""
 										data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="eaudesurface form-group">
-									<label for="coteSol">Côte Sol Berge (eau de surface)</label>
+									<label for="coteSol">Cote Sol Berge (eau de surface)</label>
 									<form:input class="form-control" id="coteSol" path="coteSol"
 										placeholder="" data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="numeroBSS">Numéro BSS (nappe souterraine)</label>
 									<form:input type="text" class="form-control" path="numeroBSS"
 										placeholder="" data-parsley-trigger="change"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
-									<label for="mesureProfondeur">Mesure repère Profondeur
-										/NGF (nappe souterraine)</label>
+									<label for="mesureProfondeur">Mesure repère NGF /
+										Niveau Statique initial, en mètres</label>
 									<form:input type="number" class="form-control"
 										id="mesureProfondeur" path="mesureProfondeur" placeholder=""
 										data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="nappesouterraine form-group">
-									<label for="mesureRepereNGFSol">Mesure repère NGF / Sol
-										(nappe souterraine)</label>
+									<label for="mesureRepereNGFSol">Mesure repère NGF /
+										Fond, en mètres </label>
 									<form:input type="number" class="form-control"
 										path="mesureRepereNGFSol" placeholder=""
 										data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 							</div>
 
@@ -328,7 +340,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 			function activateNappeOrSurface() {
 
-				if ($('#typeOuvrage :selected').val() == 'NAPPE_SOUTERRAINE') {
+				// 2 = nappe souterraine
+				if ($('#typeOuvrage :selected').val() == 2) {
 					console.log('nappe  ' + $('#typeOuvrage').value)
 					$('.nappesouterraine').attr('style', 'display: block;');
 					$('.nappesouterraine').attr('disabled', false);
@@ -338,7 +351,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					$('.eaudesurface').attr('disabled', true);
 					$('.eaudesurface').hide();
 				}
-				if ($('#typeOuvrage :selected').val() == 'EAU_DE_SURFACE') {
+				// 1 = eau de surface
+				if ($('#typeOuvrage :selected').val() == 1) {
 					$('.nappesouterraine').attr('style', 'display: none;');
 					$('.nappesouterraine').attr('disabled', true);
 					$('.nappesouterraine').hide();

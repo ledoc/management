@@ -211,7 +211,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 
 								<div class="col-xs-6">
-									<label for="valeur">Valeur</label>
+									<label for="valeur">Valeur sans unité</label>
 									<form:input class="form-control" id="valeur"
 										path="niveauManuel.valeur" placeholder=""
 										data-parsley-trigger="change" step="any"
@@ -221,7 +221,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck-message="2 caractères minimum" disabled="${readOnlyValue }"/>
 								</div>
 								<div class="col-xs-6">
-									<label for="date">Date</label>
+									<label for="date">Date: dd-mm-yyyy hh:mm:ss</label>
 									<form:input class="form-control" id="date"
 										path="niveauManuel.date" placeholder="dd-mm-yyyy hh:mm:ss"
 										data-parsley-required="true" data-parsley-trigger="change"

@@ -140,21 +140,7 @@ public class EnregistreurController {
 					.findByIdWithJoinFetchEnregistreurs(enregistreur
 							.getOuvrage().getId());
 
-			// TODO HACK A supprimer
-			if (enregistreur.getDerniereMesure() != null
-					&& enregistreur.getDerniereMesure().getId() == null) {
-				enregistreur.setDerniereMesure(null);
-			}
-			if (enregistreur.getNiveauManuel() != null
-					&& enregistreur.getNiveauManuel().getId() == null) {
-				Mesure niveauManuel = mesureService.create(enregistreur
-						.getNiveauManuel());
 				enregistreur = enregistreurService.create(enregistreur);
-				niveauManuel.setEnregistreur(enregistreur);
-				mesureService.update(niveauManuel);
-			} else {
-				enregistreur = enregistreurService.create(enregistreur);
-			}
 			if (!ouvrage.getEnregistreurs().contains(enregistreur)) {
 				ouvrage.getEnregistreurs().add(enregistreur);
 				ouvrageService.update(ouvrage);
@@ -258,7 +244,6 @@ public class EnregistreurController {
 
 			mesure = mesureService.create(enregistreur.getNiveauManuel());
 			logger.info("mesure : " + mesure);
-			enregistreur.setNiveauManuel(mesure);
 			enregistreur = enregistreurService.create(enregistreur);
 			mesure.setEnregistreur(enregistreur);
 			mesureService.update(mesure);

@@ -1,8 +1,6 @@
 package fr.treeptik.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +30,7 @@ import fr.treeptik.model.TypeOuvrage;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
+import fr.treeptik.service.TypeOuvrageService;
 import fr.treeptik.spring.EnregistreurCustomEditor;
 import fr.treeptik.spring.MesureCustomEditor;
 import fr.treeptik.spring.OuvrageCustomEditor;
@@ -49,7 +48,8 @@ public class OuvrageController {
 	private EnregistreurService enregistreurService;
 	@Inject
 	private SiteService siteService;
-
+	@Inject
+	private TypeOuvrageService typeOuvrageService;
 	@Inject
 	private EnregistreurCustomEditor enregistreurCustomEditor;
 	@Inject
@@ -63,9 +63,7 @@ public class OuvrageController {
 	public String initForm(Model model) throws ControllerException {
 		logger.info("--initForm OuvrageController--");
 		List<Ouvrage> ouvragesCombo;
-
-		List<TypeOuvrage> typesOuvrageCombo = new ArrayList<TypeOuvrage>(
-				Arrays.asList(TypeOuvrage.values()));
+		List<TypeOuvrage> typesOuvrageCombo;
 		List<Enregistreur> enregistreursCombo;
 		List<Site> sitesCombo;
 		Ouvrage ouvrage = new Ouvrage();
@@ -74,6 +72,7 @@ public class OuvrageController {
 			sitesCombo = siteService.findAll();
 			enregistreursCombo = enregistreurService.findFreeEnregistreurs();
 			ouvragesCombo = ouvrageService.findAll();
+			typesOuvrageCombo = typeOuvrageService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -119,14 +118,14 @@ public class OuvrageController {
 		List<Ouvrage> ouvragesCombo;
 		List<Enregistreur> enregistreursCombo;
 		List<Site> sitesCombo;
-		List<TypeOuvrage> typesOuvrageCombo = new ArrayList<TypeOuvrage>(
-				Arrays.asList(TypeOuvrage.values()));
+		List<TypeOuvrage> typesOuvrageCombo;
 
 		try {
 			ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(id);
 
 			ouvragesCombo = ouvrageService.findAll();
 			ouvragesCombo.remove(ouvrage);
+			typesOuvrageCombo = typeOuvrageService.findAll();
 			enregistreursCombo = enregistreurService.findFreeEnregistreurs();
 			enregistreursCombo.addAll(ouvrage.getEnregistreurs());
 			sitesCombo = siteService.findAll();

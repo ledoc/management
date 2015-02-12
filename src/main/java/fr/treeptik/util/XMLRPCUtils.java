@@ -64,6 +64,11 @@ public class XMLRPCUtils {
 
 	}
 
+	/**
+	 * Liste les mobiles du compte correspondant au couple clientName/userName.
+	 * @param sessionKey
+	 * @return Object[]
+	 */
 	public Object[] enregistreurList(String sessionKey) {
 		logger.info("--enregistreurList --");
 

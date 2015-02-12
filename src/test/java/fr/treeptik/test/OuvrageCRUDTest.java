@@ -22,7 +22,6 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeMesure;
-import fr.treeptik.model.TypeOuvrage;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.OuvrageService;
@@ -95,7 +94,7 @@ public class OuvrageCRUDTest {
 
 //		nappe.setNiveauManuel(createMesureManuel());
 		nappe.setNumeroBSS("0000 x 00000 0");
-		nappe.setTypeOuvrage(TypeOuvrage.NAPPE_SOUTERRAINE);
+//		nappe.setTypeOuvrage(TypeOuvrage.NAPPE_SOUTERRAINE);
 
 		try {
 			ouvrageService.create(nappe);

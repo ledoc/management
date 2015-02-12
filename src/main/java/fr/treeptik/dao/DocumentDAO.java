@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import fr.treeptik.model.Document;
-import fr.treeptik.model.Site;
 
 public interface DocumentDAO extends JpaRepository<Document, Integer> {
 

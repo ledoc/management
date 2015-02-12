@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,15 +19,15 @@ public class Ouvrage implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	protected Integer id;
+	private Integer id;
 
 	// Nom de la nappe / cours d'eau / réservoir / bassin
-	protected String nom;
-	protected String codeOuvrage;
+	private String nom;
+	private String codeOuvrage;
 	// suivi de nappe souterraine, suivi d’eaux de surface (Vanne / Pompe :
 	// version 2) ;
-	@Enumerated(EnumType.STRING)
-	protected TypeOuvrage typeOuvrage;
+	@ManyToOne
+	private TypeOuvrage typeOuvrage;
 	@ManyToOne
 	@JsonIgnore
 	private Site site;
@@ -40,34 +38,34 @@ public class Ouvrage implements Serializable {
 	 * Nivellement général de la France
 	 */
 	// Côte repère NGF : à indiquer
-	protected Float coteRepereNGF;
+	private Float coteRepereNGF;
 
-	protected String commentaire;
+	private String commentaire;
 	// Si l'ouvrage est "lié" à un autre
-	protected Boolean asservissement;
+	private Boolean asservissement;
 	// Ouvrage auquel il est asservi
 
 	@ManyToOne
-	protected Ouvrage ouvrageMaitre;
+	private Ouvrage ouvrageMaitre;
 	@JsonIgnore
 	@OneToMany(mappedBy = "ouvrageMaitre")
 	private List<Ouvrage> ouvrageFils;
 
-	protected String photo;
-	protected String croquisDynamique;
+	private String photo;
+	private String croquisDynamique;
 
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "ouvrage")
-	protected List<Enregistreur> enregistreurs;
+	private List<Enregistreur> enregistreurs;
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "ouvrage")
-	protected List<Mesure> mesures;
+	private List<Mesure> mesures;
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "ouvrage")
-	protected List<Alerte> alertes;
+	private List<Alerte> alertes;
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "ouvrage")
-	protected List<Document> documents;
+	private List<Document> documents;
 
 	/**
 	 * Spécifique À EAU DE SURFACE TODO : comprendre :( Côte Sol « berge » : à

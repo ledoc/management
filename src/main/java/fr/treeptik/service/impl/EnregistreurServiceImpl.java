@@ -42,7 +42,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Enregistreur update(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--UPDATE EnregistreurServiceImpl --");
+		logger.info("--update EnregistreurServiceImpl --");
 		logger.debug("enregistreur : " + enregistreur);
 		return enregistreurDAO.saveAndFlush(enregistreur);
 	}
@@ -50,7 +50,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--DELETE EnregistreurServiceImpl --");
+		logger.info("--remove EnregistreurServiceImpl --");
 		logger.debug("enregistreur : " + enregistreur);
 		
 		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(enregistreur.getOuvrage().getId());

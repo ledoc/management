@@ -83,7 +83,6 @@ public class DocumentCRUDTest {
 			fail("La collection doit être augmentée de 1");
 		}
 
-		documentService.remove(document);
 
 		document = documentService.findById(id);
 		assertNull("L'objet ne doit pas exister", document);
