@@ -1,9 +1,7 @@
 package fr.treeptik.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +22,7 @@ import fr.treeptik.model.Marker;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
 import fr.treeptik.service.EtablissementService;
+import fr.treeptik.service.MapService;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
 
@@ -33,6 +32,8 @@ public class MapController {
 
 	private Logger logger = Logger.getLogger(MapController.class);
 
+	@Inject
+	private MapService mapService;
 	@Inject
 	private EtablissementService etablissementService;
 	@Inject
@@ -45,13 +46,16 @@ public class MapController {
 			throws ControllerException {
 		logger.info("--goToCarto MapController--");
 
+		List<Marker> markers = new ArrayList<Marker>();
 		List<Site> sitesCombo = null;
 		List<Etablissement> etablissementsCombo = null;
 		List<Ouvrage> ouvragesCombo = null;
+
 		try {
 
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
+
 			if (isAdmin) {
 				sitesCombo = siteService.findAll();
 				ouvragesCombo = ouvrageService.findAll();
@@ -66,24 +70,21 @@ public class MapController {
 						.findByClientLogin(userLogin);
 				ouvragesCombo = ouvrageService.findByClientLogin(userLogin);
 			}
+
+			for (Site item : sitesCombo) {
+				markers.add(mapService.transformSiteInMarker(item));
+			}
+			for (Ouvrage item : ouvragesCombo) {
+				markers.add(mapService.transformOuvrageInMarker(item));
+			}
+
+			for (Etablissement item : etablissementsCombo) {
+				markers.add(mapService.transformEtablissementInMarker(item));
+			}
+
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
-		}
-
-		List<Marker> markers = new ArrayList<Marker>();
-		for (Site item : sitesCombo) {
-
-			markers.add(this.transformSiteInMarker(item));
-		}
-		for (Ouvrage item : ouvragesCombo) {
-
-			markers.add(this.transformOuvrageInMarker(item));
-		}
-
-		for (Etablissement item : etablissementsCombo) {
-
-			markers.add(this.transformEtablissementInMarker(item));
 		}
 
 		model.addAttribute("sitesCombo", sitesCombo);
@@ -95,22 +96,23 @@ public class MapController {
 	@RequestMapping(method = RequestMethod.GET, value = "/allItems")
 	public @ResponseBody List<Marker> getAllItems(HttpServletRequest request)
 			throws ControllerException {
-		System.out.println("--getAllOuvrages MapController--");
+		logger.info("--getAllOuvrages MapController--");
 
+		List<Marker> markers = new ArrayList<Marker>();
 		List<Site> sitesCombo = null;
 		List<Etablissement> etablissementsCombo = null;
 		List<Ouvrage> ouvragesCombo = null;
+
 		try {
 
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
+
 			if (isAdmin) {
 				sitesCombo = siteService.findAll();
 				ouvragesCombo = ouvrageService.findAll();
 				etablissementsCombo = etablissementService.findAll();
-
 			} else {
-
 				String userLogin = SecurityContextHolder.getContext()
 						.getAuthentication().getName();
 				logger.debug("USER LOGIN : " + userLogin);
@@ -120,26 +122,22 @@ public class MapController {
 						.findByClientLogin(userLogin);
 				ouvragesCombo = ouvrageService.findByClientLogin(userLogin);
 			}
+
+			for (Site item : sitesCombo) {
+				markers.add(mapService.transformSiteInMarker(item));
+			}
+			for (Ouvrage item : ouvragesCombo) {
+				markers.add(mapService.transformOuvrageInMarker(item));
+			}
+
+			for (Etablissement item : etablissementsCombo) {
+				markers.add(mapService.transformEtablissementInMarker(item));
+			}
+
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-
-		List<Marker> markers = new ArrayList<Marker>();
-		for (Site item : sitesCombo) {
-
-			markers.add(this.transformSiteInMarker(item));
-		}
-		for (Ouvrage item : ouvragesCombo) {
-
-			markers.add(this.transformOuvrageInMarker(item));
-		}
-
-		for (Etablissement item : etablissementsCombo) {
-
-			markers.add(this.transformEtablissementInMarker(item));
-		}
-
 		return markers;
 	}
 
@@ -154,9 +152,9 @@ public class MapController {
 		try {
 			Ouvrage ouvrage = ouvrageService.findById(ouvrageId);
 
-			logger.debug("--ouvrage : " + ouvrage);
+			logger.debug("-- ouvrage : " + ouvrage);
 
-			marker = this.transformOuvrageInMarker(ouvrage);
+			marker = mapService.transformOuvrageInMarker(ouvrage);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -175,7 +173,7 @@ public class MapController {
 			Site site = siteService.findById(siteId);
 			logger.debug("--site : " + site);
 
-			marker = this.transformSiteInMarker(site);
+			marker = mapService.transformSiteInMarker(site);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -198,7 +196,7 @@ public class MapController {
 
 			logger.debug("--etablissement : " + etablissement);
 
-			marker = this.transformEtablissementInMarker(etablissement);
+			marker = mapService.transformEtablissementInMarker(etablissement);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -206,51 +204,4 @@ public class MapController {
 		}
 		return marker;
 	}
-
-	private Marker transformOuvrageInMarker(Ouvrage ouvrage)
-			throws ControllerException {
-		Marker marker = new Marker();
-		marker.setType("ouvrage");
-		marker.setItemId(ouvrage.getId());
-		marker.setLat(ouvrage.getLatitude());
-		marker.setLng(ouvrage.getLongitude());
-		marker.setTitle(ouvrage.getCodeOuvrage());
-		marker.setIconPath("/img/dark-blue-pin-th.png");
-		marker.setItemName(ouvrage.getTypeOuvrage().getDescription());
-		Map<String, String> infoWindow = new HashMap<String, String>();
-		marker.setInfoWindow(infoWindow);
-		return marker;
-	}
-
-	private Marker transformEtablissementInMarker(Etablissement etablissement)
-			throws ControllerException {
-		Marker marker = new Marker();
-		marker.setType("etablissement");
-		marker.setItemId(etablissement.getId());
-		marker.setLat(etablissement.getLatitude());
-		marker.setLng(etablissement.getLongitude());
-		marker.setTitle(etablissement.getCodeEtablissement());
-		marker.setIconPath("/img/red-pin-th.png");
-		marker.setItemName(etablissement.getNom());
-		Map<String, String> infoWindow = new HashMap<String, String>();
-		marker.setInfoWindow(infoWindow);
-
-		return marker;
-	}
-
-	private Marker transformSiteInMarker(Site site) throws ControllerException {
-		Marker marker = new Marker();
-		marker.setType("site");
-		marker.setItemId(site.getId());
-		marker.setLat(site.getLatitude());
-		marker.setLng(site.getLongitude());
-		marker.setTitle(site.getCodeSite());
-		marker.setIconPath("/img/green-pin-th.png");
-		marker.setItemName(site.getNom());
-		Map<String, String> infoWindow = new HashMap<String, String>();
-		marker.setInfoWindow(infoWindow);
-
-		return marker;
-	}
-
 }

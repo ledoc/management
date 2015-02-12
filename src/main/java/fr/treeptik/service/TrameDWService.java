@@ -7,18 +7,16 @@ import fr.treeptik.model.TrameDW;
 
 public interface TrameDWService {
 
-		TrameDW findById(Integer id) throws ServiceException;
-		
-		TrameDW create(TrameDW trameDW)
-				throws ServiceException;
+	TrameDW findById(Integer id) throws ServiceException;
 
-		TrameDW update(TrameDW trameDW) throws ServiceException;
-		
-		void remove(TrameDW trameDW)
-				throws ServiceException;
+	TrameDW create(TrameDW trameDW) throws ServiceException;
 
-		List<TrameDW> findAll() throws ServiceException;
+	TrameDW update(TrameDW trameDW) throws ServiceException;
 
-		void remove(Integer id) throws ServiceException;
+	void remove(TrameDW trameDW) throws ServiceException;
+
+	List<TrameDW> findAll() throws ServiceException;
+
+	void remove(Integer id) throws ServiceException;
 
 }
