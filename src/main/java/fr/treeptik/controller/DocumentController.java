@@ -293,12 +293,12 @@ public class DocumentController {
 	@RequestMapping(method = RequestMethod.GET, value = "/init/ouvrage")
 	public @ResponseBody List<Ouvrage> initOuvrageCombobox()
 			throws ControllerException {
-		System.out.println("--initOuvrageCombobox DocumentController--");
+		logger.info("--initOuvrageCombobox DocumentController--");
 
 		List<Ouvrage> allOuvrages;
 		try {
 			allOuvrages = ouvrageService.findAll();
-			System.out.println("liste d'ouvrages renvoyée : " + allOuvrages);
+			logger.debug("liste d'ouvrages renvoyée : " + allOuvrages);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -310,12 +310,12 @@ public class DocumentController {
 	public @ResponseBody List<Client> initClientCombobox()
 			throws ControllerException {
 
-		System.out.println("--initClientCombobox DocumentController");
+		logger.info("--initClientCombobox DocumentController");
 
 		List<Client> allClients = new ArrayList<Client>();
 		try {
 			allClients = clientService.findAll();
-			System.out.println("liste de client renvoyée : " + allClients);
+			logger.debug("liste de client renvoyée : " + allClients);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);

@@ -35,6 +35,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/plugins/fastclick.js"></script>
 <script src="${urlResources}/plugins/moment.js"></script>
 <script src="${urlResources}/plugins/parsley.min.js"></script>
+<script src="${urlResources}/plugins/select2/select2.min.js"></script>
 <!-- /core scripts -->
 
 <!-- page level scripts -->
@@ -46,6 +47,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/plugins/icheck/icheck.js"></script>
 <script src="${urlResources}/plugins/hightcharts/js/highcharts.js"></script>
 <script type="text/javascript" src="${urlResources}/js/bootstrap-filestyle.min.js"> </script>
+
 <!-- /page level scripts -->
 
 <!-- template scripts -->
