@@ -71,6 +71,6 @@ public class MapServiceImpl implements MapService {
 		marker.setItemName(site.getNom());
 		Map<String, String> infoWindow = new HashMap<String, String>();
 		marker.setInfoWindow(infoWindow);
-		return null;
+		return marker;
 	}
 }

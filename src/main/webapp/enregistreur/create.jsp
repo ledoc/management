@@ -15,6 +15,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 </jsp:include>
 
 <c:url var="urlResources" value="/resources" />
+
+<c:url var="initNiveauManuelUrl"
+	value="/enregistreur/init/niveau/manuel" />
+<a class="relayUrl" href="${initNiveauManuelUrl}"></a>
+
+
+
 <!-- Seulement une visualisation pour les clients -->
 <sec:authorize ifAllGranted="ADMIN">
 	<c:set var="readOnlyValue" value="false"></c:set>
@@ -46,7 +53,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
 							Enregistreur</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							enregistreur.</p>
@@ -78,12 +85,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="niveauManuel">Niveau manuel</label>
-									<div class="text-primary" >
+									<div class="text-primary">
 										<a id="creation-niveau-manuel" data-toggle="modal"
-											data-target=".bs-modal-sm" class="text-info" >Enregistrer
+											data-target=".bs-modal-sm" class="text-info">Enregistrer
 											un nouveau niveau manuel</a>
 									</div>
-									<form:hidden path="niveauManuel.id" />
+									<%-- 									<form:hidden path="niveauManuel.id" /> --%>
 									<form:input readonly="true" type="text"
 										class="transfertInput form-control" id="niveauManuel"
 										path="niveauManuel.valeur" />
@@ -218,7 +225,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" disabled="${readOnlyValue }"/>
+										data-parsley-mincheck-message="2 caractères minimum"
+										disabled="${readOnlyValue }" />
 								</div>
 								<div class="col-xs-6">
 									<label for="date">Date: dd-mm-yyyy hh:mm:ss</label>
@@ -228,7 +236,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-pattern="([0-2]{1}\d{1}|[3]{1}[0-1]{1})(?:\-)?([0]{1}\d{1}|[1]{1}[0-2]{1})(?:\-)?(\d{2}|\d{4})(?:\s)?([0-1]{1}\d{1}|[2]{1}[0-3]{1})(?::)?([0-5]{1}\d{1})(?::)?([0-5]{1}\d{1})"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" disabled="${readOnlyValue }"/>
+										data-parsley-mincheck-message="2 caractères minimum"
+										disabled="${readOnlyValue }" />
 								</div>
 								<div class="modal-footer col-xs-12 no-b">
 									<button type="button" class="btn btn-default"

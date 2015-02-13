@@ -13,6 +13,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="Solices - Détail Ouvrage" name="titreOnglet" />
 </jsp:include>
 
+<c:url var="initTypeOuvrage" value="/ouvrage/init/type/ouvrage" />
+<a class="relayUrl" href="${initTypeOuvrage}"></a>
+
+
 <!-- Seulement une visualisation pour les clients -->
 <sec:authorize ifAllGranted="ADMIN">
 	<c:set var="readOnlyValue" value="false"></c:set>
@@ -39,9 +43,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<section class="main-content bg-white rounded shadow">
 		<!-- content wrapper -->
 
-
-
-
 		<div class="content-wrap clearfix pt15">
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
@@ -62,16 +63,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">
-									<label for="typeOuvrage">Type de l'ouvrage</label>
-									<form:select id="typeOuvrage" name="typeOuvrage"
-										path="typeOuvrage.id" data-parsley-required="true"
-										data-parsley-required-message="Champ requis"
-										onchange="javascript:activateNappeOrSurface();"
-										class="form-control chosen" disabled="${readOnlyValue }">
-										<form:option value="NONE" label="--- Choisir un type ---" />
-										<form:options items="${typesOuvrageCombo}"
-											itemValue="id" itemLabel="description" />
-									</form:select>
+									<label for="typeOuvrage">Type de l'ouvrage</label> <input
+										id="typeOuvrage">
+
+
+									<!-- 										<select -->
+									<!-- 										id="typeOuvrage" -->
+									<!-- 										data-placeholder="--- Choisir un type ---" -->
+									<!-- 										class="form-control" data-parsley-required="true" -->
+									<!-- 										data-parsley-required-message="Champ requis" -->
+									<!-- 										onchange="javascript:activateNappeOrSurface();" class="" -->
+									<%-- 										disabled="${readOnlyValue}"> --%>
+									<!-- 									</select> -->
 								</div>
 								<div class="form-group">
 									<label for="nom">Nom</label>
@@ -326,9 +329,61 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<jsp:include page="/template/footer.jsp" />
 
 		<script type="text/javascript">
+
+		function initTypeOuvrage() {
+		$.getJSON({ // instead of writing the function to execute the request we use Select2's convenient helper
+			url : $('.relayUrl').attr('href'),
+			dataType : 'json',
+			results : function(data, page) { // parse the results into the format expected by Select2.
+				// since we are using custom formatting functions we do not need to alter remote JSON data
+
+				console.log(data)
+				return {
+					results : data
+				};
+			}
+		});}
+		
+		
 			$(document).ready(function() {
+
+				$("#typeOuvrage").select2({
+					placeholder : "choisr un type",
+					minimumInputLength : 1,
+					initTypeOuvrage(),
+				});
+
+				// 								var $select = $('#typeOuvrage');
+
+				// 								$
+				// 										.getJSON(
+				// 												$('.relayUrl').attr('href'),
+				// 												null,
+				// 												function(listTypeOuvrage) {
+				// console.log(listTypeOuvrage)
+				// 													var output = []
+				// 													$
+				// 															.each(
+				// 																	listTypeOuvrage,
+				// 																	function(
+				// 																			index,
+				// 																			typeOuvrage) {
+				// 																		var tpl = '<option value="NONE"></option><option value="' + typeOuvrage.id + '">'
+				// 																				+ typeOuvrage.description
+				// 																				+ '</option>';
+				// 																		output
+				// 																				.push(tpl);
+				// 																	});
+				// 													$select.html(output
+				// 															.join(''));
+				// 													$("#typeOuvrage").select2({
+				// 														tags : {id: listTypeOuvrage.id, text: listTypeOuvrage.decription }
+				// 													})
+				// 												});
+
 				activateNappeOrSurface();
 				activateOuvrageMaitre();
+
 			});
 
 			$('#confirmModal').modal();

@@ -54,6 +54,15 @@ public class EnregistreurController {
 	@Inject
 	private AlerteService alerteService;
 
+//	@RequestMapping(value = "/init/niveau/manuel", method = RequestMethod.GET)
+//	public String initNiveauManuel(@ModelAttribute Enregistreur enregistreur,
+//			BindingResult result, Model model) throws ControllerException {
+//		enregistreur.setNiveauManuel(new Mesure());
+//		model.addAttribute("enregistreur", enregistreur);
+//		
+//		return "/enregistreur/update/" + enregistreur.getId();
+//	}
+
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	public String initEnregistreur(@ModelAttribute Enregistreur enregistreur,
 			BindingResult result, Model model) throws ControllerException {
@@ -131,8 +140,10 @@ public class EnregistreurController {
 		logger.debug(result.getAllErrors());
 		logger.info("--create EnregistreurController--");
 		logger.debug("enregistreur : " + enregistreur);
-		logger.debug(" enregistreur Mesure Enregistreur "
+		logger.debug(" getDerniereMesure "
 				+ enregistreur.getDerniereMesure());
+		logger.debug(" getNiveauManuel "
+				+ enregistreur.getNiveauManuel());
 		Ouvrage ouvrage = new Ouvrage();
 		try {
 
@@ -140,7 +151,40 @@ public class EnregistreurController {
 					.findByIdWithJoinFetchEnregistreurs(enregistreur
 							.getOuvrage().getId());
 
-				enregistreur = enregistreurService.create(enregistreur);
+			/**
+			 * TODO : Hack ? Mieux ? Pourri comment l'éviter?
+			 */
+			if (enregistreur.getNiveauManuel().getValeur() != null) {
+				for (Mesure mesure : enregistreur.getMesures()) {
+					System.out.println("mesuressssss : " + mesure);
+				}
+
+				if (enregistreur.getMesures() != null) {
+					System.out.println("Niv manuel déjà présent : "
+							+ enregistreur.getMesures().contains(
+									enregistreur.getNiveauManuel()));
+					if (!enregistreur.getMesures().contains(
+							enregistreur.getNiveauManuel())) {
+						Mesure newNiveauManuel = enregistreur.getNiveauManuel();
+						newNiveauManuel.setId(null);
+						newNiveauManuel.setEnregistreur(enregistreur);
+						enregistreur.getMesures().add(newNiveauManuel);
+						System.out.println("list : "
+								+ enregistreur.getMesures());
+					}
+				} else {
+					List<Mesure> mesures = new ArrayList<Mesure>();
+					Mesure newNiveauManuel = enregistreur.getNiveauManuel();
+					newNiveauManuel.setEnregistreur(enregistreur);
+					mesures.add(newNiveauManuel);
+					enregistreur.setMesures(mesures);
+				}
+			}
+			/**
+			 * TODO fin
+			 */
+
+			enregistreur = enregistreurService.create(enregistreur);
 			if (!ouvrage.getEnregistreurs().contains(enregistreur)) {
 				ouvrage.getEnregistreurs().add(enregistreur);
 				ouvrageService.update(ouvrage);
@@ -150,7 +194,7 @@ public class EnregistreurController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/ouvrage/update/" + ouvrage.getId() ;
+		return "redirect:/ouvrage/update/" + ouvrage.getId();
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
@@ -201,7 +245,7 @@ public class EnregistreurController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/ouvrage/update/" + ouvrageId ;
+		return "redirect:/ouvrage/update/" + ouvrageId;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list")

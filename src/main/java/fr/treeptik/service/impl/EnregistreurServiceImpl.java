@@ -35,7 +35,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Enregistreur create(Enregistreur enregistreur) throws ServiceException {
 		logger.info("--CREATE EnregistreurServiceImpl --");
-		logger.debug("enregistreur : " + enregistreur);
+		logger.debug("enregistreur : " + enregistreur   +  " mesures de l'enregistreur" + enregistreur.getMesures());
 		return enregistreurDAO.save(enregistreur);
 	}
 

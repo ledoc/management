@@ -1,6 +1,7 @@
 package fr.treeptik.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
@@ -194,4 +196,23 @@ public class OuvrageController {
 				new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"), true));
 
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/init/type/ouvrage")
+	public @ResponseBody List<TypeOuvrage> initSelectTypeOuvrage()
+			throws ControllerException {
+
+		logger.info("--initSelectTypeOuvrage OuvrageController");
+
+		List<TypeOuvrage> allTypeOuvrage = new ArrayList<TypeOuvrage>();
+		try {
+			allTypeOuvrage = typeOuvrageService.findAll();
+			logger.debug("liste des types d'ouvrage renvoyée : "
+					+ allTypeOuvrage);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return allTypeOuvrage;
+	}
+
 }

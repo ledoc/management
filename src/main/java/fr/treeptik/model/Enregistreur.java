@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
 import javax.persistence.Transient;
 
@@ -69,7 +70,7 @@ public class Enregistreur implements Serializable {
 	// @OneToMany(mappedBy = "enregistreur")
 	// private List<TrameDW> trameDWs;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "enregistreur")
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE  }, mappedBy = "enregistreur")
 	private List<Mesure> mesures;
 
 	/**
@@ -117,8 +118,9 @@ public class Enregistreur implements Serializable {
 
 	@PostUpdate
 	@PostLoad
+	@PostPersist
 	public void setDynamicMesures() {
-		Mesure mesureFantoche= new Mesure();
+		Mesure mesureFantoche = new Mesure();
 		this.setNiveauManuel(mesureFantoche);
 		this.setDerniereMesure(mesureFantoche);
 	}
@@ -244,29 +246,39 @@ public class Enregistreur implements Serializable {
 	 * @param niveauManuel
 	 */
 	public void setNiveauManuel(Mesure niveauManuel) {
-		List<Date> dates = new ArrayList<Date>();
-		if (this.mesures != null) {
 
+		List<Date> dates = new ArrayList<Date>();
+		Mesure mesureFantoche = new Mesure();
+
+		if (this.mesures != null) {
 			List<Mesure> listNiveauxManuels = this.mesures
 					.stream()
 					.filter(m -> {
+						System.out.println(m);
 						return m.getTypeMesure()
 								.equals(TypeMesure.NIVEAUMANUEL);
 					}).collect(Collectors.toList());
 
-			for (Mesure mesure : listNiveauxManuels) {
-				dates.add(mesure.getDate());
-			}
-
-			Date date = Collections.max(dates);
-			for (Mesure mesure : listNiveauxManuels) {
-				if (mesure.getDate() == date) {
-					this.niveauManuel = mesure;
+			if (listNiveauxManuels.size() > 0) {
+				for (Mesure mesure : listNiveauxManuels) {
+					dates.add(mesure.getDate());
 				}
-			}
-		}
+				Date date = Collections.max(dates);
+				for (Mesure mesure : listNiveauxManuels) {
+					if (mesure.getDate() == date) {
+						this.niveauManuel = mesure;
+					} else {
+						this.niveauManuel = mesureFantoche;
+					}
+				}
 
-		System.out.println("niveauManuel : " + this.niveauManuel);
+			} else {
+				this.niveauManuel = mesureFantoche;
+			}
+		} else {
+			this.niveauManuel = mesureFantoche;
+		}
+		System.out.println("autoupdate niveauManuel : " + this.niveauManuel);
 	}
 
 	/**
@@ -274,7 +286,6 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
-
 	public Mesure getDerniereMesure() {
 		return derniereMesure;
 	}
@@ -286,6 +297,8 @@ public class Enregistreur implements Serializable {
 	 */
 	public void setDerniereMesure(Mesure derniereMesure) {
 		List<Date> dates = new ArrayList<Date>();
+		Mesure mesureFantoche = new Mesure();
+
 		if (this.mesures != null) {
 
 			List<Mesure> listMesuresAutomatiques = this.mesures
@@ -295,16 +308,25 @@ public class Enregistreur implements Serializable {
 								TypeMesure.NIVEAUMANUEL);
 					}).collect(Collectors.toList());
 
-			for (Mesure mesure : listMesuresAutomatiques) {
-				dates.add(mesure.getDate());
-			}
+			if (listMesuresAutomatiques.size() > 0) {
 
-			Date date = Collections.max(dates);
-			for (Mesure mesure : listMesuresAutomatiques) {
-				if (mesure.getDate() == date) {
-					this.derniereMesure = mesure;
+				for (Mesure mesure : listMesuresAutomatiques) {
+					dates.add(mesure.getDate());
 				}
+
+				Date date = Collections.max(dates);
+				for (Mesure mesure : listMesuresAutomatiques) {
+					if (mesure.getDate() == date) {
+						this.derniereMesure = mesure;
+					} else {
+						this.derniereMesure = mesureFantoche;
+					}
+				}
+			} else {
+				this.derniereMesure = mesureFantoche;
 			}
+		} else {
+			this.derniereMesure = mesureFantoche;
 		}
 		System.out.println("derniereMesure : " + this.derniereMesure);
 	}
