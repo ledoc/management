@@ -46,8 +46,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <link rel="stylesheet" href="${urlResources}/css/main.css">
 <!-- template styles -->
 
-<link rel="stylesheet" href="${urlResources}/plugins/select2/select2.css" />
-
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

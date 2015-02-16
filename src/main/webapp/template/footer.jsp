@@ -35,7 +35,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/plugins/fastclick.js"></script>
 <script src="${urlResources}/plugins/moment.js"></script>
 <script src="${urlResources}/plugins/parsley.min.js"></script>
-<script src="${urlResources}/plugins/select2/select2.min.js"></script>
 <!-- /core scripts -->
 
 <!-- page level scripts -->
