@@ -25,6 +25,7 @@ public class Etablissement implements Serializable {
 	private String codeEtablissement;
 	// latitude/longitude
 	private String coordonneesGeographique;
+	private String coordonneesLambert;
 	private Float latitude;
 	private Float longitude;
 	private String formeJuridique;
@@ -72,6 +73,14 @@ public class Etablissement implements Serializable {
 		this.setLongitude();
 	}
 	
+	public String getCoordonneesLambert() {
+		return coordonneesLambert;
+	}
+
+	public void setCoordonneesLambert(String coordonneesLambert) {
+		this.coordonneesLambert = coordonneesLambert;
+	}
+
 	public Float getLatitude() {
 		return latitude;
 	}
@@ -150,10 +159,6 @@ public class Etablissement implements Serializable {
 	public void setSites(List<Site> sites) {
 		this.sites = sites;
 	}
-
-
-
-
 
 	@Override
 	public String toString() {

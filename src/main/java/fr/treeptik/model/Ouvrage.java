@@ -32,6 +32,7 @@ public class Ouvrage implements Serializable {
 	@JsonIgnore
 	private Site site;
 	private String coordonneesGeographique;
+	private String coordonneesLambert;
 	private Float latitude;
 	private Float longitude;
 	/**
@@ -42,7 +43,7 @@ public class Ouvrage implements Serializable {
 
 	private String commentaire;
 	// Si l'ouvrage est "lié" à un autre
-	private Boolean asservissement;
+	private Boolean rattachement;
 	// Ouvrage auquel il est asservi
 
 	@ManyToOne
@@ -121,8 +122,8 @@ public class Ouvrage implements Serializable {
 		this.site = site;
 	}
 
-	public Boolean getAsservissement() {
-		return asservissement;
+	public Boolean getRattachement() {
+		return rattachement;
 	}
 
 	public String getCoordonneesGeographique() {
@@ -133,6 +134,14 @@ public class Ouvrage implements Serializable {
 		this.coordonneesGeographique = coordonneesGeographique;
 		this.setLatitude();
 		this.setLongitude();
+	}
+
+	public String getCoordonneesLambert() {
+		return coordonneesLambert;
+	}
+
+	public void setCoordonneesLambert(String coordonneesLambert) {
+		this.coordonneesLambert = coordonneesLambert;
 	}
 
 	public Float getLatitude() {
@@ -155,8 +164,8 @@ public class Ouvrage implements Serializable {
 				this.coordonneesGeographique.length()));
 	}
 
-	public void setAsservissement(Boolean asservissement) {
-		this.asservissement = asservissement;
+	public void setRattachement(Boolean asservissement) {
+		this.rattachement = asservissement;
 	}
 
 	public Ouvrage getOuvrageMaitre() {
@@ -315,7 +324,6 @@ public class Ouvrage implements Serializable {
 		this.coteSolNGF = coteSolNGF;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Ouvrage [id=" + id + ", nom=" + nom + ", codeOuvrage="
@@ -323,8 +331,8 @@ public class Ouvrage implements Serializable {
 				+ site + ", coordonneesGeographique=" + coordonneesGeographique
 				+ ", latitude=" + latitude + ", longitude=" + longitude
 				+ ", coteRepereNGF=" + coteRepereNGF + ", commentaire="
-				+ commentaire + ", asservissement=" + asservissement
-				+ ", photo=" + photo + ", croquisDynamique=" + croquisDynamique
+				+ commentaire + ", asservissement=" + rattachement + ", photo="
+				+ photo + ", croquisDynamique=" + croquisDynamique
 				+ ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
 				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol
 				+ ", mesureProfondeur=" + mesureProfondeur + ", coteSolNGF="

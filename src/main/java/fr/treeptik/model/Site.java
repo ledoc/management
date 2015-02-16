@@ -30,6 +30,7 @@ public class Site implements Serializable {
 	private String codeSite;
 	private String departement;
 	private String coordonneesGeographique;
+	private String coordonneesLambert;
 	private Float latitude;
 	private Float longitude;
 	// Station météo : code Météo France et coordonnées géographiques ;
@@ -93,6 +94,16 @@ public class Site implements Serializable {
 		this.setLongitude();
 	}
 	
+	
+	
+	public String getCoordonneesLambert() {
+		return coordonneesLambert;
+	}
+
+	public void setCoordonneesLambert(String coordonneesLambert) {
+		this.coordonneesLambert = coordonneesLambert;
+	}
+
 	public Float getLatitude() {
 		return latitude;
 	}
