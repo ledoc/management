@@ -11,6 +11,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * @author herve
+ *
+ */
 @SuppressWarnings("serial")
 @Entity
 public class Document implements Serializable {
@@ -53,7 +57,6 @@ public class Document implements Serializable {
 		this.nom = nom;
 	}
 
-	
 	public String getType() {
 		return type;
 	}
@@ -86,8 +89,6 @@ public class Document implements Serializable {
 		this.ouvrage = ouvrage;
 	}
 
-	
-	
 	public Client getClient() {
 		return client;
 	}
@@ -97,11 +98,20 @@ public class Document implements Serializable {
 	}
 
 	@Override
+	public String toString() {
+		return "Document [id=" + id + ", date=" + date + ", nom=" + nom
+				+ ", type=" + type + ", path=" + path + ", taille=" + taille
+				+ ", client=" + client.getLogin() + ", ouvrage="
+				+ ouvrage.getCodeOuvrage() + "]";
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.toUpperCase().hashCode());
+		result = prime * result
+				+ ((nom == null) ? 0 : nom.toUpperCase().hashCode());
 		return result;
 	}
 
@@ -126,7 +136,5 @@ public class Document implements Serializable {
 			return false;
 		return true;
 	}
-
-
 
 }

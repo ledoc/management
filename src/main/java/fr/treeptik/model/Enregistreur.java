@@ -1,12 +1,10 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -37,6 +35,9 @@ public class Enregistreur implements Serializable {
 	// Un bouton de liaison NM apparaîtra afin da faire correspondre la nouvelle
 	// données reçu avec un Niveau Manuel
 	private Boolean maintenance;
+	private Float altitude;
+	private Float coeffTemperature;
+	private Float echelleCapteur;
 
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
 	// historique NM
@@ -70,7 +71,7 @@ public class Enregistreur implements Serializable {
 	// @OneToMany(mappedBy = "enregistreur")
 	// private List<TrameDW> trameDWs;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE  }, mappedBy = "enregistreur")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<Mesure> mesures;
 
 	/**
@@ -99,6 +100,8 @@ public class Enregistreur implements Serializable {
 
 	public Enregistreur() {
 		super();
+		this.niveauManuel = new Mesure();
+		this.derniereMesure = new Mesure();
 	}
 
 	public Enregistreur(HashMap<String, Object> xmlrpcHashMap) {
@@ -120,9 +123,8 @@ public class Enregistreur implements Serializable {
 	@PostLoad
 	@PostPersist
 	public void setDynamicMesures() {
-		Mesure mesureFantoche = new Mesure();
-		this.setNiveauManuel(mesureFantoche);
-		this.setDerniereMesure(mesureFantoche);
+		this.setNiveauManuel();
+		this.setDerniereMesure();
 	}
 
 	public Integer getId() {
@@ -139,6 +141,32 @@ public class Enregistreur implements Serializable {
 
 	public void setMid(String mid) {
 		this.mid = mid;
+	}
+
+	public Float getAltitude() {
+		return altitude;
+	}
+
+	public void setAltitude(Float altitude) {
+		this.altitude = altitude;
+	}
+
+	public Float getCoeffTemperature() {
+		return coeffTemperature;
+	}
+
+	public void setCoeffTemperature(Float coeffTemperature) {
+		this.coeffTemperature = coeffTemperature;
+	}
+
+	
+	
+	public Float getEchelleCapteur() {
+		return echelleCapteur;
+	}
+
+	public void setEchelleCapteur(Float echelleCapteur) {
+		this.echelleCapteur = echelleCapteur;
 	}
 
 	public Ouvrage getOuvrage() {
@@ -245,40 +273,21 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @param niveauManuel
 	 */
-	public void setNiveauManuel(Mesure niveauManuel) {
-
-		List<Date> dates = new ArrayList<Date>();
-		Mesure mesureFantoche = new Mesure();
+	public void setNiveauManuel() {
 
 		if (this.mesures != null) {
-			List<Mesure> listNiveauxManuels = this.mesures
+			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+					m2.getDate());
+
+			Optional<Mesure> optional = this.mesures
 					.stream()
-					.filter(m -> {
-						System.out.println(m);
-						return m.getTypeMesure()
-								.equals(TypeMesure.NIVEAUMANUEL);
-					}).collect(Collectors.toList());
+					.filter(m -> m.getTypeMesure().equals(
+							TypeMesure.NIVEAUMANUEL)).max(c);
 
-			if (listNiveauxManuels.size() > 0) {
-				for (Mesure mesure : listNiveauxManuels) {
-					dates.add(mesure.getDate());
-				}
-				Date date = Collections.max(dates);
-				for (Mesure mesure : listNiveauxManuels) {
-					if (mesure.getDate() == date) {
-						this.niveauManuel = mesure;
-					} else {
-						this.niveauManuel = mesureFantoche;
-					}
-				}
-
-			} else {
-				this.niveauManuel = mesureFantoche;
-			}
-		} else {
-			this.niveauManuel = mesureFantoche;
+			this.niveauManuel = optional.isPresent() ? optional.get()
+					: new Mesure();
 		}
-		System.out.println("autoupdate niveauManuel : " + this.niveauManuel);
+
 	}
 
 	/**
@@ -295,40 +304,19 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
-	public void setDerniereMesure(Mesure derniereMesure) {
-		List<Date> dates = new ArrayList<Date>();
-		Mesure mesureFantoche = new Mesure();
-
+	public void setDerniereMesure() {
 		if (this.mesures != null) {
+			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+					m2.getDate());
 
-			List<Mesure> listMesuresAutomatiques = this.mesures
+			Optional<Mesure> optional = this.mesures
 					.stream()
-					.filter(m -> {
-						return !m.getTypeMesure().equals(
-								TypeMesure.NIVEAUMANUEL);
-					}).collect(Collectors.toList());
+					.filter(m -> !m.getTypeMesure().equals(
+							TypeMesure.NIVEAUMANUEL)).max(c);
 
-			if (listMesuresAutomatiques.size() > 0) {
-
-				for (Mesure mesure : listMesuresAutomatiques) {
-					dates.add(mesure.getDate());
-				}
-
-				Date date = Collections.max(dates);
-				for (Mesure mesure : listMesuresAutomatiques) {
-					if (mesure.getDate() == date) {
-						this.derniereMesure = mesure;
-					} else {
-						this.derniereMesure = mesureFantoche;
-					}
-				}
-			} else {
-				this.derniereMesure = mesureFantoche;
-			}
-		} else {
-			this.derniereMesure = mesureFantoche;
+			this.derniereMesure = optional.isPresent() ? optional.get()
+					: new Mesure();
 		}
-		System.out.println("derniereMesure : " + this.derniereMesure);
 	}
 
 	public String getModem() {
@@ -437,11 +425,19 @@ public class Enregistreur implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Enregistreur [id=" + id + ", valid=" + valid + ", period="
-				+ period + ", localizableStatus=" + localizableStatus
-				+ ", clientName=" + clientName + ", mid=" + mid + ", until="
-				+ until + ", pid=" + pid + ", comment=" + comment + ", type="
-				+ type + ", userName=" + userName + "]";
+		return "Enregistreur [id=" + id + ", mid=" + mid + ", maintenance="
+				+ maintenance + ", altitude=" + altitude
+				+ ", coeffTemperature=" + coeffTemperature + ", niveauManuel="
+				+ niveauManuel + ", derniereMesure=" + derniereMesure
+				+ ", modem=" + modem + ", transmission=" + transmission
+				+ ", sim=" + sim + ", batterie=" + batterie
+				+ ", niveauBatterie=" + niveauBatterie + ", panneauSolaire="
+				+ panneauSolaire + ", sonde=" + sonde + ", croquis=" + croquis
+				+ ", valid=" + valid + ", period=" + period
+				+ ", localizableStatus=" + localizableStatus + ", clientName="
+				+ clientName + ", until=" + until + ", pid=" + pid
+				+ ", comment=" + comment + ", type=" + type + ", userName="
+				+ userName + ", ouvrage=" + ouvrage.getCodeOuvrage() + "]";
 	}
 
 	@Override
@@ -482,13 +478,4 @@ public class Enregistreur implements Serializable {
 			return false;
 		return true;
 	}
-
-	// public Object getSeamless() {
-	// return seamless;
-	// }
-	//
-	// public void setSeamless(Object seamless) {
-	// this.seamless = seamless;
-	// }
-
 }
