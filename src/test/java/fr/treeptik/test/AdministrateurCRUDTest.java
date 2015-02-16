@@ -98,7 +98,7 @@ public class AdministrateurCRUDTest {
 			fail("La collection doit être augmentée de 1");
 		}
 
-		administrateurService.remove(administrateur);
+//		administrateurService.remove(administrateur);
 
 		administrateur = administrateurService.findById(id);
 		assertNull("L'objet ne doit pas exister", administrateur);

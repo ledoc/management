@@ -183,7 +183,7 @@ public class ClientCRUDTest {
 			fail("La collection doit être augmentée de 1");
 		}
 		client = clientService.findById(id);
-		clientService.remove(client);
+//		clientService.remove(client);
 
 		client = clientService.findById(id);
 		assertNull("L'objet ne doit pas exister", client);

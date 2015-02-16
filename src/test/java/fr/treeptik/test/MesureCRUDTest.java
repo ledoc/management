@@ -110,7 +110,7 @@ public class MesureCRUDTest {
 		if (firstFindAll.size() + 1 != secondFindAll.size())
 			fail("La collection doit être augmentée de 1");
 
-		mesureService.remove(mesure2);
+//		mesureService.remove(mesure2);
 
 		mesure2 = mesureService.findById(id);
 		assertNull("L'objet ne doit pas exister", mesure2);

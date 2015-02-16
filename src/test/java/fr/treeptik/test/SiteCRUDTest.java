@@ -97,7 +97,7 @@ public class SiteCRUDTest {
 			fail("La collection doit être augmentée de 1");			
 		}
 
-		siteService.remove(site);
+//		siteService.remove(site);
 
 		site = siteService.findById(id);
 		assertNull("L'objet ne doit pas exister", site);

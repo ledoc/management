@@ -102,7 +102,7 @@ public class AlerteCRUDTest {
 			fail("La collection doit être augmentée de 1");
 		}
 
-		alerteService.remove(alerte);
+//		alerteService.remove(alerte);
 		alerte = alerteService.findById(id);
 		assertNull("L'objet ne doit pas exister", alerte);
 

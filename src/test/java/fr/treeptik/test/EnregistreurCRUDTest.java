@@ -191,7 +191,7 @@ public class EnregistreurCRUDTest {
 			fail("La collection doit être augmentée de 1");
 		}
 
-		enregistreurService.remove(enregistreur);
+//		enregistreurService.remove(enregistreur);
 
 		enregistreur = enregistreurService.findById(id);
 		assertNull("L'objet ne doit pas exister", enregistreur);

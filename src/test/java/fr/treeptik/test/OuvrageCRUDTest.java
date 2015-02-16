@@ -74,7 +74,7 @@ public class OuvrageCRUDTest {
 	private Ouvrage createNappe() {
 		Ouvrage nappe = new Ouvrage();
 		nappe.setCodeOuvrage("Pz12");
-		nappe.setAsservissement(false);
+		nappe.setRattachement(false);
 //		nappe.setSite("1001");
 		nappe.setNom("Nappe de Brie");
 		nappe.setCoteSolNGF(nappe.getCoteRepereNGF() - nappe.getMesureRepereNGFSol());
