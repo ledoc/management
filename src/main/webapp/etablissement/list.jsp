@@ -49,7 +49,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Téléphone</th>
 										<th>Email</th>
 										<th>Site web</th>
+										<sec:authorize ifAllGranted="ADMIN">
 										<th class="nosort nosearch">Actions</th>
+										</sec:authorize>
 									</tr>
 								</thead>
 								<tbody>
@@ -66,11 +68,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${etablissement.mail}" /></td>
 											<td class="text-primary"><a
 												href="http://${etablissement.siteWeb}" target="_blank">${etablissement.siteWeb}</a></td>
+											<sec:authorize ifAllGranted="ADMIN">
 											<td><a data-url="${urlEtablissementDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
 													<i class="fa fa-remove"></i>
 											</a></td>
+											</sec:authorize>
 										</tr>
 									</c:forEach>
 								</tbody>

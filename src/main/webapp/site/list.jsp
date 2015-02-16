@@ -46,7 +46,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Nom</th>
 										<th>Département</th>
 										<th>Station météo</th>
-										<th class="nosort nosearch" >Actions</th>
+										<sec:authorize ifAllGranted="ADMIN">
+											<th class="nosort nosearch">Actions</th>
+										</sec:authorize>
 									</tr>
 								</thead>
 								<tbody>
@@ -59,11 +61,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${site.nom}" /></td>
 											<td><c:out value="${site.departement}" /></td>
 											<td><c:out value="${site.stationMeteo}" /></td>
-											<td><a data-url="${urlSiteDelete}" data-toggle="modal"
-												data-target="#confirmModal"
-												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
-													<i class="fa fa-remove"></i>
-											</a></td>
+											<sec:authorize ifAllGranted="ADMIN">
+												<td><a data-url="${urlSiteDelete}" data-toggle="modal"
+													data-target="#confirmModal"
+													class="btn btn-outline btn-danger btn-xs js-confirm-btn">
+														<i class="fa fa-remove"></i>
+												</a></td>
+											</sec:authorize>
 										</tr>
 									</c:forEach>
 								</tbody>

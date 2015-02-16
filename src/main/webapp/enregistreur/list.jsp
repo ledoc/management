@@ -9,7 +9,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuEnregistreurActive" />
+	<jsp:param value="active" name="menuOuvrageActive" />
 	<jsp:param value="Solices - Liste Enregistreur" name="titreOnglet" />
 </jsp:include>
 
@@ -48,9 +48,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Dernière mesure</th>
 										<th>Niveau manuel</th>
 										<th>Maintenance</th>
-<!-- 										<th>mesures</th> -->
-<!-- 										<th>Croquis</th> -->
+										<sec:authorize ifAllGranted="ADMIN">
 										<th class="nosort nosearch">Actions</th>
+										</sec:authorize>
 									</tr>
 								</thead>
 								<tbody>
@@ -59,7 +59,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											value="/enregistreur/delete/${enregistreur.id}" />
 										<c:url var="urlEnregistreurUpdate"
 											value="/enregistreur/update/${enregistreur.id}" />
-											<c:url var="urlMesuresView"
+										<c:url var="urlMesuresView"
 											value="/mesure/list/enregistreur/${enregistreur.id}" />
 										<tr>
 											<td class="text-primary"><a
@@ -76,14 +76,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<c:if test="${ maintenance == false }">
 												<td><c:out value="non" /></td>
 											</c:if>
-<!-- 											<td class="text-primary"><a -->
-<%-- 												href="${urlMesuresView}">voir</a></td> --%>
-<%-- 											<td><c:out value="${enregistreur.croquis}" /></td> --%>
+											<sec:authorize ifAllGranted="ADMIN">
 											<td><a data-url="${urlEnregistreurDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
 													<i class="fa fa-remove"></i>
 											</a></td>
+											</sec:authorize>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -107,7 +106,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
-							<p class="text-muted">ATTENTION : Les mesures associées seront supprimés</p>
+							<p class="text-muted">ATTENTION : Les mesures associées
+								seront supprimés</p>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"

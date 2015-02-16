@@ -59,11 +59,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${mesure.typeMesure.description}" /></td>
 											<td><c:out value="${mesure.valeur}" /></td>
 											<td><c:out value="${mesure.date}" /></td>
+											<sec:authorize ifAllGranted="ADMIN">
 											<td><a data-url="${urlMesureDelete}" data-toggle="modal"
 												data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
 													<i class="fa fa-remove"></i>
 											</a></td>
+											</sec:authorize>
 										</tr>
 									</c:forEach>
 								</tbody>

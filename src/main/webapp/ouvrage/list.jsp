@@ -44,11 +44,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Nom</th>
 										<th>Type</th>
 										<th>numéro BSS</th>
-										<!-- 										<th>Code site</th> -->
-										<th>Asservissement</th>
+										<th>Rattachement</th>
 										<th>Ouvrage maître</th>
-										<!-- 										<th class="nosort nosearch">Croquis</th> -->
+										<sec:authorize ifAllGranted="ADMIN">
 										<th class="nosort nosearch">Actions</th>
+									</sec:authorize>
 									</tr>
 								</thead>
 								<tbody>
@@ -63,20 +63,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${ouvrage.typeOuvrage.description}" /></td>
 											<td><c:out value="${ouvrage.numeroBSS}" /></td>
 											<%-- 											<td><c:out value="${ouvrage.site.code}" /></td> --%>
-											<c:set var="asservissement" value="${ouvrage.asservissement}" />
-											<c:if test="${ asservissement == false }">
+											<c:set var="rattachement" value="${ouvrage.rattachement}" />
+											<c:if test="${ rattachement == false }">
 												<td><c:out value="non" /></td>
 											</c:if>
-											<c:if test="${ asservissement == true }">
+											<c:if test="${ rattachement == true }">
 												<td><c:out value="oui" /></td>
 											</c:if>
 											<td><c:out value="${ouvrage.ouvrageMaitre.codeOuvrage}" /></td>
-											<!-- 											<td class="text-primary"><a href="#">voir</a></td> -->
-											<td><a data-url="${urlOuvrageDelete}"
-												data-toggle="modal" data-target="#confirmModal"
-												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
-													<i class="fa fa-remove"></i>
-											</a></td>
+											<sec:authorize ifAllGranted="ADMIN">
+												<td><a data-url="${urlOuvrageDelete}"
+													data-toggle="modal" data-target="#confirmModal"
+													class="btn btn-outline btn-danger btn-xs js-confirm-btn">
+														<i class="fa fa-remove"></i>
+												</a></td>
+											</sec:authorize>
 										</tr>
 									</c:forEach>
 								</tbody>
