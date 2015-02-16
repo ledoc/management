@@ -10,7 +10,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuEnregistreurActive" />
+	<jsp:param value="active" name="menuOuvrageActive" />
 	<jsp:param value="Solices - Détails Enregistreur" name="titreOnglet" />
 </jsp:include>
 
@@ -43,7 +43,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<c:set var="textCreateUpdate" value="Détails" />
 </sec:authorize>
 
-
 <section class="layout">
 	<!-- /sidebar -->
 	<section class="main-content bg-white rounded shadow">
@@ -69,7 +68,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">
-									<label for="mid">MID</label>
+									<label for="mid">Identifiant DW</label>
 									<form:input type="text" class="transfertInput form-control"
 										id="mid" path="mid" placeholder=""
 										data-parsley-required="true" data-parsley-trigger="change"
@@ -84,27 +83,40 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										id="ouvrage" path="ouvrage.codeOuvrage" />
 								</div>
 								<div class="form-group">
-									<label for="niveauManuel">Niveau manuel</label>
-									<div class="text-primary">
-										<a id="creation-niveau-manuel" data-toggle="modal"
-											data-target=".bs-modal-sm" class="text-info">Enregistrer
-											un nouveau niveau manuel</a>
-									</div>
-									<%-- 									<form:hidden path="niveauManuel.id" /> --%>
-									<form:input readonly="true" type="text"
-										class="transfertInput form-control" id="niveauManuel"
-										path="niveauManuel.valeur" />
-								</div>
-
-								<div class="form-group">
-									<label for="derniereMesure">Dernière mesure</label>
-									<form:hidden path="derniereMesure.id" />
-									<input type="text" class="transfertInput form-control"
-										id="derniereMesure" value="${derniereMesure.valeur}"
-										readonly="true" />
+									<label for="coeffTemperature">coefficient de
+										température</label>
+									<form:input type="text" class="form-control"
+										id="coeffTemperature" path="coeffTemperature" placeholder=""
+										data-parsley-trigger="change" step="any"
+										data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<label for="sonde">Sonde</label>
+									<label for="altitude">Altitude (mètre)</label>
+									<form:input type="text" class="form-control" id="altitude"
+										path="altitude" placeholder="" data-parsley-trigger="change"
+										step="any" data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
+								</div>
+								<div class="form-group">
+									<label for="echelleCapteur">Pleine échelle capteur</label>
+									<form:input type="text" class="form-control"
+										id="echelleCapteur" path="echelleCapteur" placeholder=""
+										data-parsley-trigger="change" step="any"
+										data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
+								</div>
+								<div class="form-group">
+									<label for="sonde">n° de sonde</label>
 									<form:input type="text" class="form-control" id="sonde"
 										path="sonde" data-parsley-trigger="change" placeholder=""
 										readonly="${readOnlyValue }" />
@@ -144,28 +156,76 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<div class="col-md-4">
 								<div class="panel panel-default no-b">
 									<div class="form-group">
-										<label for="batterie">Batterie</label>
+										<label for="niveauManuel">Niveau manuel</label>
+										<div class="text-primary">
+											<a id="creation-niveau-manuel" data-toggle="modal"
+												data-target=".bs-modal-sm" class="text-info">Enregistrer
+												un nouveau niveau manuel</a>
+										</div>
+										<form:input readonly="true" type="text"
+											class="transfertInput form-control" id="niveauManuel"
+											path="niveauManuel.valeur" />
+									</div>
+									<div class="form-group">
+										<label for="derniereMesure">Dernière mesure</label> <input
+											type="text" class="transfertInput form-control"
+											id="derniereMesure" value="${derniereMesure.valeur}"
+											readonly="true" />
+									</div>
+									<div class="form-group">
+										<label for="batterie">Valeur maximum de la batterie en
+											volts</label>
 										<form:input type="text" class="transfertInput form-control"
 											id="batterie" path="batterie" placeholder=""
-											data-parsley-trigger="change" data-parsley-mincheck="2"
+											data-parsley-trigger="change" step="any"
+											data-parsley-type="number"
+											data-parsley-type-message="valeur numérique"
+											data-parsley-mincheck="2"
 											data-parsley-mincheck-message="2 caractères minimum"
 											readonly="${readOnlyValue }" />
 									</div>
 									<div class="form-group">
-										<label for="niveauBatterie">Niveau batterie</label>
+										<label for="niveauBatterie">Niveau batterie en %</label>
 										<form:input class="transfertInput form-control"
 											id="niveauBatterie" path="niveauBatterie" placeholder=""
 											data-parsley-trigger="change" data-parsley-type="number"
 											readonly="${readOnlyValue }" />
 									</div>
-									<div class="form-group">
-										<label for="maintenance">Maintenance</label>
-										<form:radiobutton class="transfertInput" id="maintenance"
-											path="maintenance" label="oui" value="true" />
-										<form:radiobutton class="transfertInput" id="maintenance"
-											path="maintenance" label="non" value="false"
-											disabled="${readOnlyValue }" />
+
+									<div class="checkbox checkbox-inline">
+										<form:checkbox id="maintenance" path="maintenance"
+											label="Maintenance" disabled="${readOnlyValue }" />
 									</div>
+
+									<header class="panel-heading clearfix brtl brtr no-b">
+										<div class="overflow-hidden">
+											<span class="h4 show no-m pt10">Historiques niveaux
+												manuels</span>
+										</div>
+									</header>
+									<div class="list-group ">
+										<table class="no-b no-m">
+											<thead>
+												<tr>
+													<th>Date</th>
+													<th>Valeur</th>
+												</tr>
+											</thead>
+											<c:forEach items="${listNiveauxManuels}" var="niveauManuel">
+												<tbody>
+													<tr>
+														<td class=""><c:out value="${niveauManuel.date}" />
+															<!-- 																		</a> --></td>
+														<td><div class="list-group-item">
+																<c:out value="${niveauManuel.valeur}" />
+															</div></td>
+													</tr>
+												</tbody>
+											</c:forEach>
+										</table>
+									</div>
+
+
 								</div>
 							</div>
 						</form:form>
@@ -192,6 +252,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								class="parsley-form clearfix" data-validate="parsley"
 								data-show-errors="true">
 
+								<input type="hidden" name="niveauManuel.id" value="" />
+								<input type="hidden" name="niveauManuel.typeMesure"
+									value="NIVEAUMANUEL" />
+
 								<form:hidden id="data-id" path="id" />
 								<form:hidden id="data-mid" path="mid" />
 								<form:hidden id="data-maintenance" path="maintenance" />
@@ -205,17 +269,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:hidden id="data-sonde" path="sonde" />
 								<form:hidden id="data-croquis" path="croquis" />
 								<form:hidden id="data-alertesActives" path="alertesActives" />
-
-								<div class="col-xs-6">
-									<label for="typesMesureCombo">Type de mesure</label>
-									<form:select id="typesMesureCombo" name="typesMesureCombo"
-										path="niveauManuel.typeMesure" items="${typesMesureCombo}"
-										data-placeholder="Sélectionnez 
-							un type"
-										itemLabel="description" data-parsley-required="true"
-										class="form-control" disabled="${readOnlyValue }">
-									</form:select>
-								</div>
+								<form:hidden id="data-echelleCapteur" path="echelleCapteur" />
+								<form:hidden id="data-altitude" path="altitude" />
+								<form:hidden id="data-coeffTemperature" path="coeffTemperature" />
 
 								<div class="col-xs-6">
 									<label for="valeur">Valeur sans unité</label>
@@ -229,7 +285,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										disabled="${readOnlyValue }" />
 								</div>
 								<div class="col-xs-6">
-									<label for="date">Date: dd-mm-yyyy hh:mm:ss</label>
+									<label for="date">Date (dd-mm-yyyy hh:mm:ss)</label>
 									<form:input class="form-control" id="date"
 										path="niveauManuel.date" placeholder="dd-mm-yyyy hh:mm:ss"
 										data-parsley-required="true" data-parsley-trigger="change"

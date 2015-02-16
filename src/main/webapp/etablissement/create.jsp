@@ -48,7 +48,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
 							Etablissement</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							établissement.</p>
@@ -84,7 +84,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="coordonneesGeographique">Coordonnées
-										géographiques (format Lambert93)</label>
+										géographiques (format Google map)</label>
 									<form:input type="text" class="form-control"
 										id="coordonneesGeographique" path="coordonneesGeographique"
 										placeholder="" data-parsley-required="true"
@@ -95,12 +95,22 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
+									<label for="coordonneesLambert">Coordonnées
+										géographiques (format Lambert93)</label>
+									<form:input type="text" class="form-control"
+										id="coordonneesLambert" path="coordonneesLambert"
+										placeholder="" data-parsley-trigger="change"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue}" />
+								</div>
+								<div class="form-group">
 									<label for="formeJuridique">Forme juridique</label>
 									<form:input type="text" class="form-control"
 										id="formeJuridique" path="formeJuridique" placeholder=""
 										data-parsley-trigger="change" data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum"
-										readonly="${readOnlyValue }" />
+										readonly="${readOnlyValue}" />
 								</div>
 								<div class="form-group">
 									<label for="telephone">Téléphone</label>
@@ -155,6 +165,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										</header>
 										<div class="list-group ">
 											<table class="no-b">
+												<thead>
+													<tr>
+														<th>Code</th>
+														<th>Nom</th>
+													</tr>
+												</thead>
 												<c:forEach items="${etablissement.sites}" var="site">
 													<tbody>
 														<tr>

@@ -45,8 +45,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un Site</h1>
-						<p class="text-muted">Permet de ${sentenceCreateUpdate} un site.</p>
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'unSite</h1>
+						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
+							site.</p>
 					</header>
 					<div class="panel-body">
 						<c:url var="createSite" value="/site/create" />
@@ -64,7 +65,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="typesSiteCombo">Choisir un type de site</label>
@@ -72,7 +74,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										path="typeSite" items="${typesSiteCombo}"
 										data-placeholder="Sélectionnez
 							un type"
-										class="form-control" data-parsley-required="true" disabled="${readOnlyValue }" >
+										class="form-control" data-parsley-required="true"
+										disabled="${readOnlyValue }">
 									</form:select>
 								</div>
 								<div class="form-group">
@@ -82,7 +85,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="departement">Département</label>
@@ -92,14 +96,25 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="coordonneesGeographique">Coordonnées
-										géographiques (format Lambert93)</label>
+										géographiques (format Google map)</label>
 									<form:input type="text" class="form-control"
 										id="coordonneesGeographique" path="coordonneesGeographique"
 										placeholder="" data-parsley-required="true"
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
+								</div>
+								<div class="form-group">
+									<label for="coordonneesLambert">Coordonnées
+										géographiques (format Lambert93)</label>
+									<form:input type="text" class="form-control"
+										id="coordonneesLambert" path="coordonneesLambert"
+										placeholder="" data-parsley-trigger="change"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue}" />
 								</div>
 								<div class="form-group">
 									<label for="stationMeteo">Codes des Stations météo</label>
@@ -108,7 +123,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" readonly="${readOnlyValue }" />
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
 									<label for="etablissements">Rattacher à un
@@ -146,6 +162,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										</header>
 										<div class="list-group ">
 											<table class="no-b">
+												<thead>
+													<tr>
+														<th>Code</th>
+														<th>Nom</th>
+													</tr>
+												</thead>
 												<c:forEach items="${site.ouvrages}" var="ouvrage">
 													<tbody>
 														<tr>

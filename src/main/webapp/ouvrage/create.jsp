@@ -50,7 +50,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
 							Ouvrage</h1>
 						<p class="text-muted">Pour ajouter un ou des enregistreurs
-							l'ouvrage doit d'abord être créer</p>
+							l'ouvrage doit d'abord être créé</p>
 					</header>
 
 					<div class="panel-body">
@@ -63,18 +63,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">
-									<label for="typeOuvrage">Type de l'ouvrage</label> <input
-										id="typeOuvrage">
-
-
-									<!-- 										<select -->
-									<!-- 										id="typeOuvrage" -->
-									<!-- 										data-placeholder="--- Choisir un type ---" -->
-									<!-- 										class="form-control" data-parsley-required="true" -->
-									<!-- 										data-parsley-required-message="Champ requis" -->
-									<!-- 										onchange="javascript:activateNappeOrSurface();" class="" -->
-									<%-- 										disabled="${readOnlyValue}"> --%>
-									<!-- 									</select> -->
+									<label for="typeOuvrage">Type de l'ouvrage</label>
+									<form:select id="typeOuvrage" name="typeOuvrage"
+										path="typeOuvrage.id" data-parsley-required="true"
+										data-parsley-required-message="Champ requis"
+										onchange="javascript:activateNappeOrSurface();"
+										class="form-control chosen" disabled="${readOnlyValue }">
+										<form:option value="" label="--- Choisir un type ---" />
+										<form:options items="${typesOuvrageCombo}" itemValue="id"
+											itemLabel="description" />
+									</form:select>
 								</div>
 								<div class="form-group">
 									<label for="nom">Nom</label>
@@ -102,7 +100,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-placeholder="Choisir un etablissement ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis" path="site.id"
-										readonly="${readOnlyValue }">
+										disabled="${readOnlyValue }">
 										<form:option value=""></form:option>
 										<form:options items="${sitesCombo}" itemValue="id"
 											itemLabel="codeSite" />
@@ -112,7 +110,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="coordonneesGeographique">Coordonnées
-										géographiques (format Lambert93)</label>
+										géographiques (format Google map)</label>
 									<form:input type="text" class="form-control"
 										id="coordonneesGeographique" path="coordonneesGeographique"
 										placeholder="" data-parsley-required="true"
@@ -122,10 +120,20 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck-message="2 caractères minimum"
 										readonly="${readOnlyValue }" />
 								</div>
+								<div class="form-group">
+									<label for="coordonneesLambert">Coordonnées
+										géographiques (format Lambert93)</label>
+									<form:input type="text" class="form-control"
+										id="coordonneesLambert" path="coordonneesLambert"
+										placeholder="" data-parsley-trigger="change"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue}" />
+								</div>
 								<div class="checkbox checkbox-inline">
-									<form:checkbox id="asservissement" path="asservissement"
+									<form:checkbox id="rattachement" path="rattachement"
 										onchange="javascript:activateOuvrageMaitre();"
-										label="Asservissement" disabled="${readOnlyValue }" />
+										label="Rattachement" disabled="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" id="ouvrageMaitre"
 									class="form-group">
@@ -199,8 +207,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="mesureProfondeur">Mesure repère NGF /
 										Niveau Statique initial, en mètres</label>
-									<form:input type="number" class="form-control"
-										id="mesureProfondeur" path="mesureProfondeur" placeholder=""
+									<form:input class="form-control" id="mesureProfondeur"
+										path="mesureProfondeur" placeholder=""
 										data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
@@ -211,9 +219,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="mesureRepereNGFSol">Mesure repère NGF /
 										Fond, en mètres </label>
-									<form:input type="number" class="form-control"
-										path="mesureRepereNGFSol" placeholder=""
-										data-parsley-trigger="change" step="any"
+									<form:input class="form-control" path="mesureRepereNGFSol"
+										placeholder="" data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
@@ -329,61 +336,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<jsp:include page="/template/footer.jsp" />
 
 		<script type="text/javascript">
-
-		function initTypeOuvrage() {
-		$.getJSON({ // instead of writing the function to execute the request we use Select2's convenient helper
-			url : $('.relayUrl').attr('href'),
-			dataType : 'json',
-			results : function(data, page) { // parse the results into the format expected by Select2.
-				// since we are using custom formatting functions we do not need to alter remote JSON data
-
-				console.log(data)
-				return {
-					results : data
-				};
-			}
-		});}
-		
-		
 			$(document).ready(function() {
-
-				$("#typeOuvrage").select2({
-					placeholder : "choisr un type",
-					minimumInputLength : 1,
-					initTypeOuvrage(),
-				});
-
-				// 								var $select = $('#typeOuvrage');
-
-				// 								$
-				// 										.getJSON(
-				// 												$('.relayUrl').attr('href'),
-				// 												null,
-				// 												function(listTypeOuvrage) {
-				// console.log(listTypeOuvrage)
-				// 													var output = []
-				// 													$
-				// 															.each(
-				// 																	listTypeOuvrage,
-				// 																	function(
-				// 																			index,
-				// 																			typeOuvrage) {
-				// 																		var tpl = '<option value="NONE"></option><option value="' + typeOuvrage.id + '">'
-				// 																				+ typeOuvrage.description
-				// 																				+ '</option>';
-				// 																		output
-				// 																				.push(tpl);
-				// 																	});
-				// 													$select.html(output
-				// 															.join(''));
-				// 													$("#typeOuvrage").select2({
-				// 														tags : {id: listTypeOuvrage.id, text: listTypeOuvrage.decription }
-				// 													})
-				// 												});
-
 				activateNappeOrSurface();
 				activateOuvrageMaitre();
-
 			});
 
 			$('#confirmModal').modal();
@@ -421,7 +376,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			}
 
 			function activateOuvrageMaitre() {
-				if ($('#asservissement').is(':checked')) {
+				if ($('#rattachement').is(':checked')) {
 					$('#ouvrageMaitre').attr('style', 'display: block;');
 					$('#ouvrageMaitre').attr('disabled', false);
 					$('#ouvrageMaitre').show();
@@ -429,7 +384,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						allow_single_deselect : true
 					});
 				}
-				if (!$('#asservissement').is(':checked')) {
+				if (!$('#rattachement').is(':checked')) {
 					$('#ouvrageMaitre').attr('style', 'display: none;');
 					$('#ouvrageMaitre').attr('disabled', true);
 					$('#ouvrageMaitre').hide();
@@ -437,6 +392,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 					$('#ouvragesCombo').trigger("chosen:updated");
 				}
-				console.log($('#asservissement').is(':checked'));
+				console.log($('#rattachement').is(':checked'));
 			}
 		</script>

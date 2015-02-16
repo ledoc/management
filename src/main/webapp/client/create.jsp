@@ -138,7 +138,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										itemValue="id" itemLabel="codeEtablissement"
 										data-placeholder=" Sélectionnez
 							une entité"
-										class="form-control chosen" disabled="${readOnlyValue }" >
+										class="form-control chosen" disabled="${readOnlyValue }">
 									</form:select>
 								</div>
 								<div class="pull-right">
@@ -162,6 +162,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 										<div class="list-group">
 											<table class="no-b">
+												<thead>
+													<tr>
+														<th>Code</th>
+														<th>Nom</th>
+													</tr>
+												</thead>
 												<c:forEach items="${client.etablissements}"
 													var="etablissement">
 													<tbody>
