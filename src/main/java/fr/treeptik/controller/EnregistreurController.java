@@ -3,10 +3,15 @@ package fr.treeptik.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -53,15 +58,6 @@ public class EnregistreurController {
 	private MesureService mesureService;
 	@Inject
 	private AlerteService alerteService;
-
-//	@RequestMapping(value = "/init/niveau/manuel", method = RequestMethod.GET)
-//	public String initNiveauManuel(@ModelAttribute Enregistreur enregistreur,
-//			BindingResult result, Model model) throws ControllerException {
-//		enregistreur.setNiveauManuel(new Mesure());
-//		model.addAttribute("enregistreur", enregistreur);
-//		
-//		return "/enregistreur/update/" + enregistreur.getId();
-//	}
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	public String initEnregistreur(@ModelAttribute Enregistreur enregistreur,
@@ -140,10 +136,8 @@ public class EnregistreurController {
 		logger.debug(result.getAllErrors());
 		logger.info("--create EnregistreurController--");
 		logger.debug("enregistreur : " + enregistreur);
-		logger.debug(" getDerniereMesure "
-				+ enregistreur.getDerniereMesure());
-		logger.debug(" getNiveauManuel "
-				+ enregistreur.getNiveauManuel());
+		logger.debug(" getDerniereMesure " + enregistreur.getDerniereMesure());
+		logger.debug(" getNiveauManuel " + enregistreur.getNiveauManuel());
 		Ouvrage ouvrage = new Ouvrage();
 		try {
 
@@ -155,9 +149,9 @@ public class EnregistreurController {
 			 * TODO : Hack ? Mieux ? Pourri comment l'éviter?
 			 */
 			if (enregistreur.getNiveauManuel().getValeur() != null) {
-				for (Mesure mesure : enregistreur.getMesures()) {
-					System.out.println("mesuressssss : " + mesure);
-				}
+				// for (Mesure mesure : enregistreur.getMesures()) {
+				// System.out.println("mesuressssss : " + mesure);
+				// }
 
 				if (enregistreur.getMesures() != null) {
 					System.out.println("Niv manuel déjà présent : "
@@ -204,12 +198,11 @@ public class EnregistreurController {
 		logger.debug("enregistreurId : " + id);
 
 		Enregistreur enregistreur = null;
+		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
 		List<Alerte> alertesCombo;
-		Map<Integer, Alerte> alerteCache;
 
 		List<TypeMesure> typesMesureCombo = new ArrayList<TypeMesure>(
 				Arrays.asList(TypeMesure.values()));
-		alerteCache = new HashMap<Integer, Alerte>();
 
 		try {
 			enregistreur = enregistreurService
@@ -217,14 +210,21 @@ public class EnregistreurController {
 
 			alertesCombo = alerteService.findAll();
 
-			for (Alerte alerte : alertesCombo) {
-				alerteCache.put(alerte.getId(), alerte);
+			if (enregistreur.getMesures() != null) {
+				listNiveauxManuels = enregistreur
+						.getMesures()
+						.stream()
+						.filter(m -> m.getTypeMesure().equals(
+								TypeMesure.NIVEAUMANUEL))
+						.collect(Collectors.toList());
 			}
+
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
+		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
 		model.addAttribute("enregistreur", enregistreur);
 		model.addAttribute("typesMesureCombo", typesMesureCombo);
 		model.addAttribute("alertesCombo", alertesCombo);
@@ -248,7 +248,7 @@ public class EnregistreurController {
 		return "redirect:/ouvrage/update/" + ouvrageId;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
+	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--list EnregistreurController--");
