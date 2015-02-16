@@ -137,7 +137,7 @@ public class MesureController {
 		return "redirect:/mesure/list";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
+	@RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--list MesureController--");

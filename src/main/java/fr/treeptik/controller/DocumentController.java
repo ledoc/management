@@ -78,7 +78,7 @@ public class DocumentController {
 		return "/document/assign";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
+	@RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--list DocumentController--");

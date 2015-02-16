@@ -94,7 +94,7 @@ public class AdministrateurController {
 		return "redirect:/administrateur/list";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
+	@RequestMapping(method = RequestMethod.GET, value =  {"/list", "/"})
 	public String list(Model model) throws ControllerException {
 		logger.info("--list AdministrateurController--");
 

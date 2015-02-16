@@ -203,7 +203,7 @@ public class ClientController {
 	 * @return
 	 * @throws ControllerException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/list")
+	@RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
 	public String list(Model model) throws ControllerException {
 		logger.info("--list ClientController--");
 
