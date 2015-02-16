@@ -13,8 +13,6 @@ public interface ClientService {
 
 	Client update(Client client) throws ServiceException;
 
-	void remove(Client client) throws ServiceException;
-
 	List<Client> findAll() throws ServiceException;
 
 	void remove(Integer id) throws ServiceException;

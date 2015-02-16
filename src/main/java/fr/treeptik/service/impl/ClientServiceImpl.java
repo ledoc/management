@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,14 +49,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Client client) throws ServiceException {
-		logger.info("--DELETE ClientServiceImpl --");
-		logger.debug("client : " + client);
-		clientDAO.delete(client);
-	}
-
-	@Override
+	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE ClientServiceImpl --");

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class TrameDWServiceImpl implements TrameDWService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public TrameDW create(TrameDW trameDW) throws ServiceException {
 		logger.info("--CREATE trameDW --");
 		logger.debug("trameDW : " + trameDW);
@@ -35,6 +37,7 @@ public class TrameDWServiceImpl implements TrameDWService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public TrameDW update(TrameDW trameDW) throws ServiceException {
 		logger.info("--UPDATE trameDW --");
 		logger.debug("trameDW : " + trameDW);
@@ -42,14 +45,8 @@ public class TrameDWServiceImpl implements TrameDWService {
 	}
 
 	@Override
-	public void remove(TrameDW trameDW) throws ServiceException {
-		logger.info("--DELETE trameDW --");
-		logger.debug("trameDW : " + trameDW);
-		trameDWDAO.delete(trameDW);
-	}
-	
-
-	@Override
+	@Secured("ADMIN")
+	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE trameDW --");
 		logger.debug("trameDWId : " + id);

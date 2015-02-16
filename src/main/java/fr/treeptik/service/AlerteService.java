@@ -14,9 +14,6 @@ public interface AlerteService {
 
 		Alerte update(Alerte alerte) throws ServiceException;
 		
-		void remove(Alerte alerte)
-				throws ServiceException;
-
 		List<Alerte> findAll() throws ServiceException;
 
 		void remove(Integer id) throws ServiceException;

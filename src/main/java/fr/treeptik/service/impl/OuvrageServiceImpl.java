@@ -6,8 +6,8 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.OuvrageDAO;
@@ -37,7 +37,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = ServiceException.class)
+	@Transactional(rollbackFor = ServiceException.class)
 	public Ouvrage update(Ouvrage ouvrage) throws ServiceException {
 		logger.info("--UPDATE OuvrageServiceImpl --");
 		logger.debug("ouvrage : " + ouvrage);
@@ -45,6 +45,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 	}
 
 	@Override
+	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE OuvrageServiceImpl --");
@@ -57,7 +58,7 @@ public class OuvrageServiceImpl implements OuvrageService {
 		// Pour la suppression des ouvrages fils
 		o.getOuvrageFils().forEach(ou-> {
 			ou.setOuvrageMaitre(null);
-			ou.setAsservissement(false);
+			ou.setRattachement(false);
 		});
 		
 		ouvrageDAO.delete(id);

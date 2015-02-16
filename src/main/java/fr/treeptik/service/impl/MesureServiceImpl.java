@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,6 @@ public class MesureServiceImpl implements MesureService {
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
 	public Mesure findById(Integer id) throws ServiceException {
 		Mesure mesure = new Mesure();
 		mesure = mesureDAO.findOne(id);
@@ -33,6 +33,7 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public Mesure create(Mesure mesure) throws ServiceException {
 		logger.info("--CREATE MesureService --");
 		logger.debug("mesure : " + mesure);
@@ -40,6 +41,7 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public Mesure update(Mesure mesure) throws ServiceException {
 		logger.info("--UPDATE MesureService --");
 		logger.debug("mesure : " + mesure);
@@ -47,13 +49,8 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
-	public void remove(Mesure mesure) throws ServiceException {
-		logger.info("--DELETE MesureService --");
-		logger.debug("mesure : " + mesure);
-		mesureDAO.delete(mesure);
-	}
-
-	@Override
+	@Secured("ADMIN")
+	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE MesureService --");
 		logger.debug("mesureId : " + id);

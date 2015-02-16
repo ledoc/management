@@ -22,13 +22,13 @@ public class TypeOuvrageServiceImpl implements TypeOuvrageService {
 	private Logger logger = Logger.getLogger(TypeOuvrageServiceImpl.class);
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
 	public TypeOuvrage findById(Integer id) throws ServiceException {
 		logger.info("--findById TypeOuvrageServiceImpl -- id : " + id);
 		return typeOuvrageDAO.findOne(id);
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public TypeOuvrage create(TypeOuvrage typeOuvrage) throws ServiceException {
 		logger.info("--create TypeOuvrageServiceImpl -- typeOuvrage : "
 				+ typeOuvrage);
@@ -36,6 +36,7 @@ public class TypeOuvrageServiceImpl implements TypeOuvrageService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public TypeOuvrage update(TypeOuvrage typeOuvrage) throws ServiceException {
 		logger.info("--update TypeOuvrageServiceImpl -- typeOuvrage : "
 				+ typeOuvrage);
@@ -43,6 +44,7 @@ public class TypeOuvrageServiceImpl implements TypeOuvrageService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--remove TypeOuvrageServiceImpl -- typeOuvrageId : " + id);
 		typeOuvrageDAO.delete(id);

@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,12 +39,12 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 	public Administrateur create(Administrateur administrateur)
 			throws ServiceException {
 		logger.info("--CREATE AdministrateurServiceImpl --");
-		
+
 		administrateur.setRole(Role.ADMIN);
 		administrateur = administrateurDAO.save(administrateur);
-		administrateur.setIdentifiant("ID-"+administrateur.getId());
+		administrateur.setIdentifiant("ID-" + administrateur.getId());
 		logger.debug("administrateur : " + administrateur);
-		
+
 		return administrateur;
 	}
 
@@ -57,14 +58,7 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Administrateur administrateur) throws ServiceException {
-		logger.info("--DELETE AdministrateurServiceImpl --");
-		logger.debug("administrateur : " + administrateur);
-		administrateurDAO.delete(administrateur);
-	}
-
-	@Override
+	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE AdministrateurServiceImpl --");
@@ -80,25 +74,26 @@ public class AdministrateurServiceImpl implements AdministrateurService {
 
 	@Override
 	public List<String> getAuditLog() throws ServiceException {
-	
+
 		ArrayList<String> logs = new ArrayList<String>();
 		Stream<String> lines = null;
 		try {
-			
-			lines = Files.lines(Paths.get(System.getProperty("rootPath"), "..", "..", "logs", "audit-msg.log"));
+
+			lines = Files.lines(Paths.get(System.getProperty("rootPath"), "..",
+					"..", "logs", "audit-msg.log"));
 			lines.forEach(s -> logs.add(s));
-			lines.close();	
+			lines.close();
 
 			// Reverse pour afficher les dernière actions en premier
 			Collections.reverse(logs);
-			 
+
 		} catch (IOException e) {
 			logger.error("Erreur read audit log " + e.getMessage());
 			throw new ServiceException(e.getMessage(), e);
 		}
-		
+
 		return logs;
-		
+
 	}
 
 	@Override

@@ -24,9 +24,6 @@ public interface EtablissementService {
 	
 	Etablissement findByIdWithJoinFetchSites(Integer id)
 			throws ServiceException;	
-	
-//	Etablissement findByIdWithJoinFetchClientsAndSites(Integer id)
-//			throws ServiceException;
 
 	List<Ouvrage> findAllOuvragesOfEtablissement(Integer id)
 			throws ServiceException;

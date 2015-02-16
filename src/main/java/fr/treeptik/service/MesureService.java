@@ -13,8 +13,6 @@ public interface MesureService {
 
 	Mesure update(Mesure mesure) throws ServiceException;
 
-	void remove(Mesure mesure) throws ServiceException;
-
 	List<Mesure> findAll() throws ServiceException;
 
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné

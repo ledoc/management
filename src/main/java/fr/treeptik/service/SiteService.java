@@ -13,9 +13,6 @@ public interface SiteService {
 				throws ServiceException;
 
 		Site update(Site site) throws ServiceException;
-		
-		void remove(Site site)
-				throws ServiceException;
 
 		List<Site> findAll() throws ServiceException;
 

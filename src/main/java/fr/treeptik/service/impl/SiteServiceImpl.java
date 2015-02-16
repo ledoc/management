@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,14 +46,7 @@ public class SiteServiceImpl implements SiteService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Site site) throws ServiceException {
-		logger.info("--DELETE SiteServiceImpl --");
-		logger.debug("site : " + site);
-		siteDAO.delete(site);
-	}
-
-	@Override
+	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE SiteServiceImpl Id --");

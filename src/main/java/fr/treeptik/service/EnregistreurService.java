@@ -14,9 +14,6 @@ public interface EnregistreurService {
 
 		Enregistreur update(Enregistreur enregistreur) throws ServiceException;
 		
-		void remove(Enregistreur enregistreur)
-				throws ServiceException;
-
 		List<Enregistreur> findAll() throws ServiceException;
 
 		Enregistreur findByMid(String mid) throws ServiceException;

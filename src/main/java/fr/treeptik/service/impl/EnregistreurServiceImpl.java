@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,20 +49,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	}
 
 	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--remove EnregistreurServiceImpl --");
-		logger.debug("enregistreur : " + enregistreur);
-		
-		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(enregistreur.getOuvrage().getId());
-		boolean success = ouvrage.getEnregistreurs().remove(enregistreur);
-		
-		logger.debug("remove enregistreur from ouvrage succes ? : " + success);
-		ouvrageService.update(ouvrage);
-		enregistreurDAO.delete(enregistreur);
-	}
-	
-	@Override
+	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE EnregistreurServiceImpl --enregistreurId : " + id);

@@ -14,9 +14,6 @@ public interface AdministrateurService {
 
 		Administrateur update(Administrateur administrateur) throws ServiceException;
 		
-		void remove(Administrateur administrateur)
-				throws ServiceException;
-
 		List<Administrateur> findAll() throws ServiceException;
 
 		void remove(Integer id) throws ServiceException;
