@@ -203,6 +203,12 @@
 			<version>2.5.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -220,9 +226,24 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+
+				<!-- Mail configuration -->
+				<mail.apiKey>h.fontbonne@treeptik.fr</mail.apiKey>
+				<mail.secretKey>placebo13</mail.secretKey>
+				<mail.emailFrom>h.fontbonne@treeptik.fr</mail.emailFrom>
+				<mail.smtpHost>smtp.gmail.com</mail.smtpHost>
+				<mail.socketFactoryPort>587</mail.socketFactoryPort>
+				<mail.smtpPort>587</mail.smtpPort>
+
+				<!-- String for mail -->
+				<mail.acquittement.url.prefix>http://localhost:8080/solices/alerte/acquittement</mail.acquittement.url.prefix>
+				<mail.subject.acquittement>Bienvenue sur CloudUnit</mail.subject.acquittement>
+
+				<!-- Database -->
 				<database.url>jdbc:mysql://localhost:3306/solices?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false</database.url>
 				<database.user>root</database.user>
 				<database.password>root</database.password>
+
 				<!-- Log4J configuration -->
 				<log.level.solices>debug</log.level.solices>
 				<log.level.other>warn</log.level.other>
@@ -233,6 +254,20 @@
 		<profile>
 			<id>CloudUnit</id>
 			<properties>
+
+				<!-- Mail configuration -->
+				<mail.apiKey>h.fontbonne@treeptik.fr</mail.apiKey>
+				<mail.secretKey>placebo13</mail.secretKey>
+				<mail.emailFrom>h.fontbonne@treeptik.fr</mail.emailFrom>
+				<mail.smtpHost>smtp.gmail.com</mail.smtpHost>
+				<mail.socketFactoryPort>587</mail.socketFactoryPort>
+				<mail.smtpPort>587</mail.smtpPort>
+
+				<!-- String for mail -->
+				<mail.acquittement.url.prefix>http://solices-solices-solices.eu4.cloudunit.io/alerte/acquittement</mail.acquittement.url.prefix>
+				<mail.subject.acquittement>Bienvenue sur CloudUnit</mail.subject.acquittement>
+
+				<!-- Database -->
 				<database.url>jdbc:mysql://solices-solices-mysql-5-5-1.mysql-5-5.cloud.unit/solices</database.url>
 				<database.user>admin9p87qnpb</database.user>
 				<database.password>esoqcves</database.password>
