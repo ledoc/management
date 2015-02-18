@@ -37,4 +37,20 @@ public class DeverywareController {
 		}
 		return response;
 	}
+	
+	// gps://ORANGE/+33781916177
+	@RequestMapping(method = RequestMethod.GET, value = "/wait/message")
+	public @ResponseBody String waitForMessage()
+			throws ControllerException {
+		logger.info("--waitForMessage DeverywareController--");
+		String response;
+		try {
+			response = deverywareService.waitForMessage();
+		} catch (NumberFormatException | ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return response;
+	}
+	
 }

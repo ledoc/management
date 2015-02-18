@@ -69,7 +69,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 			trameDW = this.transfertHistoryToTrameDW(trameDW,
 					hashMapHistoryXmlRpc);
 
-			 trameDW.setEnregistreur(enregistreur);
+			trameDW.setEnregistreur(enregistreur);
 
 			if (enregistreur.getTrameDWs() != null) {
 				enregistreur.getTrameDWs().add(trameDW);
@@ -78,9 +78,9 @@ public class DeverywareServiceImpl implements DeverywareService {
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
 			}
-			
-			
+
 			enregistreurService.update(enregistreur);
+			mesureService.conversionSignalElectrique_Valeur(trameDW);
 		}
 
 		return history.toString();
@@ -180,9 +180,10 @@ public class DeverywareServiceImpl implements DeverywareService {
 		}
 	}
 
-	public void waitForMessage() throws Exception {
+	public String waitForMessage() throws ServiceException {
 		logger.info("--waitForMessage DeverywareServiceImpl--");
 
+		
 		HashMap<String, Object> waitForMessage = xmlRPCUtils
 				.waitForMessage(sessionKey);
 
@@ -201,9 +202,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 			}
 			logger.debug("value : " + object3.getValue());
 		}
-		/**
-	 *
-	 */
+		return waitForMessage.toString();
 	}
 
 	public void waitForMessages() throws Exception {
