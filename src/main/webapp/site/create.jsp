@@ -45,7 +45,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'unSite</h1>
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un site</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							site.</p>
 					</header>
@@ -69,7 +69,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<label for="typesSiteCombo">Choisir un type de site</label>
+									<label for="typesSiteCombo">Choisir un type</label>
 									<form:select id="typesSiteCombo" name="typesSiteCombo"
 										path="typeSite" items="${typesSiteCombo}"
 										data-placeholder="Sélectionnez
@@ -134,10 +134,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-placeholder="Choisir un etablissement ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
-										path="etablissement.id">
+										path="etablissement.id" disabled="${readOnlyValue}">
 										<form:option value=""></form:option>
 										<form:options items="${etablissementsCombo}" itemValue="id"
-											itemLabel="codeEtablissement" disabled="${readOnlyValue }" />
+											itemLabel="codeEtablissement" />
 									</form:select>
 
 								</div>
@@ -145,7 +145,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 									<a href="<c:url  value="/site/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									<sec:authorize ifAllGranted="ADMIN">
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									</sec:authorize>
 								</div>
 							</div>
 
