@@ -30,7 +30,7 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public AlerteEmise create(AlerteEmise alerteEmise) throws ServiceException {
-		logger.info("--CREATE AlerteServiceImpl --");
+		logger.info("--create AlerteEmiseServiceImpl --");
 		logger.debug("alerte : " + alerteEmise);
 		return alerteEmiseDAO.save(alerteEmise);
 	}
@@ -38,8 +38,7 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public AlerteEmise update(AlerteEmise alerteEmise) throws ServiceException {
-		logger.info("--UPDATE AlerteServiceImpl --");
-		logger.debug("alerte : " + alerteEmise);
+		logger.info("--update AlerteEmiseServiceImpl -- alerteEmise : " + alerteEmise);
 		return alerteEmiseDAO.saveAndFlush(alerteEmise);
 	}
 
@@ -47,22 +46,31 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--remove AlerteServiceImpl -- alerteId : " + id);
+		logger.info("--remove AlerteEmiseServiceImpl -- alerteId : " + id);
 		alerteEmiseDAO.delete(id);
 	}
 
 	@Override
 	public List<AlerteEmise> findAll() throws ServiceException {
-		logger.info("--FINDALL AlerteServiceImpl --");
+		logger.info("--findAll AlerteEmiseServiceImpl --");
 		return alerteEmiseDAO.findAll();
 	}
 
 	@Override
 	public List<AlerteEmise> findAllByClientLogin(String userLogin)
 			throws ServiceException {
-		logger.info("--findByClient userLogin AlerteServiceImpl -- userLogin : "
+		logger.info("--findAllByClientLogin AlerteServiceImpl -- userLogin : "
 				+ userLogin);
 
 		return alerteEmiseDAO.findAllByClientLogin(userLogin);
+	}
+
+	@Override
+	public void acquittementAlerte(Integer id) throws ServiceException {
+		logger.info("--acquittementAlerte AlerteServiceImpl -- alerteEmiseId : "
+				+ id);
+		AlerteEmise alerteEmise = this.findById(id);
+		alerteEmise.setAcquittement(true);
+		this.update(alerteEmise);
 	}
 }

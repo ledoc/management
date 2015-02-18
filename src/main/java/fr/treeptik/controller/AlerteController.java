@@ -41,6 +41,73 @@ public class AlerteController {
 	@Inject
 	private EnregistreurService enregistreurService;
 
+	@RequestMapping(method = RequestMethod.GET, value = "/acquittement/{id}")
+	public String receiveEmail(Model model, HttpServletRequest request,
+			@PathVariable("id") Integer id) throws ControllerException {
+		logger.info("--receiveEmail AlerteController--");
+
+		List<AlerteDescription> alerteDescriptions = null;
+		List<AlerteEmise> historiqueAlertes = null;
+		List<Enregistreur> enregistreursCombo = null;
+
+		List<TypeAlerte> typesAlerteCombo = new ArrayList<TypeAlerte>(
+				Arrays.asList(TypeAlerte.values()));
+
+		List<TendanceAlerte> tendancesAlerteCombo = new ArrayList<TendanceAlerte>(
+				Arrays.asList(TendanceAlerte.values()));
+
+		Long alertesActives = null;
+		Long alertesTotales = null;
+		
+		String messageSuccess = "<p class=\"text-success\">Votre Alerte a bien été acquittée.</p>";
+
+		// Boolean isAdmin = request.isUserInRole("ADMIN");
+		// logger.debug("USER ROLE ADMIN : " + isAdmin);
+		// if (isAdmin) {
+
+		try {
+
+			alerteEmiseService.acquittementAlerte(id);
+
+			alerteDescriptions = alerteDescriptionService.findAll();
+			historiqueAlertes = alerteEmiseService.findAll();
+			alertesTotales = alerteDescriptionService.countAll();
+			alertesActives = alerteDescriptionService.countAllActives();
+			enregistreursCombo = enregistreurService.findAll();
+			// } else {
+			// String userLogin = SecurityContextHolder.getContext()
+			// .getAuthentication().getName();
+			// logger.debug("USER LOGIN : " + userLogin);
+			//
+			// alerteDescriptions = alerteDescriptionService
+			// .findAllByClientLogin(userLogin);
+			// historiqueAlertes = alerteEmiseService
+			// .findAllByClientLogin(userLogin);
+			//
+			// alertesTotales = alerteDescriptionService
+			// .countAllByClientLogin(userLogin);
+			// alertesActives = alerteDescriptionService
+			// .countAllActivesByClientLogin(userLogin);
+			//
+			// }
+
+		} catch (NumberFormatException | ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		model.addAttribute("messageSuccess", messageSuccess);
+		model.addAttribute("historiqueAlertes", historiqueAlertes);
+		model.addAttribute("alertesTotales", alertesTotales);
+		model.addAttribute("alertesActives", alertesActives);
+		model.addAttribute("alertes", alerteDescriptions);
+		model.addAttribute("alerte", new AlerteDescription());
+		model.addAttribute("enregistreursCombo", enregistreursCombo);
+		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
+		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
+
+		return "redirect:/alerte/list";
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/description/create")
 	public String initForm(Model model) throws ControllerException {
 		logger.info("--initForm AlerteController--");
