@@ -20,19 +20,22 @@ import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
+import fr.treeptik.util.CheckAlerte;
 
 @Service
 public class MesureServiceImpl implements MesureService {
 
 	@Inject
 	private MesureDAO mesureDAO;
-	
+
+	@Inject
+	private CheckAlerte checkAlerte;
+
 	@Inject
 	private TrameDWService trameDWService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
-	
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
 	// (en mètre)
 	// - intensite : valeur brute transmise par le capteur à un instant t (mA)
@@ -45,7 +48,8 @@ public class MesureServiceImpl implements MesureService {
 	 * 
 	 */
 	@Override
-	public TrameDW conversionSignalElectrique_Valeur(TrameDW trameDW) throws ServiceException {
+	public TrameDW conversionSignalElectrique_Valeur(TrameDW trameDW)
+			throws ServiceException {
 		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
 
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
@@ -57,20 +61,33 @@ public class MesureServiceImpl implements MesureService {
 		Float signalBrut = trameDW.getSignalBrut();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
-		Float valeuCapteurPleineEchelle = enregistreur.getEchelleCapteur();
+		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
 
 		if (enregistreur.getTypeEnregistreur().equals(
 				TypeEnregistreur.ANALOGIQUE)) {
 			valeur = ((((temperature - 25) * coeffTemperature) / 100) + 1)
-					* (valeuCapteurPleineEchelle / 16) * (signalBrut - 4);
+					* (valeurCapteurPleineEchelle / 16) * (signalBrut - 4);
 		} else {
 			valeur = ((((temperature - 25) * coeffTemperature) / 100) + 1)
 					* signalBrut;
 		}
 		trameDW.setValeur(valeur);
-		
+
 		trameDWService.update(trameDW);
+
+		/**
+		 * TODO Voir à déporter sa pour être générique
+		 */
+		Mesure mesure = new Mesure();
+		mesure.setDate(new Date());
+		mesure.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure.setEnregistreur(enregistreur);
+		mesure.setValeur(valeur);
 		
+		this.create(mesure);
+		
+		checkAlerte.checkAlerte(enregistreur, mesure);
+
 		return trameDW;
 	}
 
@@ -78,7 +95,8 @@ public class MesureServiceImpl implements MesureService {
 	// Nm0 : mesure manuelle initiale
 	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
 	@Override
-	public float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW) throws ServiceException {
+	public float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW)
+			throws ServiceException {
 		logger.info("--conversionHauteurEau_CoteAltimetrique mesure --");
 
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
@@ -88,38 +106,29 @@ public class MesureServiceImpl implements MesureService {
 		Enregistreur enregistreur = trameDW.getEnregistreur();
 		float hauteurEau = trameDW.getValeur();
 		derniereHauteurEau = enregistreur.getDerniereTrameDW().getValeur();
-		
-		if(enregistreur.getDerniereMesure().getValeur() != null ){
+
+		if (enregistreur.getDerniereMesure().getValeur() != null) {
 			dernierNiveauEau = enregistreur.getDerniereMesure().getValeur();
-			
-		}else {
+
+		} else {
 			dernierNiveauEau = enregistreur.getNiveauManuel().getValeur();
 		}
-		
-		niveauEau = dernierNiveauEau
-				+ (hauteurEau - derniereHauteurEau);
-		
+
+		niveauEau = dernierNiveauEau + (hauteurEau - derniereHauteurEau);
+
 		Mesure mesure = new Mesure();
 		mesure.setDate(new Date());
 		mesure.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure.setEnregistreur(enregistreur);
 		mesure.setValeur(niveauEau);
-		
+
 		enregistreur.getMesures().add(mesure);
-		
-		//enregistreurService
-		
-		
+
+		// enregistreurService
+
 		return niveauEau;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@Override
 	public Mesure findById(Integer id) throws ServiceException {
 		Mesure mesure = new Mesure();
@@ -148,9 +157,9 @@ public class MesureServiceImpl implements MesureService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE MesureService -- mesureId : " + id);
-		
+
 		Mesure mesure = this.findById(id);
-		
+
 		logger.debug("--DELETE MesureService -- : " + mesure);
 		mesureDAO.delete(mesure);
 	}

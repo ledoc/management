@@ -71,11 +71,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="typesSiteCombo">Choisir un type</label>
 									<form:select id="typesSiteCombo" name="typesSiteCombo"
-										path="typeSite" items="${typesSiteCombo}"
-										data-placeholder="Sélectionnez
-							un type"
-										class="form-control" data-parsley-required="true"
+										path="typeSite" class="form-control"
+										data-parsley-required="true"
+										data-parsley-required-message="Choix requis"
 										disabled="${readOnlyValue }">
+										<form:option value="" label="--- Choisir un type ---" />
+										<form:options items="${typesSiteCombo}" />
 									</form:select>
 								</div>
 								<div class="form-group">

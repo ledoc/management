@@ -44,8 +44,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										value="acquittement" readonly="readonly" />
 								</div>
 								<div class="form-group">
+								<fmt:formatDate var="formatDate" value="${alerte.date}"
+													pattern="dd-MM-yyyy HH:mm:ss" />
 									<label for="date">Date</label> <input type="text"
-										class="form-control" id="date" value="dateAlerteEmise"
+										class="form-control" id="date" value="${formatDate }"
 										readonly="readonly" />
 								</div>
 								<div class="form-group">
@@ -65,10 +67,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="ouvrage">Ouvrage</label>
-									<form:input type="text" class="form-control" id=""
-										ouvrage""
-										path="enregistreur.ouvrage.codeOuvrage"
-										readonly="readonly" />
+									<form:input type="text" class="form-control" id="ouvrage"
+										path="enregistreur.ouvrage.codeOuvrage" readonly="readonly" />
 								</div>
 								<div class="form-group">
 									<label for="typeAlerte">Type</label>
