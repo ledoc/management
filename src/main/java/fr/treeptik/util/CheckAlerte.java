@@ -8,78 +8,76 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Component;
 
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Alerte;
+import fr.treeptik.model.AlerteDescription;
+import fr.treeptik.model.AlerteEmise;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.NiveauAlerte;
-import fr.treeptik.service.AlerteService;
+import fr.treeptik.service.AlerteDescriptionService;
+import fr.treeptik.service.AlerteEmiseService;
 
 @Component
 public class CheckAlerte {
 
 	@Inject
-	private AlerteService alerteService;
+	private AlerteDescriptionService alerteDescriptionService;
+	@Inject
+	private AlerteEmiseService alerteEmiseService;
 
 	public void checkAlerte(Enregistreur enregistreur, Mesure mesure)
 			throws ServiceException {
-		List<Alerte> alertesActives = alerteService
+		List<AlerteDescription> alertesActives = alerteDescriptionService
 				.findAlertesActivesByEnregistreurId(enregistreur.getId());
 
-		for (Alerte alerte : alertesActives) {
-			switch (alerte.getTendance().getDescription()) {
+		for (AlerteDescription alerteActive : alertesActives) {
+			switch (alerteActive.getTendance().getDescription()) {
 
 			case "inférieur à":
-				if (mesure.getValeur() < alerte.getSeuilPreAlerte()) {
-					alerte.setId(null);
-					alerte.setMesureLevantAlerte(mesure);
-					alerte.setEmise(true);
-					alerte.setDate(new Date());
-					alerte.setEnregistreur(enregistreur);
-					
-					if (mesure.getValeur() < alerte.getSeuilAlerte()) {
-						alerte.setNiveauAlerte(NiveauAlerte.ALERTE);
+				if (mesure.getValeur() < alerteActive.getSeuilPreAlerte()) {
+					AlerteEmise alerteEmise = new AlerteEmise();
+					alerteEmise.setMesureLevantAlerte(mesure);
+					alerteEmise.setDate(new Date());
+					alerteEmise.setEnregistreur(enregistreur);
+
+					if (mesure.getValeur() < alerteActive.getSeuilAlerte()) {
+						alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
 					} else {
-						alerte.setNiveauAlerte(NiveauAlerte.PREALERTE);
+						alerteEmise.setNiveauAlerte(NiveauAlerte.PREALERTE);
 					}
-					alerteService.create(alerte);
+					alerteEmiseService.create(alerteEmise);
 				}
 				break;
 			case "supérieur à":
-				if (mesure.getValeur() > alerte.getSeuilPreAlerte()) {
-					alerte.setId(null);
-					alerte.setMesureLevantAlerte(mesure);
-					alerte.setEmise(true);
-					alerte.setDate(new Date());
-					alerte.setEnregistreur(enregistreur);
-					
-					if (mesure.getValeur() > alerte.getSeuilAlerte()) {
-						alerte.setNiveauAlerte(NiveauAlerte.ALERTE);
+				if (mesure.getValeur() > alerteActive.getSeuilPreAlerte()) {
+					AlerteEmise alerteEmise = new AlerteEmise();
+					alerteEmise.setMesureLevantAlerte(mesure);
+					alerteEmise.setDate(new Date());
+					alerteEmise.setEnregistreur(enregistreur);
+
+					if (mesure.getValeur() > alerteActive.getSeuilAlerte()) {
+						alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
 					} else {
-						alerte.setNiveauAlerte(NiveauAlerte.PREALERTE);
+						alerteEmise.setNiveauAlerte(NiveauAlerte.PREALERTE);
 					}
-					alerteService.create(alerte);
+					alerteEmiseService.create(alerteEmise);
 				}
 				break;
 			case "égal à":
-				if (mesure.getValeur() == alerte.getSeuilAlerte()) {
-
-					alerte.setId(null);
-					alerte.setMesureLevantAlerte(mesure);
-					alerte.setEmise(true);
-					alerte.setDate(new Date());
-					alerte.setEnregistreur(enregistreur);
-					alerteService.create(alerte);
+				if (mesure.getValeur() == alerteActive.getSeuilAlerte()) {
+					AlerteEmise alerteEmise = new AlerteEmise();
+					alerteEmise.setMesureLevantAlerte(mesure);
+					alerteEmise.setDate(new Date());
+					alerteEmise.setEnregistreur(enregistreur);
+					alerteEmiseService.create(alerteEmise);
 				}
 				break;
 			case "différent de":
-				if (mesure.getValeur() != alerte.getSeuilAlerte()) {
-					
-					alerte.setId(null);
-					alerte.setMesureLevantAlerte(mesure);
-					alerte.setEmise(true);
-					alerte.setDate(new Date());
-					alerte.setEnregistreur(enregistreur);
-					alerteService.create(alerte);
+				if (mesure.getValeur() != alerteActive.getSeuilAlerte()) {
+					AlerteEmise alerteEmise = new AlerteEmise();
+					alerteEmise.setMesureLevantAlerte(mesure);
+					alerteEmise.setDate(new Date());
+					alerteEmise.setEnregistreur(enregistreur);
+					alerteEmiseService.create(alerteEmise);
 				}
 				break;
 

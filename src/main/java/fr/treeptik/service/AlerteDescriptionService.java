@@ -3,37 +3,33 @@ package fr.treeptik.service;
 import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Alerte;
+import fr.treeptik.model.AlerteDescription;
 
-public interface AlerteService {
+public interface AlerteDescriptionService {
 
-	Alerte findById(Integer id) throws ServiceException;
+	AlerteDescription findById(Integer id) throws ServiceException;
 
-	Alerte create(Alerte alerte) throws ServiceException;
+	AlerteDescription create(AlerteDescription alerteDescription) throws ServiceException;
 
-	Alerte update(Alerte alerte) throws ServiceException;
+	AlerteDescription update(AlerteDescription alerteDescription) throws ServiceException;
 
-	List<Alerte> findAll() throws ServiceException;
+	List<AlerteDescription> findAll() throws ServiceException;
 
 	void remove(Integer id) throws ServiceException;
 
-	List<Alerte> findByClientLogin(String userLogin) throws ServiceException;
-	
-	Long countAlertesActives() throws ServiceException;
-
-	Long countAllAlertesByClientLogin(String userLogin) throws ServiceException;
-
-	Long countAlertesActivesByClientLogin(String userLogin)
+	List<AlerteDescription> findAllByClientLogin(String userLogin)
 			throws ServiceException;
 
-	List<Alerte> findAlertesActivesByEnregistreurId(Integer enregistreurId)
+	Long countAll() throws ServiceException;
+
+	Long countAllActives() throws ServiceException;
+
+	Long countAllByClientLogin(String userLogin) throws ServiceException;
+
+	Long countAllActivesByClientLogin(String userLogin)
 			throws ServiceException;
 
-	Long countAllAlertes() throws ServiceException;
-
-	List<Alerte> findAllAlertesEmises() throws ServiceException;
-
-	List<Alerte> findAlertesEmisesByClientLogin(String userLogin)
-			throws ServiceException;
+	List<AlerteDescription> findAlertesActivesByEnregistreurId(
+			Integer enregistreurId) throws ServiceException;
 
 }

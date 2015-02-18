@@ -49,7 +49,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							${alertesTotales}</p>
 						<div class="pull-right mb15">
 							<sec:authorize ifAllGranted="ADMIN">
-								<a data-url="<c:url  value="/alerte/create" />"
+								<a data-url="<c:url  value="/alerte/description/create" />"
 									data-toggle="modal" data-target="#creationModal"
 									class="btn btn-outline btn-primary btn-m">Créer un alerte</a>
 							</sec:authorize>
@@ -65,12 +65,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<thead>
 									<tr>
 										<th>Code</th>
-										<th>Enregistreur</th>
 										<th>Activation</th>
+										<th>Ouvrage</th>
+										<th>Enregistreur</th>
 										<th>Type</th>
-										<th>Tendance</th>
-										<th>Seuil pré-alerte</th>
-										<th>Seuil alerte</th>
 										<th>Email d'envoi</th>
 										<sec:authorize ifAllGranted="ADMIN">
 											<th class="nosort nosearch">Actions</th>
@@ -79,27 +77,27 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</thead>
 								<tbody>
 									<c:forEach items="${alertes}" var="alerte">
-										<c:url var="urlAlerteDelete"
-											value="/alerte/delete/${alerte.id}" />
-										<c:url var="urlAlerteUpdate"
-											value="/alerte/update/${alerte.id}" />
+										<c:url var="urlAlerteDescriptionDelete"
+											value="/alerte/description/delete/${alerte.id}" />
+										<c:url var="urlAlerteDescriptionUpdate"
+											value="/alerte/description/update/${alerte.id}" />
 										<tr>
-											<td class="text-primary"><a href="${urlAlerteUpdate}">${alerte.codeAlerte}</a></td>
-											<td><c:out value="${alerte.enregistreur.mid}" /></td>
+											<td class="text-primary"><a
+												href="${urlAlerteDescriptionUpdate}">${alerte.codeAlerte}</a></td>
 											<c:set var="activation" value="${alerte.activation}" />
 											<c:if test="${ activation == false }">
-												<td><c:out value="non" /></td>
+												<td class="text-danger"><c:out value="non" /></td>
 											</c:if>
 											<c:if test="${ activation == true }">
-												<td><c:out value="oui" /></td>
+												<td class="text-success"><b><c:out value="oui" /></b></td>
 											</c:if>
+											<td><c:out
+													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
+											<td><c:out value="${alerte.enregistreur.mid}" /></td>
 											<td><c:out value="${alerte.typeAlerte.description}" /></td>
-											<td><c:out value="${alerte.tendance.description}" /></td>
-											<td><c:out value="${alerte.seuilPreAlerte}" /></td>
-											<td><c:out value="${alerte.seuilAlerte}" /></td>
 											<td><c:out value="${alerte.emailDEnvoi}" /></td>
 											<sec:authorize ifAllGranted="ADMIN">
-												<td><a data-url="${urlAlerteDelete}"
+												<td><a data-url="${urlAlerteDescriptionDelete}"
 													data-toggle="modal" data-target="#confirmModal"
 													class="btn btn-outline btn-danger btn-xs js-confirm-btn">
 														<i class="fa fa-remove"></i>
@@ -116,8 +114,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</section>
 			</div>
 			<c:if test="${empty historiqueAlertes }">
-
-				<H2>&nbspPas d'historique</H2>
+			<div class="col-lg-12 col-md-12 col-xs-12">
+				<div class="panel-body">
+				<section class="panel">
+					<H2>Pas d'historique</H2>
+					</section>
+				</div>
+				</div>
 			</c:if>
 			<c:if test="${not empty historiqueAlertes }">
 				<div class="col-lg-12 col-md-12 col-xs-12">
@@ -132,6 +135,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<tr>
 										<th>Date</th>
 										<th>Code</th>
+										<th>Ouvrage</th>
 										<th>Enregistreur</th>
 										<th>Type</th>
 										<th>Seuil pré-alerte</th>
@@ -142,21 +146,28 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</thead>
 								<tbody>
 									<c:forEach items="${historiqueAlertes}" var="alerte">
+										<c:url var="urlAlerteEmiseUpdate"
+											value="/alerte/emise/update/${alerte.id}" />
 										<tr>
 											<td><fmt:formatDate value="${alerte.date}"
 													pattern="dd-MM-yyyy hh:mm:ss" /></td>
+											<td><a href="${urlAlerteEmiseUpdate}">${alerte.codeAlerte}</a>
+											</td>
+											<td><c:out
+													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
 											<td><c:out value="${alerte.enregistreur.mid}" /></td>
 											<td><c:out value="${alerte.typeAlerte.description}" /></td>
 											<td><c:out value="${alerte.seuilPreAlerte}" /></td>
 											<td><c:out value="${alerte.seuilAlerte}" /></td>
 											<td><c:out value="${alerte.mesureLevantAlerte}" /></td>
+											<c:set var="acquittement" value="${alerte.acquittement}" />
 											<c:if test="${ acquittement == false }">
-												<td><output style="color: green">ALERTE </output></td>
+												<td class="text-danger"><c:out value="ALERTE" /></td>
 											</c:if>
 											<c:if test="${ acquittement == true }">
-												<td><output style="color: red">acquittée</output></td>
+												<td class="text-success"><b><c:out
+															value="acquittée" /></b></td>
 											</c:if>
-										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
@@ -180,10 +191,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						</div>
 						<div class="modal-body">
 							<div class="panel-body">
-								<c:url var="createAlerte" value="/alerte/create" />
-								<form:form id="form" method="POST" action="${createAlerte}"
-									modelAttribute="alerte" role="form" class="parsley-form"
-									data-validate="parsley" data-show-errors="true">
+								<c:url var="createAlerteDescription"
+									value="/alerte/description/create" />
+								<form:form id="form" method="POST"
+									action="${createAlerteDescription}" modelAttribute="alerte"
+									role="form" class="parsley-form" data-validate="parsley"
+									data-show-errors="true">
 
 									<form:hidden path="id" />
 
@@ -246,12 +259,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										</div>
 									</div>
 									<div class="col-md-6">
-										<div class="form-group">
+										<div class="form-group preAlerte">
 											<label for="seuilPreAlerte">Seuil pré-alerte</label>
 											<form:input type="text" class="form-control"
 												id="seuilPreAlerte" path="seuilPreAlerte" placeholder=""
-												data-parsley-trigger="change" data-parsley-required="true"
-												data-parsley-required-message="Champ requis" step="any"
+												data-parsley-trigger="change" step="any"
 												data-parsley-type="number"
 												data-parsley-type-message="valeur numérique"
 												data-parsley-mincheck="2"
@@ -330,6 +342,29 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 		<!-- script pour passer l'URL de suppression d'une entité à la modal -->
 		<script type="text/javascript">
+			$('#tendance').change(
+
+			function() {
+				preAlerteNeedOrNot();
+			})
+
+			function preAlerteNeedOrNot() {
+
+				if ($('#tendance :selected').val() == 'EGAL'
+						|| $('#tendance :selected').val() == 'DIFFERENT_DE') {
+					console.log('nappe  ' + $('#tendance').value)
+
+					$('.preAlerte').attr('style', 'display: none;');
+					$('.preAlerte').attr('disabled', true);
+					$('.preAlerte').hide();
+				} else {
+					$('.preAlerte').attr('style', 'display: block;');
+					$('.preAlerte').attr('disabled', false);
+					$('.preAlerte').show();
+				}
+
+			}
+
 			$('#confirmModal').modal();
 			$('#confirmModal').on('show.bs.modal', function(e) {
 				var url = $(e.relatedTarget).data('url');

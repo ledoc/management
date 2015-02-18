@@ -1,6 +1,7 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,17 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @SuppressWarnings("serial")
 @Entity
-public class AlerteDescription implements Serializable {
+public class AlerteEmise implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
 	private String codeAlerte;
-	private Boolean activation;
 	private String intitule;
 	@Enumerated(EnumType.STRING)
 	private TypeAlerte typeAlerte;
@@ -28,6 +29,12 @@ public class AlerteDescription implements Serializable {
 	private Float seuilPreAlerte;
 	private Float seuilAlerte;
 	private String emailDEnvoi;
+	@OneToOne
+	private Mesure mesureLevantAlerte;
+	@Enumerated(EnumType.STRING)
+	private NiveauAlerte niveauAlerte;
+	private Date date;
+	private Boolean acquittement;
 
 	@ManyToOne
 	private Enregistreur enregistreur;
@@ -48,20 +55,30 @@ public class AlerteDescription implements Serializable {
 		this.codeAlerte = code;
 	}
 
-	public Boolean getActivation() {
-		return activation;
-	}
-
-	public void setActivation(Boolean activation) {
-		this.activation = activation;
-	}
-
 	public String getIntitule() {
 		return intitule;
 	}
 
 	public void setIntitule(String intitule) {
 		this.intitule = intitule;
+	}
+
+	public Mesure getMesureLevantAlerte() {
+		return mesureLevantAlerte;
+	}
+
+	public void setMesureLevantAlerte(Mesure mesureLevantAlerte) {
+		this.mesureLevantAlerte = mesureLevantAlerte;
+	}
+
+	
+	
+	public NiveauAlerte getNiveauAlerte() {
+		return niveauAlerte;
+	}
+
+	public void setNiveauAlerte(NiveauAlerte niveauAlerte) {
+		this.niveauAlerte = niveauAlerte;
 	}
 
 	public TypeAlerte getTypeAlerte() {
@@ -112,4 +129,20 @@ public class AlerteDescription implements Serializable {
 		this.enregistreur = enregistreur;
 	}
 
+	public Boolean getAcquittement() {
+		return acquittement;
+	}
+
+	public void setAcquittement(Boolean acquittement) {
+		this.acquittement = acquittement;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
 }

@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Alerte;
+import fr.treeptik.model.AlerteDescription;
+import fr.treeptik.model.AlerteEmise;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TendanceAlerte;
 import fr.treeptik.model.TypeAlerte;
-import fr.treeptik.service.AlerteService;
+import fr.treeptik.service.AlerteDescriptionService;
+import fr.treeptik.service.AlerteEmiseService;
 import fr.treeptik.service.EnregistreurService;
 
 @Controller
@@ -33,11 +35,13 @@ public class AlerteController {
 	private Logger logger = Logger.getLogger(AlerteController.class);
 
 	@Inject
-	private AlerteService alerteService;
+	private AlerteDescriptionService alerteDescriptionService;
+	@Inject
+	private AlerteEmiseService alerteEmiseService;
 	@Inject
 	private EnregistreurService enregistreurService;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/create")
+	@RequestMapping(method = RequestMethod.GET, value = "/description/create")
 	public String initForm(Model model) throws ControllerException {
 		logger.info("--initForm AlerteController--");
 
@@ -57,20 +61,19 @@ public class AlerteController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		model.addAttribute("alerte", new Alerte());
+		model.addAttribute("alerte", new AlerteDescription());
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
 		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
 		return "/alerte/create";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Alerte alerte, Model model,
-			BindingResult result) throws ControllerException {
-		logger.info("--create AlerteController-- alerte : " + alerte);
+	@RequestMapping(value = "/description/create", method = RequestMethod.POST)
+	public String create(@ModelAttribute AlerteDescription alerteDescription,
+			Model model, BindingResult result) throws ControllerException {
+		logger.info("--create AlerteController-- alerte : " + alerteDescription);
 		try {
-			alerte.setEmise(false);
-			alerteService.create(alerte);
+			alerteDescriptionService.create(alerteDescription);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -81,7 +84,7 @@ public class AlerteController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
+	@RequestMapping(method = RequestMethod.GET, value = "/description/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
 		logger.info("--update AlerteController-- alerteId : " + id);
@@ -92,9 +95,9 @@ public class AlerteController {
 
 		List<TendanceAlerte> tendancesAlerteCombo = new ArrayList<TendanceAlerte>(
 				Arrays.asList(TendanceAlerte.values()));
-		Alerte alerte = null;
+		AlerteDescription alerteDescription = null;
 		try {
-			alerte = alerteService.findById(id);
+			alerteDescription = alerteDescriptionService.findById(id);
 			enregistreursCombo = enregistreurService.findAll();
 
 		} catch (NumberFormatException | ServiceException e) {
@@ -102,20 +105,38 @@ public class AlerteController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		model.addAttribute("alerte", alerte);
+		model.addAttribute("alerte", alerteDescription);
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
 		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
 		return "/alerte/create";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
+	@RequestMapping(method = RequestMethod.GET, value = "/emise/view/{id}")
+	public String viewAlerteEmise(Model model, @PathVariable("id") Integer id)
+			throws ControllerException {
+		logger.info("--update AlerteController-- alerteId : " + id);
+
+		AlerteEmise alerteEmise = null;
+		try {
+			alerteEmise = alerteEmiseService.findById(id);
+
+		} catch (NumberFormatException | ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+
+		model.addAttribute("alerte", alerteEmise);
+		return "/alerte/view-emise";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/description/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
 		logger.info("--delete AlerteController-- alerteId : " + id);
 
 		try {
-			alerteService.remove(id);
+			alerteDescriptionService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -128,8 +149,8 @@ public class AlerteController {
 			throws ControllerException {
 		logger.info("--list AlerteController--");
 
-		List<Alerte> alertes = null;
-		List<Alerte> historiqueAlertes = null;
+		List<AlerteDescription> alerteDescriptions = null;
+		List<AlerteEmise> historiqueAlertes = null;
 		List<Enregistreur> enregistreursCombo;
 		List<TypeAlerte> typesAlerteCombo = new ArrayList<TypeAlerte>(
 				Arrays.asList(TypeAlerte.values()));
@@ -145,26 +166,29 @@ public class AlerteController {
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
 			if (isAdmin) {
-				
-				alertes = alerteService.findAll();
-				historiqueAlertes = alerteService.findAllAlertesEmises();
-				alertesTotales = alerteService.countAllAlertes();
-				alertesActives = alerteService.countAlertesActives();
+
+				alerteDescriptions = alerteDescriptionService.findAll();
+				historiqueAlertes = alerteEmiseService.findAll();
+				alertesTotales = alerteDescriptionService.countAll();
+				alertesActives = alerteDescriptionService.countAllActives();
 			} else {
 				String userLogin = SecurityContextHolder.getContext()
 						.getAuthentication().getName();
 				logger.debug("USER LOGIN : " + userLogin);
-				
-				alertes = alerteService.findByClientLogin(userLogin);
-				historiqueAlertes = alerteService.findAlertesEmisesByClientLogin(userLogin);
-				alertesTotales = alerteService
-						.countAllAlertesByClientLogin(userLogin);
-				alertesActives = alerteService
-						.countAlertesActivesByClientLogin(userLogin);
+
+				alerteDescriptions = alerteDescriptionService
+						.findAllByClientLogin(userLogin);
+				historiqueAlertes = alerteEmiseService
+						.findAllByClientLogin(userLogin);
+
+				alertesTotales = alerteDescriptionService
+						.countAllByClientLogin(userLogin);
+				alertesActives = alerteDescriptionService
+						.countAllActivesByClientLogin(userLogin);
 
 			}
 
-			alertes = alerteService.findAll();
+			alerteDescriptions = alerteDescriptionService.findAll();
 			enregistreursCombo = enregistreurService.findAll();
 
 		} catch (NumberFormatException | ServiceException e) {
@@ -175,8 +199,8 @@ public class AlerteController {
 		model.addAttribute("historiqueAlertes", historiqueAlertes);
 		model.addAttribute("alertesTotales", alertesTotales);
 		model.addAttribute("alertesActives", alertesActives);
-		model.addAttribute("alertes", alertes);
-		model.addAttribute("alerte", new Alerte());
+		model.addAttribute("alertes", alerteDescriptions);
+		model.addAttribute("alerte", new AlerteDescription());
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
 		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);

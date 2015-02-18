@@ -21,11 +21,11 @@ import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Alerte;
+import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TendanceAlerte;
 import fr.treeptik.model.TrameDW;
-import fr.treeptik.service.AlerteService;
+import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.util.XMLRPCUtils;
 
@@ -41,9 +41,9 @@ public class EnregistreurCRUDTest {
 	@Inject
 	private XMLRPCUtils xmlRPCUtils;
 	@Inject
-	private AlerteService alerteService;
+	private AlerteDescriptionService alerteDescriptionService;
 
-	private Alerte alerte;
+	private AlerteDescription alerteDescription;
 
 	private static final String MID = "gps://ORANGE/+33781916177";
 
@@ -59,18 +59,18 @@ public class EnregistreurCRUDTest {
 		String type = "Niveau haut";
 		float valeurCritique = 4.6F;
 
-		alerte = new Alerte();
+		alerteDescription = new AlerteDescription();
 
-		alerte.setActivation(activation);
-		alerte.setEmailDEnvoi(emailOrSMSDEnvoi);
-		alerte.setCodeAlerte(code);
-		alerte.setIntitule(intitule);
-		alerte.setLienAPIDW(lienAPIDW);
-		alerte.setModeEnvoi(modeEnvoi);
-		alerte.setTendance(tendance);
-		alerte.setTypeAlerte(type);
-		alerte.setValeurCritique(valeurCritique);
-		alerteService.create(alerte);
+		alerteDescription.setActivation(activation);
+		alerteDescription.setEmailDEnvoi(emailOrSMSDEnvoi);
+		alerteDescription.setCodeAlerte(code);
+		alerteDescription.setIntitule(intitule);
+//		alerte.setLienAPIDW(lienAPIDW);
+//		alerte.setModeEnvoi(modeEnvoi);
+		alerteDescription.setTendance(tendance);
+//		alerte.setTypeAlerte(type);
+		alerteDescription.setSeuilAlerte(valeurCritique);
+		alerteDescriptionService.create(alerteDescription);
 	}
 
 	// @Test
@@ -116,7 +116,7 @@ public class EnregistreurCRUDTest {
 		String panneauSolaire = "solar";
 		String sonde = "amadeus";
 		String croquis = "mycroquis.jpeg";
-		List<Alerte> alertesActives = null;
+		List<AlerteDescription> alertesActives = null;
 
 		String mid2 = "gps://BOUYGUES/+33781916177";
 		Boolean maintenance2 = false;
@@ -153,7 +153,7 @@ public class EnregistreurCRUDTest {
 
 		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 
-		enregistreur2.getAlertes().add(alerte);
+		enregistreur2.getAlertes().add(alerteDescription);
 		enregistreur2.setBatterie(batterie2);
 		enregistreur2.setCroquis(croquis2);
 		enregistreur2.setMaintenance(maintenance2);
