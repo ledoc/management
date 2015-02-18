@@ -47,6 +47,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des alertes</h1>
 						<p class="text-muted">Alertes actives : ${alertesActives} /
 							${alertesTotales}</p>
+						<div>${messageSuccess}</div>
 						<div class="pull-right mb15">
 							<sec:authorize ifAllGranted="ADMIN">
 								<a data-url="<c:url  value="/alerte/description/create" />"
@@ -82,7 +83,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlAlerteDescriptionUpdate"
 											value="/alerte/description/update/${alerte.id}" />
 										<tr>
-											<td class="text-primary"><a
+											<td class="text-primary" ><a
 												href="${urlAlerteDescriptionUpdate}">${alerte.codeAlerte}</a></td>
 											<c:set var="activation" value="${alerte.activation}" />
 											<c:if test="${ activation == false }">
@@ -147,11 +148,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<tbody>
 									<c:forEach items="${historiqueAlertes}" var="alerte">
 										<c:url var="urlAlerteEmiseUpdate"
-											value="/alerte/emise/update/${alerte.id}" />
+											value="/alerte/emise/view/${alerte.id}" />
 										<tr>
 											<td><fmt:formatDate value="${alerte.date}"
-													pattern="dd-MM-yyyy hh:mm:ss" /></td>
-											<td><a href="${urlAlerteEmiseUpdate}">${alerte.codeAlerte}</a>
+													pattern="dd-MM-yyyy HH:mm:ss" /></td>
+											<td class="text-primary" ><a href="${urlAlerteEmiseUpdate}">${alerte.codeAlerte}</a>
 											</td>
 											<td><c:out
 													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
@@ -159,7 +160,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${alerte.typeAlerte.description}" /></td>
 											<td><c:out value="${alerte.seuilPreAlerte}" /></td>
 											<td><c:out value="${alerte.seuilAlerte}" /></td>
-											<td><c:out value="${alerte.mesureLevantAlerte}" /></td>
+											<td><c:out value="${alerte.mesureLevantAlerte.valeur}" /></td>
 											<c:set var="acquittement" value="${alerte.acquittement}" />
 											<c:if test="${ acquittement == false }">
 												<td class="text-danger"><c:out value="ALERTE" /></td>

@@ -14,7 +14,7 @@ public class LoginAuditAspect {
 
 	private Logger logger = Logger.getLogger(LoginAuditAspect.class);
 
-	@AfterReturning(pointcut="execution(* fr.treeptik.dao.*.save(..))", returning="result")
+//	@AfterReturning(pointcut="execution(* fr.treeptik.dao.*.save(..))", returning="result")
 	public void logAfterSave(JoinPoint joinPoint, Object result){
 		
 		SecurityContext context = SecurityContextHolder.getContext();
