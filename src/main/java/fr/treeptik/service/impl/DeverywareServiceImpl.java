@@ -20,7 +20,7 @@ import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.deveryware.DeviceState;
 import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
-import fr.treeptik.service.TrameDWService;
+import fr.treeptik.service.MesureService;
 import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
 
@@ -33,7 +33,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 	@Inject
 	private EnregistreurService enregistreurService;
 	@Inject
-	private TrameDWService trameDWService;
+	private MesureService mesureService;
 
 	private static String sessionKey;
 
@@ -78,6 +78,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
 			}
+			
+			
 			enregistreurService.update(enregistreur);
 		}
 

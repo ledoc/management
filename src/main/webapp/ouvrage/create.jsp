@@ -270,9 +270,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<thead>
 											<tr>
 												<th>MID</th>
-												<th>Sonde</th>
 												<th>Dernière mesure</th>
 												<th>Niveau manuel</th>
+												<th>% Batterie</th>
 												<sec:authorize ifAllGranted="ADMIN">
 													<th class="nosort nosearch">Actions</th>
 												</sec:authorize>
@@ -289,10 +289,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<tr>
 													<td class="text-primary"><a
 														href="${urlEnregistreurUpdate}">${enregistreur.mid}</a></td>
-													<td><c:out value="${enregistreur.sonde}" /></td>
 													<td><c:out
 															value="${enregistreur.derniereMesure.valeur}" /></td>
 													<td><c:out value="${enregistreur.niveauManuel.valeur}" /></td>
+													<td><c:out value="${enregistreur.niveauBatterie}" /></td>
 													<sec:authorize ifAllGranted="ADMIN">
 														<td><a data-url="${urlEnregistreurDelete}"
 															data-toggle="modal" data-target="#confirmModal"

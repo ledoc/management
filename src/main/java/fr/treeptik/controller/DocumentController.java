@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Alerte;
+import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.Client;
 import fr.treeptik.model.Document;
 import fr.treeptik.model.Ouvrage;
@@ -194,7 +194,7 @@ public class DocumentController {
 		binder.registerCustomEditor(List.class, "clients",
 				new CustomCollectionEditor(List.class) {
 					protected Object convertElement(Object element) {
-						if (element instanceof Alerte) {
+						if (element instanceof AlerteDescription) {
 							logger.info("Conversion d'un client en client: "
 									+ element);
 							return element;
@@ -221,7 +221,7 @@ public class DocumentController {
 		binder.registerCustomEditor(List.class, "ouvrages",
 				new CustomCollectionEditor(List.class) {
 					protected Object convertElement(Object element) {
-						if (element instanceof Alerte) {
+						if (element instanceof AlerteDescription) {
 							logger.info("Conversion d'un ouvrage en ouvrage: "
 									+ element);
 							return element;

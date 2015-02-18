@@ -50,8 +50,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					</header>
 
 					<div class="panel-body">
-						<c:url var="createAlerte" value="/alerte/create" />
-						<form:form id="form" method="POST" action="${createAlerte}"
+						<c:url var="createAlerteDescription" value="/alerte/description/create" />
+						<form:form id="form" method="POST" action="${createAlerteDescription}"
 							modelAttribute="alerte" role="form" class="parsley-form"
 							data-validate="parsley" data-show-errors="true">
 

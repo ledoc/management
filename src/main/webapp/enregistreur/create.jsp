@@ -90,8 +90,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
-										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum"
 										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
@@ -310,7 +308,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:hidden id="data-panneauSolaire" path="panneauSolaire" />
 								<form:hidden id="data-sonde" path="sonde" />
 								<form:hidden id="data-croquis" path="croquis" />
-								<form:hidden id="data-alertes" path="alertes" />
+								<form:hidden id="data-alerteDescriptions" path="alerteDescriptions" />
 								<form:hidden id="data-echelleCapteur" path="echelleCapteur" />
 								<form:hidden id="data-altitude" path="altitude" />
 								<form:hidden id="data-coeffTemperature" path="coeffTemperature" />
