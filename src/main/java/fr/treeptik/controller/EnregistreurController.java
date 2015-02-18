@@ -33,6 +33,7 @@ import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
+import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
@@ -70,6 +71,9 @@ public class EnregistreurController {
 		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
 				Arrays.asList(TypeMesureOrTrame.values()));
 
+		List<TypeEnregistreur> typesEnregistreurCombo = new ArrayList<TypeEnregistreur>(
+				Arrays.asList(TypeEnregistreur.values()));
+
 		try {
 
 			alertesCombo = alerteDescriptionService.findAll();
@@ -87,7 +91,7 @@ public class EnregistreurController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-
+		model.addAttribute("typesEnregistreurCombo", typesEnregistreurCombo);
 		model.addAttribute("enregistreur", enregistreur);
 		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
 		model.addAttribute("typesMesureCombo", typesMesureCombo);
@@ -202,6 +206,8 @@ public class EnregistreurController {
 
 		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
 				Arrays.asList(TypeMesureOrTrame.values()));
+		List<TypeEnregistreur> typesEnregistreurCombo = new ArrayList<TypeEnregistreur>(
+				Arrays.asList(TypeEnregistreur.values()));
 
 		try {
 			enregistreur = enregistreurService
@@ -222,7 +228,7 @@ public class EnregistreurController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-
+		model.addAttribute("typesEnregistreurCombo", typesEnregistreurCombo);
 		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
 		model.addAttribute("enregistreur", enregistreur);
 		model.addAttribute("typesMesureCombo", typesMesureCombo);

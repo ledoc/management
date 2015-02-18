@@ -67,6 +67,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<form:hidden class="transfertInput" path="id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
+
+								<div class="form-group">
+									<label for="typeEnregistreur">Analogique / numérique</label>
+									<form:select id="typeEnregistreur" path="typeEnregistreur"
+										data-parsley-required="true"
+										data-parsley-required-message="Choix requis"
+										class="form-control chosen" disabled="${readOnlyValue }">
+										<form:option value="" label="--- Choisir un type ---" />
+										<form:options items="${typesEnregistreurCombo}"
+											itemLabel="description" />
+									</form:select>
+								</div>
 								<div class="form-group">
 									<label for="mid">Identifiant DW</label>
 									<form:input type="text" class="transfertInput form-control"
@@ -160,8 +172,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<sec:authorize ifAllGranted="ADMIN">
 											<div class="text-primary">
 												<a id="creation-niveau-manuel" data-toggle="modal"
-													data-target="#modal-creation-niveau-manuel" class="text-info">Enregistrer
-													un nouveau niveau manuel</a>
+													data-target="#modal-creation-niveau-manuel"
+													class="text-info">Enregistrer un nouveau niveau manuel</a>
 											</div>
 										</sec:authorize>
 										<form:input readonly="true" type="text"
@@ -274,8 +286,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
 		<!--  modal window for create niveau manuel -->
-		<div id="modal-creation-niveau-manuel" class="modal fade bs-modal-sm creation-niveau-manuel" tabindex="-1" role="dialog"
-			aria-hidden="true" data-backdrop="false" data-show="false">
+		<div id="modal-creation-niveau-manuel"
+			class="modal fade bs-modal-sm creation-niveau-manuel" tabindex="-1"
+			role="dialog" aria-hidden="true" data-backdrop="false"
+			data-show="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -308,7 +322,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:hidden id="data-panneauSolaire" path="panneauSolaire" />
 								<form:hidden id="data-sonde" path="sonde" />
 								<form:hidden id="data-croquis" path="croquis" />
-								<form:hidden id="data-alerteDescriptions" path="alerteDescriptions" />
+								<form:hidden id="data-alerteDescriptions"
+									path="alerteDescriptions" />
 								<form:hidden id="data-echelleCapteur" path="echelleCapteur" />
 								<form:hidden id="data-altitude" path="altitude" />
 								<form:hidden id="data-coeffTemperature" path="coeffTemperature" />
