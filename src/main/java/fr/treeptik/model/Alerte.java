@@ -1,6 +1,7 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @SuppressWarnings("serial")
 @Entity
@@ -18,30 +20,41 @@ public class Alerte implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	private String code;
+	private String codeAlerte;
 	private Boolean activation;
 	private String intitule;
-
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private TypeAlerte typeAlerte;
 	// la tendance : + - > < =
 	@Enumerated(EnumType.STRING)
 	private TendanceAlerte tendance;
-	private float valeurCritique;
-	//SMS Email ou les deux
-	private String modeEnvoi;
-	private String EmailOrSMSDEnvoi;
-	// Un lien vers l’API DW si il s’agit d’une alerte Données ou connexion, Mouvements ;
-	private String lienAPIDW;
+	private Float seuilPreAlerte;
+	private Float seuilAlerte;
+	// SMS Email ou les deux
+	// private String modeEnvoi;
+	private String emailDEnvoi;
+	// Un lien vers l’API DW s'il s’agit d’une alerte Données ou connexion,
+	// Mouvements ;
+//	private String lienAPIDW;
+	
+	/**
+	 * Propriétés spécifiques aux alertes levées
+	 */
+	// vrai quand une alerte est levé par une mesure
+	// entre dans l'historique
+	private Boolean emise;
+	@OneToOne
+	private Mesure mesureLevantAlerte;
+	@Enumerated(EnumType.STRING)
+	private NiveauAlerte niveauAlerte;
+	private Date date;
+	private Boolean acquittement;
 
 	@ManyToOne
-	private Ouvrage ouvrage;
-	/**
-	 * TODO : prise de connaissance - voir pour quelle version
-	 */
-	// private Boolean acquittement ;
+	private Enregistreur enregistreur;
 
-	public String getCode() {
-		return code;
+	public String getCodeAlerte() {
+		return codeAlerte;
 	}
 
 	public Integer getId() {
@@ -52,8 +65,8 @@ public class Alerte implements Serializable {
 		this.id = id;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setCodeAlerte(String code) {
+		this.codeAlerte = code;
 	}
 
 	public Boolean getActivation() {
@@ -72,12 +85,39 @@ public class Alerte implements Serializable {
 		this.intitule = intitule;
 	}
 
-	public String getType() {
-		return type;
+	public Boolean getEmise() {
+		return emise;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setEmise(Boolean emise) {
+		this.emise = emise;
+	}
+
+	
+	public Mesure getMesureLevantAlerte() {
+		return mesureLevantAlerte;
+	}
+
+	public void setMesureLevantAlerte(Mesure mesureLevantAlerte) {
+		this.mesureLevantAlerte = mesureLevantAlerte;
+	}
+
+	
+	
+	public NiveauAlerte getNiveauAlerte() {
+		return niveauAlerte;
+	}
+
+	public void setNiveauAlerte(NiveauAlerte niveauAlerte) {
+		this.niveauAlerte = niveauAlerte;
+	}
+
+	public TypeAlerte getTypeAlerte() {
+		return typeAlerte;
+	}
+
+	public void setTypeAlerte(TypeAlerte typeAlerte) {
+		this.typeAlerte = typeAlerte;
 	}
 
 	public TendanceAlerte getTendance() {
@@ -88,119 +128,68 @@ public class Alerte implements Serializable {
 		this.tendance = tendance;
 	}
 
-	public float getValeurCritique() {
-		return valeurCritique;
+	public Float getSeuilAlerte() {
+		return seuilAlerte;
 	}
 
-	public void setValeurCritique(float valeurCritique) {
-		this.valeurCritique = valeurCritique;
+	public void setSeuilAlerte(Float seuilAlerte) {
+		this.seuilAlerte = seuilAlerte;
 	}
 
-	public String getModeEnvoi() {
-		return modeEnvoi;
+	public Float getSeuilPreAlerte() {
+		return seuilPreAlerte;
 	}
 
-	public void setModeEnvoi(String modeEnvoi) {
-		this.modeEnvoi = modeEnvoi;
+	public void setSeuilPreAlerte(Float seuilPreAlerte) {
+		this.seuilPreAlerte = seuilPreAlerte;
 	}
 
-	public String getEmailOrSMSDEnvoi() {
-		return EmailOrSMSDEnvoi;
+	// public String getModeEnvoi() {
+	// return modeEnvoi;
+	// }
+	//
+	// public void setModeEnvoi(String modeEnvoi) {
+	// this.modeEnvoi = modeEnvoi;
+	// }
+
+	public String getEmailDEnvoi() {
+		return emailDEnvoi;
 	}
 
-	public void setEmailOrSMSDEnvoi(String emailOrSMSDEnvoi) {
-		EmailOrSMSDEnvoi = emailOrSMSDEnvoi;
+	public void setEmailDEnvoi(String emailOrSMSDEnvoi) {
+		emailDEnvoi = emailOrSMSDEnvoi;
 	}
 
-	public String getLienAPIDW() {
-		return lienAPIDW;
+//	public String getLienAPIDW() {
+//		return lienAPIDW;
+//	}
+//
+//	public void setLienAPIDW(String lienAPIDW) {
+//		this.lienAPIDW = lienAPIDW;
+//	}
+
+	public Enregistreur getEnregistreur() {
+		return enregistreur;
 	}
 
-	public void setLienAPIDW(String lienAPIDW) {
-		this.lienAPIDW = lienAPIDW;
+	public void setEnregistreur(Enregistreur enregistreur) {
+		this.enregistreur = enregistreur;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((EmailOrSMSDEnvoi == null) ? 0 : EmailOrSMSDEnvoi.hashCode());
-		result = prime * result + ((activation == null) ? 0 : activation.hashCode());
-		result = prime * result + ((code == null) ? 0 : code.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((intitule == null) ? 0 : intitule.hashCode());
-		result = prime * result + ((lienAPIDW == null) ? 0 : lienAPIDW.hashCode());
-		result = prime * result + ((modeEnvoi == null) ? 0 : modeEnvoi.hashCode());
-		result = prime * result + ((tendance == null) ? 0 : tendance.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + Float.floatToIntBits(valeurCritique);
-		return result;
+	public Boolean getAcquittement() {
+		return acquittement;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Alerte other = (Alerte) obj;
-		if (EmailOrSMSDEnvoi == null) {
-			if (other.EmailOrSMSDEnvoi != null)
-				return false;
-		} else if (!EmailOrSMSDEnvoi.equals(other.EmailOrSMSDEnvoi))
-			return false;
-		if (activation == null) {
-			if (other.activation != null)
-				return false;
-		} else if (!activation.equals(other.activation))
-			return false;
-		if (code == null) {
-			if (other.code != null)
-				return false;
-		} else if (!code.equals(other.code))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (intitule == null) {
-			if (other.intitule != null)
-				return false;
-		} else if (!intitule.equals(other.intitule))
-			return false;
-		if (lienAPIDW == null) {
-			if (other.lienAPIDW != null)
-				return false;
-		} else if (!lienAPIDW.equals(other.lienAPIDW))
-			return false;
-		if (modeEnvoi == null) {
-			if (other.modeEnvoi != null)
-				return false;
-		} else if (!modeEnvoi.equals(other.modeEnvoi))
-			return false;
-		if (tendance != other.tendance)
-			return false;
-		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
-			return false;
-		if (Float.floatToIntBits(valeurCritique) != Float.floatToIntBits(other.valeurCritique))
-			return false;
-		return true;
+	public void setAcquittement(Boolean acquittement) {
+		this.acquittement = acquittement;
 	}
 
-	public Ouvrage getOuvrage() {
-		return ouvrage;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setOuvrage(Ouvrage ouvrage) {
-		this.ouvrage = ouvrage;
+	public void setDate(Date date) {
+		this.date = date;
 	}
-
-	
 	
 }

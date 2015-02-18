@@ -1,13 +1,11 @@
 package fr.treeptik.model;
 
-public enum TendanceAlerte {
-
-	INFERIEUR("inférieur à"), SUPERIEUR("supérieur à"), EGAL("égal à"), DIFFERENT_DE(
-			"différent de");
+public enum NiveauAlerte {
+	PREALERTE("pré-alerte"), ALERTE("alerte");
 	
 	private String description;
 
-	private TendanceAlerte(String description) {
+	private NiveauAlerte(String description) {
 		this.description = description;
 	}
 
@@ -18,5 +16,4 @@ public enum TendanceAlerte {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 }

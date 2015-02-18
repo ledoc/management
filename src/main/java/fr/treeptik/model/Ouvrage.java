@@ -61,9 +61,9 @@ public class Ouvrage implements Serializable {
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "ouvrage")
 	private List<Mesure> mesures;
-	@JsonIgnore
-	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "ouvrage")
-	private List<Alerte> alertes;
+	// @JsonIgnore
+	// @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "ouvrage")
+	// private List<Alerte> alertes;
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.REMOVE }, mappedBy = "ouvrage")
 	private List<Document> documents;
@@ -222,13 +222,13 @@ public class Ouvrage implements Serializable {
 		this.mesures = mesures;
 	}
 
-	public List<Alerte> getAlertes() {
-		return alertes;
-	}
-
-	public void setAlertes(List<Alerte> alertes) {
-		this.alertes = alertes;
-	}
+	// public List<Alerte> getAlertes() {
+	// return alertes;
+	// }
+	//
+	// public void setAlertes(List<Alerte> alertes) {
+	// this.alertes = alertes;
+	// }
 
 	public String getCroquisDynamique() {
 		return croquisDynamique;

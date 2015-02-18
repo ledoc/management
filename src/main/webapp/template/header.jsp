@@ -97,9 +97,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						class="${param.menuOuvrageActive}">Ouvrages</a></li>
 					<li><a href="<c:url  value="/mesure/mesure.jsp" />"
 						class="${param.menuMesureActive}">Mesures</a></li>
+					<li><a href="<c:url  value="/alerte/list" />"
+						class="${param.menuAlerteActive}">Alertes</a></li>
 					<li><a href="<c:url  value="/document/list" />"
 						class="${param.menuDocumentActive}">Documents</a></li>
-					<li><a href="#" class="${param.menuMessagerieActive}">Messagerie</a></li>
 				</ul>
 			</div>
 			<ul class="nav navbar-nav navbar-right">

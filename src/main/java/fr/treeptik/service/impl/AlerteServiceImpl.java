@@ -30,7 +30,7 @@ public class AlerteServiceImpl implements AlerteService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Alerte create(Alerte alerte) throws ServiceException {
-		logger.info("--CREATE alerte --");
+		logger.info("--CREATE AlerteServiceImpl --");
 		logger.debug("alerte : " + alerte);
 		return alerteDAO.save(alerte);
 	}
@@ -38,7 +38,7 @@ public class AlerteServiceImpl implements AlerteService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Alerte update(Alerte alerte) throws ServiceException {
-		logger.info("--UPDATE alerte --");
+		logger.info("--UPDATE AlerteServiceImpl --");
 		logger.debug("alerte : " + alerte);
 		return alerteDAO.saveAndFlush(alerte);
 	}
@@ -47,15 +47,68 @@ public class AlerteServiceImpl implements AlerteService {
 	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE alerte --");
-		logger.debug("alerteId : " + id);
+		logger.info("--remove AlerteServiceImpl -- alerteId : " + id);
 		alerteDAO.delete(id);
 	}
-	
+
 	@Override
 	public List<Alerte> findAll() throws ServiceException {
-		logger.info("--FINDALL alerte --");
+		logger.info("--FINDALL AlerteServiceImpl --");
 		return alerteDAO.findAll();
 	}
 
+	@Override
+	public List<Alerte> findByClientLogin(String userLogin)
+			throws ServiceException {
+		logger.info("--findByClient userLogin AlerteServiceImpl -- userLogin : "
+				+ userLogin);
+
+		return alerteDAO.findByClientLogin(userLogin);
+	}
+
+	@Override
+	public Long countAllAlertes() throws ServiceException {
+		return alerteDAO.countAllAlertes();
+	}
+	
+	@Override
+	public Long countAlertesActives() throws ServiceException {
+		return alerteDAO.countAlertesActives();
+	}
+
+	@Override
+	public Long countAllAlertesByClientLogin(String userLogin) throws ServiceException {
+		logger.info("--findByClient userId AlerteServiceImpl -- userLogin : "
+				+ userLogin);
+		return alerteDAO.countAllAlertesByClientLogin(userLogin);
+	}
+	
+	@Override
+	public Long countAlertesActivesByClientLogin(String userLogin) throws ServiceException {
+		logger.info("--countAlertesActivesByClientLogin userId AlerteServiceImpl -- userLogin : "
+				+ userLogin);
+		return alerteDAO.countAlertesActivesByClientLogin(userLogin);
+	}
+	
+	@Override
+	public List<Alerte> findAlertesActivesByEnregistreurId(Integer enregistreurId) throws ServiceException {
+		logger.info("--findAlertesActivesByEnregistreurId AlerteServiceImpl -- enregistreurId : "
+				+ enregistreurId);
+		return alerteDAO.findAlertesActivesByEnregistreurId(enregistreurId);
+	}
+	
+	@Override
+	public List<Alerte> findAllAlertesEmises() throws ServiceException {
+		logger.info("--findAllAlertesEmises AlerteServiceImpl");
+		return alerteDAO.findAllAlertesEmises();
+	}
+	
+	@Override
+	public List<Alerte> findAlertesEmisesByClientLogin(String userLogin) throws ServiceException {
+		logger.info("--findAlertesEmisesByClientLogin AlerteServiceImpl -- userLogin : "
+				+ userLogin);
+		return alerteDAO.findAlertesEmisesByClientLogin(userLogin);
+	}
+	
+	
 }
