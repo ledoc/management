@@ -2,6 +2,7 @@ package fr.treeptik.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +18,14 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.deveryware.DeviceState;
+import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
 
 @Service
-public class DeverywareServiceImpl {
+public class DeverywareServiceImpl implements DeverywareService {
 
 	private Logger logger = Logger.getLogger(DeverywareServiceImpl.class);
 	@Inject
@@ -32,23 +34,63 @@ public class DeverywareServiceImpl {
 	private EnregistreurService enregistreurService;
 	@Inject
 	private TrameDWService trameDWService;
-	
+
 	private static String sessionKey;
-	
+
 	@PostConstruct
 	public void openSession() throws Exception {
 		logger.info("-- openSession --");
 
-		String sessionKey = xmlRPCUtils.openSession();
+		sessionKey = xmlRPCUtils.openSession();
 		logger.info("sessionKey : " + sessionKey);
 	}
-	
+
+	/**
+	 * la (ou l'une) des méthodes pour récupérer l'ampérage renvoyé par un
+	 * enregsitreur analogique
+	 * 
+	 * @param mid
+	 * @throws ServiceException
+	 */
+	@SuppressWarnings("unchecked")
+	public String getHistory(String mid) throws ServiceException {
+		logger.info("--getHistory DeverywareServiceImpl -- mid : " + mid);
+
+		Enregistreur enregistreur = enregistreurService
+				.findByMidWithJoinFetchTrameDWs(mid);
+		Object[] history = xmlRPCUtils.getHistory(mid, sessionKey);
+		logger.debug(history.length + " trame History récupérée");
+
+		TrameDW trameDW = new TrameDW();
+
+		for (Object historyXmlRpc : history) {
+			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) historyXmlRpc;
+			System.out.println(hashMapHistoryXmlRpc);
+			trameDW = this.transfertHistoryToTrameDW(trameDW,
+					hashMapHistoryXmlRpc);
+
+			 trameDW.setEnregistreur(enregistreur);
+
+			if (enregistreur.getTrameDWs() != null) {
+				enregistreur.getTrameDWs().add(trameDW);
+			} else {
+				List<TrameDW> trameDWs = new ArrayList<TrameDW>();
+				trameDWs.add(trameDW);
+				enregistreur.setTrameDWs(trameDWs);
+			}
+			enregistreurService.update(enregistreur);
+		}
+
+		return history.toString();
+	}
+
 	// Deveryflow.mobileList
 	public void enregistreurList() throws ServiceException {
 		logger.info("--enregistreurList DeverywareServiceImpl --");
 
 		Enregistreur enregistreur = null;
-		Object[] listEnregistreursXMLRPC = xmlRPCUtils.enregistreurList(sessionKey);
+		Object[] listEnregistreursXMLRPC = xmlRPCUtils
+				.enregistreurList(sessionKey);
 
 		for (Object enregistreurXmlRpc : listEnregistreursXMLRPC) {
 			@SuppressWarnings("unchecked")
@@ -62,10 +104,9 @@ public class DeverywareServiceImpl {
 			enregistreur = new Enregistreur(enregistreurHashMap);
 			logger.debug(enregistreur);
 			enregistreurService.create(enregistreur);
-			
+
 		}
-		
-		
+
 	}
 
 	public void getDataHistory(String mid) throws ServiceException {
@@ -84,44 +125,11 @@ public class DeverywareServiceImpl {
 		}
 	}
 
-	public void getHistory(String mid) throws ServiceException {
-		logger.info("--getHistory DeverywareServiceImpl -- mid : " + mid);
-		
-		Enregistreur enregistreur = new Enregistreur();
-		enregistreur = enregistreurService.findByMidWithJoinFetchTrameDWs(mid);
-		logger.debug(enregistreur.getClientName());
-
-		Object[] history = xmlRPCUtils.getHistory(mid, sessionKey);
-		logger.debug(history.length + " trame History récupérée");
-		TrameDW trameDW = new TrameDW();
-		for (Object dataXmlRpc : history) {
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) dataXmlRpc;
-			int dateInt = (int) hashMapHistoryXmlRpc.get("date");
-
-			
-			try {
-				trameDW.setDate(DateUnixConverter.intToDate(dateInt));
-				trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
-			} catch (ParseException e) {
-				logger.error("Error DeverywareServiceImpl : " + e);
-				throw new ServiceException(e.getLocalizedMessage(), e);
-			}
-			logger.debug(enregistreur);
-			trameDW.setEnregistreur(enregistreur);
-			trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
-
-			trameDWService.create(trameDW);
-			logger.debug(trameDW.toString());
-			enregistreur.getTrameDWs().add(trameDW);
-			enregistreurService.update(enregistreur);
-		}
-	}
-
 	public void getUnifyHistory(String mid) throws ServiceException {
 		logger.info("--getUnifyHistory DeverywareServiceImpl -- mid : " + mid);
 
-		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(mid, sessionKey);
+		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(mid,
+				sessionKey);
 
 		logger.debug(unifyHistoryArray.length + " unifyHistory retournée");
 		logger.debug(unifyHistoryArray);
@@ -129,7 +137,8 @@ public class DeverywareServiceImpl {
 			logger.debug(unifyHistoryXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapunifyHistoryXmlRpc = (HashMap<String, Object>) unifyHistoryXmlRpc;
-			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc.entrySet()) {
+			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc
+					.entrySet()) {
 				logger.debug("key : " + object3.getKey());
 				if (object3.getKey().equals("alertList")) {
 					Object[] alertList = (Object[]) object3.getValue();
@@ -140,7 +149,8 @@ public class DeverywareServiceImpl {
 				logger.debug("value : " + object3.getValue());
 			}
 
-			Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc.get("deviceDataList");
+			Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc
+					.get("deviceDataList");
 			for (Object object : deviceDataList) {
 				logger.debug(object);
 			}
@@ -150,7 +160,8 @@ public class DeverywareServiceImpl {
 	public void getEventHistory(String mid) throws ServiceException {
 		logger.info("--getEventHistory DeverywareServiceImpl -- mid : " + mid);
 
-		Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(mid, sessionKey);
+		Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(mid,
+				sessionKey);
 
 		logger.debug(eventHistoryArray.length + " eventHistoryArray retournée");
 		logger.debug(eventHistoryArray);
@@ -158,7 +169,8 @@ public class DeverywareServiceImpl {
 			logger.debug(eventHistoryXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapEventHistoryXmlRpc = (HashMap<String, Object>) eventHistoryXmlRpc;
-			for (Entry<String, Object> object3 : hashMapEventHistoryXmlRpc.entrySet()) {
+			for (Entry<String, Object> object3 : hashMapEventHistoryXmlRpc
+					.entrySet()) {
 				logger.debug(object3.getKey());
 				logger.debug(object3.getValue());
 			}
@@ -169,17 +181,20 @@ public class DeverywareServiceImpl {
 	public void waitForMessage() throws Exception {
 		logger.info("--waitForMessage DeverywareServiceImpl--");
 
-		HashMap<String, Object> waitForMessage = xmlRPCUtils.waitForMessage(sessionKey);
+		HashMap<String, Object> waitForMessage = xmlRPCUtils
+				.waitForMessage(sessionKey);
 
 		logger.debug(waitForMessage.size() + " waitForMessage retournée");
 		logger.debug(waitForMessage);
 		for (Entry<String, Object> object3 : waitForMessage.entrySet()) {
 			logger.debug("key : " + object3.getKey());
 			if (object3.getKey().equals("date")) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						"dd/MM/yyyy HH:mm:ss");
 				int dateInt = (int) object3.getValue();
 				Long dateLong = (long) dateInt;
-				String dateString = dateFormat.format(new Date(dateLong * 1000));
+				String dateString = dateFormat
+						.format(new Date(dateLong * 1000));
 				logger.debug("date  ==== " + dateString);
 			}
 			logger.debug("value : " + object3.getValue());
@@ -192,17 +207,20 @@ public class DeverywareServiceImpl {
 	public void waitForMessages() throws Exception {
 		logger.info("--waitForMessages DeverywareServiceImpl--");
 
-		HashMap<String, Object> waitForMessages = xmlRPCUtils.waitForMessages(sessionKey);
+		HashMap<String, Object> waitForMessages = xmlRPCUtils
+				.waitForMessages(sessionKey);
 
 		logger.debug(waitForMessages.size() + " waitForMessages retournée");
 		logger.debug(waitForMessages);
 		for (Entry<String, Object> object3 : waitForMessages.entrySet()) {
 			logger.debug("key : " + object3.getKey());
 			if (object3.getKey().contains("ate")) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				SimpleDateFormat dateFormat = new SimpleDateFormat(
+						"dd/MM/yyyy HH:mm:ss");
 				int dateInt = (int) object3.getValue();
 				Long dateLong = (long) dateInt;
-				String dateString = dateFormat.format(new Date(dateLong * 1000));
+				String dateString = dateFormat
+						.format(new Date(dateLong * 1000));
 				logger.debug("date  ==== " + dateString);
 			}
 			logger.debug("value : " + object3.getValue());
@@ -214,7 +232,8 @@ public class DeverywareServiceImpl {
 
 		HashMap<String, Object> getInfo = xmlRPCUtils.getInfo(sessionKey);
 
-		logger.debug("taille du resultat: " + getInfo.size() + " waitForMessage retournée");
+		logger.debug("taille du resultat: " + getInfo.size()
+				+ " waitForMessage retournée");
 		logger.debug(getInfo);
 		for (Entry<String, Object> object3 : getInfo.entrySet()) {
 			logger.debug("key : " + object3.getKey());
@@ -222,7 +241,21 @@ public class DeverywareServiceImpl {
 		}
 
 	}
-	
-	
 
+	private TrameDW transfertHistoryToTrameDW(TrameDW trameDW,
+			HashMap<String, Object> hashMapHistoryXmlRpc)
+			throws ServiceException {
+		logger.info("--transfertHistoryToTrameDW DeverywareServiceImpl--");
+
+		int dateInt = (int) hashMapHistoryXmlRpc.get("date");
+		trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
+		try {
+			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
+			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
+		} catch (ParseException e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return trameDW;
+	}
 }

@@ -30,7 +30,8 @@ public class SessionHandlerInterceptor  extends HandlerInterceptorAdapter {
 	            Object handler) throws Exception {
 		 
 		
-		if (request.getSession().getAttribute("userSession")==null) {
+		if (request.getSession().getAttribute("userSession")==null && SecurityContextHolder.getContext()
+				.getAuthentication() != null) {
 			Client client = null;
 			Administrateur admininstrateur = null ;
 
