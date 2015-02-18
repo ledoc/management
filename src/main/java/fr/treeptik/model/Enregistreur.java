@@ -73,9 +73,10 @@ public class Enregistreur implements Serializable {
 	private String sonde;
 	// croquis dynamique de l'ensemble
 	private String croquis;
-	//
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
-	private List<Alerte> alertes;
+	private List<AlerteDescription> alerteDescriptions;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
+	private List<AlerteEmise> alerteEmises;
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<TrameDW> trameDWs;
 
@@ -130,9 +131,9 @@ public class Enregistreur implements Serializable {
 	@PostLoad
 	@PostPersist
 	public void setDynamicMesures() {
-		this.setNiveauManuel();
-		this.setDerniereMesure();
-		this.setDerniereTrameDW();
+		this.initNiveauManuel();
+		this.initDerniereMesure();
+		this.initDerniereTrameDW();
 	}
 	
 	
@@ -152,7 +153,7 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @param niveauManuel
 	 */
-	public void setNiveauManuel() {
+	public void initNiveauManuel() {
 
 		if (this.mesures != null) {
 			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
@@ -163,8 +164,10 @@ public class Enregistreur implements Serializable {
 					.filter(m -> m.getTypeMesure().equals(
 							TypeMesureOrTrame.NIVEAUMANUEL)).max(c);
 
-			this.niveauManuel = optional.isPresent() ? optional.get()
+			this.niveauManuel = optional.isPresent() ? optional.get().cloneMe()
 					: new Mesure();
+			
+			
 		}
 
 	}
@@ -183,7 +186,7 @@ public class Enregistreur implements Serializable {
 	 * 
 	 * @return
 	 */
-	public void setDerniereMesure() {
+	public void initDerniereMesure() {
 		if (this.mesures != null) {
 			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
 					m2.getDate());
@@ -202,7 +205,7 @@ public class Enregistreur implements Serializable {
 		return derniereTrameDW;
 	}
 
-	public void setDerniereTrameDW() {
+	public void initDerniereTrameDW() {
 
 		if (this.trameDWs != null) {
 			Comparator<TrameDW> c = (t1, t2) -> t1.getDate().compareTo(
@@ -425,14 +428,7 @@ public class Enregistreur implements Serializable {
 	public void setMesures(List<Mesure> mesures) {
 		this.mesures = mesures;
 	}
-
-	public List<Alerte> getAlertes() {
-		return alertes;
-	}
-
-	public void setAlertes(List<Alerte> alertesActives) {
-		this.alertes = alertesActives;
-	}
+	
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -512,5 +508,41 @@ public class Enregistreur implements Serializable {
 		} else if (!sim.equalsIgnoreCase(other.sim))
 			return false;
 		return true;
+	}
+
+	public Boolean getValid() {
+		return valid;
+	}
+
+	public void setValid(Boolean valid) {
+		this.valid = valid;
+	}
+
+	public void setNiveauManuel(Mesure niveauManuel) {
+		this.niveauManuel = niveauManuel;
+	}
+
+	public void setDerniereMesure(Mesure derniereMesure) {
+		this.derniereMesure = derniereMesure;
+	}
+
+	public void setDerniereTrameDW(TrameDW derniereTrameDW) {
+		this.derniereTrameDW = derniereTrameDW;
+	}
+
+	public List<AlerteDescription> getAlerteDescriptions() {
+		return alerteDescriptions;
+	}
+
+	public void setAlerteDescriptions(List<AlerteDescription> alerteDescriptions) {
+		this.alerteDescriptions = alerteDescriptions;
+	}
+
+	public List<AlerteEmise> getAlerteEmises() {
+		return alerteEmises;
+	}
+
+	public void setAlerteEmises(List<AlerteEmise> alerteEmises) {
+		this.alerteEmises = alerteEmises;
 	}
 }

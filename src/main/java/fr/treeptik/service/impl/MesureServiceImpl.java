@@ -32,70 +32,7 @@ public class MesureServiceImpl implements MesureService {
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
-	@Override
-	public Mesure findById(Integer id) throws ServiceException {
-		Mesure mesure = new Mesure();
-		mesure = mesureDAO.findOne(id);
-		return mesure;
-	}
-
-	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public Mesure create(Mesure mesure) throws ServiceException {
-		logger.info("--CREATE MesureService --");
-		logger.debug("mesure : " + mesure);
-		return mesureDAO.save(mesure);
-	}
-
-	@Override
-	@Transactional(rollbackFor = ServiceException.class)
-	public Mesure update(Mesure mesure) throws ServiceException {
-		logger.info("--UPDATE MesureService --");
-		logger.debug("mesure : " + mesure);
-		return mesureDAO.saveAndFlush(mesure);
-	}
-
-	@Override
-	@Secured("ADMIN")
-	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE MesureService -- mesureId : " + id);
-		mesureDAO.delete(id);
-	}
-
-	@Override
-	public List<Mesure> findAll() throws ServiceException {
-		logger.info("--FINDALL MesureService --");
-		return mesureDAO.findAll();
-	}
-
-	@Override
-	public List<Mesure> findByEnregistreurId(Integer id)
-			throws ServiceException {
-		logger.info("--findByEnregistreurId MesureService -- Id : " + id);
-		List<Mesure> mesures;
-		try {
-			mesures = mesureDAO.findByEnregistreurId(id);
-		} catch (PersistenceException e) {
-			logger.error("Error MesureService : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
-		return mesures;
-	}
-
-	@Override
-	public List<Mesure> findByOuvrageId(Integer id) throws ServiceException {
-		logger.info("--findByOuvrageId MesureService by Id--");
-		List<Mesure> mesures;
-		try {
-			mesures = mesureDAO.findByOuvrageId(id);
-		} catch (PersistenceException e) {
-			logger.error("Error MesureService : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
-		return mesures;
-	}
-
+	
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
 	// (en mètre)
 	// - intensite : valeur brute transmise par le capteur à un instant t (mA)
@@ -108,12 +45,11 @@ public class MesureServiceImpl implements MesureService {
 	 * 
 	 */
 	@Override
-	public TrameDW conversionSignalElectrique_HauteurEau(TrameDW trameDW,
-			float profMax) throws ServiceException {
+	public TrameDW conversionSignalElectrique_Valeur(TrameDW trameDW) throws ServiceException {
 		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
 
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
-		Float hauteurEau;
+		Float valeur;
 		/**
 		 * TODO ajouter la temperature comme variable
 		 */
@@ -121,16 +57,17 @@ public class MesureServiceImpl implements MesureService {
 		Float signalBrut = trameDW.getSignalBrut();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
+		Float valeuCapteurPleineEchelle = enregistreur.getEchelleCapteur();
 
 		if (enregistreur.getTypeEnregistreur().equals(
 				TypeEnregistreur.ANALOGIQUE)) {
-			hauteurEau = ((((temperature - 25) * coeffTemperature) / 100) + 1)
-					* (profMax / 16) * (signalBrut - 4);
+			valeur = ((((temperature - 25) * coeffTemperature) / 100) + 1)
+					* (valeuCapteurPleineEchelle / 16) * (signalBrut - 4);
 		} else {
-			hauteurEau = ((((temperature - 25) * coeffTemperature) / 100) + 1)
+			valeur = ((((temperature - 25) * coeffTemperature) / 100) + 1)
 					* signalBrut;
 		}
-		trameDW.setValeur(hauteurEau);
+		trameDW.setValeur(valeur);
 		
 		trameDWService.update(trameDW);
 		
@@ -174,5 +111,80 @@ public class MesureServiceImpl implements MesureService {
 		
 		
 		return niveauEau;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public Mesure findById(Integer id) throws ServiceException {
+		Mesure mesure = new Mesure();
+		mesure = mesureDAO.findOne(id);
+		return mesure;
+	}
+
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public Mesure create(Mesure mesure) throws ServiceException {
+		logger.info("--CREATE MesureService --");
+		logger.debug("mesure : " + mesure);
+		return mesureDAO.save(mesure);
+	}
+
+	@Override
+	@Transactional(rollbackFor = ServiceException.class)
+	public Mesure update(Mesure mesure) throws ServiceException {
+		logger.info("--UPDATE MesureService --");
+		logger.debug("mesure : " + mesure);
+		return mesureDAO.saveAndFlush(mesure);
+	}
+
+	@Override
+	@Secured("ADMIN")
+	@Transactional(rollbackFor = ServiceException.class)
+	public void remove(Integer id) throws ServiceException {
+		logger.info("--DELETE MesureService -- mesureId : " + id);
+		
+		Mesure mesure = this.findById(id);
+		
+		logger.debug("--DELETE MesureService -- : " + mesure);
+		mesureDAO.delete(mesure);
+	}
+
+	@Override
+	public List<Mesure> findAll() throws ServiceException {
+		logger.info("--FINDALL MesureService --");
+		return mesureDAO.findAll();
+	}
+
+	@Override
+	public List<Mesure> findByEnregistreurId(Integer id)
+			throws ServiceException {
+		logger.info("--findByEnregistreurId MesureService -- Id : " + id);
+		List<Mesure> mesures;
+		try {
+			mesures = mesureDAO.findByEnregistreurId(id);
+		} catch (PersistenceException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return mesures;
+	}
+
+	@Override
+	public List<Mesure> findByOuvrageId(Integer id) throws ServiceException {
+		logger.info("--findByOuvrageId MesureService by Id--");
+		List<Mesure> mesures;
+		try {
+			mesures = mesureDAO.findByOuvrageId(id);
+		} catch (PersistenceException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return mesures;
 	}
 }

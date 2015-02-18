@@ -128,8 +128,7 @@ public class MesureController {
 		logger.debug("mesureId : " + id);
 		Mesure mesure;
 		try {
-			mesure = mesureService.findById(id);
-			mesureService.remove(mesure.getId());
+			mesureService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);

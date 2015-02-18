@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 
 @SuppressWarnings("serial")
 @Entity
-public class Mesure implements Serializable {
+public class Mesure implements Serializable, Cloneable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,6 +44,8 @@ public class Mesure implements Serializable {
 		this.ouvrage = ouvrage;
 		this.valeur = valeur;
 	}
+	
+
 
 	public Integer getId() {
 		return id;
@@ -135,6 +137,15 @@ public class Mesure implements Serializable {
 		if (Float.floatToIntBits(valeur) != Float.floatToIntBits(other.valeur))
 			return false;
 		return true;
+	}
+	
+	public Mesure cloneMe(){
+		try {
+			return (Mesure) this.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

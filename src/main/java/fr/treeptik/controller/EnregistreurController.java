@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Alerte;
+import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.TypeMesureOrTrame;
-import fr.treeptik.service.AlerteService;
+import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.OuvrageService;
@@ -53,7 +53,7 @@ public class EnregistreurController {
 	@Inject
 	private MesureService mesureService;
 	@Inject
-	private AlerteService alerteService;
+	private AlerteDescriptionService alerteDescriptionService;
 
 	@RequestMapping(value = "/redirect/enregistreur", method = RequestMethod.POST)
 	public String redirectEnregistreur(
@@ -64,7 +64,7 @@ public class EnregistreurController {
 		logger.info("--create EnregistreurController-- " + enregistreur
 				+ " - niveau manuel : " + enregistreur.getNiveauManuel());
 
-		List<Alerte> alertesCombo;
+		List<AlerteDescription> alertesCombo;
 		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
 
 		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
@@ -72,39 +72,7 @@ public class EnregistreurController {
 
 		try {
 
-			alertesCombo = alerteService.findAll();
-
-
-			/**
-			 * TODO : Hack ? Mieux ? Pourri comment l'éviter?
-			 */
-			if (enregistreur.getNiveauManuel().getValeur() != null) {
-
-				if (enregistreur.getMesures() != null) {
-					logger.debug("Niv manuel déjà présent : "
-							+ enregistreur.getMesures().contains(
-									enregistreur.getNiveauManuel()));
-					if (!enregistreur.getMesures().contains(
-							enregistreur.getNiveauManuel())) {
-						Mesure newNiveauManuel = enregistreur.getNiveauManuel();
-						newNiveauManuel.setId(null);
-						newNiveauManuel.setEnregistreur(enregistreur);
-						enregistreur.getMesures().add(newNiveauManuel);
-						System.out.println("list : "
-								+ enregistreur.getMesures());
-					}
-				} else {
-					List<Mesure> mesures = new ArrayList<Mesure>();
-					Mesure newNiveauManuel = enregistreur.getNiveauManuel();
-					newNiveauManuel.setEnregistreur(enregistreur);
-					mesures.add(newNiveauManuel);
-					enregistreur.setMesures(mesures);
-				}
-			}
-
-			/**
-			 * TODO fin
-			 */
+			alertesCombo = alerteDescriptionService.findAll();
 
 			if (enregistreur.getMesures() != null) {
 				listNiveauxManuels = enregistreur
@@ -140,12 +108,11 @@ public class EnregistreurController {
 		Ouvrage ouvrage = new Ouvrage();
 		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
 				Arrays.asList(TypeMesureOrTrame.values()));
-		List<Alerte> alertesCombo;
-		Map<Integer, Alerte> alerteCache;
+		List<AlerteDescription> alertesCombo;
 
 		try {
 			ouvrage = ouvrageService.findById(ouvrageId);
-			alertesCombo = alerteService.findAll();
+			alertesCombo = alerteDescriptionService.findAll();
 
 			enregistreur.setOuvrage(ouvrage);
 			/**
@@ -156,11 +123,6 @@ public class EnregistreurController {
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
-		}
-
-		alerteCache = new HashMap<Integer, Alerte>();
-		for (Alerte alerte : alertesCombo) {
-			alerteCache.put(alerte.getId(), alerte);
 		}
 
 		model.addAttribute("enregistreur", enregistreur);
@@ -189,9 +151,6 @@ public class EnregistreurController {
 			 * TODO : Hack ? Mieux ? Pourri comment l'éviter?
 			 */
 			if (enregistreur.getNiveauManuel().getValeur() != null) {
-				// for (Mesure mesure : enregistreur.getMesures()) {
-				// System.out.println("mesuressssss : " + mesure);
-				// }
 
 				if (enregistreur.getMesures() != null) {
 					System.out.println("Niv manuel déjà présent : "
@@ -239,7 +198,7 @@ public class EnregistreurController {
 
 		Enregistreur enregistreur = null;
 		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
-		List<Alerte> alertesCombo;
+		List<AlerteDescription> alertesCombo;
 
 		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
 				Arrays.asList(TypeMesureOrTrame.values()));
@@ -248,7 +207,7 @@ public class EnregistreurController {
 			enregistreur = enregistreurService
 					.findByIdWithJoinFetchAlertesActives(id);
 
-			alertesCombo = alerteService.findAll();
+			alertesCombo = alerteDescriptionService.findAll();
 
 			if (enregistreur.getMesures() != null) {
 				listNiveauxManuels = enregistreur
@@ -351,26 +310,26 @@ public class EnregistreurController {
 		binder.registerCustomEditor(List.class, "alertes",
 				new CustomCollectionEditor(List.class) {
 					protected Object convertElement(Object element) {
-						Map<Integer, Alerte> alerteCache = new HashMap<Integer, Alerte>();
+						Map<Integer, AlerteDescription> alerteCache = new HashMap<Integer, AlerteDescription>();
 
-						if (element instanceof Alerte) {
+						if (element instanceof AlerteDescription) {
 							logger.info("Conversion d'un Alerte en Alerte: "
 									+ element);
 							return element;
 						}
 						if (element instanceof String
 								|| element instanceof Integer) {
-							Alerte alerte;
+							AlerteDescription alerteDescription;
 							if (element instanceof String) {
-								alerte = alerteCache.get(Integer
+								alerteDescription = alerteCache.get(Integer
 										.valueOf((String) element));
 							} else {
 
-								alerte = alerteCache.get(element);
+								alerteDescription = alerteCache.get(element);
 								logger.info("Recherche du alerte pour l'Id : "
-										+ element + ": " + alerte);
+										+ element + ": " + alerteDescription);
 							}
-							return alerte;
+							return alerteDescription;
 						}
 						logger.debug("Problème avec l'élement : " + element);
 						return null;
