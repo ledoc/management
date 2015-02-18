@@ -149,7 +149,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<a
 										href="<c:url  value="/ouvrage/update/${enregistreur.ouvrage.id}" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									<sec:authorize ifAllGranted="ADMIN">
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									</sec:authorize>
 								</div>
 							</div>
 							<!--  2eme colonne -->
@@ -157,11 +159,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="panel panel-default no-b">
 									<div class="form-group">
 										<label for="niveauManuel">Niveau manuel</label>
-										<div class="text-primary">
-											<a id="creation-niveau-manuel" data-toggle="modal"
-												data-target=".bs-modal-sm" class="text-info">Enregistrer
-												un nouveau niveau manuel</a>
-										</div>
+										<sec:authorize ifAllGranted="ADMIN">
+											<div class="text-primary">
+												<a id="creation-niveau-manuel" data-toggle="modal"
+													data-target="#modal-creation-niveau-manuel" class="text-info">Enregistrer
+													un nouveau niveau manuel</a>
+											</div>
+										</sec:authorize>
 										<form:input readonly="true" type="text"
 											class="transfertInput form-control" id="niveauManuel"
 											path="niveauManuel.valeur" />
@@ -196,35 +200,48 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<form:checkbox id="maintenance" path="maintenance"
 											label="Maintenance" disabled="${readOnlyValue }" />
 									</div>
-
-									<header class="panel-heading clearfix brtl brtr no-b">
-										<div class="overflow-hidden">
-											<span class="h4 show no-m pt10">Historiques niveaux
-												manuels</span>
-										</div>
-									</header>
-									<div class="list-group ">
-										<table class="no-b no-m">
-											<thead>
-												<tr>
-													<th>Date</th>
-													<th>Valeur</th>
-												</tr>
-											</thead>
-											<c:forEach items="${listNiveauxManuels}" var="niveauManuel">
-												<tbody>
+									<c:if test="${not empty listNiveauxManuels }">
+										<header class="panel-heading clearfix brtl brtr no-b">
+											<div class="overflow-hidden">
+												<span class="h4 show no-m pt10">Historiques niveaux
+													manuels</span>
+											</div>
+										</header>
+										<div class="list-group ">
+											<table class="no-b no-m">
+												<thead>
 													<tr>
-														<td class=""><c:out value="${niveauManuel.date}" />
-															<!-- 																		</a> --></td>
-														<td><div class="list-group-item">
-																<c:out value="${niveauManuel.valeur}" />
-															</div></td>
+														<th>Date</th>
+														<th>Valeur</th>
+														<sec:authorize ifAllGranted="ADMIN">
+															<th class="nosort nosearch">Actions</th>
+														</sec:authorize>
 													</tr>
-												</tbody>
-											</c:forEach>
-										</table>
-									</div>
+												</thead>
+												<c:forEach items="${listNiveauxManuels}" var="niveauManuel">
+													<c:url var="urlMesureDelete"
+														value="/mesure/delete/${niveauManuel.id}/${enregistreur.id}" />
+													<tbody>
+														<tr>
 
+															<td class=""><fmt:formatDate
+																	value="${niveauManuel.date}"
+																	pattern="dd-MM-yyyy hh:mm:ss" /></td>
+															<td><div class="list-group-item">
+																	<c:out value="${niveauManuel.valeur}" />
+																</div></td>
+															<sec:authorize ifAllGranted="ADMIN">
+																<td><a data-url="${urlMesureDelete}"
+																	data-toggle="modal" data-target="#confirmModal"
+																	class="btn btn-outline btn-danger btn-xs js-confirm-btn"><i
+																		class="fa fa-remove"></i> </a></td>
+															</sec:authorize>
+														</tr>
+													</tbody>
+												</c:forEach>
+											</table>
+										</div>
+									</c:if>
 
 								</div>
 							</div>
@@ -234,8 +251,32 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			</div>
 		</div>
 
-		<!--  modal window for create or update niveau manuel -->
-		<div class="modal fade bs-modal-sm" tabindex="-1" role="dialog"
+		<!-- Fenetre modale -->
+		<div id="confirmModal" class="modal fade bs-modal-sm" tabindex="-1"
+			role="dialog" aria-hidden="true" data-backdrop="false"
+			data-show="false">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">×</button>
+						<h4 class="modal-title">Confirmation de suppression</h4>
+					</div>
+					<div class="modal-body">
+						<p>Supprimer cette ligne ?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+						<a id="js-confirm-button" class="btn btn-success">Confirmer</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Fenetre modale -->
+
+
+		<!--  modal window for create niveau manuel -->
+		<div id="modal-creation-niveau-manuel" class="modal fade bs-modal-sm creation-niveau-manuel" tabindex="-1" role="dialog"
 			aria-hidden="true" data-backdrop="false" data-show="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -246,7 +287,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					</div>
 					<div class="modal-body">
 						<div>
-							<c:url var="createNiveauManuel" value="/enregistreur/init" />
+							<c:url var="createNiveauManuel"
+								value="/enregistreur/redirect/enregistreur" />
 							<form:form id="form" method="POST" action="${createNiveauManuel}"
 								modelAttribute="enregistreur" role="form"
 								class="parsley-form clearfix" data-validate="parsley"
@@ -268,7 +310,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:hidden id="data-panneauSolaire" path="panneauSolaire" />
 								<form:hidden id="data-sonde" path="sonde" />
 								<form:hidden id="data-croquis" path="croquis" />
-								<form:hidden id="data-alertesActives" path="alertesActives" />
+								<form:hidden id="data-alertes" path="alertes" />
 								<form:hidden id="data-echelleCapteur" path="echelleCapteur" />
 								<form:hidden id="data-altitude" path="altitude" />
 								<form:hidden id="data-coeffTemperature" path="coeffTemperature" />
@@ -299,7 +341,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<button type="button" class="btn btn-default"
 										data-dismiss="modal">Close</button>
 									<button id="validate-creation-niveau-manuel" type="submit"
-										class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+										class="btn btn-outline btn-primary">Créer nouveau</button>
 								</div>
 							</form:form>
 						</div>
@@ -308,7 +350,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</div>
 			</div>
 		</div>
-		<!--  modal window for create or update niveau manuel -->
+		<!--  modal window for createniveau manuel -->
 
 		<!-- /content wrapper -->
 		<a class="exit-offscreen"></a>
@@ -324,12 +366,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				console.log(map);
 			})
 
-			$('.bs-modal-sm').modal();
-			$('.bs-modal-sm').on('show.bs.modal', function(e) {
+			$('#modal-creation-niveau-manuel').modal();
+			$('#modal-creation-niveau-manuel').on('show.bs.modal', function(e) {
 				console.log(map);
 				Object.keys(map).forEach(function(element, index, array) {
 					$('#data-' + element).val(map[element]);
 					console.log(map.element);
 				});
+			});
+
+			$('#confirmModal').modal();
+			$('#confirmModal').on('show.bs.modal', function(e) {
+				var url = $(e.relatedTarget).data('url');
+				var $confirmButton = $('#js-confirm-button');
+				$confirmButton.attr('href', url);
 			});
 		</script>

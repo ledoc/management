@@ -3,15 +3,11 @@ package fr.treeptik.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +33,7 @@ import fr.treeptik.model.Alerte;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
-import fr.treeptik.model.TypeMesure;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
@@ -59,33 +55,73 @@ public class EnregistreurController {
 	@Inject
 	private AlerteService alerteService;
 
-	@RequestMapping(value = "/init", method = RequestMethod.POST)
-	public String initEnregistreur(@ModelAttribute Enregistreur enregistreur,
-			BindingResult result, Model model) throws ControllerException {
+	@RequestMapping(value = "/redirect/enregistreur", method = RequestMethod.POST)
+	public String redirectEnregistreur(
+			@ModelAttribute Enregistreur enregistreur, BindingResult result,
+			Model model) throws ControllerException {
 
 		logger.debug(result.getAllErrors());
-		logger.info("--create EnregistreurController-- " + enregistreur);
+		logger.info("--create EnregistreurController-- " + enregistreur
+				+ " - niveau manuel : " + enregistreur.getNiveauManuel());
 
 		List<Alerte> alertesCombo;
-		Map<Integer, Alerte> alerteCache;
+		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
 
-		List<TypeMesure> typesMesureCombo = new ArrayList<TypeMesure>(
-				Arrays.asList(TypeMesure.values()));
-		alerteCache = new HashMap<Integer, Alerte>();
+		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
+				Arrays.asList(TypeMesureOrTrame.values()));
 
 		try {
 
 			alertesCombo = alerteService.findAll();
 
-			for (Alerte alerte : alertesCombo) {
-				alerteCache.put(alerte.getId(), alerte);
+
+			/**
+			 * TODO : Hack ? Mieux ? Pourri comment l'éviter?
+			 */
+			if (enregistreur.getNiveauManuel().getValeur() != null) {
+
+				if (enregistreur.getMesures() != null) {
+					logger.debug("Niv manuel déjà présent : "
+							+ enregistreur.getMesures().contains(
+									enregistreur.getNiveauManuel()));
+					if (!enregistreur.getMesures().contains(
+							enregistreur.getNiveauManuel())) {
+						Mesure newNiveauManuel = enregistreur.getNiveauManuel();
+						newNiveauManuel.setId(null);
+						newNiveauManuel.setEnregistreur(enregistreur);
+						enregistreur.getMesures().add(newNiveauManuel);
+						System.out.println("list : "
+								+ enregistreur.getMesures());
+					}
+				} else {
+					List<Mesure> mesures = new ArrayList<Mesure>();
+					Mesure newNiveauManuel = enregistreur.getNiveauManuel();
+					newNiveauManuel.setEnregistreur(enregistreur);
+					mesures.add(newNiveauManuel);
+					enregistreur.setMesures(mesures);
+				}
 			}
+
+			/**
+			 * TODO fin
+			 */
+
+			if (enregistreur.getMesures() != null) {
+				listNiveauxManuels = enregistreur
+						.getMesures()
+						.stream()
+						.filter(m -> m.getTypeMesure().equals(
+								TypeMesureOrTrame.NIVEAUMANUEL))
+						.collect(Collectors.toList());
+			}
+
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
 		model.addAttribute("enregistreur", enregistreur);
+		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
 		model.addAttribute("typesMesureCombo", typesMesureCombo);
 		model.addAttribute("alertesCombo", alertesCombo);
 
@@ -102,8 +138,8 @@ public class EnregistreurController {
 
 		Enregistreur enregistreur = new Enregistreur();
 		Ouvrage ouvrage = new Ouvrage();
-		List<TypeMesure> typesMesureCombo = new ArrayList<TypeMesure>(
-				Arrays.asList(TypeMesure.values()));
+		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
+				Arrays.asList(TypeMesureOrTrame.values()));
 		List<Alerte> alertesCombo;
 		Map<Integer, Alerte> alerteCache;
 
@@ -112,6 +148,10 @@ public class EnregistreurController {
 			alertesCombo = alerteService.findAll();
 
 			enregistreur.setOuvrage(ouvrage);
+			/**
+			 * TODO : attention
+			 */
+			enregistreur.setMaintenance(false);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -201,8 +241,8 @@ public class EnregistreurController {
 		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
 		List<Alerte> alertesCombo;
 
-		List<TypeMesure> typesMesureCombo = new ArrayList<TypeMesure>(
-				Arrays.asList(TypeMesure.values()));
+		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
+				Arrays.asList(TypeMesureOrTrame.values()));
 
 		try {
 			enregistreur = enregistreurService
@@ -215,7 +255,7 @@ public class EnregistreurController {
 						.getMesures()
 						.stream()
 						.filter(m -> m.getTypeMesure().equals(
-								TypeMesure.NIVEAUMANUEL))
+								TypeMesureOrTrame.NIVEAUMANUEL))
 						.collect(Collectors.toList());
 			}
 

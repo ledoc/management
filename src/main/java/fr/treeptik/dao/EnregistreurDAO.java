@@ -17,7 +17,7 @@ public interface EnregistreurDAO extends JpaRepository<Enregistreur, Integer> {
 	public Enregistreur findByMidWithJoinFechTrameDWs(@Param("mid") String mid)
 			throws DataAccessException;
 
-	@Query("select e from Enregistreur e left join fetch e.alertesActives where e.id = :id")
+	@Query("select e from Enregistreur e left join fetch e.alertes where e.id = :id")
 	public Enregistreur findByIdWithJoinFetchAlertesActives(
 			@Param("id") Integer id) throws DataAccessException;
 
