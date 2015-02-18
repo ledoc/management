@@ -47,7 +47,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
 							Ouvrage</h1>
 						<p class="text-muted">Pour ajouter un ou des enregistreurs
 							l'ouvrage doit d'abord être créé</p>
@@ -161,7 +161,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="pull-right">
 									<a href="<c:url  value="/ouvrage/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									<sec:authorize ifAllGranted="ADMIN">
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									</sec:authorize>
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -271,7 +273,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<th>Sonde</th>
 												<th>Dernière mesure</th>
 												<th>Niveau manuel</th>
-												<th class="nosort nosearch">Actions</th>
+												<sec:authorize ifAllGranted="ADMIN">
+													<th class="nosort nosearch">Actions</th>
+												</sec:authorize>
 											</tr>
 										</thead>
 										<tbody>
@@ -289,11 +293,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													<td><c:out
 															value="${enregistreur.derniereMesure.valeur}" /></td>
 													<td><c:out value="${enregistreur.niveauManuel.valeur}" /></td>
-													<td><a data-url="${urlEnregistreurDelete}"
-														data-toggle="modal" data-target="#confirmModal"
-														class="btn btn-outline btn-danger btn-xs js-confirm-btn">
-															<i class="fa fa-remove"></i>
-													</a></td>
+													<sec:authorize ifAllGranted="ADMIN">
+														<td><a data-url="${urlEnregistreurDelete}"
+															data-toggle="modal" data-target="#confirmModal"
+															class="btn btn-outline btn-danger btn-xs js-confirm-btn">
+																<i class="fa fa-remove"></i>
+														</a></td>
+													</sec:authorize>
 												</tr>
 											</c:forEach>
 										</tbody>

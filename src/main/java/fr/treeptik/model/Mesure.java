@@ -21,24 +21,25 @@ public class Mesure implements Serializable {
 
 	// niveaux d'eau, pluviometrie, niveau batterie
 	@Enumerated(EnumType.STRING)
-	private TypeMesure typeMesure;
+	private TypeMesureOrTrame typeMesure;
 	private Date date;
 	@ManyToOne
 	private Ouvrage ouvrage;
-	
+
 	@ManyToOne
 	private Enregistreur enregistreur;
-	
+
 	private Float valeur;
 
 	public Mesure() {
 		super();
 	}
 
-	public Mesure(Integer id, TypeMesure typeMesure, Date date, Ouvrage ouvrage, Float valeur) {
+	public Mesure(Integer id, TypeMesureOrTrame typeMesureOrTrame, Date date,
+			Ouvrage ouvrage, Float valeur) {
 		super();
 		this.id = id;
-		this.typeMesure = typeMesure;
+		this.typeMesure = typeMesureOrTrame;
 		this.date = date;
 		this.ouvrage = ouvrage;
 		this.valeur = valeur;
@@ -52,11 +53,11 @@ public class Mesure implements Serializable {
 		this.id = id;
 	}
 
-	public TypeMesure getTypeMesure() {
+	public TypeMesureOrTrame getTypeMesure() {
 		return typeMesure;
 	}
 
-	public void setTypeMesure(TypeMesure typeMesure) {
+	public void setTypeMesure(TypeMesureOrTrame typeMesure) {
 		this.typeMesure = typeMesure;
 	}
 
@@ -75,7 +76,7 @@ public class Mesure implements Serializable {
 	public void setOuvrage(Ouvrage ouvrage) {
 		this.ouvrage = ouvrage;
 	}
-	
+
 	public Enregistreur getEnregistreur() {
 		return enregistreur;
 	}
@@ -94,7 +95,8 @@ public class Mesure implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Mesure [id=" + id + ", typeMesure=" + typeMesure + ", date=" + date + ", valeur=" + valeur + "]";
+		return "Mesure [id=" + id + ", typeMesure=" + typeMesure + ", date="
+				+ date + ", valeur=" + valeur + "]";
 	}
 
 	@Override
@@ -103,7 +105,8 @@ public class Mesure implements Serializable {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((typeMesure == null) ? 0 : typeMesure.hashCode());
+		result = prime * result
+				+ ((typeMesure == null) ? 0 : typeMesure.hashCode());
 		result = prime * result + Float.floatToIntBits(valeur);
 		return result;
 	}

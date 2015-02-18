@@ -42,7 +42,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
 							Client</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							client.</p>
@@ -144,7 +144,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="pull-right">
 									<a href="<c:url  value="/client/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									<sec:authorize ifAllGranted="ADMIN">
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									</sec:authorize>
 								</div>
 							</div>
 

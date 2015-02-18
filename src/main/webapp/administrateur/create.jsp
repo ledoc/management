@@ -10,17 +10,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="active" name="menuAdministrateurActive" />
 	<jsp:param value="Solices - Détails Administrateur" name="titreOnglet" />
 </jsp:include>
-		
-	<c:if test="${empty administrateur.id}">
-		<c:set var="sentenceCreateUpdate" value="créer" />
-		<c:set var="labelCreateUpdate" value="Créer" />
-		<c:set var="textCreateUpdate" value="Création" />
-	</c:if>
-	<c:if test="${not empty administrateur.id}">
-		<c:set var="sentenceCreateUpdate" value="mettre à jour" />
-		<c:set var="labelCreateUpdate" value="Mettre à jour" />
-		<c:set var="textCreateUpdate" value="Mise à jour" />
-	</c:if>
+
+<c:if test="${empty administrateur.id}">
+	<c:set var="sentenceCreateUpdate" value="créer" />
+	<c:set var="labelCreateUpdate" value="Créer" />
+	<c:set var="textCreateUpdate" value="Création" />
+</c:if>
+<c:if test="${not empty administrateur.id}">
+	<c:set var="sentenceCreateUpdate" value="mettre à jour" />
+	<c:set var="labelCreateUpdate" value="Mettre à jour" />
+	<c:set var="textCreateUpdate" value="Mise à jour" />
+</c:if>
 
 <section class="layout">
 
@@ -32,7 +32,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un Administrateur</h1>
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+							Administrateur</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							administrateur.</p>
 					</header>
@@ -46,9 +47,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<form:hidden path="id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
-							
-							<form:errors path="*" cssClass="alert alert-danger alert-dismissible fade in" element="div"/>
-							
+
+								<form:errors path="*"
+									cssClass="alert alert-danger alert-dismissible fade in"
+									element="div" />
+
 								<div class="form-group">
 									<label for="nom">Nom</label>
 									<form:input type="text" class="form-control" id="nom"
@@ -113,7 +116,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="pull-right">
 									<a href="<c:url  value="/administrateur/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
 								</div>
 							</div>
 						</form:form>
