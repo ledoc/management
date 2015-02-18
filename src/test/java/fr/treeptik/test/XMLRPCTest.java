@@ -21,6 +21,7 @@ import fr.treeptik.conf.DispatcherServletConfiguration;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.deveryware.DeviceState;
+import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.DateUnixConverter;
@@ -39,6 +40,9 @@ public class XMLRPCTest {
 	private EnregistreurService enregistreurService;
 	@Inject
 	private TrameDWService trameDWService;
+	
+	@Inject
+	private DeverywareService deverywareService;
 
 	private String sessionKey;
 	private static final String MID = "gps://ORANGE/+33781916177";
@@ -95,29 +99,34 @@ public class XMLRPCTest {
 
 	@Test
 	public void getHistoryTest() throws Exception {
-		Enregistreur enregistreur = new Enregistreur();
-		enregistreur = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
-		System.out.println(enregistreur.getClientName());
-
-		Object[] history = xmlRPCUtils.getHistory(MID, sessionKey);
-		logger.info(history.length + " trame History récupérée");
-		TrameDW trameDW = new TrameDW();
-		for (Object dataXmlRpc : history) {
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) dataXmlRpc;
-			int dateInt = (int) hashMapHistoryXmlRpc.get("date");
-
-			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
-			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
-			System.out.println(enregistreur);
-			trameDW.setEnregistreur(enregistreur);
-			trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
-
-			trameDWService.create(trameDW);
-			logger.info(trameDW.toString());
-			enregistreur.getTrameDWs().add(trameDW);
-			enregistreurService.update(enregistreur);
-		}
+		
+		deverywareService.getHistory(MID);
+		
+//		Enregistreur enregistreur = new Enregistreur();
+//		enregistreur = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
+//		System.out.println(enregistreur.getClientName());
+//
+//		Object[] history = xmlRPCUtils.getHistory(MID, sessionKey);
+//		logger.info(history.length + " trame History récupérée");
+//		TrameDW trameDW = new TrameDW();
+//		for (Object dataXmlRpc : history) {
+//			@SuppressWarnings("unchecked")
+//			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) dataXmlRpc;
+//			int dateInt = (int) hashMapHistoryXmlRpc.get("date");
+//
+//			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
+//			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
+//			System.out.println(enregistreur);
+//			trameDW.setEnregistreur(enregistreur);
+//			trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
+//
+//			trameDWService.create(trameDW);
+//			logger.info(trameDW.toString());
+//			enregistreur.getTrameDWs().add(trameDW);
+//			enregistreurService.update(enregistreur);
+//		}
+		
+		
 	}
 
 	// @Test

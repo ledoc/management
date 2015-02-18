@@ -24,7 +24,7 @@ import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.TrameDW;
-import fr.treeptik.model.TypeMesure;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
@@ -77,7 +77,7 @@ public class MesureCRUDTest {
 		float random3 = random1 + 2;
 
 		Mesure mesure1 = new Mesure();
-		mesure1.setTypeMesure(TypeMesure.NIVEAUDEAU);
+		mesure1.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure1.setDate(new Date());
 		mesure1.setValeur(random1);
 
@@ -91,13 +91,13 @@ public class MesureCRUDTest {
 
 		Mesure mesure2 = new Mesure();
 
-		mesure2.setTypeMesure(TypeMesure.NIVEAUDEAU);
+		mesure2.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure2.setDate(new Date());
 		mesure2.setValeur(random2);
 
 		mesureService.create(mesure2);
 
-		mesure2.setTypeMesure(TypeMesure.NIVEAUDEAU);
+		mesure2.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure2.setDate(new Date());
 		mesure2.setValeur(random3);
 		mesureService.update(mesure2);

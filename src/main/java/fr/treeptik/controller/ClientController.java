@@ -52,8 +52,6 @@ public class ClientController {
 
 	/**
 	 * 
-	 * Init Create en GET
-	 * 
 	 * @param model
 	 * @return
 	 * @throws ControllerException

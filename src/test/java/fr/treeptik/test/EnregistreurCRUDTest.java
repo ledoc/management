@@ -62,13 +62,13 @@ public class EnregistreurCRUDTest {
 		alerte = new Alerte();
 
 		alerte.setActivation(activation);
-		alerte.setEmailOrSMSDEnvoi(emailOrSMSDEnvoi);
-		alerte.setCode(code);
+		alerte.setEmailDEnvoi(emailOrSMSDEnvoi);
+		alerte.setCodeAlerte(code);
 		alerte.setIntitule(intitule);
 		alerte.setLienAPIDW(lienAPIDW);
 		alerte.setModeEnvoi(modeEnvoi);
 		alerte.setTendance(tendance);
-		alerte.setType(type);
+		alerte.setTypeAlerte(type);
 		alerte.setValeurCritique(valeurCritique);
 		alerteService.create(alerte);
 	}
@@ -131,7 +131,7 @@ public class EnregistreurCRUDTest {
 
 		Enregistreur enregistreur = enregistreurService.findByMid(mid);
 
-		enregistreur.setAlertesActives(alertesActives);
+		enregistreur.setAlertes(alertesActives);
 		enregistreur.setBatterie(batterie);
 		enregistreur.setCroquis(croquis);
 		enregistreur.setMaintenance(maintenance);
@@ -153,7 +153,7 @@ public class EnregistreurCRUDTest {
 
 		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 
-		enregistreur2.getAlertesActives().add(alerte);
+		enregistreur2.getAlertes().add(alerte);
 		enregistreur2.setBatterie(batterie2);
 		enregistreur2.setCroquis(croquis2);
 		enregistreur2.setMaintenance(maintenance2);

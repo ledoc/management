@@ -123,11 +123,10 @@ public class XMLRPCUtils {
 	}
 
 	public Object[] getHistory(String mid, String sessionKey) {
-		logger.info("--getHistory --");
+		logger.info("--getHistory -- sessionKey :" + sessionKey + " - mid : " + mid);
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey + " - mid : " + mid);
 
 		Object[] result = null;
 		int nbPos = 6;
@@ -138,8 +137,7 @@ public class XMLRPCUtils {
 		try {
 			Object[] params = new Object[] { sessionKey, mid, nbPos, state, content, port, compress };
 
-			logger.info("--XMLRPC PARAMS--");
-			logger.info(" = sessionKey : " + sessionKey + " - mid : " + mid + " - nbPos : " + nbPos + " - state : "
+			logger.info("XMLRPC PARAMS = sessionKey : " + sessionKey + " - mid : " + mid + " - nbPos : " + nbPos + " - state : "
 					+ state + " - content : " + content + " - port : " + port + " - compress : " + compress);
 
 			result = (Object[]) xmlRpcClient.execute("Deveryflow.getHistory", params);

@@ -59,13 +59,13 @@ public class AlerteCRUDTest {
 		Alerte alerte = new Alerte();
 
 		alerte.setActivation(activation);
-		alerte.setEmailOrSMSDEnvoi(emailOrSMSDEnvoi);
-		alerte.setCode(code);
+		alerte.setEmailDEnvoi(emailOrSMSDEnvoi);
+		alerte.setCodeAlerte(code);
 		alerte.setIntitule(intitule);
 		alerte.setLienAPIDW(lienAPIDW);
 		alerte.setModeEnvoi(modeEnvoi);
 		alerte.setTendance(tendance);
-		alerte.setType(type);
+		alerte.setTypeAlerte(type);
 		alerte.setValeurCritique(valeurCritique);
 
 		alerteService.create(alerte);
@@ -78,18 +78,18 @@ public class AlerteCRUDTest {
 
 		Alerte alerte2 = new Alerte();
 		alerte2.setActivation(activation2);
-		alerte2.setEmailOrSMSDEnvoi(emailOrSMSDEnvoi2);
-		alerte2.setCode(code2);
+		alerte2.setEmailDEnvoi(emailOrSMSDEnvoi2);
+		alerte2.setCodeAlerte(code2);
 		alerte2.setIntitule(intitule2);
 		alerte2.setLienAPIDW(lienAPIDW2);
 		alerte2.setModeEnvoi(modeEnvoi2);
 		alerte2.setTendance(tendance2);
-		alerte2.setType(type2);
+		alerte2.setTypeAlerte(type2);
 		alerte2.setValeurCritique(valeurCritique2);
 
 		alerteService.create(alerte2);
 
-		alerte2.setCode("ARMAGEDON");
+		alerte2.setCodeAlerte("ARMAGEDON");
 		;
 		alerteService.update(alerte2);
 
