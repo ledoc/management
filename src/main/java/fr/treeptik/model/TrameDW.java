@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,14 +22,16 @@ public class TrameDW implements Serializable {
 	private Integer id;
 	@ManyToOne
 	private Enregistreur enregistreur;
+	@Enumerated(EnumType.STRING)
+	private TypeMesureOrTrame typeTrameDW; 
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	@Temporal(TemporalType.TIME)
 	private Date heure;
 	// milliAmpère
-	private float signalBrut;
+	private Float signalBrut;
 	// 1ere conversion
-	private String hauteurEau;
+	private Float valeur;
 
 	// public TrameDW(HashMap<String, Object> hashMapHistoryXmlRpc){
 	//
@@ -60,6 +64,14 @@ public class TrameDW implements Serializable {
 	public void setEnregistreur(Enregistreur enregistreur) {
 		this.enregistreur = enregistreur;
 	}
+	
+	public TypeMesureOrTrame getTypeTrameDW() {
+		return typeTrameDW;
+	}
+
+	public void setTypeTrameDW(TypeMesureOrTrame typeTrameDW) {
+		this.typeTrameDW = typeTrameDW;
+	}
 
 	public Date getDate() {
 		return date;
@@ -77,26 +89,26 @@ public class TrameDW implements Serializable {
 		this.heure = heure;
 	}
 
-	public float getSignalBrut() {
+	public Float getSignalBrut() {
 		return signalBrut;
 	}
 
-	public void setSignalBrut(float signalBrut) {
+	public void setSignalBrut(Float signalBrut) {
 		this.signalBrut = signalBrut;
 	}
 
-	public String getHauteurEau() {
-		return hauteurEau;
+	public Float getValeur() {
+		return valeur;
 	}
 
-	public void setHauteurEau(String hauteurEau) {
-		this.hauteurEau = hauteurEau;
+	public void setValeur(Float hauteurEau) {
+		this.valeur = hauteurEau;
 	}
 
 	@Override
 	public String toString() {
 		return "TrameDW [id=" + id + ", date=" + date + ", heure=" + heure + ", signalBrut=" + signalBrut
-				+ ", hauteurEau=" + hauteurEau + "]";
+				+ ", hauteurEau=" + valeur + "]";
 	}
 
 	@Override
@@ -105,7 +117,7 @@ public class TrameDW implements Serializable {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((enregistreur == null) ? 0 : enregistreur.hashCode());
-		result = prime * result + ((hauteurEau == null) ? 0 : hauteurEau.hashCode());
+		result = prime * result + ((valeur == null) ? 0 : valeur.hashCode());
 		result = prime * result + ((heure == null) ? 0 : heure.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Float.floatToIntBits(signalBrut);
@@ -131,10 +143,10 @@ public class TrameDW implements Serializable {
 				return false;
 		} else if (!enregistreur.equals(other.enregistreur))
 			return false;
-		if (hauteurEau == null) {
-			if (other.hauteurEau != null)
+		if (valeur == null) {
+			if (other.valeur != null)
 				return false;
-		} else if (!hauteurEau.equals(other.hauteurEau))
+		} else if (!valeur.equals(other.valeur))
 			return false;
 		if (heure == null) {
 			if (other.heure != null)

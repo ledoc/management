@@ -28,7 +28,7 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
-import fr.treeptik.model.TypeMesure;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 
@@ -50,8 +50,8 @@ public class MesureController {
 		logger.info("--create formulaire MesureController--");
 
 		List<Enregistreur> enregistreursCombo;
-		List<TypeMesure> typesMesureCombo = new ArrayList<TypeMesure>(
-				Arrays.asList(TypeMesure.values()));
+		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
+				Arrays.asList(TypeMesureOrTrame.values()));
 		try {
 			enregistreursCombo = enregistreurService.findAll();
 		} catch (ServiceException e) {
@@ -59,21 +59,20 @@ public class MesureController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		
 		enregistreurCache = new HashMap<Integer, Enregistreur>();
 		for (Enregistreur enregistreur : enregistreursCombo) {
 			enregistreurCache.put(enregistreur.getId(), enregistreur);
 		}
-		
+
 		model.addAttribute("typesMesureCombo", typesMesureCombo);
 		model.addAttribute("mesure", new Mesure());
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
 		return "/mesure/create";
 	}
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Mesure mesure,
-			BindingResult result) throws ControllerException {
+	public String create(@ModelAttribute Mesure mesure, BindingResult result)
+			throws ControllerException {
 		logger.debug(result.getAllErrors());
 		logger.info("--create MesureController--");
 		logger.debug("mesure : " + mesure);
@@ -92,7 +91,6 @@ public class MesureController {
 		return "redirect:/mesure/list";
 
 	}
-	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
@@ -122,22 +120,24 @@ public class MesureController {
 		return "/mesure/create";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id)
+	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}/{enregistreurId}")
+	public String delete(Model model, @PathVariable("id") Integer id,
+			@PathVariable("enregistreurId") Integer enregistreurId)
 			throws ControllerException {
 		logger.info("--delete MesureController--");
 		logger.debug("mesureId : " + id);
-
+		Mesure mesure;
 		try {
-			mesureService.remove(id);
+			mesure = mesureService.findById(id);
+			mesureService.remove(mesure.getId());
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/mesure/list";
+		return "redirect:/enregistreur/update/" + enregistreurId;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
+	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--list MesureController--");
@@ -194,10 +194,9 @@ public class MesureController {
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) throws ControllerException {
 
-
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"), true));
-		
+
 		binder.registerCustomEditor(List.class, "enregistreurs",
 				new CustomCollectionEditor(List.class) {
 					protected Object convertElement(Object element) {
@@ -239,7 +238,8 @@ public class MesureController {
 		return enregistreurCache;
 	}
 
-	public void setEnregistreurCache(Map<Integer, Enregistreur> enregistreurCache) {
+	public void setEnregistreurCache(
+			Map<Integer, Enregistreur> enregistreurCache) {
 		this.enregistreurCache = enregistreurCache;
 	}
 

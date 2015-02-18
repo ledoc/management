@@ -13,15 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.MesureDAO;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
-import fr.treeptik.model.TypeMesure;
+import fr.treeptik.model.TrameDW;
+import fr.treeptik.model.TypeEnregistreur;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.MesureService;
+import fr.treeptik.service.TrameDWService;
 
 @Service
 public class MesureServiceImpl implements MesureService {
 
 	@Inject
 	private MesureDAO mesureDAO;
+	
+	@Inject
+	private TrameDWService trameDWService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
@@ -52,8 +59,7 @@ public class MesureServiceImpl implements MesureService {
 	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE MesureService --");
-		logger.debug("mesureId : " + id);
+		logger.info("--DELETE MesureService -- mesureId : " + id);
 		mesureDAO.delete(id);
 	}
 
@@ -62,11 +68,11 @@ public class MesureServiceImpl implements MesureService {
 		logger.info("--FINDALL MesureService --");
 		return mesureDAO.findAll();
 	}
-	
+
 	@Override
 	public List<Mesure> findByEnregistreurId(Integer id)
 			throws ServiceException {
-		logger.info("--findByEnregistreurId MesureService by Id--");
+		logger.info("--findByEnregistreurId MesureService -- Id : " + id);
 		List<Mesure> mesures;
 		try {
 			mesures = mesureDAO.findByEnregistreurId(id);
@@ -76,10 +82,9 @@ public class MesureServiceImpl implements MesureService {
 		}
 		return mesures;
 	}
-	
+
 	@Override
-	public List<Mesure> findByOuvrageId(Integer id)
-			throws ServiceException {
+	public List<Mesure> findByOuvrageId(Integer id) throws ServiceException {
 		logger.info("--findByOuvrageId MesureService by Id--");
 		List<Mesure> mesures;
 		try {
@@ -90,41 +95,84 @@ public class MesureServiceImpl implements MesureService {
 		}
 		return mesures;
 	}
-	
 
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
 	// (en mètre)
-	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;
+	// - intensite : valeur brute transmise par le capteur à un instant t (mA)
+
+	// Valeur à afficher comme mesure conductivité nette à 25°C =
+	// ((((Température-25)*coefficient de température)/100)+1)*((valeur capteur
+	// pleine échelle/16)*(Valeur mesurée-4))
+
+	/**
+	 * 
+	 */
 	@Override
-	public float conversionSignalElectrique_HauteurEau(float intensite,
+	public TrameDW conversionSignalElectrique_HauteurEau(TrameDW trameDW,
 			float profMax) throws ServiceException {
 		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
 
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
-		float hauteurEau;
-		hauteurEau = (profMax / 16) * (intensite - 4);
+		Float hauteurEau;
+		/**
+		 * TODO ajouter la temperature comme variable
+		 */
+		Float temperature = 25F;
+		Float signalBrut = trameDW.getSignalBrut();
+		Enregistreur enregistreur = trameDW.getEnregistreur();
+		Float coeffTemperature = enregistreur.getCoeffTemperature();
 
-		Mesure mesure = new Mesure();
-		mesure.setDate(new Date());
-		mesure.setTypeMesure(TypeMesure.NIVEAUDEAU);
-		mesure.setValeur(hauteurEau);
-		return hauteurEau;
+		if (enregistreur.getTypeEnregistreur().equals(
+				TypeEnregistreur.ANALOGIQUE)) {
+			hauteurEau = ((((temperature - 25) * coeffTemperature) / 100) + 1)
+					* (profMax / 16) * (signalBrut - 4);
+		} else {
+			hauteurEau = ((((temperature - 25) * coeffTemperature) / 100) + 1)
+					* signalBrut;
+		}
+		trameDW.setValeur(hauteurEau);
+		
+		trameDWService.update(trameDW);
+		
+		return trameDW;
 	}
 
 	// Ns0 = Nm0
 	// Nm0 : mesure manuelle initiale
 	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
 	@Override
-	public float conversionHauteurEau_CoteAltimetrique(float hauteurEau,
-			float dernier_calcul_Niveau_Eau, float derniere_HauteurEau) {
+	public float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW) throws ServiceException {
 		logger.info("--conversionHauteurEau_CoteAltimetrique mesure --");
 
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		float niveauEau;
-		niveauEau = dernier_calcul_Niveau_Eau
-				+ (hauteurEau - derniere_HauteurEau);
-
+		float dernierNiveauEau;
+		float derniereHauteurEau;
+		Enregistreur enregistreur = trameDW.getEnregistreur();
+		float hauteurEau = trameDW.getValeur();
+		derniereHauteurEau = enregistreur.getDerniereTrameDW().getValeur();
+		
+		if(enregistreur.getDerniereMesure().getValeur() != null ){
+			dernierNiveauEau = enregistreur.getDerniereMesure().getValeur();
+			
+		}else {
+			dernierNiveauEau = enregistreur.getNiveauManuel().getValeur();
+		}
+		
+		niveauEau = dernierNiveauEau
+				+ (hauteurEau - derniereHauteurEau);
+		
+		Mesure mesure = new Mesure();
+		mesure.setDate(new Date());
+		mesure.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure.setEnregistreur(enregistreur);
+		mesure.setValeur(niveauEau);
+		
+		enregistreur.getMesures().add(mesure);
+		
+		//enregistreurService
+		
+		
 		return niveauEau;
 	}
-
 }

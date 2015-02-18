@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Mesure;
+import fr.treeptik.model.TrameDW;
 
 public interface MesureService {
 
@@ -15,22 +16,21 @@ public interface MesureService {
 
 	List<Mesure> findAll() throws ServiceException;
 
-	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
-	// (en mètre)
-	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;
-	float conversionSignalElectrique_HauteurEau(float intensite, float profMax)
-			throws ServiceException;
-
-	// Ns0 = Nm0
-	// Nm0 : mesure manuelle initiale
-	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
-	float conversionHauteurEau_CoteAltimetrique(float hauteurEau,
-			float dernier_calcul_Niveau_Eau, float derniere_HauteurEau)
-			throws ServiceException;
-
 	void remove(Integer id) throws ServiceException;
 
 	List<Mesure> findByEnregistreurId(Integer id) throws ServiceException;
 
 	List<Mesure> findByOuvrageId(Integer id) throws ServiceException;
+
+	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
+	// (en mètre)
+	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;
+	TrameDW conversionSignalElectrique_HauteurEau(TrameDW trameDW, float profMax)
+			throws ServiceException;
+
+
+	// Ns0 = Nm0
+	// Nm0 : mesure manuelle initiale
+	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
+	float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW) throws ServiceException;
 }
