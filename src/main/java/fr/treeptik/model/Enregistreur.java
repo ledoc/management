@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,6 +32,9 @@ public class Enregistreur implements Serializable {
 
 	// identifiant applicatif
 	private String mid;
+	// Analogique ou numérique : différence pour calcul
+	@Enumerated(EnumType.STRING)
+	private TypeEnregistreur typeEnregistreur;
 	// figer la chronique en cas de changement d'un quelconque composant.
 	// fiche passera en écriture libre
 	// Un bouton de liaison NM apparaîtra afin da faire correspondre la nouvelle
@@ -46,6 +51,9 @@ public class Enregistreur implements Serializable {
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
 	@Transient
 	private Mesure derniereMesure;
+	// nécessaire pour calcul du niveau d'eau
+	@Transient
+	private TrameDW derniereTrameDW;
 
 	// modem : nom, modèle, numéro série…
 	private String modem;
@@ -66,10 +74,10 @@ public class Enregistreur implements Serializable {
 	// croquis dynamique de l'ensemble
 	private String croquis;
 	//
-	@OneToMany(cascade = CascadeType.REMOVE)
-	private List<Alerte> alertesActives;
-	// @OneToMany(mappedBy = "enregistreur")
-	// private List<TrameDW> trameDWs;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
+	private List<Alerte> alertes;
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
+	private List<TrameDW> trameDWs;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<Mesure> mesures;
@@ -91,8 +99,6 @@ public class Enregistreur implements Serializable {
 	private String comment;
 	private String type;
 	private String userName;
-	@OneToMany(mappedBy = "enregistreur")
-	private List<TrameDW> trameDWs;
 	@ManyToOne
 	private Ouvrage ouvrage;
 
@@ -102,6 +108,7 @@ public class Enregistreur implements Serializable {
 		super();
 		this.niveauManuel = new Mesure();
 		this.derniereMesure = new Mesure();
+		this.derniereTrameDW = new TrameDW();
 	}
 
 	public Enregistreur(HashMap<String, Object> xmlrpcHashMap) {
@@ -125,7 +132,91 @@ public class Enregistreur implements Serializable {
 	public void setDynamicMesures() {
 		this.setNiveauManuel();
 		this.setDerniereMesure();
+		this.setDerniereTrameDW();
 	}
+	
+	
+	/**
+	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
+	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
+	 * 
+	 * @param niveauManuel
+	 */
+	public Mesure getNiveauManuel() {
+		return niveauManuel;
+	}
+
+	/**
+	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
+	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
+	 * 
+	 * @param niveauManuel
+	 */
+	public void setNiveauManuel() {
+
+		if (this.mesures != null) {
+			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+					m2.getDate());
+
+			Optional<Mesure> optional = this.mesures
+					.stream()
+					.filter(m -> m.getTypeMesure().equals(
+							TypeMesureOrTrame.NIVEAUMANUEL)).max(c);
+
+			this.niveauManuel = optional.isPresent() ? optional.get()
+					: new Mesure();
+		}
+
+	}
+
+	/**
+	 * récupérer la dernière mesure enregistrée
+	 * 
+	 * @return
+	 */
+	public Mesure getDerniereMesure() {
+		return derniereMesure;
+	}
+
+	/**
+	 * affecter la dernière mesure enregistrée
+	 * 
+	 * @return
+	 */
+	public void setDerniereMesure() {
+		if (this.mesures != null) {
+			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+					m2.getDate());
+
+			Optional<Mesure> optional = this.mesures
+					.stream()
+					.filter(m -> !m.getTypeMesure().equals(
+							TypeMesureOrTrame.NIVEAUMANUEL)).max(c);
+
+			this.derniereMesure = optional.isPresent() ? optional.get()
+					: new Mesure();
+		}
+	}
+
+	public TrameDW getDerniereTrameDW() {
+		return derniereTrameDW;
+	}
+
+	public void setDerniereTrameDW() {
+
+		if (this.trameDWs != null) {
+			Comparator<TrameDW> c = (t1, t2) -> t1.getDate().compareTo(
+					t2.getDate());
+
+			Optional<TrameDW> optional = this.trameDWs.stream().max(c);
+
+			this.derniereTrameDW = optional.isPresent() ? optional.get()
+					: new TrameDW();
+		}
+	}
+	
+	
+	
 
 	public Integer getId() {
 		return id;
@@ -141,6 +232,14 @@ public class Enregistreur implements Serializable {
 
 	public void setMid(String mid) {
 		this.mid = mid;
+	}
+
+	public TypeEnregistreur getTypeEnregistreur() {
+		return typeEnregistreur;
+	}
+
+	public void setTypeEnregistreur(TypeEnregistreur typeEnregistreur) {
+		this.typeEnregistreur = typeEnregistreur;
 	}
 
 	public Float getAltitude() {
@@ -159,8 +258,6 @@ public class Enregistreur implements Serializable {
 		this.coeffTemperature = coeffTemperature;
 	}
 
-	
-	
 	public Float getEchelleCapteur() {
 		return echelleCapteur;
 	}
@@ -257,68 +354,6 @@ public class Enregistreur implements Serializable {
 		this.maintenance = maintenance;
 	}
 
-	/**
-	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
-	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
-	 * 
-	 * @param niveauManuel
-	 */
-	public Mesure getNiveauManuel() {
-		return niveauManuel;
-	}
-
-	/**
-	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
-	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
-	 * 
-	 * @param niveauManuel
-	 */
-	public void setNiveauManuel() {
-
-		if (this.mesures != null) {
-			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-					m2.getDate());
-
-			Optional<Mesure> optional = this.mesures
-					.stream()
-					.filter(m -> m.getTypeMesure().equals(
-							TypeMesure.NIVEAUMANUEL)).max(c);
-
-			this.niveauManuel = optional.isPresent() ? optional.get()
-					: new Mesure();
-		}
-
-	}
-
-	/**
-	 * récupérer la dernière mesure enregistrée
-	 * 
-	 * @return
-	 */
-	public Mesure getDerniereMesure() {
-		return derniereMesure;
-	}
-
-	/**
-	 * affecter la dernière mesure enregistrée
-	 * 
-	 * @return
-	 */
-	public void setDerniereMesure() {
-		if (this.mesures != null) {
-			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-					m2.getDate());
-
-			Optional<Mesure> optional = this.mesures
-					.stream()
-					.filter(m -> !m.getTypeMesure().equals(
-							TypeMesure.NIVEAUMANUEL)).max(c);
-
-			this.derniereMesure = optional.isPresent() ? optional.get()
-					: new Mesure();
-		}
-	}
-
 	public String getModem() {
 		return modem;
 	}
@@ -391,12 +426,12 @@ public class Enregistreur implements Serializable {
 		this.mesures = mesures;
 	}
 
-	public List<Alerte> getAlertesActives() {
-		return alertesActives;
+	public List<Alerte> getAlertes() {
+		return alertes;
 	}
 
-	public void setAlertesActives(List<Alerte> alertesActives) {
-		this.alertesActives = alertesActives;
+	public void setAlertes(List<Alerte> alertesActives) {
+		this.alertes = alertesActives;
 	}
 
 	public static long getSerialversionuid() {
