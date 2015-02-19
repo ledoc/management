@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import fr.treeptik.model.AlerteEmise;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TrameDW;
 
@@ -20,7 +21,7 @@ public class LoginAuditAspect {
 	@AfterReturning(pointcut = "execution(* fr.treeptik.dao.*.save(..))", returning = "result")
 	public void logAfterSave(JoinPoint joinPoint, Object result) {
 
-		if (!(joinPoint.getArgs()[0] instanceof TrameDW || joinPoint.getArgs()[0] instanceof Mesure)) {
+		if (!(joinPoint.getArgs()[0] instanceof TrameDW || joinPoint.getArgs()[0] instanceof Mesure || joinPoint.getArgs()[0] instanceof AlerteEmise)) {
 
 			SecurityContext context = SecurityContextHolder.getContext();
 			String loginName = context.getAuthentication().getName();

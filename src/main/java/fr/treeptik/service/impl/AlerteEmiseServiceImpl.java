@@ -30,8 +30,7 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public AlerteEmise create(AlerteEmise alerteEmise) throws ServiceException {
-		logger.info("--create AlerteEmiseServiceImpl --");
-		logger.debug("alerte : " + alerteEmise);
+		logger.info("--create AlerteEmiseServiceImpl -- alerte : " + alerteEmise);
 		return alerteEmiseDAO.save(alerteEmise);
 	}
 

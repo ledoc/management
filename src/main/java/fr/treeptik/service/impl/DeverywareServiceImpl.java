@@ -21,6 +21,7 @@ import fr.treeptik.model.deveryware.DeviceState;
 import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
+import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
 
@@ -32,6 +33,9 @@ public class DeverywareServiceImpl implements DeverywareService {
 	private XMLRPCUtils xmlRPCUtils;
 	@Inject
 	private EnregistreurService enregistreurService;
+	@Inject
+	private TrameDWService trameDWService;
+
 	@Inject
 	private MesureService mesureService;
 
@@ -70,6 +74,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 					hashMapHistoryXmlRpc);
 
 			trameDW.setEnregistreur(enregistreur);
+			trameDW = trameDWService.create(trameDW);
+			trameDW = trameDWService.findById(trameDW.getId());
 
 			if (enregistreur.getTrameDWs() != null) {
 				enregistreur.getTrameDWs().add(trameDW);
@@ -80,7 +86,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 			}
 
 			enregistreurService.update(enregistreur);
-			
 			mesureService.conversionSignalElectrique_Valeur(trameDW);
 		}
 
@@ -184,7 +189,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 	public String waitForMessage() throws ServiceException {
 		logger.info("--waitForMessage DeverywareServiceImpl--");
 
-		
 		HashMap<String, Object> waitForMessage = xmlRPCUtils
 				.waitForMessage(sessionKey);
 
