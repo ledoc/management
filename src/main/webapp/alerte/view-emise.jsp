@@ -22,7 +22,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">Vue d'un Alerte émise</h1>
+						<h1 class="h3 text-primary mt0">Détails de l'alerte émise</h1>
 					</header>
 
 					<div class="panel-body">
@@ -35,80 +35,82 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<form:hidden path="id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
-								<fmt:formatDate var="dateAlerteEmise" value="${alerte.date}"
-									pattern="dd-MM-yyyy hh:mm:ss" />
-								acquittement
+
 								<div class="form-group">
-									<label for="acquittement">Acquittement</label> <input
-										type="checkbox" class="form-control" id="acquittement"
-										value="acquittement" readonly="readonly" />
+									<label for="nom">Niveau d'Alerte</label>
+									<form:input type="text" class="form-control" id="niveauAlerte"
+										path="niveauAlerte.description" readonly="true" />
 								</div>
 								<div class="form-group">
-								<fmt:formatDate var="formatDate" value="${alerte.date}"
-													pattern="dd-MM-yyyy HH:mm:ss" />
+									<fmt:formatDate var="dateAlerteEmise" value="${alerte.date}"
+										pattern="dd-MM-yyyy hh:mm:ss" />
+									<fmt:formatDate var="formatDate" value="${alerte.date}"
+										pattern="dd-MM-yyyy HH:mm:ss" />
 									<label for="date">Date</label> <input type="text"
 										class="form-control" id="date" value="${formatDate }"
 										readonly="readonly" />
 								</div>
 								<div class="form-group">
-									<label for="nom">Niveau d'Alerte</label>
-									<form:input type="text" class="form-control" id="niveauAlerte"
-										path="niveauAlerte.description" readonly="readonly" />
-								</div>
-								<div class="form-group">
 									<label for="nom">Code</label>
 									<form:input type="text" class="form-control" id="codeAlerte"
-										path="codeAlerte" readonly="readonly" />
+										path="codeAlerte" readonly="true" />
 								</div>
 								<div class="form-group">
 									<label for="enregistreur">Enregistreur (identifiant DW)</label>
 									<form:input type="text" class="form-control" id="enregistreur"
-										path="enregistreur.mid" readonly="readonly" />
+										path="enregistreur.mid" readonly="true" />
 								</div>
 								<div class="form-group">
 									<label for="ouvrage">Ouvrage</label>
 									<form:input type="text" class="form-control" id="ouvrage"
-										path="enregistreur.ouvrage.codeOuvrage" readonly="readonly" />
+										path="enregistreur.ouvrage.codeOuvrage" readonly="true" />
 								</div>
 								<div class="form-group">
 									<label for="typeAlerte">Type</label>
 									<form:input id="typeAlerte" path="typeAlerte.description"
-										class="form-control" readonly="readonly" />
-								</div>
-								<div class="form-group">
-									<label for="tendance">Tendance</label>
-									<form:input id="tendance" class="form-control"
-										path="tendance.description" readonly="readonly" />
-								</div>
-								<div class="form-group">
-									<label for="mesureLevantAlerte">Seuil pré-alerte</label>
-									<form:input type="text" class="form-control"
-										id="mesureLevantAlerte" path="mesureLevantAlerte.valeur"
-										readonly="readonly" />
-								</div>
-								<div class="form-group">
-									<label for="seuilPreAlerte">Seuil pré-alerte</label>
-									<form:input type="text" class="form-control"
-										id="seuilPreAlerte" path="seuilPreAlerte" readonly="readonly" />
-								</div>
-								<div class="form-group">
-									<label for="seuilAlerte">Seuil d'alerte</label>
-									<form:input type="text" class="form-control" id="seuilAlerte"
-										path="seuilAlerte" readonly="readonly" />
-								</div>
-								<div class="form-group">
-									<label for="emailDEnvoi">Mail d'envoi</label>
-									<form:input class="form-control" id="emailDEnvoi"
-										path="emailDEnvoi" readonly="readOnlyValue" />
+										class="form-control" readonly="true" />
 								</div>
 								<div class="form-group">
 									<label for="intitule">Intitulé</label>
 									<form:input type="text" class="form-control" id="intitule"
-										path="intitule" readonly="readOnlyValue" />
+										path="intitule" readonly="true" />
+								</div>
+								<div class="form-group">
+									<label for="emailDEnvoi">Mail d'envoi</label>
+									<form:input class="form-control" id="emailDEnvoi"
+										path="emailDEnvoi" readonly="true" />
 								</div>
 								<div class="pull-right">
 									<a href="<c:url  value="/alerte/list" />"
 										class="btn btn-default btn-outline">Retour</a>
+								</div>
+
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="mesureLevantAlerte">Mesure relevée</label>
+									<form:input type="text" class="form-control"
+										id="mesureLevantAlerte" path="mesureLevantAlerte.valeur"
+										readonly="true" />
+								</div>
+								<div class="form-group">
+									<label for="tendance">Tendance</label>
+									<form:input id="tendance" class="form-control"
+										path="tendance.description" readonly="true" />
+								</div>
+								<div class="form-group">
+									<label for="seuilAlerte">Seuil d'alerte</label>
+									<form:input type="text" class="form-control" id="seuilAlerte"
+										path="seuilAlerte" readonly="true" />
+								</div>
+								<div class="form-group">
+									<label for="seuilPreAlerte">Seuil pré-alerte</label>
+									<form:input type="text" class="form-control"
+										id="seuilPreAlerte" path="seuilPreAlerte" readonly="true" />
+								</div>
+								<div class="checkbox checkbox-inline ">
+									<form:checkbox id="acquittement" path="acquittement"
+										label="Acquittement" disabled="true" />
 								</div>
 							</div>
 						</form:form>

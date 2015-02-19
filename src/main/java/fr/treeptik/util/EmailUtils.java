@@ -19,6 +19,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import fr.treeptik.model.AlerteEmise;
+import fr.treeptik.model.NiveauAlerte;
+import fr.treeptik.model.TendanceAlerte;
 
 @Component
 public class EmailUtils {
@@ -39,11 +41,26 @@ public class EmailUtils {
 			throws AddressException, MessagingException {
 		logger.info("--sendAcquittementEmail EmailUtils--");
 
-		SimpleDateFormat dateFormatter = new
-				 SimpleDateFormat("E dd-MM-y 'à' HH:mm", new Locale("fr"));
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(
+				"E dd-MM-y 'à' HH:mm", new Locale("fr"));
 		String date = dateFormatter.format(alerteEmise.getDate());
-		
-		String nomOuvrage = alerteEmise.getEnregistreur().getOuvrage().getNom();
+		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String niveauAlerte = null;
+		String seuil = null;
+
+		if (alerteEmise.getNiveauAlerte().equals(NiveauAlerte.ALERTE)) {
+			niveauAlerte = "d'alerte";
+		}
+		if (alerteEmise.getNiveauAlerte().equals(NiveauAlerte.PREALERTE)) {
+			niveauAlerte = "de pré-alerte";
+		}
+
+		if (alerteEmise.getTendance().equals(TendanceAlerte.INFERIEUR)) {
+			seuil = "bas";
+		}
+		if (alerteEmise.getTendance().equals(TendanceAlerte.SUPERIEUR)) {
+			seuil = "haut";
+		}
 
 		final String apiKey = env.getProperty("mail.apiKey");
 		final String secretKey = env.getProperty("mail.secretKey");
@@ -74,12 +91,17 @@ public class EmailUtils {
 		MimeMessage message = new MimeMessage(session);
 
 		String body = "<p><div>Bonjour,</div></p>"
-				+ "<p>Une "
-				+ alerteEmise.getNiveauAlerte().getDescription()
-				+ " a été émise par "
-				+ nomOuvrage
+				+ "<p>Le capteur n° "
+				+ midEnregistreur
+				+ " vient de détecter une valeur de "
+				+ +alerteEmise.getMesureLevantAlerte().getValeur()
+				+ " considérée comme dépassant le seuil "
+				+ niveauAlerte
+				+ " "
+				+ seuil
 				+ ", le "
-				+ date + ".</p>"
+				+ date
+				+ ".</p>"
 				+ "<p>Pour acquitter cette "
 				+ alerteEmise.getNiveauAlerte().getDescription()
 				+ " et avoir plus de détails, veuillez suivre le lien ci-dessous :</p>"
@@ -91,7 +113,7 @@ public class EmailUtils {
 		message.setFrom(new InternetAddress(emailFrom));
 		message.setRecipients(Message.RecipientType.TO,
 				InternetAddress.parse(alerteEmise.getEmailDEnvoi()));
-		message.setSubject(ALERTEMESSAGE + nomOuvrage);
+		message.setSubject(ALERTEMESSAGE + midEnregistreur);
 		message.setContent(body, "text/html");
 
 		Transport.send(message);

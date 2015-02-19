@@ -139,8 +139,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Ouvrage</th>
 										<th>Enregistreur</th>
 										<th>Type</th>
-										<th>Seuil pré-alerte</th>
-										<th>Seuil alerte</th>
 										<th>Mesure relevée</th>
 										<th>Etat</th>
 									</tr>
@@ -158,8 +156,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
 											<td><c:out value="${alerte.enregistreur.mid}" /></td>
 											<td><c:out value="${alerte.typeAlerte.description}" /></td>
-											<td><c:out value="${alerte.seuilPreAlerte}" /></td>
-											<td><c:out value="${alerte.seuilAlerte}" /></td>
 											<td><c:out value="${alerte.mesureLevantAlerte.valeur}" /></td>
 											<c:set var="acquittement" value="${alerte.acquittement}" />
 											<c:if test="${ acquittement == false }">
