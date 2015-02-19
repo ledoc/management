@@ -8,20 +8,30 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import fr.treeptik.model.Mesure;
+import fr.treeptik.model.TrameDW;
+
 @Aspect
 @Component
 public class LoginAuditAspect {
 
 	private Logger logger = Logger.getLogger(LoginAuditAspect.class);
 
-//	@AfterReturning(pointcut="execution(* fr.treeptik.dao.*.save(..))", returning="result")
+	@AfterReturning(pointcut="execution(* fr.treeptik.dao.*.save(..))", returning="result")
 	public void logAfterSave(JoinPoint joinPoint, Object result){
 		
-		SecurityContext context = SecurityContextHolder.getContext();
-		String loginName = context.getAuthentication().getName();
+		System.out.println(joinPoint.getArgs()[0].getClass());
 		
-		logger.info("- " + loginName + 
-				" - Save / Update - " + result.getClass().getSimpleName() + " - " + result );
+		if (! (joinPoint.getArgs()[0] instanceof TrameDW) || 
+				! (joinPoint.getArgs()[0] instanceof Mesure) ){
+			
+			SecurityContext context = SecurityContextHolder.getContext();
+			String loginName = context.getAuthentication().getName();
+			
+			logger.info("- " + loginName + 
+					" - Save / Update - " + result.getClass().getSimpleName() + " - " + result );
+			
+		}
 		
 	}
 	

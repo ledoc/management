@@ -47,7 +47,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des alertes</h1>
 						<p class="text-muted">Alertes actives : ${alertesActives} /
 							${alertesTotales}</p>
-						<div>${messageSuccess}</div>
+							
+							<c:if test='${ messageSuccess == "OK" }'>
+								<div style="text-align: center">
+									<span class="text-success h3">Votre Alerte a bien été acquittée.</span>
+								</div>
+							</c:if>
+
 						<div class="pull-right mb15">
 							<sec:authorize ifAllGranted="ADMIN">
 								<a data-url="<c:url  value="/alerte/description/create" />"
@@ -128,6 +134,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<section class="panel">
 						<header class="panel-heading no-b">
 							<h1 class="h3 text-primary mt0">Historique des alertes</h1>
+							<p class="text-muted">Cliquer sur le code pour voir le détail</p>
 						</header>
 						<div class="panel-body">
 
@@ -163,7 +170,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											</c:if>
 											<c:if test="${ acquittement == true }">
 												<td class="text-success"><b><c:out
-															value="acquittée" /></b></td>
+															value="Acquittée" /></b></td>
 											</c:if>
 									</c:forEach>
 								</tbody>
