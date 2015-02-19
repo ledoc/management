@@ -80,6 +80,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 			}
 
 			enregistreurService.update(enregistreur);
+			
 			mesureService.conversionSignalElectrique_Valeur(trameDW);
 		}
 

@@ -73,6 +73,7 @@ public class MesureServiceImpl implements MesureService {
 		}
 		trameDW.setValeur(valeur);
 
+		trameDW = trameDWService.findById(trameDW.getId());
 		trameDWService.update(trameDW);
 
 		/**
