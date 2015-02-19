@@ -2269,6 +2269,14 @@ a.list-group-item:hover, a.list-group-item:focus {
 	border-collapse: separate;
 }
 
+table .sommaire  td {
+	padding: 0 15px 0 0;
+}
+
+table .sommaire  td > a {
+	padding: 15px 0;
+}
+
 /* No More tables */
 @media ( max-width : 767px) {
 	/* Source:: http://elvery.net/demo/responsive-tables/#no-more-tables */

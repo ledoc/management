@@ -24,10 +24,8 @@ public class TrameDW implements Serializable {
 	private Enregistreur enregistreur;
 	@Enumerated(EnumType.STRING)
 	private TypeMesureOrTrame typeTrameDW; 
-	@Temporal(TemporalType.DATE)
+//	@Temporal(TemporalType.DATE)
 	private Date date;
-	@Temporal(TemporalType.TIME)
-	private Date heure;
 	// milliAmpère
 	private Float signalBrut;
 	// 1ere conversion
@@ -81,13 +79,6 @@ public class TrameDW implements Serializable {
 		this.date = date;
 	}
 
-	public Date getHeure() {
-		return heure;
-	}
-
-	public void setHeure(Date heure) {
-		this.heure = heure;
-	}
 
 	public Float getSignalBrut() {
 		return signalBrut;
@@ -107,7 +98,7 @@ public class TrameDW implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TrameDW [id=" + id + ", date=" + date + ", heure=" + heure + ", signalBrut=" + signalBrut
+		return "TrameDW [id=" + id + ", date=" + date + ", signalBrut=" + signalBrut
 				+ ", hauteurEau=" + valeur + "]";
 	}
 
@@ -118,7 +109,6 @@ public class TrameDW implements Serializable {
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((enregistreur == null) ? 0 : enregistreur.hashCode());
 		result = prime * result + ((valeur == null) ? 0 : valeur.hashCode());
-		result = prime * result + ((heure == null) ? 0 : heure.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Float.floatToIntBits(signalBrut);
 		return result;
@@ -147,11 +137,6 @@ public class TrameDW implements Serializable {
 			if (other.valeur != null)
 				return false;
 		} else if (!valeur.equals(other.valeur))
-			return false;
-		if (heure == null) {
-			if (other.heure != null)
-				return false;
-		} else if (!heure.equals(other.heure))
 			return false;
 		if (id == null) {
 			if (other.id != null)

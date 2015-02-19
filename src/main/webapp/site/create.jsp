@@ -45,7 +45,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un site</h1>
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un site</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
 							site.</p>
 					</header>
@@ -173,16 +173,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												</thead>
 												<c:forEach items="${site.ouvrages}" var="ouvrage">
 													<tbody>
-														<tr>
-															<td class="text-primary"><c:url
+														<tr class="sommaire" >
+															<td class="text-primary" ><c:url
 																	var="urlOuvrageUpdate"
 																	value="/ouvrage/update/${ouvrage.id}" /> <a
 																href="${urlOuvrageUpdate}"
 																class="list-group-item text-uppercase "><c:out
 																		value="${ouvrage.codeOuvrage}" /> </a></td>
-															<td><div class="list-group-item">
-																	<c:out value="${ouvrage.nom}" />
-																</div></td>
+															<td><c:out value="${ouvrage.nom}" /></td>
 														</tr>
 													</tbody>
 												</c:forEach>

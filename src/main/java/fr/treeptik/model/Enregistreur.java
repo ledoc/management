@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -135,8 +136,7 @@ public class Enregistreur implements Serializable {
 		this.initDerniereMesure();
 		this.initDerniereTrameDW();
 	}
-	
-	
+
 	/**
 	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
 	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
@@ -159,17 +159,22 @@ public class Enregistreur implements Serializable {
 			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
 					m2.getDate());
 
-			Optional<Mesure> optional = this.mesures
+			List<Mesure> allMesureManuel = this.mesures
 					.stream()
 					.filter(m -> m.getTypeMesure().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL)).max(c);
+							TypeMesureOrTrame.NIVEAUMANUEL))
+					.collect(Collectors.toList());
 
-			this.niveauManuel = optional.isPresent() ? optional.get().cloneMe()
-					: new Mesure();
-			
-			
+			if (allMesureManuel.size() < 1) {
+
+				Optional<Mesure> max = allMesureManuel.stream().max(c);
+
+				this.niveauManuel = max.isPresent() ? max.get().cloneMe()
+						: new Mesure();
+			} else {
+				this.niveauManuel = allMesureManuel.get(0).cloneMe();
+			}
 		}
-
 	}
 
 	/**
@@ -191,13 +196,20 @@ public class Enregistreur implements Serializable {
 			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
 					m2.getDate());
 
-			Optional<Mesure> optional = this.mesures
+			List<Mesure> allMesureNotManuel = this.mesures
 					.stream()
 					.filter(m -> !m.getTypeMesure().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL)).max(c);
+							TypeMesureOrTrame.NIVEAUMANUEL))
+					.collect(Collectors.toList());
+			if (allMesureNotManuel.size() < 1) {
 
-			this.derniereMesure = optional.isPresent() ? optional.get()
-					: new Mesure();
+				Optional<Mesure> max = allMesureNotManuel.stream().max(c);
+
+				this.derniereMesure = max.isPresent() ? max.get()
+						: new Mesure();
+			} else {
+				this.derniereMesure = allMesureNotManuel.get(0);
+			}
 		}
 	}
 
@@ -208,18 +220,24 @@ public class Enregistreur implements Serializable {
 	public void initDerniereTrameDW() {
 
 		if (this.trameDWs != null) {
-			Comparator<TrameDW> c = (t1, t2) -> t1.getDate().compareTo(
-					t2.getDate());
 
-			Optional<TrameDW> optional = this.trameDWs.stream().max(c);
+			if (this.trameDWs.size() < 1) {
 
-			this.derniereTrameDW = optional.isPresent() ? optional.get()
-					: new TrameDW();
+				Comparator<TrameDW> c = (t1, t2) -> t1.getDate().compareTo(
+						t2.getDate());
+
+				Optional<TrameDW> optional = this.trameDWs.stream().max(c);
+
+				this.derniereTrameDW = optional.isPresent() ? optional.get()
+						: new TrameDW();
+			}
+
+			else {
+				this.derniereTrameDW = this.trameDWs.get(0);
+			}
 		}
+
 	}
-	
-	
-	
 
 	public Integer getId() {
 		return id;
@@ -428,7 +446,6 @@ public class Enregistreur implements Serializable {
 	public void setMesures(List<Mesure> mesures) {
 		this.mesures = mesures;
 	}
-	
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

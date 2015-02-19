@@ -39,6 +39,7 @@ public class DateUnixConverter {
 				"dd/MM/yyyy HH:mm:ss");
 		Long dateLong = (long) intUnix;
 		String dateString = dateFormat.format(new Date(dateLong * 1000));
+		
 		return dateString;
 	}
 

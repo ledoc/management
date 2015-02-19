@@ -175,15 +175,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												</thead>
 												<c:forEach items="${etablissement.sites}" var="site">
 													<tbody>
-														<tr>
+														<tr class="sommaire">
 															<td class="text-primary"><c:url var="urlSiteUpdate"
 																	value="/site/update/${site.id}" /> <a
 																href="${urlSiteUpdate}"
 																class="list-group-item text-uppercase"><c:out
 																		value="${site.codeSite}" /> </a></td>
-															<td><div class="list-group-item">
-																	<c:out value="${site.nom}" />
-																</div></td>
+															<td><c:out value="${site.nom}" /></td>
 														</tr>
 													</tbody>
 												</c:forEach>

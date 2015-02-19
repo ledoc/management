@@ -72,23 +72,31 @@ public class DeverywareServiceImpl implements DeverywareService {
 			System.out.println(hashMapHistoryXmlRpc);
 			trameDW = this.transfertHistoryToTrameDW(trameDW,
 					hashMapHistoryXmlRpc);
-
-			trameDW.setEnregistreur(enregistreur);
-			trameDW = trameDWService.create(trameDW);
-			trameDW = trameDWService.findById(trameDW.getId());
-
 			if (enregistreur.getTrameDWs() != null) {
-				enregistreur.getTrameDWs().add(trameDW);
+				if (!this.containsSameDate(enregistreur.getTrameDWs(), trameDW)) {
+
+					trameDW.setEnregistreur(enregistreur);
+
+					trameDW = trameDWService.create(trameDW);
+					trameDW = trameDWService.findById(trameDW.getId());
+
+					enregistreur.getTrameDWs().add(trameDW);
+					enregistreurService.update(enregistreur);
+					mesureService.conversionSignalElectrique_Valeur(trameDW);
+				}
+				logger.debug("Pas de nouvelle trameDW a enregistrée");
 			} else {
+				trameDW.setEnregistreur(enregistreur);
+				trameDW = trameDWService.create(trameDW);
+				trameDW = trameDWService.findById(trameDW.getId());
+
 				List<TrameDW> trameDWs = new ArrayList<TrameDW>();
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
+				enregistreurService.update(enregistreur);
+				mesureService.conversionSignalElectrique_Valeur(trameDW);
 			}
-
-			enregistreurService.update(enregistreur);
-			mesureService.conversionSignalElectrique_Valeur(trameDW);
 		}
-
 		return history.toString();
 	}
 
@@ -257,11 +265,28 @@ public class DeverywareServiceImpl implements DeverywareService {
 		trameDW.setSignalBrut(xmlRPCUtils.extractAmperage(hashMapHistoryXmlRpc));
 		try {
 			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
-			trameDW.setHeure(DateUnixConverter.intToTime(dateInt));
 		} catch (ParseException e) {
 			logger.error("Error DeverywareServiceImpl : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return trameDW;
+	}
+
+	/**
+	 * Check si une trameDW de l'enregistreur n'a pas la même date que celle
+	 * parsée renvoie TRUE si c'est le cas
+	 * 
+	 * @param list
+	 * @param trameDW
+	 * @return
+	 */
+	public boolean containsSameDate(final List<TrameDW> trameDWs,
+			TrameDW trameDW) {
+		logger.info("--containsSameDate DeverywareServiceImpl -- trameDW : "
+				+ trameDW);
+		return trameDWs
+				.stream()
+				.filter(t -> t.getDate().getTime() == trameDW.getDate()
+						.getTime()).findFirst().isPresent();
 	}
 }
