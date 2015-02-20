@@ -20,8 +20,6 @@ public interface MesureService {
 
 	List<Mesure> findByEnregistreurId(Integer id) throws ServiceException;
 
-	List<Mesure> findByOuvrageId(Integer id) throws ServiceException;
-
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
 	// (en mètre)
 	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;

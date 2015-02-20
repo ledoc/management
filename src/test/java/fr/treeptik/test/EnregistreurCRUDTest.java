@@ -51,18 +51,13 @@ public class EnregistreurCRUDTest {
 	public void createfourEtablissement() throws ServiceException {
 		String code = "Tsunami";
 		Boolean activation = true;
-		String emailOrSMSDEnvoi = "h.fontbonne@treeptik.fr";
 		String intitule = "Données";
-		String lienAPIDW = "/solices/donnéesDW";
-		String modeEnvoi = "email";
 		TendanceAlerte tendance = TendanceAlerte.EGAL;
-		String type = "Niveau haut";
 		float valeurCritique = 4.6F;
 
 		alerteDescription = new AlerteDescription();
 
 		alerteDescription.setActivation(activation);
-		alerteDescription.setEmailDEnvoi(emailOrSMSDEnvoi);
 		alerteDescription.setCodeAlerte(code);
 		alerteDescription.setIntitule(intitule);
 //		alerte.setLienAPIDW(lienAPIDW);
@@ -131,7 +126,7 @@ public class EnregistreurCRUDTest {
 
 		Enregistreur enregistreur = enregistreurService.findByMid(mid);
 
-		enregistreur.setAlertes(alertesActives);
+		enregistreur.setAlerteDescriptions(alertesActives);
 		enregistreur.setBatterie(batterie);
 		enregistreur.setCroquis(croquis);
 		enregistreur.setMaintenance(maintenance);
@@ -153,7 +148,7 @@ public class EnregistreurCRUDTest {
 
 		Enregistreur enregistreur2 = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);
 
-		enregistreur2.getAlertes().add(alerteDescription);
+		enregistreur2.getAlerteDescriptions().add(alerteDescription);
 		enregistreur2.setBatterie(batterie2);
 		enregistreur2.setCroquis(croquis2);
 		enregistreur2.setMaintenance(maintenance2);

@@ -13,6 +13,10 @@ public interface EnregistreurDAO extends JpaRepository<Enregistreur, Integer> {
 
 	Enregistreur findByMid(String mid) throws DataAccessException;
 
+	@Query("select e from Client c join c.etablissements e join e.sites s join s.ouvrages o  join o.enregistreurs e where c.login = :userLogin")
+	public List<Enregistreur> findByClientLogin(@Param("userLogin") String userLogin) throws DataAccessException;
+	
+	
 	@Query("select e from Enregistreur e left join fetch e.trameDWs where e.mid = :mid")
 	public Enregistreur findByMidWithJoinFechTrameDWs(@Param("mid") String mid)
 			throws DataAccessException;

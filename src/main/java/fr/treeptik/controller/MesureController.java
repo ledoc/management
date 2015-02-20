@@ -74,14 +74,9 @@ public class MesureController {
 	public String create(@ModelAttribute Mesure mesure, BindingResult result)
 			throws ControllerException {
 		logger.debug(result.getAllErrors());
-		logger.info("--create MesureController--");
-		logger.debug("mesure : " + mesure);
+		logger.info("--create MesureController-- mesure : " + mesure);
 		try {
 
-			/**
-			 * TODO : comprendre pourquoi il faut sauver un objet null
-			 * :(((((((((
-			 */
 			mesureService.create(mesure);
 
 		} catch (ServiceException e) {
@@ -95,8 +90,7 @@ public class MesureController {
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--update MesureController--");
-		logger.debug("mesureId : " + id);
+		logger.info("--update MesureController-- mesureId : " + id);
 
 		Mesure mesure = null;
 		List<Enregistreur> enregistreursCombo;
@@ -126,7 +120,7 @@ public class MesureController {
 			throws ControllerException {
 		logger.info("--delete MesureController--");
 		logger.debug("mesureId : " + id);
-		Mesure mesure;
+
 		try {
 			mesureService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {

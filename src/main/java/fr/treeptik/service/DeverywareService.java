@@ -4,7 +4,7 @@ import fr.treeptik.exception.ServiceException;
 
 public interface DeverywareService {
 
-	public String getHistory(String mid) throws ServiceException;
+	public void getHistory() throws ServiceException;
 	
 	public String waitForMessage() throws ServiceException;
 }

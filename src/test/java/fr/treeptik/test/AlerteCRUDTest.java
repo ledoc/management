@@ -38,28 +38,19 @@ public class AlerteCRUDTest {
 
 		String code = "Tsunami";
 		Boolean activation = true;
-		String emailOrSMSDEnvoi = "h.fontbonne@treeptik.fr";
 		String intitule = "Données";
-		String lienAPIDW = "/solices/donnéesDW";
-		String modeEnvoi = "email";
 		TendanceAlerte tendance = TendanceAlerte.EGAL;
-		String type = "Niveau haut";
 		float valeurCritique = 4.6F;
 
 		String code2 = "Godzilla";
 		Boolean activation2 = true;
-		String emailOrSMSDEnvoi2 = "0123456789";
 		String intitule2 = "Données";
-		String lienAPIDW2 = "/solices/donnéesDW2";
-		String modeEnvoi2 = "SMS";
 		TendanceAlerte tendance2 = TendanceAlerte.SUPERIEUR;
-		String type2 = "inondation";
 		float valeurCritique2 = 7.6F;
 
 		AlerteDescription alerteDescription = new AlerteDescription();
 
 		alerteDescription.setActivation(activation);
-		alerteDescription.setEmailDEnvoi(emailOrSMSDEnvoi);
 		alerteDescription.setCodeAlerte(code);
 		alerteDescription.setIntitule(intitule);
 //		alerte.setLienAPIDW(lienAPIDW);
@@ -78,7 +69,6 @@ public class AlerteCRUDTest {
 
 		AlerteDescription alerte2 = new AlerteDescription();
 		alerte2.setActivation(activation2);
-		alerte2.setEmailDEnvoi(emailOrSMSDEnvoi2);
 		alerte2.setCodeAlerte(code2);
 		alerte2.setIntitule(intitule2);
 //		alerte2.setLienAPIDW(lienAPIDW2);

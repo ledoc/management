@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,25 +21,11 @@ public class TrameDW implements Serializable {
 	@ManyToOne
 	private Enregistreur enregistreur;
 	@Enumerated(EnumType.STRING)
-	private TypeMesureOrTrame typeTrameDW; 
-//	@Temporal(TemporalType.DATE)
+	private TypeMesureOrTrame typeTrameDW;
 	private Date date;
-	// milliAmpère
 	private Float signalBrut;
 	// 1ere conversion
 	private Float valeur;
-
-	// public TrameDW(HashMap<String, Object> hashMapHistoryXmlRpc){
-	//
-	// }
-
-	// niveau d’eau en mètre au moment de l’installation du capteur et de la
-	// mesure manuelle de référence Nm0
-	// private String niveauStatique;
-	// 2ème conversion
-	// private String coteAltimetrique;
-	// @OneToMany
-	// private List<Alerte> alertes;
 
 	public TrameDW() {
 		super();
@@ -62,7 +46,7 @@ public class TrameDW implements Serializable {
 	public void setEnregistreur(Enregistreur enregistreur) {
 		this.enregistreur = enregistreur;
 	}
-	
+
 	public TypeMesureOrTrame getTypeTrameDW() {
 		return typeTrameDW;
 	}
@@ -78,7 +62,6 @@ public class TrameDW implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 
 	public Float getSignalBrut() {
 		return signalBrut;
@@ -98,8 +81,8 @@ public class TrameDW implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TrameDW [id=" + id + ", date=" + date + ", signalBrut=" + signalBrut
-				+ ", hauteurEau=" + valeur + "]";
+		return "TrameDW [id=" + id + ", date=" + date + ", signalBrut="
+				+ signalBrut + ", hauteurEau=" + valeur + "]";
 	}
 
 	@Override
@@ -107,7 +90,8 @@ public class TrameDW implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + ((enregistreur == null) ? 0 : enregistreur.hashCode());
+		result = prime * result
+				+ ((enregistreur == null) ? 0 : enregistreur.hashCode());
 		result = prime * result + ((valeur == null) ? 0 : valeur.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Float.floatToIntBits(signalBrut);
@@ -143,33 +127,9 @@ public class TrameDW implements Serializable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (Float.floatToIntBits(signalBrut) != Float.floatToIntBits(other.signalBrut))
+		if (Float.floatToIntBits(signalBrut) != Float
+				.floatToIntBits(other.signalBrut))
 			return false;
 		return true;
 	}
-
-	// public String getNiveauStatique() {
-	// return niveauStatique;
-	// }
-	//
-	// public void setNiveauStatique(String niveauStatique) {
-	// this.niveauStatique = niveauStatique;
-	// }
-	//
-	// public String getCoteAltimetrique() {
-	// return coteAltimetrique;
-	// }
-	//
-	// public void setCoteAltimetrique(String coteAltimetrique) {
-	// this.coteAltimetrique = coteAltimetrique;
-	// }
-
-	// public List<Alerte> getAlertes() {
-	// return alertes;
-	// }
-	//
-	// public void setAlertes(List<Alerte> alertes) {
-	// this.alertes = alertes;
-	// }
-
 }

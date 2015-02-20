@@ -21,11 +21,8 @@ public class Mesure implements Serializable, Cloneable {
 
 	// niveaux d'eau, pluviometrie, niveau batterie
 	@Enumerated(EnumType.STRING)
-	private TypeMesureOrTrame typeMesure;
+	private TypeMesureOrTrame typeMesureOrTrame;
 	private Date date;
-	@ManyToOne
-	private Ouvrage ouvrage;
-
 	@ManyToOne
 	private Enregistreur enregistreur;
 
@@ -39,9 +36,8 @@ public class Mesure implements Serializable, Cloneable {
 			Ouvrage ouvrage, Float valeur) {
 		super();
 		this.id = id;
-		this.typeMesure = typeMesureOrTrame;
+		this.typeMesureOrTrame = typeMesureOrTrame;
 		this.date = date;
-		this.ouvrage = ouvrage;
 		this.valeur = valeur;
 	}
 	
@@ -55,12 +51,12 @@ public class Mesure implements Serializable, Cloneable {
 		this.id = id;
 	}
 
-	public TypeMesureOrTrame getTypeMesure() {
-		return typeMesure;
+	public TypeMesureOrTrame getTypeMesureOrTrame() {
+		return typeMesureOrTrame;
 	}
 
-	public void setTypeMesure(TypeMesureOrTrame typeMesure) {
-		this.typeMesure = typeMesure;
+	public void setTypeMesureOrTrame(TypeMesureOrTrame typeMesureOrTrame) {
+		this.typeMesureOrTrame = typeMesureOrTrame;
 	}
 
 	public Date getDate() {
@@ -69,14 +65,6 @@ public class Mesure implements Serializable, Cloneable {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public Ouvrage getOuvrage() {
-		return ouvrage;
-	}
-
-	public void setOuvrage(Ouvrage ouvrage) {
-		this.ouvrage = ouvrage;
 	}
 
 	public Enregistreur getEnregistreur() {
@@ -97,7 +85,7 @@ public class Mesure implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return "Mesure [id=" + id + ", typeMesure=" + typeMesure + ", date="
+		return "Mesure [id=" + id + ", typeMesurTrameAlert=" + typeMesureOrTrame + ", date="
 				+ date + ", valeur=" + valeur + "]";
 	}
 
@@ -108,7 +96,7 @@ public class Mesure implements Serializable, Cloneable {
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
-				+ ((typeMesure == null) ? 0 : typeMesure.hashCode());
+				+ ((typeMesureOrTrame == null) ? 0 : typeMesureOrTrame.hashCode());
 		result = prime * result + Float.floatToIntBits(valeur);
 		return result;
 	}
@@ -132,7 +120,7 @@ public class Mesure implements Serializable, Cloneable {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (typeMesure != other.typeMesure)
+		if (typeMesureOrTrame != other.typeMesureOrTrame)
 			return false;
 		if (Float.floatToIntBits(valeur) != Float.floatToIntBits(other.valeur))
 			return false;

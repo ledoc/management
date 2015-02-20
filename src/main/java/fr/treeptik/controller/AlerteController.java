@@ -188,6 +188,7 @@ public class AlerteController {
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
 			if (isAdmin) {
 
+				enregistreursCombo = enregistreurService.findAll();
 				alerteDescriptions = alerteDescriptionService.findAll();
 				historiqueAlertes = alerteEmiseService.findAll();
 				alertesTotales = alerteDescriptionService.countAll();
@@ -206,11 +207,9 @@ public class AlerteController {
 						.countAllByClientLogin(userLogin);
 				alertesActives = alerteDescriptionService
 						.countAllActivesByClientLogin(userLogin);
-
+				enregistreursCombo = enregistreurService.findByClientLogin(userLogin);
 			}
 
-			alerteDescriptions = alerteDescriptionService.findAll();
-			enregistreursCombo = enregistreurService.findAll();
 
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());

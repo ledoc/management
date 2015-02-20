@@ -27,4 +27,7 @@ public interface EnregistreurService {
 
 		List<Enregistreur> findFreeEnregistreurs() throws ServiceException;
 
+		List<Enregistreur> findByClientLogin(String userLogin)
+				throws ServiceException;
+
 }

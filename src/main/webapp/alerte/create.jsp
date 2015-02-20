@@ -43,17 +43,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
 							Alerte</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} une
 							alerte</p>
 					</header>
 
 					<div class="panel-body">
-						<c:url var="createAlerteDescription" value="/alerte/description/create" />
-						<form:form id="form" method="POST" action="${createAlerteDescription}"
-							modelAttribute="alerte" role="form" class="parsley-form"
-							data-validate="parsley" data-show-errors="true">
+						<c:url var="createAlerteDescription"
+							value="/alerte/description/create" />
+						<form:form id="form" method="POST"
+							action="${createAlerteDescription}" modelAttribute="alerte"
+							role="form" class="parsley-form" data-validate="parsley"
+							data-show-errors="true">
 
 							<form:hidden path="id" />
 
@@ -133,16 +135,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<label for="emailDEnvoi">Email 1</label>
-									<form:input class="form-control" id="emailDEnvoi"
-										path="emailDEnvoi" data-parsley-type="email"
-										data-parsley-required="true" data-parsley-trigger="change"
-										placeholder="my@email.fr"
-										data-parsley-required-message="Champ requis"
-										data-parsley-type-message="Entrer une adresse email valide" />
-								</div>
-
-								<div class="form-group">
 									<label for="intitule">Intitulé</label>
 									<form:input type="text" class="form-control" id="intitule"
 										path="intitule" placeholder="" data-parsley-trigger="change"
@@ -153,7 +145,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="pull-right">
 									<a href="<c:url  value="/alerte/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									<sec:authorize ifAllGranted="ADMIN">
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									</sec:authorize>
 								</div>
 							</div>
 						</form:form>

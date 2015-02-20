@@ -41,10 +41,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<table class="table table-striped list no-m">
 								<thead>
 									<tr>
+										<th>Date</th>
+										<th>Ouvrage</th>
 										<th>Enregistreur (mid)</th>
 										<th>Type</th>
 										<th>Valeur</th>
-										<th>Date</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -55,17 +56,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlMesureUpdate"
 											value="/mesure/update/${mesure.id}" />
 										<tr>
-											<td><c:out value="${mesure.enregistreur.mid}" /></td>
-											<td><c:out value="${mesure.typeMesure.description}" /></td>
-											<td><c:out value="${mesure.valeur}" /></td>
 											<td><c:out value="${mesure.date}" /></td>
-											<sec:authorize ifAllGranted="ADMIN">
-											<td><a data-url="${urlMesureDelete}" data-toggle="modal"
-												data-target="#confirmModal"
-												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
-													<i class="fa fa-remove"></i>
-											</a></td>
-											</sec:authorize>
+											<td><c:out value="${mesure.enregistreur.ouvrage.codeOuvrage}" /></td>
+											<td><c:out value="${mesure.enregistreur.mid}" /></td>
+											<td><c:out
+													value="${mesure.typeMesureOrTrame.description}" /></td>
+											<td><c:out value="${mesure.valeur}" /></td>
+											<%-- 											<sec:authorize ifAllGranted="ADMIN"> --%>
+											<%-- 											<td><a data-url="${urlMesureDelete}" data-toggle="modal" --%>
+											<!-- 												data-target="#confirmModal" -->
+											<!-- 												class="btn btn-outline btn-danger btn-xs js-confirm-btn"> -->
+											<!-- 													<i class="fa fa-remove"></i> -->
+											<!-- 											</a></td> -->
+											<%-- 											</sec:authorize> --%>
 										</tr>
 									</c:forEach>
 								</tbody>

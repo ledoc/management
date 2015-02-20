@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.View;
@@ -31,11 +31,9 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import fr.treeptik.spring.SessionHandlerInterceptor;
 
-
-
-
 @Configuration
 @EnableWebMvc
+@EnableScheduling
 @ComponentScan(basePackages = { "fr.treeptik.controller" })
 @PropertySource({ "classpath:/config.properties" })
 public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
@@ -47,11 +45,8 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 	private static final int MAX_UPLOAD_SIZE = 300 * 1000 * 1000;
 
 	@Inject
-	private Environment env;
-	
-	@Inject
 	private SessionHandlerInterceptor sessionHandlerInterceptor;
-	
+
 	@Bean
 	public ViewResolver contentNegotiatingViewResolver() {
 		logger.info("Configuring the ContentNegotiatingViewResolver");
@@ -107,7 +102,8 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 		logger.debug("Creating requestMappingHandlerMapping");
 		RequestMappingHandlerMapping requestMappingHandlerMapping = new RequestMappingHandlerMapping();
 		requestMappingHandlerMapping.setUseSuffixPatternMatch(true);
-		Object[] interceptors = { localeChangeInterceptor(), sessionHandlerInterceptor };
+		Object[] interceptors = { localeChangeInterceptor(),
+				sessionHandlerInterceptor };
 		requestMappingHandlerMapping.setInterceptors(interceptors);
 		return requestMappingHandlerMapping;
 	}

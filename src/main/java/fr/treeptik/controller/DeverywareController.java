@@ -28,20 +28,18 @@ public class DeverywareController {
 			throws ControllerException {
 		logger.info("--getHistory DeverywareController-- Enregistreur mid: "
 				+ mid);
-		String response;
 		try {
-			response = deverywareService.getHistory(mid);
+			deverywareService.getHistory();
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return response;
+		return "Super cool";
 	}
-	
+
 	// gps://ORANGE/+33781916177
 	@RequestMapping(method = RequestMethod.GET, value = "/wait/message")
-	public @ResponseBody String waitForMessage()
-			throws ControllerException {
+	public @ResponseBody String waitForMessage() throws ControllerException {
 		logger.info("--waitForMessage DeverywareController--");
 		String response;
 		try {
@@ -52,5 +50,5 @@ public class DeverywareController {
 		}
 		return response;
 	}
-	
+
 }

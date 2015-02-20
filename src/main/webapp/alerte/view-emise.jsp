@@ -75,16 +75,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<form:input type="text" class="form-control" id="intitule"
 										path="intitule" readonly="true" />
 								</div>
-								<div class="form-group">
-									<label for="emailDEnvoi">Mail d'envoi</label>
-									<form:input class="form-control" id="emailDEnvoi"
-										path="emailDEnvoi" readonly="true" />
-								</div>
 								<div class="pull-right">
 									<a href="<c:url  value="/alerte/list" />"
 										class="btn btn-default btn-outline">Retour</a>
 								</div>
-
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">

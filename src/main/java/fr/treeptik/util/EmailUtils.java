@@ -37,7 +37,7 @@ public class EmailUtils {
 	 * @throws AddressException
 	 * @throws MessagingException
 	 */
-	public void sendAcquittementEmail(AlerteEmise alerteEmise)
+	public void sendAcquittementEmail(AlerteEmise alerteEmise, String emailDestinataire)
 			throws AddressException, MessagingException {
 		logger.info("--sendAcquittementEmail EmailUtils--");
 
@@ -112,7 +112,7 @@ public class EmailUtils {
 
 		message.setFrom(new InternetAddress(emailFrom));
 		message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(alerteEmise.getEmailDEnvoi()));
+				InternetAddress.parse(emailDestinataire));
 		message.setSubject(ALERTEMESSAGE + midEnregistreur);
 		message.setContent(body, "text/html");
 

@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fr.treeptik.exception.ServiceException;
@@ -56,23 +57,29 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * @param mid
 	 * @throws ServiceException
 	 */
+	@Scheduled(fixedRate = 3600000)
 	@SuppressWarnings("unchecked")
-	public String getHistory(String mid) throws ServiceException {
-		logger.info("--getHistory DeverywareServiceImpl -- mid : " + mid);
+	public void getHistory() throws ServiceException {
+		logger.info("--getHistory DeverywareServiceImpl --");
 
 		Enregistreur enregistreur = enregistreurService
-				.findByMidWithJoinFetchTrameDWs(mid);
-		Object[] history = xmlRPCUtils.getHistory(mid, sessionKey);
+				.findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33781916177");
+		Object[] history = xmlRPCUtils.getHistory("gps://ORANGE/+33781916177",
+				sessionKey);
 		logger.debug(history.length + " trame History récupérée");
 
 		TrameDW trameDW = new TrameDW();
 
 		for (Object historyXmlRpc : history) {
 			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) historyXmlRpc;
-			System.out.println(hashMapHistoryXmlRpc);
+
+			logger.debug(hashMapHistoryXmlRpc);
+
 			trameDW = this.transfertHistoryToTrameDW(trameDW,
 					hashMapHistoryXmlRpc);
+
 			if (enregistreur.getTrameDWs() != null) {
+
 				if (!this.containsSameDate(enregistreur.getTrameDWs(), trameDW)) {
 
 					trameDW.setEnregistreur(enregistreur);
@@ -81,23 +88,30 @@ public class DeverywareServiceImpl implements DeverywareService {
 					trameDW = trameDWService.findById(trameDW.getId());
 
 					enregistreur.getTrameDWs().add(trameDW);
+
 					enregistreurService.update(enregistreur);
+
 					mesureService.conversionSignalElectrique_Valeur(trameDW);
+				} else {
+
+					logger.debug("Pas de nouvelle trameDW a enregistrée");
 				}
-				logger.debug("Pas de nouvelle trameDW a enregistrée");
+
 			} else {
 				trameDW.setEnregistreur(enregistreur);
+
 				trameDW = trameDWService.create(trameDW);
 				trameDW = trameDWService.findById(trameDW.getId());
 
 				List<TrameDW> trameDWs = new ArrayList<TrameDW>();
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
+
 				enregistreurService.update(enregistreur);
+
 				mesureService.conversionSignalElectrique_Valeur(trameDW);
 			}
 		}
-		return history.toString();
 	}
 
 	// Deveryflow.mobileList
@@ -284,9 +298,12 @@ public class DeverywareServiceImpl implements DeverywareService {
 			TrameDW trameDW) {
 		logger.info("--containsSameDate DeverywareServiceImpl -- trameDW : "
 				+ trameDW);
+
 		return trameDWs
 				.stream()
 				.filter(t -> t.getDate().getTime() == trameDW.getDate()
-						.getTime()).findFirst().isPresent();
+						.getTime()
+						&& t.getSignalBrut().equals(trameDW.getSignalBrut()))
+				.findFirst().isPresent();
 	}
 }

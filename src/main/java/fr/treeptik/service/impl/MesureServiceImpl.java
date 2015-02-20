@@ -1,5 +1,6 @@
 package fr.treeptik.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,9 +19,10 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
-import fr.treeptik.util.CheckAlerte;
+import fr.treeptik.util.CheckAlerteUtils;
 
 @Service
 public class MesureServiceImpl implements MesureService {
@@ -29,10 +31,13 @@ public class MesureServiceImpl implements MesureService {
 	private MesureDAO mesureDAO;
 
 	@Inject
-	private CheckAlerte checkAlerte;
+	private CheckAlerteUtils checkAlerteUtils;
 
 	@Inject
 	private TrameDWService trameDWService;
+
+	@Inject
+	private EnregistreurService enregistreurService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
@@ -80,13 +85,24 @@ public class MesureServiceImpl implements MesureService {
 		 */
 		Mesure mesure = new Mesure();
 		mesure.setDate(new Date());
-		mesure.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure.setEnregistreur(enregistreur);
 		mesure.setValeur(valeur);
-		
+
 		this.create(mesure);
-		
-		checkAlerte.checkAlerte(enregistreur, mesure);
+
+		if (enregistreur.getMesures() != null) {
+			enregistreur.getMesures().add(mesure);
+		} else {
+			List<Mesure> mesures = new ArrayList<Mesure>();
+			mesures.add(mesure);
+			enregistreur.setMesures(mesures);
+		}
+
+		mesure =  this.findById(mesure.getId());
+		enregistreur = enregistreurService.update(enregistreur);
+
+		checkAlerteUtils.checkAlerte(enregistreur, mesure);
 
 		return trameDW;
 	}
@@ -118,13 +134,11 @@ public class MesureServiceImpl implements MesureService {
 
 		Mesure mesure = new Mesure();
 		mesure.setDate(new Date());
-		mesure.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure.setEnregistreur(enregistreur);
 		mesure.setValeur(niveauEau);
 
 		enregistreur.getMesures().add(mesure);
-
-		// enregistreurService
 
 		return niveauEau;
 	}
@@ -177,19 +191,6 @@ public class MesureServiceImpl implements MesureService {
 		List<Mesure> mesures;
 		try {
 			mesures = mesureDAO.findByEnregistreurId(id);
-		} catch (PersistenceException e) {
-			logger.error("Error MesureService : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
-		return mesures;
-	}
-
-	@Override
-	public List<Mesure> findByOuvrageId(Integer id) throws ServiceException {
-		logger.info("--findByOuvrageId MesureService by Id--");
-		List<Mesure> mesures;
-		try {
-			mesures = mesureDAO.findByOuvrageId(id);
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);

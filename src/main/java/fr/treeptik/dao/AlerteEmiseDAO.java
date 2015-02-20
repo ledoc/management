@@ -13,7 +13,7 @@ public interface AlerteEmiseDAO extends
 		JpaRepository<AlerteEmise, Integer> {
 
 
-	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteEmises a where c.id = :userLogin")
+	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteEmises a where c.login = :userLogin")
 	public List<AlerteEmise> findAllByClientLogin(
 			@Param("userLogin") String userLogin) throws DataAccessException;
 

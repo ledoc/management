@@ -156,24 +156,31 @@ public class Enregistreur implements Serializable {
 	public void initNiveauManuel() {
 
 		if (this.mesures != null) {
-			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-					m2.getDate());
 
-			List<Mesure> allMesureManuel = this.mesures
-					.stream()
-					.filter(m -> m.getTypeMesure().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL))
-					.collect(Collectors.toList());
+			boolean typeManuelPresence = this.mesures.stream().anyMatch(
+					m -> m.getTypeMesureOrTrame().equals(
+							TypeMesureOrTrame.NIVEAUMANUEL));
 
-			if (allMesureManuel.size() < 1) {
+			if (typeManuelPresence) {
+				List<Mesure> allMesureManuel = this.mesures
+						.stream()
+						.filter(m -> m.getTypeMesureOrTrame().equals(
+								TypeMesureOrTrame.NIVEAUMANUEL))
+						.collect(Collectors.toList());
 
-				Optional<Mesure> max = allMesureManuel.stream().max(c);
+				if (allMesureManuel.size() < 1) {
+					Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+							m2.getDate());
 
-				this.niveauManuel = max.isPresent() ? max.get().cloneMe()
-						: new Mesure();
-			} else {
-				this.niveauManuel = allMesureManuel.get(0).cloneMe();
+					Optional<Mesure> max = allMesureManuel.stream().max(c);
+
+					this.niveauManuel = max.isPresent() ? max.get().cloneMe()
+							: new Mesure();
+				} else {
+					this.niveauManuel = allMesureManuel.get(0).cloneMe();
+				}
 			}
+
 		}
 	}
 
@@ -193,22 +200,30 @@ public class Enregistreur implements Serializable {
 	 */
 	public void initDerniereMesure() {
 		if (this.mesures != null) {
-			Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-					m2.getDate());
 
-			List<Mesure> allMesureNotManuel = this.mesures
-					.stream()
-					.filter(m -> !m.getTypeMesure().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL))
-					.collect(Collectors.toList());
-			if (allMesureNotManuel.size() < 1) {
+			boolean typeNotManuelPresence = this.mesures.stream().anyMatch(
+					m -> !m.getTypeMesureOrTrame().equals(
+							TypeMesureOrTrame.NIVEAUMANUEL));
 
-				Optional<Mesure> max = allMesureNotManuel.stream().max(c);
+			if (typeNotManuelPresence) {
 
-				this.derniereMesure = max.isPresent() ? max.get()
-						: new Mesure();
-			} else {
-				this.derniereMesure = allMesureNotManuel.get(0);
+				List<Mesure> allMesureNotManuel = this.mesures
+						.stream()
+						.filter(m -> !m.getTypeMesureOrTrame().equals(
+								TypeMesureOrTrame.NIVEAUMANUEL))
+						.collect(Collectors.toList());
+
+				if (allMesureNotManuel.size() < 1) {
+					Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+							m2.getDate());
+
+					Optional<Mesure> max = allMesureNotManuel.stream().max(c);
+
+					this.derniereMesure = max.isPresent() ? max.get()
+							: new Mesure();
+				} else {
+					this.derniereMesure = allMesureNotManuel.get(0);
+				}
 			}
 		}
 	}

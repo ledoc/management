@@ -76,7 +76,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Ouvrage</th>
 										<th>Enregistreur</th>
 										<th>Type</th>
-										<th>Email d'envoi</th>
 										<sec:authorize ifAllGranted="ADMIN">
 											<th class="nosort nosearch">Actions</th>
 										</sec:authorize>
@@ -102,7 +101,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
 											<td><c:out value="${alerte.enregistreur.mid}" /></td>
 											<td><c:out value="${alerte.typeAlerte.description}" /></td>
-											<td><c:out value="${alerte.emailDEnvoi}" /></td>
 											<sec:authorize ifAllGranted="ADMIN">
 												<td><a data-url="${urlAlerteDescriptionDelete}"
 													data-toggle="modal" data-target="#confirmModal"
@@ -286,16 +284,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												data-parsley-mincheck-message="2 caractères minimum"
 												readonly="${readOnlyValue }" />
 										</div>
-										<div class="form-group">
-											<label for="emailDEnvoi">Mail d'envoi</label>
-											<form:input class="form-control" id="emailDEnvoi"
-												path="emailDEnvoi" data-parsley-type="email"
-												data-parsley-required="true" data-parsley-trigger="change"
-												placeholder="my@email.fr"
-												data-parsley-required-message="Champ requis"
-												data-parsley-type-message="Entrer une adresse email valide" />
-										</div>
-
 										<div class="form-group">
 											<label for="intitule">Intitulé</label>
 											<form:input type="text" class="form-control" id="intitule"

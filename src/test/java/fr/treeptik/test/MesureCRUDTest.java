@@ -11,7 +11,6 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,11 +21,10 @@ import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
-import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeMesureOrTrame;
-import fr.treeptik.service.MesureService;
 import fr.treeptik.service.EnregistreurService;
+import fr.treeptik.service.MesureService;
 import fr.treeptik.service.OuvrageService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,16 +43,6 @@ public class MesureCRUDTest {
 
 	private static final String MID = "gps://ORANGE/+33781916177";
 
-	@Test
-	public void testGetMesuresOfOuvrage() throws Exception {
-
-		logger.info("--testGetMesuresOfOuvrage --");
-		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchMesures(1);
-		System.out.println(ouvrage);
-		for (Mesure mesure : ouvrage.getMesures()) {
-			System.out.println(mesure);
-		}
-	}
 
 	// @Test
 	public void testGetEnregistreur() throws Exception {
@@ -77,7 +65,7 @@ public class MesureCRUDTest {
 		float random3 = random1 + 2;
 
 		Mesure mesure1 = new Mesure();
-		mesure1.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure1.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure1.setDate(new Date());
 		mesure1.setValeur(random1);
 
@@ -91,13 +79,13 @@ public class MesureCRUDTest {
 
 		Mesure mesure2 = new Mesure();
 
-		mesure2.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure2.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure2.setDate(new Date());
 		mesure2.setValeur(random2);
 
 		mesureService.create(mesure2);
 
-		mesure2.setTypeMesure(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure2.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure2.setDate(new Date());
 		mesure2.setValeur(random3);
 		mesureService.update(mesure2);
@@ -109,8 +97,6 @@ public class MesureCRUDTest {
 
 		if (firstFindAll.size() + 1 != secondFindAll.size())
 			fail("La collection doit être augmentée de 1");
-
-//		mesureService.remove(mesure2);
 
 		mesure2 = mesureService.findById(id);
 		assertNull("L'objet ne doit pas exister", mesure2);

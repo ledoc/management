@@ -28,7 +28,6 @@ public class AlerteEmise implements Serializable {
 	private TendanceAlerte tendance;
 	private Float seuilPreAlerte;
 	private Float seuilAlerte;
-	private String emailDEnvoi;
 	@OneToOne
 	private Mesure mesureLevantAlerte;
 	@Enumerated(EnumType.STRING)
@@ -71,8 +70,6 @@ public class AlerteEmise implements Serializable {
 		this.mesureLevantAlerte = mesureLevantAlerte;
 	}
 
-	
-	
 	public NiveauAlerte getNiveauAlerte() {
 		return niveauAlerte;
 	}
@@ -113,14 +110,6 @@ public class AlerteEmise implements Serializable {
 		this.seuilPreAlerte = seuilPreAlerte;
 	}
 
-	public String getEmailDEnvoi() {
-		return emailDEnvoi;
-	}
-
-	public void setEmailDEnvoi(String emailOrSMSDEnvoi) {
-		emailDEnvoi = emailOrSMSDEnvoi;
-	}
-
 	public Enregistreur getEnregistreur() {
 		return enregistreur;
 	}
@@ -144,5 +133,5 @@ public class AlerteEmise implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
 }

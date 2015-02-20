@@ -237,7 +237,6 @@
 
 				<!-- String for mail -->
 				<mail.acquittement.url.prefix>http://localhost:8080/solices/alerte/acquittement</mail.acquittement.url.prefix>
-				<mail.subject.acquittement>Bienvenue sur CloudUnit</mail.subject.acquittement>
 
 				<!-- Database -->
 				<database.url>jdbc:mysql://localhost:3306/solices?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false</database.url>
@@ -265,7 +264,6 @@
 
 				<!-- String for mail -->
 				<mail.acquittement.url.prefix>http://solices-solices-solices.eu4.cloudunit.io/alerte/acquittement</mail.acquittement.url.prefix>
-				<mail.subject.acquittement>Bienvenue sur CloudUnit</mail.subject.acquittement>
 
 				<!-- Database -->
 				<database.url>jdbc:mysql://solices-solices-mysql-5-5-1.mysql-5-5.cloud.unit/solices</database.url>

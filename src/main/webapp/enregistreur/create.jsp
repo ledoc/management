@@ -181,9 +181,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											path="niveauManuel.valeur" />
 									</div>
 									<div class="form-group">
-										<label for="derniereMesure">Dernière mesure</label> <input
-											type="text" class="transfertInput form-control"
-											id="derniereMesure" value="${derniereMesure.valeur}"
+										<label for="derniereMesure">Dernière mesure</label>
+										<form:input type="text" class="transfertInput form-control"
+											id="derniereMesure" path="derniereMesure.valeur"
 											readonly="true" />
 									</div>
 									<div class="form-group">
@@ -223,9 +223,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													<tr>
 														<th>Date</th>
 														<th>Valeur</th>
-														<sec:authorize ifAllGranted="ADMIN">
-															<th class="nosort nosearch">Actions</th>
-														</sec:authorize>
+														<%-- 														<sec:authorize ifAllGranted="ADMIN"> --%>
+														<!-- 															<th class="nosort nosearch">Actions</th> -->
+														<%-- 														</sec:authorize> --%>
 													</tr>
 												</thead>
 												<c:forEach items="${listNiveauxManuels}" var="niveauManuel">
@@ -240,12 +240,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<td><div class="list-group-item">
 																	<c:out value="${niveauManuel.valeur}" />
 																</div></td>
-															<sec:authorize ifAllGranted="ADMIN">
-																<td><a data-url="${urlMesureDelete}"
-																	data-toggle="modal" data-target="#confirmModal"
-																	class="btn btn-outline btn-danger btn-xs js-confirm-btn"><i
-																		class="fa fa-remove"></i> </a></td>
-															</sec:authorize>
+															<%-- 															<sec:authorize ifAllGranted="ADMIN"> --%>
+															<%-- 																<td><a data-url="${urlMesureDelete}" --%>
+															<!-- 																	data-toggle="modal" data-target="#confirmModal" -->
+															<!-- 																	class="btn btn-outline btn-danger btn-xs js-confirm-btn"><i -->
+															<!-- 																		class="fa fa-remove"></i> </a></td> -->
+															<%-- 															</sec:authorize> --%>
 														</tr>
 													</tbody>
 												</c:forEach>
@@ -307,7 +307,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								data-show-errors="true">
 
 								<input type="hidden" name="niveauManuel.id" value="" />
-								<input type="hidden" name="niveauManuel.typeMesure"
+								<input type="hidden" name="niveauManuel.typeMesureOrTrame"
 									value="NIVEAUMANUEL" />
 
 								<form:hidden id="data-id" path="id" />

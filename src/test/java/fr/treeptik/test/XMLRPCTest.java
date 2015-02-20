@@ -19,12 +19,9 @@ import fr.treeptik.conf.ApplicationConfiguration;
 import fr.treeptik.conf.ApplicationInitializer;
 import fr.treeptik.conf.DispatcherServletConfiguration;
 import fr.treeptik.model.Enregistreur;
-import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.deveryware.DeviceState;
 import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
-import fr.treeptik.service.TrameDWService;
-import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,8 +35,6 @@ public class XMLRPCTest {
 	private XMLRPCUtils xmlRPCUtils;
 	@Inject
 	private EnregistreurService enregistreurService;
-	@Inject
-	private TrameDWService trameDWService;
 	
 	@Inject
 	private DeverywareService deverywareService;
@@ -100,7 +95,7 @@ public class XMLRPCTest {
 	@Test
 	public void getHistoryTest() throws Exception {
 		
-		deverywareService.getHistory(MID);
+		deverywareService.getHistory();
 		
 //		Enregistreur enregistreur = new Enregistreur();
 //		enregistreur = enregistreurService.findByMidWithJoinFetchTrameDWs(MID);

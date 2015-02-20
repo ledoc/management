@@ -82,7 +82,7 @@ public class EnregistreurController {
 				listNiveauxManuels = enregistreur
 						.getMesures()
 						.stream()
-						.filter(m -> m.getTypeMesure().equals(
+						.filter(m -> m.getTypeMesureOrTrame().equals(
 								TypeMesureOrTrame.NIVEAUMANUEL))
 						.collect(Collectors.toList());
 			}
@@ -157,17 +157,12 @@ public class EnregistreurController {
 			if (enregistreur.getNiveauManuel().getValeur() != null) {
 
 				if (enregistreur.getMesures() != null) {
-					System.out.println("Niv manuel déjà présent : "
-							+ enregistreur.getMesures().contains(
-									enregistreur.getNiveauManuel()));
 					if (!enregistreur.getMesures().contains(
 							enregistreur.getNiveauManuel())) {
 						Mesure newNiveauManuel = enregistreur.getNiveauManuel();
 						newNiveauManuel.setId(null);
 						newNiveauManuel.setEnregistreur(enregistreur);
 						enregistreur.getMesures().add(newNiveauManuel);
-						System.out.println("list : "
-								+ enregistreur.getMesures());
 					}
 				} else {
 					List<Mesure> mesures = new ArrayList<Mesure>();
@@ -197,8 +192,7 @@ public class EnregistreurController {
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--update EnregistreurController--");
-		logger.debug("enregistreurId : " + id);
+		logger.info("--update EnregistreurController-- enregistreurId : " + id);
 
 		Enregistreur enregistreur = null;
 		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
@@ -219,7 +213,7 @@ public class EnregistreurController {
 				listNiveauxManuels = enregistreur
 						.getMesures()
 						.stream()
-						.filter(m -> m.getTypeMesure().equals(
+						.filter(m -> m.getTypeMesureOrTrame().equals(
 								TypeMesureOrTrame.NIVEAUMANUEL))
 						.collect(Collectors.toList());
 			}

@@ -27,7 +27,6 @@ public class AlerteDescription implements Serializable {
 	private TendanceAlerte tendance;
 	private Float seuilPreAlerte;
 	private Float seuilAlerte;
-	private String emailDEnvoi;
 
 	@ManyToOne
 	private Enregistreur enregistreur;
@@ -94,14 +93,6 @@ public class AlerteDescription implements Serializable {
 
 	public void setSeuilPreAlerte(Float seuilPreAlerte) {
 		this.seuilPreAlerte = seuilPreAlerte;
-	}
-
-	public String getEmailDEnvoi() {
-		return emailDEnvoi;
-	}
-
-	public void setEmailDEnvoi(String emailOrSMSDEnvoi) {
-		emailDEnvoi = emailOrSMSDEnvoi;
 	}
 
 	public Enregistreur getEnregistreur() {

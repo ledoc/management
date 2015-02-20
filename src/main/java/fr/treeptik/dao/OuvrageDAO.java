@@ -14,9 +14,6 @@ public interface OuvrageDAO extends JpaRepository<Ouvrage, Integer> {
 	@Query("select o from Ouvrage o where o not in (select o2 from Site s join s.ouvrages o2)")
 	public List<Ouvrage> findFreeOuvrages()throws DataAccessException;
 	
-	@Query("select o from Ouvrage o left join fetch o.mesures where o.id = :id")
-	public Ouvrage findByIdWithJoinFetchMesures(@Param("id") Integer id) throws DataAccessException;
-
 	@Query("select o from Ouvrage o left join fetch o.documents where o.id = :id")
 	public Ouvrage findByIdWithJoinFetchDocuments(@Param("id") Integer id) throws DataAccessException;
 

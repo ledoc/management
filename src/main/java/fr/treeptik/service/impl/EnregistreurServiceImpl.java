@@ -35,16 +35,14 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Enregistreur create(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--CREATE EnregistreurServiceImpl --");
-		logger.debug("enregistreur : " + enregistreur   +  " mesures de l'enregistreur" + enregistreur.getMesures());
+		logger.info("--CREATE EnregistreurServiceImpl -- enregistreur : " + enregistreur);
 		return enregistreurDAO.save(enregistreur);
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Enregistreur update(Enregistreur enregistreur) throws ServiceException {
-		logger.info("--update EnregistreurServiceImpl --");
-		logger.debug("enregistreur : " + enregistreur);
+		logger.info("--update EnregistreurServiceImpl -- enregistreur : " + enregistreur);
 		return enregistreurDAO.saveAndFlush(enregistreur);
 	}
 
@@ -52,7 +50,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE EnregistreurServiceImpl --enregistreurId : " + id);
+		logger.info("--DELETE EnregistreurServiceImpl -- enregistreurId : " + id);
 		
 		Enregistreur enregistreur = this.findById(id);
 		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(enregistreur.getOuvrage().getId());
@@ -71,7 +69,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	
 	@Override
 	public List<Enregistreur> findFreeEnregistreurs() throws ServiceException {
-		logger.info("--findFreeSites SiteServiceImpl --");
+		logger.info("--findFreeEnregistreurs EnregistreurServiceImpl --");
 		List<Enregistreur> enregistreurs;
 		try {
 			enregistreurs = enregistreurDAO.findFreeEnregistreurs();
@@ -84,8 +82,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 
 	@Override
 	public Enregistreur findByMid(String mid) throws ServiceException {
-		logger.info("--findByMid EnregistreurServiceImpl --");
-		logger.debug("mid : " + mid);
+		logger.info("--findByMid EnregistreurServiceImpl -- mid : " + mid);
 		return enregistreurDAO.findByMid(mid);
 	}
 
@@ -95,8 +92,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	 */
 	@Override
 	public Enregistreur findByMidWithJoinFetchTrameDWs(String mid) throws ServiceException {
-		logger.info("--findByMidWithJoinFechTrameDWs enregistreur --");
-		logger.info("mid : " + mid);
+		logger.info("--findByMidWithJoinFechTrameDWs EnregistreurServiceImpl -- mid : " + mid);
 		Enregistreur enregistreur = enregistreurDAO.findByMidWithJoinFechTrameDWs(mid);
 		System.out.println(enregistreur);
 		return enregistreur;
@@ -108,10 +104,16 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	 */
 	@Override
 	public Enregistreur findByIdWithJoinFetchAlertesActives(Integer id) throws ServiceException {
-		logger.info("--findByIdWithJoinFechAlertesActives enregistreur --");
-		logger.info("id : " + id);
+		logger.info("--findByIdWithJoinFechAlertesActives EnregistreurServiceImpl -- id : " + id);
 		Enregistreur enregistreur = enregistreurDAO.findByIdWithJoinFetchAlertesActives(id);
 		System.out.println(enregistreur);
 		return enregistreur;
+	}
+	
+	@Override
+	public List<Enregistreur> findByClientLogin(String userLogin)
+			throws ServiceException {
+		logger.info("--findByClient EnregistreurServiceImpl-- userLogin : " + userLogin);
+		return enregistreurDAO.findByClientLogin(userLogin);
 	}
 }
