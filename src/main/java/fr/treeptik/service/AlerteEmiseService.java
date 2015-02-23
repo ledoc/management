@@ -20,6 +20,9 @@ public interface AlerteEmiseService {
 	List<AlerteEmise> findAllByClientLogin(String userLogin)
 			throws ServiceException;
 
-	void acquittementAlerte(Integer id) throws ServiceException;;
+	void acquittementAlerte(Integer id) throws ServiceException;
+
+	AlerteEmise findLastAlerteEmiseByCodeAlerte(String codeAlerte)
+			throws ServiceException;;
 
 }

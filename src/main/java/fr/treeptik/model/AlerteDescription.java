@@ -27,6 +27,8 @@ public class AlerteDescription implements Serializable {
 	private TendanceAlerte tendance;
 	private Float seuilPreAlerte;
 	private Float seuilAlerte;
+	private Boolean aSurveiller;
+	private Integer compteurRetourNormal;
 
 	@ManyToOne
 	private Enregistreur enregistreur;
@@ -103,4 +105,72 @@ public class AlerteDescription implements Serializable {
 		this.enregistreur = enregistreur;
 	}
 
+	public Boolean getaSurveiller() {
+		return aSurveiller;
+	}
+
+	public void setaSurveiller(Boolean aSurveiller) {
+		this.aSurveiller = aSurveiller;
+	}
+
+	public Integer getCompteurRetourNormal() {
+		return compteurRetourNormal;
+	}
+
+	public void setCompteurRetourNormal(Integer compteurRetourNormal) {
+		this.compteurRetourNormal = compteurRetourNormal;
+	}
+
+	@Override
+	public String toString() {
+		return "AlerteDescription [id=" + id + ", codeAlerte=" + codeAlerte
+				+ ", activation=" + activation + ", intitule=" + intitule
+				+ ", typeAlerte=" + typeAlerte + ", tendance=" + tendance
+				+ ", seuilPreAlerte=" + seuilPreAlerte + ", seuilAlerte="
+				+ seuilAlerte + ", aSurveiller=" + aSurveiller
+				+ ", compteurRetourNormal=" + compteurRetourNormal + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((codeAlerte == null) ? 0 : codeAlerte.toLowerCase().hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((intitule == null) ? 0 : intitule.toLowerCase().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AlerteDescription other = (AlerteDescription) obj;
+		if (codeAlerte == null) {
+			if (other.codeAlerte.toLowerCase() != null)
+				return false;
+		} else if (!codeAlerte.equalsIgnoreCase(other.codeAlerte))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (intitule == null) {
+			if (other.intitule.toLowerCase() != null)
+				return false;
+		} else if (!intitule.equalsIgnoreCase(other.intitule))
+			return false;
+		return true;
+	}
+
+	
+	
+	
 }

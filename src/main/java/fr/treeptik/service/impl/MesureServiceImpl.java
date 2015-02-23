@@ -1,10 +1,10 @@
 package fr.treeptik.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
@@ -19,7 +19,6 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
-import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.CheckAlerteUtils;
@@ -35,9 +34,6 @@ public class MesureServiceImpl implements MesureService {
 
 	@Inject
 	private TrameDWService trameDWService;
-
-	@Inject
-	private EnregistreurService enregistreurService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
@@ -91,18 +87,14 @@ public class MesureServiceImpl implements MesureService {
 
 		this.create(mesure);
 
-		if (enregistreur.getMesures() != null) {
-			enregistreur.getMesures().add(mesure);
-		} else {
-			List<Mesure> mesures = new ArrayList<Mesure>();
-			mesures.add(mesure);
-			enregistreur.setMesures(mesures);
+		mesure = this.findById(mesure.getId());
+
+		try {
+			checkAlerteUtils.checkAlerte(enregistreur, mesure);
+		} catch (MessagingException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
-
-		mesure =  this.findById(mesure.getId());
-		enregistreur = enregistreurService.update(enregistreur);
-
-		checkAlerteUtils.checkAlerte(enregistreur, mesure);
 
 		return trameDW;
 	}

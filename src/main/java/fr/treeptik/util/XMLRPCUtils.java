@@ -129,7 +129,7 @@ public class XMLRPCUtils {
 
 
 		Object[] result = null;
-		int nbPos = 2;
+		int nbPos = 3;
 		int state = -1;
 		int content = 17;
 		int port = 0;

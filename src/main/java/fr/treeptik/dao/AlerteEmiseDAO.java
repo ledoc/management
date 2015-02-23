@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import fr.treeptik.model.AlerteEmise;
+import fr.treeptik.model.Ouvrage;
 
 public interface AlerteEmiseDAO extends
 		JpaRepository<AlerteEmise, Integer> {
@@ -21,5 +22,10 @@ public interface AlerteEmiseDAO extends
 	public List<AlerteEmise> findAlertesActivesByEnregistreurId(
 			@Param("enregistreurId") Integer enregistreurId)
 			throws DataAccessException;
+	
+	@Query("select a from AlerteEmise a where a.codeAlerte = :codeAlerte  and a.date=(select max(a.date) from a) ")
+	public AlerteEmise findLastAlerteEmiseByCodeAlerte(@Param("codeAlerte") String codeAlerte) throws DataAccessException;
+
+	
 
 }

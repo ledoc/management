@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
@@ -40,14 +39,12 @@ public class DeverywareServiceImpl implements DeverywareService {
 	@Inject
 	private MesureService mesureService;
 
-	private static String sessionKey;
-
-	@PostConstruct
-	public void openSession() throws Exception {
+	public String openSession() throws Exception {
 		logger.info("-- openSession --");
 
-		sessionKey = xmlRPCUtils.openSession();
+		String sessionKey = xmlRPCUtils.openSession();
 		logger.info("sessionKey : " + sessionKey);
+		return sessionKey;
 	}
 
 	/**
@@ -57,10 +54,18 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * @param mid
 	 * @throws ServiceException
 	 */
-	@Scheduled(fixedRate = 3600000)
+	@Scheduled(fixedRate = 60000)
 	@SuppressWarnings("unchecked")
 	public void getHistory() throws ServiceException {
 		logger.info("--getHistory DeverywareServiceImpl --");
+
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
 
 		Enregistreur enregistreur = enregistreurService
 				.findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33781916177");
@@ -89,8 +94,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 					enregistreur.getTrameDWs().add(trameDW);
 
-					enregistreurService.update(enregistreur);
-
 					mesureService.conversionSignalElectrique_Valeur(trameDW);
 				} else {
 
@@ -107,8 +110,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
 
-				enregistreurService.update(enregistreur);
-
 				mesureService.conversionSignalElectrique_Valeur(trameDW);
 			}
 		}
@@ -119,6 +120,15 @@ public class DeverywareServiceImpl implements DeverywareService {
 		logger.info("--enregistreurList DeverywareServiceImpl --");
 
 		Enregistreur enregistreur = null;
+
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+
 		Object[] listEnregistreursXMLRPC = xmlRPCUtils
 				.enregistreurList(sessionKey);
 
@@ -142,6 +152,14 @@ public class DeverywareServiceImpl implements DeverywareService {
 	public void getDataHistory(String mid) throws ServiceException {
 		logger.info("--getDataHistory DeverywareServiceImpl -- mid : " + mid);
 
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+
 		Object[] dataArray = xmlRPCUtils.getDataHistory(mid, sessionKey);
 
 		logger.debug(dataArray.length + " DeviceData retournée");
@@ -157,6 +175,14 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 	public void getUnifyHistory(String mid) throws ServiceException {
 		logger.info("--getUnifyHistory DeverywareServiceImpl -- mid : " + mid);
+
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
 
 		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(mid,
 				sessionKey);
@@ -190,6 +216,14 @@ public class DeverywareServiceImpl implements DeverywareService {
 	public void getEventHistory(String mid) throws ServiceException {
 		logger.info("--getEventHistory DeverywareServiceImpl -- mid : " + mid);
 
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+
 		Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(mid,
 				sessionKey);
 
@@ -210,6 +244,14 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 	public String waitForMessage() throws ServiceException {
 		logger.info("--waitForMessage DeverywareServiceImpl--");
+
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
 
 		HashMap<String, Object> waitForMessage = xmlRPCUtils
 				.waitForMessage(sessionKey);
@@ -235,6 +277,14 @@ public class DeverywareServiceImpl implements DeverywareService {
 	public void waitForMessages() throws Exception {
 		logger.info("--waitForMessages DeverywareServiceImpl--");
 
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+
 		HashMap<String, Object> waitForMessages = xmlRPCUtils
 				.waitForMessages(sessionKey);
 
@@ -257,6 +307,14 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 	public void getInfo() throws Exception {
 		logger.info("--getInfo DeverywareServiceImpl--");
+
+		String sessionKey;
+		try {
+			sessionKey = this.openSession();
+		} catch (Exception e) {
+			logger.error("Error DeverywareServiceImpl : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
 
 		HashMap<String, Object> getInfo = xmlRPCUtils.getInfo(sessionKey);
 

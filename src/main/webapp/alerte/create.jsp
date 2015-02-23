@@ -43,7 +43,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate}d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'une
 							Alerte</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} une
 							alerte</p>
@@ -58,6 +58,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							data-show-errors="true">
 
 							<form:hidden path="id" />
+							<form:hidden path="compteurRetourNormal" />
+							<form:hidden path="aSurveiller" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">

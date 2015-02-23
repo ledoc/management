@@ -1,11 +1,11 @@
 package fr.treeptik.util;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,6 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Administrateur;
 import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.AlerteEmise;
-import fr.treeptik.model.Client;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Mesure;
@@ -45,7 +44,7 @@ public class CheckAlerteUtils {
 	private MesureService mesureService;
 
 	public void checkAlerte(Enregistreur enregistreur, Mesure mesure)
-			throws ServiceException {
+			throws ServiceException, AddressException, MessagingException {
 		logger.info("-- checkAlerte CheckAlerteUtils-- Enregistreur mid: "
 				+ enregistreur.getMid() + " mesure.getValeur() : "
 				+ mesure.getValeur());
@@ -54,124 +53,602 @@ public class CheckAlerteUtils {
 				.findAlertesActivesByEnregistreurId(enregistreur.getId());
 
 		for (AlerteDescription alerteActive : alertesActives) {
+
 			switch (alerteActive.getTendance().getDescription()) {
 
+			/**
+			 * TENDANCE = INFERIEUR A
+			 */
 			case "inférieur à":
-				if (alerteActive.getSeuilPreAlerte() != null) {
-					if (mesure.getValeur() < alerteActive.getSeuilPreAlerte()) {
+				/**
+				 * suivi d'unne alerte déjà émise
+				 */
+				if (alerteActive.getaSurveiller()) {
 
-						logger.info("-- checkAlerte : pré-alerte inférieur à levée");
+					String codeAlerte = alerteActive.getCodeAlerte();
+					AlerteEmise alerteEmise = alerteEmiseService
+							.findLastAlerteEmiseByCodeAlerte(codeAlerte);
 
-						AlerteEmise alerteEmise = this
-								.affectAlerteEmise(alerteActive);
-						alerteEmise.setMesureLevantAlerte(mesure);
-						alerteEmise.setEnregistreur(enregistreur);
+					NiveauAlerte niveauAlerte = alerteEmise.getNiveauAlerte();
 
-						if (mesure.getValeur() < alerteActive.getSeuilAlerte()) {
-							logger.info("-- checkAlerte : alerte inférieur à levée");
-							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
-						} else {
-							alerteEmise.setNiveauAlerte(NiveauAlerte.PREALERTE);
+					// Avec seuil de pré-alerte présent
+					if (alerteActive.getSeuilPreAlerte() != null) {
+
+						// Si seuil de pré-alerte dépassé mais pas celui
+						// d'ALERTE
+						if (mesure.getValeur() <= alerteActive
+								.getSeuilPreAlerte()
+								&& mesure.getValeur() >= alerteActive
+										.getSeuilAlerte()) {
+
+							
+							
+							// SI lA DERNIERE ALERTE EST UNE ALERTE
+							if (niveauAlerte == NiveauAlerte.ALERTE) {
+
+								alerteActive
+										.setCompteurRetourNormal(alerteActive
+												.getCompteurRetourNormal() + 1);
+
+								if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+									String destinataireEmails = this
+											.listAllDestinataire(alerteEmise);
+									emailUtils.sendFinAlerteEmail(alerteEmise,
+											mesure, destinataireEmails);
+
+									alerteActive.setCompteurRetourNormal(0);
+
+									AlerteEmise alerteEmiseNew = this
+											.affectAlerteEmise(alerteActive);
+									alerteEmiseNew
+											.setMesureLevantAlerte(mesure);
+									alerteEmiseNew
+											.setEnregistreur(enregistreur);
+
+									alerteEmiseNew
+											.setNiveauAlerte(NiveauAlerte.PREALERTE);
+
+									mesureService.findById(mesure.getId());
+									alerteEmiseNew = alerteEmiseService
+											.create(alerteEmiseNew);
+
+									alerteDescriptionService
+											.update(alerteActive);
+
+									emailUtils.sendAcquittementEmail(
+											alerteEmiseNew, destinataireEmails);
+
+								}
+								alerteDescriptionService.update(alerteActive);
+
+							}
+
+							// SI lA DERNIERE ALERTE EST UNE PRE-ALERTE
+							if (niveauAlerte == NiveauAlerte.PREALERTE) {
+								alerteActive.setCompteurRetourNormal(0);
+
+								alerteDescriptionService.update(alerteActive);
+							}
+
 						}
 
-						mesureService.findById(mesure.getId());
-						alerteEmise = alerteEmiseService.create(alerteEmise);
+						// Si seuil de PRE-ALERTE PAS dépassé
+						else if (mesure.getValeur() > alerteActive
+								.getSeuilPreAlerte()) {
 
-						this.sendMailToAllDestinataire(alerteEmise);
+							alerteActive.setCompteurRetourNormal(alerteActive
+									.getCompteurRetourNormal() + 1);
+
+							if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+								String destinataireEmails = this
+										.listAllDestinataire(alerteEmise);
+								emailUtils.sendFinAlerteEmail(alerteEmise,
+										mesure, destinataireEmails);
+
+								alerteActive.setCompteurRetourNormal(0);
+
+								alerteActive.setaSurveiller(false);
+								alerteDescriptionService.update(alerteActive);
+
+							}
+							alerteDescriptionService.update(alerteActive);
+						}
+
+						// si TOUJOURS au dessus d'ALERTE
+						else {
+
+							alerteActive.setCompteurRetourNormal(0);
+							alerteDescriptionService.update(alerteActive);
+
+							if (niveauAlerte == NiveauAlerte.PREALERTE) {
+								AlerteEmise alerteEmiseNew = this
+										.affectAlerteEmise(alerteActive);
+								alerteEmiseNew.setMesureLevantAlerte(mesure);
+								alerteEmiseNew.setEnregistreur(enregistreur);
+
+								alerteEmiseNew
+										.setNiveauAlerte(NiveauAlerte.ALERTE);
+
+								mesureService.findById(mesure.getId());
+								alerteEmiseNew = alerteEmiseService
+										.create(alerteEmiseNew);
+
+								alerteActive.setaSurveiller(true);
+								alerteDescriptionService.update(alerteActive);
+
+								String destinataireEmails = this
+										.listAllDestinataire(alerteEmise);
+								emailUtils.sendAcquittementEmail(alerteEmise,
+										destinataireEmails);
+							}
+
+						}
+
+						// SANS seuil de pré-alerte présent
+					} else {
+						if (mesure.getValeur() <= alerteActive.getSeuilAlerte()) {
+							logger.info("-- checkAlerte : alerte inférieur à levée");
+
+							alerteActive.setCompteurRetourNormal(alerteActive
+									.getCompteurRetourNormal() + 1);
+
+							if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+								String destinataireEmails = this
+										.listAllDestinataire(alerteEmise);
+								emailUtils.sendFinAlerteEmail(alerteEmise,
+										mesure, destinataireEmails);
+
+								alerteActive.setaSurveiller(false);
+
+							}
+							// SI MESURE ENCORE EN ALERTE
+							else {
+								alerteActive.setCompteurRetourNormal(0);
+							}
+							alerteDescriptionService.update(alerteActive);
+
+						}
+
 					}
+
+					/**
+					 * S'il n'y a pas eu ENCORE d'alerte émise
+					 */
 				} else {
-					if (mesure.getValeur() < alerteActive.getSeuilAlerte()) {
-						logger.info("-- checkAlerte : alerte inférieur à levée");
 
-						AlerteEmise alerteEmise = this
-								.affectAlerteEmise(alerteActive);
-						alerteEmise.setMesureLevantAlerte(mesure);
-						alerteEmise.setEnregistreur(enregistreur);
+					if (alerteActive.getSeuilPreAlerte() != null) {
 
-						alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
-						mesureService.findById(mesure.getId());
-						alerteEmise = alerteEmiseService.create(alerteEmise);
+						if (mesure.getValeur() < alerteActive
+								.getSeuilPreAlerte()) {
 
-						this.sendMailToAllDestinataire(alerteEmise);
+							logger.info("-- checkAlerte : pré-alerte inférieur à levée");
+
+							AlerteEmise alerteEmise = this
+									.affectAlerteEmise(alerteActive);
+							alerteEmise.setMesureLevantAlerte(mesure);
+							alerteEmise.setEnregistreur(enregistreur);
+
+							if (mesure.getValeur() < alerteActive
+									.getSeuilAlerte()) {
+								logger.info("-- checkAlerte : alerte inférieur à levée");
+								alerteEmise
+										.setNiveauAlerte(NiveauAlerte.ALERTE);
+							} else {
+								alerteEmise
+										.setNiveauAlerte(NiveauAlerte.PREALERTE);
+							}
+
+							mesureService.findById(mesure.getId());
+							alerteEmise = alerteEmiseService
+									.create(alerteEmise);
+							
+							alerteActive.setaSurveiller(true);
+							alerteActive.setCompteurRetourNormal(0);
+							alerteDescriptionService.update(alerteActive);
+							
+
+							String destinataireEmails = this
+									.listAllDestinataire(alerteEmise);
+							emailUtils.sendAcquittementEmail(alerteEmise,
+									destinataireEmails);
+						}
+					} else {
+						if (mesure.getValeur() < alerteActive.getSeuilAlerte()) {
+							logger.info("-- checkAlerte : alerte inférieur à levée");
+
+							AlerteEmise alerteEmise = this
+									.affectAlerteEmise(alerteActive);
+							alerteEmise.setMesureLevantAlerte(mesure);
+							alerteEmise.setEnregistreur(enregistreur);
+
+							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
+							mesureService.findById(mesure.getId());
+							alerteEmise = alerteEmiseService
+									.create(alerteEmise);
+							
+							
+							alerteActive.setaSurveiller(true);
+							alerteActive.setCompteurRetourNormal(0);
+							alerteDescriptionService.update(alerteActive);
+
+							String destinataireEmails = this
+									.listAllDestinataire(alerteEmise);
+							emailUtils.sendAcquittementEmail(alerteEmise,
+									destinataireEmails);
+
+						}
 
 					}
 
 				}
 				break;
+
+			/**
+			 * TENDANCE = SUPERIEUR A
+			 */
 			case "supérieur à":
-				if (alerteActive.getSeuilPreAlerte() != null) {
-					if (mesure.getValeur() > alerteActive.getSeuilPreAlerte()) {
-						logger.info("-- checkAlerte : pré-alerte supérieur à levée");
+				/**
+				 * suivi d'une alerte déjà émise
+				 */
+				if (alerteActive.getaSurveiller()) {
+					String codeAlerte = alerteActive.getCodeAlerte();
+					AlerteEmise alerteEmise = alerteEmiseService
+							.findLastAlerteEmiseByCodeAlerte(codeAlerte);
 
-						AlerteEmise alerteEmise = this
-								.affectAlerteEmise(alerteActive);
-						alerteEmise.setMesureLevantAlerte(mesure);
-						alerteEmise.setEnregistreur(enregistreur);
+					NiveauAlerte niveauAlerte = alerteEmise.getNiveauAlerte();
 
+					// Avec seuil de pré-alerte présent
+					if (alerteActive.getSeuilPreAlerte() != null) {
+
+						// Si seuil de pré-alerte dépassé mais pas celui
+						// d'ALERTE
+						if (mesure.getValeur() >= alerteActive
+								.getSeuilPreAlerte()
+								&& mesure.getValeur() <= alerteActive
+										.getSeuilAlerte()) {
+
+							// SI lA DERNIERE ALERTE EST UNE ALERTE
+							if (niveauAlerte == NiveauAlerte.ALERTE) {
+
+								alerteActive
+										.setCompteurRetourNormal(alerteActive
+												.getCompteurRetourNormal() + 1);
+
+								if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+									
+									AlerteEmise alerteEmiseNew = this
+											.affectAlerteEmise(alerteActive);
+									alerteEmiseNew
+											.setMesureLevantAlerte(mesure);
+									alerteEmiseNew
+											.setEnregistreur(enregistreur);
+
+									alerteEmiseNew
+											.setNiveauAlerte(NiveauAlerte.PREALERTE);
+									
+									mesureService.findById(mesure.getId());
+									alerteEmiseNew = alerteEmiseService
+											.create(alerteEmiseNew);
+
+									String destinataireEmails = this
+											.listAllDestinataire(alerteEmise);
+									
+									emailUtils.sendFinAlerteEmail(alerteEmise,
+											mesure, destinataireEmails);
+
+									emailUtils.sendAcquittementEmail(
+											alerteEmiseNew, destinataireEmails);
+									
+									alerteActive.setCompteurRetourNormal(0);
+
+								}
+								alerteDescriptionService.update(alerteActive);
+
+							}
+
+							// SI lA DERNIERE ALERTE EST UNE PRE-ALERTE
+							if (niveauAlerte == NiveauAlerte.PREALERTE) {
+								alerteActive.setCompteurRetourNormal(0);
+								alerteDescriptionService.update(alerteActive);
+								
+								logger.info("alerteActive :"  + alerteActive);
+							}
+
+						}
+
+						// Si seuil de PRE-ALERTE PAS dépassé
+						else if (mesure.getValeur() < alerteActive
+								.getSeuilPreAlerte()) {
+
+							alerteActive.setCompteurRetourNormal(alerteActive
+									.getCompteurRetourNormal() + 1);
+
+							if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+								String destinataireEmails = this
+										.listAllDestinataire(alerteEmise);
+								emailUtils.sendFinAlerteEmail(alerteEmise,
+										mesure, destinataireEmails);
+
+								alerteActive.setCompteurRetourNormal(0);
+
+								alerteActive.setaSurveiller(false);
+
+							}
+							alerteDescriptionService.update(alerteActive);
+							
+							logger.info("alerteActive :"  + alerteActive);
+						}
+
+						// si TOUJOURS au dessus d'ALERTE
+						else {
+
+							alerteActive.setCompteurRetourNormal(0);
+							alerteDescriptionService.update(alerteActive);
+
+							if (niveauAlerte == NiveauAlerte.PREALERTE) {
+								AlerteEmise alerteEmiseNew = this
+										.affectAlerteEmise(alerteActive);
+								alerteEmiseNew.setMesureLevantAlerte(mesure);
+								alerteEmiseNew.setEnregistreur(enregistreur);
+
+								alerteEmiseNew
+										.setNiveauAlerte(NiveauAlerte.ALERTE);
+
+								mesureService.findById(mesure.getId());
+								alerteEmiseNew = alerteEmiseService
+										.create(alerteEmiseNew);
+
+								alerteActive.setaSurveiller(true);
+								alerteDescriptionService.update(alerteActive);
+
+								String destinataireEmails = this
+										.listAllDestinataire(alerteEmise);
+								emailUtils.sendAcquittementEmail(alerteEmise,
+										destinataireEmails);
+
+							}
+
+						}
+
+						// SANS seuil de pré-alerte présent
+					} else {
+
+						// SI MESURE NORMALE
+						if (mesure.getValeur() < alerteActive.getSeuilAlerte()) {
+							logger.info("-- checkAlerte : alerte inférieur à levée");
+
+							alerteActive.setCompteurRetourNormal(alerteActive
+									.getCompteurRetourNormal() + 1);
+
+							if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+								String destinataireEmails = this
+										.listAllDestinataire(alerteEmise);
+								emailUtils.sendFinAlerteEmail(alerteEmise,
+										mesure, destinataireEmails);
+
+								alerteActive.setaSurveiller(false);
+
+							}
+							// SI MESURE ENCORE EN ALERTE
+							else {
+								alerteActive.setCompteurRetourNormal(0);
+							}
+							alerteDescriptionService.update(alerteActive);
+
+						}
+
+					}
+
+					/**
+					 * S'il n'y a pas eu ENCORE d'alerte émise
+					 */
+				} else {
+
+					if (alerteActive.getSeuilPreAlerte() != null) {
+						if (mesure.getValeur() > alerteActive
+								.getSeuilPreAlerte()) {
+							logger.info("-- checkAlerte : pré-alerte supérieur à levée");
+
+							AlerteEmise alerteEmise = this
+									.affectAlerteEmise(alerteActive);
+							alerteEmise.setMesureLevantAlerte(mesure);
+							alerteEmise.setEnregistreur(enregistreur);
+
+							if (mesure.getValeur() > alerteActive
+									.getSeuilAlerte()) {
+								logger.info("-- checkAlerte : alerte supérieur à levée");
+
+								alerteEmise
+										.setNiveauAlerte(NiveauAlerte.ALERTE);
+							} else {
+								alerteEmise
+										.setNiveauAlerte(NiveauAlerte.PREALERTE);
+							}
+
+							mesureService.findById(mesure.getId());
+							alerteEmise = alerteEmiseService
+									.create(alerteEmise);
+
+							
+							alerteActive.setaSurveiller(true);
+							alerteActive.setCompteurRetourNormal(0);
+							alerteDescriptionService.update(alerteActive);
+							
+							String destinataireEmails = this
+									.listAllDestinataire(alerteEmise);
+							emailUtils.sendAcquittementEmail(alerteEmise,
+									destinataireEmails);
+						}
+					} else {
 						if (mesure.getValeur() > alerteActive.getSeuilAlerte()) {
 							logger.info("-- checkAlerte : alerte supérieur à levée");
 
+							AlerteEmise alerteEmise = this
+									.affectAlerteEmise(alerteActive);
+							alerteEmise.setMesureLevantAlerte(mesure);
+							alerteEmise.setEnregistreur(enregistreur);
+
 							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
-						} else {
-							alerteEmise.setNiveauAlerte(NiveauAlerte.PREALERTE);
+							mesureService.findById(mesure.getId());
+							alerteEmise = alerteEmiseService
+									.create(alerteEmise);
+							
+							
+							alerteActive.setaSurveiller(true);
+							alerteActive.setCompteurRetourNormal(0);
+							alerteDescriptionService.update(alerteActive);
+
+							String destinataireEmails = this
+									.listAllDestinataire(alerteEmise);
+							emailUtils.sendAcquittementEmail(alerteEmise,
+									destinataireEmails);
 						}
-
-						mesureService.findById(mesure.getId());
-						alerteEmise = alerteEmiseService.create(alerteEmise);
-
-						this.sendMailToAllDestinataire(alerteEmise);
 					}
+				}
+				break;
+
+			/**
+			 * TENDANCE = EGAL A
+			 */
+			case "égal à":
+
+				/**
+				 * suivi d'unne alerte déjà émise
+				 */
+				if (alerteActive.getaSurveiller()) {
+					String codeAlerte = alerteActive.getCodeAlerte();
+					AlerteEmise alerteEmise = alerteEmiseService
+							.findLastAlerteEmiseByCodeAlerte(codeAlerte);
+
+					// SI MESURE NORMALE
+					if (mesure.getValeur() != alerteActive.getSeuilAlerte()) {
+						logger.info("-- checkAlerte : alerte inférieur à levée");
+
+						alerteActive.setCompteurRetourNormal(alerteActive
+								.getCompteurRetourNormal() + 1);
+
+						if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+							String destinataireEmails = this
+									.listAllDestinataire(alerteEmise);
+							emailUtils.sendFinAlerteEmail(alerteEmise, mesure,
+									destinataireEmails);
+
+							alerteActive.setaSurveiller(false);
+
+						}
+						// SI MESURE ENCORE EN ALERTE
+						else {
+							alerteActive.setCompteurRetourNormal(0);
+						}
+						alerteDescriptionService.update(alerteActive);
+
+					}
+
+					/**
+					 * S'il n'y a pas eu ENCORE d'alerte émise
+					 */
 				} else {
-					if (mesure.getValeur() > alerteActive.getSeuilAlerte()) {
-						logger.info("-- checkAlerte : alerte supérieur à levée");
+
+					if (mesure.getValeur() == alerteActive.getSeuilAlerte()) {
+						logger.info("-- checkAlerte : alerte égal à levée");
 
 						AlerteEmise alerteEmise = this
 								.affectAlerteEmise(alerteActive);
 						alerteEmise.setMesureLevantAlerte(mesure);
 						alerteEmise.setEnregistreur(enregistreur);
-
-						alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
 						mesureService.findById(mesure.getId());
 						alerteEmise = alerteEmiseService.create(alerteEmise);
+						
+						
+						alerteActive.setaSurveiller(true);
+						alerteActive.setCompteurRetourNormal(0);
+						alerteDescriptionService.update(alerteActive);
 
-						this.sendMailToAllDestinataire(alerteEmise);
+						String destinataireEmails = this
+								.listAllDestinataire(alerteEmise);
+						emailUtils.sendAcquittementEmail(alerteEmise,
+								destinataireEmails);
+
 					}
 				}
-
 				break;
-			case "égal à":
-				if (mesure.getValeur() == alerteActive.getSeuilAlerte()) {
-					logger.info("-- checkAlerte : alerte égal à levée");
 
-					AlerteEmise alerteEmise = this
-							.affectAlerteEmise(alerteActive);
-					alerteEmise.setMesureLevantAlerte(mesure);
-					alerteEmise.setEnregistreur(enregistreur);
-					mesureService.findById(mesure.getId());
-					alerteEmise = alerteEmiseService.create(alerteEmise);
-
-					this.sendMailToAllDestinataire(alerteEmise);
-
-				}
-				break;
+			/**
+			 * TENDANCE = DIFFERENT DE
+			 */
 			case "différent de":
-				if (mesure.getValeur() != alerteActive.getSeuilAlerte()) {
-					logger.info("-- checkAlerte : alerte différent de levée");
 
-					AlerteEmise alerteEmise = this
-							.affectAlerteEmise(alerteActive);
-					alerteEmise.setMesureLevantAlerte(mesure);
-					alerteEmise.setEnregistreur(enregistreur);
-					mesureService.findById(mesure.getId());
-					alerteEmise = alerteEmiseService.create(alerteEmise);
+				/**
+				 * suivi d'unne alerte déjà émise
+				 */
+				if (alerteActive.getaSurveiller()) {
+					String codeAlerte = alerteActive.getCodeAlerte();
+					AlerteEmise alerteEmise = alerteEmiseService
+							.findLastAlerteEmiseByCodeAlerte(codeAlerte);
 
-					this.sendMailToAllDestinataire(alerteEmise);
+					// SI MESURE NORMALE
+					if (mesure.getValeur() == alerteActive.getSeuilAlerte()) {
+						logger.info("-- checkAlerte : alerte inférieur à levée");
 
+						alerteActive.setCompteurRetourNormal(alerteActive
+								.getCompteurRetourNormal() + 1);
+
+						if (alerteActive.getCompteurRetourNormal() >= 3) {
+
+							String destinataireEmails = this
+									.listAllDestinataire(alerteEmise);
+							emailUtils.sendFinAlerteEmail(alerteEmise, mesure,
+									destinataireEmails);
+
+							alerteActive.setaSurveiller(false);
+
+						}
+						// SI MESURE ENCORE EN ALERTE
+						else {
+							alerteActive.setCompteurRetourNormal(0);
+						}
+						alerteDescriptionService.update(alerteActive);
+
+					}
+
+					/**
+					 * S'il n'y a pas eu ENCORE d'alerte émise
+					 */
+				} else {
+
+					if (mesure.getValeur() != alerteActive.getSeuilAlerte()) {
+						logger.info("-- checkAlerte : alerte différent de levée");
+
+						AlerteEmise alerteEmise = this
+								.affectAlerteEmise(alerteActive);
+						alerteEmise.setMesureLevantAlerte(mesure);
+						alerteEmise.setEnregistreur(enregistreur);
+						mesureService.findById(mesure.getId());
+						alerteEmise = alerteEmiseService.create(alerteEmise);
+						
+						
+						alerteActive.setaSurveiller(true);
+						alerteActive.setCompteurRetourNormal(0);
+						alerteDescriptionService.update(alerteActive);
+
+						String destinataireEmails = this
+								.listAllDestinataire(alerteEmise);
+						emailUtils.sendAcquittementEmail(alerteEmise,
+								destinataireEmails);
+
+					}
 				}
 				break;
 
 			default:
-				logger.error("ERROR --  checkAlerte checkAlerte -- la tendance de l'alerte n'a pas été trouvée");
+				logger.error("ERROR --  checkAlerte() checkAlerte -- la tendance de l'alerte n'a pas été trouvée");
 				throw new ServiceException(
 						"ERROR --  checkAlerte checkAlerte -- la tendance de l'alerte n'a pas été trouvée");
 			}
@@ -194,31 +671,25 @@ public class CheckAlerteUtils {
 		return alerteEmise;
 	}
 
-	private void sendMailToAllDestinataire(AlerteEmise alerteEmise)
+	private String listAllDestinataire(AlerteEmise alerteEmise)
 			throws ServiceException {
-		logger.info("-- checkAlerte checkAlerte-- alerteEmise : " + alerteEmise);
-		try {
+		logger.info("-- checkAlerte checkAlerte-- alerteEmise : "
+				+ alerteEmise.getCodeAlerte());
+		StringBuilder strbld = new StringBuilder();
+		Etablissement etablissement = alerteEmise.getEnregistreur()
+				.getOuvrage().getSite().getEtablissement();
+		etablissement = etablissementService
+				.findByIdWithJoinFetchClients(etablissement.getId());
+		etablissement.getClients().forEach(
+				c -> strbld.append(c.getMail1() + ","));
+		List<Administrateur> administrateurs = administrateurService.findAll();
+		administrateurs.forEach(a -> strbld.append(a.getMail1() + ","));
 
-			Etablissement etablissement = alerteEmise.getEnregistreur()
-					.getOuvrage().getSite().getEtablissement();
-			etablissement = etablissementService
-					.findByIdWithJoinFetchClients(etablissement.getId());
+		String destinataireEmails = strbld.toString();
+		destinataireEmails = destinataireEmails.substring(0,
+				destinataireEmails.lastIndexOf(","));
 
-			List<String> destinataireEmails = new ArrayList<String>();
-			etablissement.getClients().forEach(
-					c -> destinataireEmails.add(c.getMail1()));
-			List<Administrateur> administrateurs = administrateurService
-					.findAll();
-			administrateurs.forEach(a -> destinataireEmails.add(a.getMail1()));
-
-			for (String mail : destinataireEmails) {
-				emailUtils.sendAcquittementEmail(alerteEmise, mail);
-
-			}
-		} catch (MessagingException e) {
-			logger.error(e.getMessage());
-			throw new ServiceException(e.getMessage(), e);
-		}
+		return destinataireEmails;
 	}
 
 }

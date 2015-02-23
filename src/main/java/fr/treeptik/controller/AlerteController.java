@@ -43,9 +43,9 @@ public class AlerteController {
 	private EnregistreurService enregistreurService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/acquittement/{id}")
-	public String acquittementAlerte(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) 
-			throws ControllerException {
-		
+	public String acquittementAlerte(@PathVariable("id") Integer id,
+			RedirectAttributes redirectAttributes) throws ControllerException {
+
 		logger.info("--acquittementAlerte AlerteController--");
 
 		try {
@@ -56,7 +56,7 @@ public class AlerteController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		
+
 		redirectAttributes.addFlashAttribute("messageSuccess", "OK");
 
 		return "redirect:/alerte/list";
@@ -94,7 +94,14 @@ public class AlerteController {
 			Model model, BindingResult result) throws ControllerException {
 		logger.info("--create AlerteController-- alerte : " + alerteDescription);
 		try {
-			alerteDescriptionService.create(alerteDescription);
+			if (alerteDescription.getId() != null) {
+				alerteDescriptionService.create(alerteDescription);
+			} else {
+
+				alerteDescription.setaSurveiller(false);
+				alerteDescription.setCompteurRetourNormal(0);
+				alerteDescriptionService.create(alerteDescription);
+			}
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -207,9 +214,9 @@ public class AlerteController {
 						.countAllByClientLogin(userLogin);
 				alertesActives = alerteDescriptionService
 						.countAllActivesByClientLogin(userLogin);
-				enregistreursCombo = enregistreurService.findByClientLogin(userLogin);
+				enregistreursCombo = enregistreurService
+						.findByClientLogin(userLogin);
 			}
-
 
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());

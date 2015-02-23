@@ -18,7 +18,9 @@ import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.AlerteEmise;
+import fr.treeptik.model.Mesure;
 import fr.treeptik.model.NiveauAlerte;
 import fr.treeptik.model.TendanceAlerte;
 
@@ -29,38 +31,8 @@ public class EmailUtils {
 
 	@Inject
 	private Environment env;
-	static String ALERTEMESSAGE = "[Solices] - Une alerte a été émise par ";
 
-	/**
-	 * 
-	 * @return
-	 * @throws AddressException
-	 * @throws MessagingException
-	 */
-	public void sendAcquittementEmail(AlerteEmise alerteEmise, String emailDestinataire)
-			throws AddressException, MessagingException {
-		logger.info("--sendAcquittementEmail EmailUtils--");
-
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(
-				"E dd-MM-y 'à' HH:mm", new Locale("fr"));
-		String date = dateFormatter.format(alerteEmise.getDate());
-		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
-		String niveauAlerte = null;
-		String seuil = null;
-
-		if (alerteEmise.getNiveauAlerte().equals(NiveauAlerte.ALERTE)) {
-			niveauAlerte = "d'alerte";
-		}
-		if (alerteEmise.getNiveauAlerte().equals(NiveauAlerte.PREALERTE)) {
-			niveauAlerte = "de pré-alerte";
-		}
-
-		if (alerteEmise.getTendance().equals(TendanceAlerte.INFERIEUR)) {
-			seuil = "bas";
-		}
-		if (alerteEmise.getTendance().equals(TendanceAlerte.SUPERIEUR)) {
-			seuil = "haut";
-		}
+	private MimeMessage initEmail() throws AddressException, MessagingException {
 
 		final String apiKey = env.getProperty("mail.apiKey");
 		final String secretKey = env.getProperty("mail.secretKey");
@@ -68,8 +40,6 @@ public class EmailUtils {
 		String mailSmtpHost = env.getProperty("mail.smtpHost");
 		String socketFactoryPort = env.getProperty("mail.socketFactoryPort");
 		String smtpPort = env.getProperty("mail.smtpPort");
-
-		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -89,6 +59,33 @@ public class EmailUtils {
 				});
 
 		MimeMessage message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(emailFrom));
+
+		return message;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws AddressException
+	 * @throws MessagingException
+	 */
+	public void sendAcquittementEmail(AlerteEmise alerteEmise,
+			String destinataireEmails) throws ServiceException,
+			AddressException, MessagingException {
+		logger.info("--sendAcquittementEmail EmailUtils--");
+
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(
+				"E dd-MM-y 'à' HH:mm", new Locale("fr"));
+		String date = dateFormatter.format(alerteEmise.getDate());
+		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String alerteSubject = "[Solices] - Une "
+				+ alerteEmise.getNiveauAlerte().getDescription()
+				+ " a été émise par ";
+
+		MimeMessage message = this.initEmail();
+
+		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
 
 		String body = "<p><div>Bonjour,</div></p>"
 				+ "<p>Le capteur n° "
@@ -96,25 +93,125 @@ public class EmailUtils {
 				+ " vient de détecter une valeur de "
 				+ +alerteEmise.getMesureLevantAlerte().getValeur()
 				+ " considérée comme dépassant le seuil "
-				+ niveauAlerte
+				+ this.niveauAlerteToString(alerteEmise)
 				+ " "
-				+ seuil
+				+ this.tendanceAlerteToString(alerteEmise)
 				+ ", le "
 				+ date
 				+ ".</p>"
 				+ "<p>Pour acquitter cette "
 				+ alerteEmise.getNiveauAlerte().getDescription()
-				+ " et avoir plus de détails, veuillez suivre le lien ci-dessous :</p>"
+				+ " et accéder de détails, veuillez cliquer sur le lien ci-dessous :</p>"
 				+ "<p><a href=" + linkPrefix + "/" + alerteEmise.getId()
 				+ " >acquittement/détails</a><p>"
 				+ "<p> </div><div>Cordialement</div>"
 				+ "<div>L'équipe solices</div></p>";
 
-		message.setFrom(new InternetAddress(emailFrom));
-		message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(emailDestinataire));
-		message.setSubject(ALERTEMESSAGE + midEnregistreur);
-		message.setContent(body, "text/html");
+		message.setRecipients(Message.RecipientType.BCC,
+				InternetAddress.parse(destinataireEmails));
+
+		message.setSubject(alerteSubject + midEnregistreur);
+		message.setContent(body, "text/html; charset=utf-8");
+
+		Transport.send(message);
+
+	}
+
+	public void sendFinAlerteEmail(AlerteEmise alerteEmise, Mesure mesure,
+			String destinataireEmails) throws ServiceException,
+			AddressException, MessagingException {
+
+		logger.info("--sendFinAlerteEmail EmailUtils--");
+
+		SimpleDateFormat dateFormatter = new SimpleDateFormat(
+				"E dd-MM-y 'à' HH:mm", new Locale("fr"));
+		String date = dateFormatter.format(mesure.getDate());
+		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String alerteSubject = "[Solices] - Une FIN "
+				+ this.niveauAlerteToString(alerteEmise) + " a été émise par ";
+
+		MimeMessage message = this.initEmail();
+
+		String body = "<p><div>Bonjour,</div></p>" + "<p>Le capteur n° "
+				+ midEnregistreur
+				+ " a constaté une absence de dépassement de seuil "
+				+ this.niveauAlerteToString(alerteEmise)
+				+ " durant 3 heures sur la valeur de " + mesure.getValeur()
+				+ ", le " + date + ".</p>"
+				+ "<p> </div><div>Cordialement</div>"
+				+ "<div>L'équipe solices</div></p>";
+
+		message.setRecipients(Message.RecipientType.BCC,
+				InternetAddress.parse(destinataireEmails));
+
+		message.setSubject(alerteSubject + midEnregistreur);
+		message.setContent(body, "text/html; charset=utf-8");
+
+		Transport.send(message);
+
+	}
+
+	private String niveauAlerteToString(AlerteEmise alerteEmise) {
+
+		String niveauAlerte = null;
+
+		if (alerteEmise.getNiveauAlerte().equals(NiveauAlerte.ALERTE)) {
+			niveauAlerte = "d'alerte";
+		}
+		if (alerteEmise.getNiveauAlerte().equals(NiveauAlerte.PREALERTE)) {
+			niveauAlerte = "de pré-alerte";
+		}
+
+		return niveauAlerte;
+
+	}
+
+	private String tendanceAlerteToString(AlerteEmise alerteEmise) {
+
+		String tendanceAlerte = null;
+		if (alerteEmise.getTendance().equals(TendanceAlerte.INFERIEUR)) {
+			tendanceAlerte = "bas";
+		}
+		if (alerteEmise.getTendance().equals(TendanceAlerte.SUPERIEUR)) {
+			tendanceAlerte = "haut";
+		}
+
+		return tendanceAlerte;
+
+	}
+
+	public void sendAlerteAcquittementTimeout(AlerteEmise alerteEmise,
+			String destinataireEmails) throws AddressException, MessagingException {
+		logger.info("--sendFinAlerteEmail EmailUtils--");
+
+		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
+
+		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String alerteSubject = "[Solices] - Une "
+				+ alerteEmise.getNiveauAlerte().getDescription() + "émise par le capteur n° " + midEnregistreur + " n'a pas encore été acquittée" ;
+
+		MimeMessage message = this.initEmail();
+
+		String body = "<p><div>Bonjour,</div></p>"
+				+ "<p>L'acquittement de l'alerte de niveau "
+				+ alerteEmise.getNiveauAlerte().getDescription()
+				+ " émise par le capteur n° "
+				+ midEnregistreur
+				+ " n'a toujours pas été effectué "
+				+ "<p> Une prise de contact avec le client est nécessaire ou l'acquittement peut être effectué pour lui</p>"
+				+ "<p>Pour acquitter cette "
+				+ alerteEmise.getNiveauAlerte().getDescription()
+				+ " et accéder de détails, veuillez cliquer sur le lien ci-dessous :</p>"
+				+ "<p><a href=" + linkPrefix + "/" + alerteEmise.getId()
+				+ " >acquittement/détails</a><p>" + ".</p>"
+				+ "<p> </div><div>Cordialement</div>"
+				+ "<div>L'équipe solices</div></p>";
+
+		message.setRecipients(Message.RecipientType.BCC,
+				InternetAddress.parse(destinataireEmails));
+
+		message.setSubject(alerteSubject);
+		message.setContent(body, "text/html; charset=utf-8");
 
 		Transport.send(message);
 

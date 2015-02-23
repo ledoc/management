@@ -94,7 +94,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	public Enregistreur findByMidWithJoinFetchTrameDWs(String mid) throws ServiceException {
 		logger.info("--findByMidWithJoinFechTrameDWs EnregistreurServiceImpl -- mid : " + mid);
 		Enregistreur enregistreur = enregistreurDAO.findByMidWithJoinFechTrameDWs(mid);
-		System.out.println(enregistreur);
+		logger.debug(enregistreur);
 		return enregistreur;
 	}
 	
@@ -106,7 +106,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	public Enregistreur findByIdWithJoinFetchAlertesActives(Integer id) throws ServiceException {
 		logger.info("--findByIdWithJoinFechAlertesActives EnregistreurServiceImpl -- id : " + id);
 		Enregistreur enregistreur = enregistreurDAO.findByIdWithJoinFetchAlertesActives(id);
-		System.out.println(enregistreur);
+		logger.debug(enregistreur);
 		return enregistreur;
 	}
 	
