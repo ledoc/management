@@ -136,6 +136,7 @@ public class MesureController {
 		logger.info("--list MesureController--");
 
 		List<Mesure> mesures = null;
+		
 		try {
 
 			mesures = mesureService.findAll();

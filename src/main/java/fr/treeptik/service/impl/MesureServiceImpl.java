@@ -75,7 +75,7 @@ public class MesureServiceImpl implements MesureService {
 		 * TODO Voir à déporter ça pour être générique
 		 */
 		Mesure mesure = new Mesure();
-		mesure.setDate(new Date());
+		mesure.setDate(trameDW.getDate());
 		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
 		mesure.setEnregistreur(enregistreur);
 		mesure.setValeur(valeur);
@@ -197,7 +197,7 @@ public class MesureServiceImpl implements MesureService {
 		 * TODO Voir à déporter ça pour être générique
 		 */
 		Mesure mesure = new Mesure();
-		mesure.setDate(new Date());
+		mesure.setDate(trameDW.getDate());
 		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
 		mesure.setEnregistreur(enregistreur);
 		mesure.setValeur(CoteNGFNiveauStatiqueMesureeCompenseDilatation);
@@ -289,6 +289,9 @@ public class MesureServiceImpl implements MesureService {
 	@Override
 	public List<Mesure> findAll() throws ServiceException {
 		logger.info("--FINDALL MesureService --");
+		
+		
+		
 		return mesureDAO.findAll();
 	}
 

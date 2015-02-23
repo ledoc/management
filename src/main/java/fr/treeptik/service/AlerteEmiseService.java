@@ -23,6 +23,8 @@ public interface AlerteEmiseService {
 	void acquittementAlerte(Integer id) throws ServiceException;
 
 	AlerteEmise findLastAlerteEmiseByCodeAlerte(String codeAlerte)
-			throws ServiceException;;
+			throws ServiceException;
+
+	void scheduledAllAlerteAcquittement() throws ServiceException;
 
 }

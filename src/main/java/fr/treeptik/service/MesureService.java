@@ -26,9 +26,9 @@ public interface MesureService {
 	TrameDW conversionSignalElectrique_Conductivite(TrameDW trameDW)
 			throws ServiceException;
 
-	// Ns0 = Nm0
-	// Nm0 : mesure manuelle initiale
-	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
+//	// Ns0 = Nm0
+//	// Nm0 : mesure manuelle initiale
+//	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
 	float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW)
 			throws ServiceException;
 

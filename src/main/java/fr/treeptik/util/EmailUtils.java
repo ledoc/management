@@ -182,13 +182,13 @@ public class EmailUtils {
 
 	public void sendAlerteAcquittementTimeout(AlerteEmise alerteEmise,
 			String destinataireEmails) throws AddressException, MessagingException {
-		logger.info("--sendFinAlerteEmail EmailUtils--");
+		logger.info("--sendAlerteAcquittementTimeout EmailUtils--");
 
 		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
 
 		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
 		String alerteSubject = "[Solices] - Une "
-				+ alerteEmise.getNiveauAlerte().getDescription() + "émise par le capteur n° " + midEnregistreur + " n'a pas encore été acquittée" ;
+				+ alerteEmise.getNiveauAlerte().getDescription() + " émise par le capteur n° " + midEnregistreur + " n'a pas encore été acquittée" ;
 
 		MimeMessage message = this.initEmail();
 
@@ -198,7 +198,7 @@ public class EmailUtils {
 				+ " émise par le capteur n° "
 				+ midEnregistreur
 				+ " n'a toujours pas été effectué "
-				+ "<p> Une prise de contact avec le client est nécessaire ou l'acquittement peut être effectué pour lui</p>"
+				+ "<p> Une prise de contact avec le client est peut être nécessaire ou bien l'acquittement peut être effectué pour lui</p>"
 				+ "<p>Pour acquitter cette "
 				+ alerteEmise.getNiveauAlerte().getDescription()
 				+ " et accéder de détails, veuillez cliquer sur le lien ci-dessous :</p>"

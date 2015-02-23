@@ -55,7 +55,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * @param mid
 	 * @throws ServiceException
 	 */
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 600000)
 	@SuppressWarnings("unchecked")
 	public void getHistory() throws ServiceException {
 		logger.info("--getHistory DeverywareServiceImpl --");
@@ -97,6 +97,21 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 					enregistreur.getTrameDWs().add(trameDW);
 
+					if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
+						mesureService
+								.conversionSignalElectrique_Conductivite(trameDW);
+					} else if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.NIVEAUDEAU) {
+						mesureService
+								.conversionSignalElectrique_CoteAltimetrique(trameDW);
+
+					}
+
+					else {
+						logger.error("Error DeverywareServiceImpl : ");
+						throw new ServiceException(
+								"ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
+					}
+
 				} else {
 
 					logger.debug("Pas de nouvelle trameDW a enregistrée");
@@ -112,20 +127,23 @@ public class DeverywareServiceImpl implements DeverywareService {
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
 
+				if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
+					mesureService
+							.conversionSignalElectrique_Conductivite(trameDW);
+				} else if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.NIVEAUDEAU) {
+					mesureService
+							.conversionSignalElectrique_CoteAltimetrique(trameDW);
+
+				}
+
+				else {
+					logger.error("Error DeverywareServiceImpl : ");
+					throw new ServiceException(
+							"ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
+				}
+
 			}
-			
-			if(trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
-				mesureService.conversionSignalElectrique_Conductivite(trameDW);				
-			}
-			else if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.NIVEAUDEAU) {
-				mesureService.conversionSignalElectrique_CoteAltimetrique(trameDW);
-				
-			}
-			
-			else { 
-				logger.error("Error DeverywareServiceImpl : ");
-				throw new ServiceException("ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
-			}
+
 		}
 	}
 
