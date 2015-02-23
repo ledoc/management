@@ -24,10 +24,10 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 
 	@Inject
 	private AlerteEmiseDAO alerteEmiseDAO;
-		
+
 	@Inject
 	private AdministrateurService administrateurService;
-	
+
 	@Inject
 	private EmailUtils emailUtils;
 
@@ -41,14 +41,16 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public AlerteEmise create(AlerteEmise alerteEmise) throws ServiceException {
-		logger.info("--create AlerteEmiseServiceImpl -- alerte : " + alerteEmise);
+		logger.info("--create AlerteEmiseServiceImpl -- alerte : "
+				+ alerteEmise);
 		return alerteEmiseDAO.save(alerteEmise);
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public AlerteEmise update(AlerteEmise alerteEmise) throws ServiceException {
-		logger.info("--update AlerteEmiseServiceImpl -- alerteEmise : " + alerteEmise);
+		logger.info("--update AlerteEmiseServiceImpl -- alerteEmise : "
+				+ alerteEmise);
 		return alerteEmiseDAO.saveAndFlush(alerteEmise);
 	}
 
@@ -76,13 +78,13 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 	}
 
 	@Override
-	public AlerteEmise findLastAlerteEmiseByCodeAlerte(String codeAlerte) throws ServiceException {
+	public AlerteEmise findLastAlerteEmiseByCodeAlerte(String codeAlerte)
+			throws ServiceException {
 		logger.info("--findLastAlerteEmiseByCodeAlerte AlerteServiceImpl -- codeAlerte : "
 				+ codeAlerte);
 		return alerteEmiseDAO.findLastAlerteEmiseByCodeAlerte(codeAlerte);
 	}
 
-	
 	@Override
 	public void acquittementAlerte(Integer id) throws ServiceException {
 		logger.info("--acquittementAlerte AlerteServiceImpl -- alerteEmiseId : "
@@ -92,46 +94,59 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 		alerteEmise.setCompteurCheckAcquittement(0);
 		this.update(alerteEmise);
 	}
-	
+
+	public List<AlerteEmise> findAlertesActivesByEnregistreurId(Integer id)
+			throws ServiceException {
+		logger.info("--findAlertesActivesByEnregistreurId AlerteServiceImpl -- alerteId : "
+				+ id);
+
+		List<AlerteEmise> alerteEmises = alerteEmiseDAO
+				.findAlertesActivesByEnregistreurId(id);
+
+		return alerteEmises;
+	}
+
+	public List<AlerteEmise> findAllNonAcquittees() throws ServiceException {
+		logger.info("--findAllNonAcquittees AlerteServiceImpl --");
+
+		List<AlerteEmise> alerteEmises = alerteEmiseDAO.findAllNonAcquittees();
+
+		return alerteEmises;
+	}
+
 	@Scheduled
-	public void scheduledAlerteAcquittement(AlerteEmise alerteEmise) throws ServiceException{
-		logger.info("--scheduledAlerteAcquittement AlerteServiceImpl -- alerteEmise : "
-				+ alerteEmise);
-		
-		if (alerteEmise.getAcquittement()) {
-			alerteEmise.setCompteurCheckAcquittement(0);
-			this.update(alerteEmise);
-			
-		}
-		else {
-			alerteEmise.setCompteurCheckAcquittement(alerteEmise.getCompteurCheckAcquittement() +1);
-			
-			if ( alerteEmise.getCompteurCheckAcquittement() >= 3) {
-				
+	public void scheduledAllAlerteAcquittement() throws ServiceException {
+		logger.info("--scheduledAlerteAcquittement AlerteServiceImpl --");
+
+		List<AlerteEmise> listAlerteEmisesNonAcquittees = this
+				.findAllNonAcquittees();
+
+		for (AlerteEmise alerteEmise : listAlerteEmisesNonAcquittees) {
+
+			alerteEmise.setCompteurCheckAcquittement(alerteEmise
+					.getCompteurCheckAcquittement() + 1);
+
+			if (alerteEmise.getCompteurCheckAcquittement() >= 3) {
+
 				StringBuilder strbld = new StringBuilder();
-				
-				List<Administrateur> administrateurs = administrateurService.findAll();
+
+				List<Administrateur> administrateurs = administrateurService
+						.findAll();
 				administrateurs.forEach(a -> strbld.append(a.getMail1() + ","));
 
 				String destinataireEmails = strbld.toString();
 				destinataireEmails = destinataireEmails.substring(0,
 						destinataireEmails.lastIndexOf(","));
-				
-				
+
 				try {
-					emailUtils.sendAlerteAcquittementTimeout(alerteEmise, destinataireEmails);
+					emailUtils.sendAlerteAcquittementTimeout(alerteEmise,
+							destinataireEmails);
 				} catch (MessagingException e) {
 					logger.error("Error OuvrageService : " + e);
 					throw new ServiceException(e.getLocalizedMessage(), e);
 				}
 			}
-			
 		}
-		
-		
-		
-		
-		
 	}
-	
+
 }

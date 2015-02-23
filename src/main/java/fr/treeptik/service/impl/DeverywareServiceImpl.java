@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TrameDW;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.model.deveryware.DeviceState;
 import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
@@ -83,6 +84,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 			trameDW = this.transfertHistoryToTrameDW(trameDW,
 					hashMapHistoryXmlRpc);
 
+			trameDW.setTypeTrameDW(enregistreur.getTypeMesureOrTrame());
+
 			if (enregistreur.getTrameDWs() != null) {
 
 				if (!this.containsSameDate(enregistreur.getTrameDWs(), trameDW)) {
@@ -94,7 +97,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 					enregistreur.getTrameDWs().add(trameDW);
 
-					mesureService.conversionSignalElectrique_Valeur(trameDW);
 				} else {
 
 					logger.debug("Pas de nouvelle trameDW a enregistrée");
@@ -110,7 +112,19 @@ public class DeverywareServiceImpl implements DeverywareService {
 				trameDWs.add(trameDW);
 				enregistreur.setTrameDWs(trameDWs);
 
-				mesureService.conversionSignalElectrique_Valeur(trameDW);
+			}
+			
+			if(trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
+				mesureService.conversionSignalElectrique_Conductivite(trameDW);				
+			}
+			else if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.NIVEAUDEAU) {
+				mesureService.conversionSignalElectrique_CoteAltimetrique(trameDW);
+				
+			}
+			
+			else { 
+				logger.error("Error DeverywareServiceImpl : ");
+				throw new ServiceException("ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
 			}
 		}
 	}
@@ -364,4 +378,5 @@ public class DeverywareServiceImpl implements DeverywareService {
 						&& t.getSignalBrut().equals(trameDW.getSignalBrut()))
 				.findFirst().isPresent();
 	}
+
 }

@@ -23,13 +23,16 @@ public interface MesureService {
 	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
 	// (en mètre)
 	// - intensite : valeur brute transmise par le capteur à un instant t (mA) ;
-	TrameDW conversionSignalElectrique_Valeur(TrameDW trameDW)
+	TrameDW conversionSignalElectrique_Conductivite(TrameDW trameDW)
 			throws ServiceException;
 
 	// Ns0 = Nm0
 	// Nm0 : mesure manuelle initiale
 	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
 	float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW)
+			throws ServiceException;
+
+	TrameDW conversionSignalElectrique_CoteAltimetrique(TrameDW trameDW)
 			throws ServiceException;
 
 }

@@ -37,28 +37,23 @@ public class MesureServiceImpl implements MesureService {
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
-	// - profMax : profondeur maximale pour laquel l'enregistreur a été étalonné
-	// (en mètre)
-	// - intensite : valeur brute transmise par le capteur à un instant t (mA)
-
-	// Valeur à afficher comme mesure conductivité nette à 25°C =
-	// ((((Température-25)*coefficient de température)/100)+1)*((valeur capteur
-	// pleine échelle/16)*(Valeur mesurée-4))
-
 	/**
-	 * 
+	 * CONDUCTIVITE
 	 */
 	@Override
-	public TrameDW conversionSignalElectrique_Valeur(TrameDW trameDW)
+	public TrameDW conversionSignalElectrique_Conductivite(TrameDW trameDW)
 			throws ServiceException {
 		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
 
 		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		Float valeur;
+
 		/**
 		 * TODO ajouter la temperature comme variable
 		 */
 		Float temperature = 25F;
+		Float compenseA25degre = 25F;
+		Float compenseA20degre = 20F;
 		Float signalBrut = trameDW.getSignalBrut();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
@@ -66,10 +61,10 @@ public class MesureServiceImpl implements MesureService {
 
 		if (enregistreur.getTypeEnregistreur().equals(
 				TypeEnregistreur.ANALOGIQUE)) {
-			valeur = ((((temperature - 25) * coeffTemperature) / 100) + 1)
+			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
 					* (valeurCapteurPleineEchelle / 16) * (signalBrut - 4);
 		} else {
-			valeur = ((((temperature - 25) * coeffTemperature) / 100) + 1)
+			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
 					* signalBrut;
 		}
 		trameDW.setValeur(valeur);
@@ -77,11 +72,11 @@ public class MesureServiceImpl implements MesureService {
 		trameDWService.update(trameDW);
 
 		/**
-		 * TODO Voir à déporter sa pour être générique
+		 * TODO Voir à déporter ça pour être générique
 		 */
 		Mesure mesure = new Mesure();
 		mesure.setDate(new Date());
-		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
 		mesure.setEnregistreur(enregistreur);
 		mesure.setValeur(valeur);
 
@@ -96,6 +91,127 @@ public class MesureServiceImpl implements MesureService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
+		return trameDW;
+	}
+
+	/**
+	 * COTE ALTIMETRIQUE
+	 */
+	@Override
+	public TrameDW conversionSignalElectrique_CoteAltimetrique(TrameDW trameDW)
+			throws ServiceException {
+		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
+
+		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
+		Float valeur;
+		Float salinite = 0F;
+		Float altitudeDuCapteur = trameDW.getEnregistreur().getAltitude();
+		Float accelerationGravitationnelle = 9.80665F;
+		Float masseVolumiqueEau = 995.651F;
+
+		/**
+		 * TODO ajouter la temperature comme variable
+		 */
+		Float temperature = 25F;
+		Float compenseA25degre = 25F;
+		Float compenseA20degre = 20F;
+		Float signalBrut = trameDW.getSignalBrut();
+		Enregistreur enregistreur = trameDW.getEnregistreur();
+		Float coeffTemperature = enregistreur.getCoeffTemperature();
+		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
+
+		Float pressionRelativeBrute = null;
+
+		if (enregistreur.getTypeEnregistreur().equals(
+				TypeEnregistreur.ANALOGIQUE)) {
+			pressionRelativeBrute = (valeurCapteurPleineEchelle / 16)
+					* (signalBrut - 4);
+		} else {
+			pressionRelativeBrute = signalBrut;
+		}
+
+		/**
+		 * HAUTEUR DE COLONNE D'EAU EN METRES
+		 */
+
+		Float hauteurColonneEau = (pressionRelativeBrute * 10000)
+				/ (accelerationGravitationnelle * masseVolumiqueEau);
+
+		/**
+		 * Cote NGF du Niveau Statique mesurée = Valeur à afficher sans
+		 * correction dérive
+		 */
+
+		Float CoteNGFNiveauStatiqueMesuree = altitudeDuCapteur
+				+ hauteurColonneEau;
+
+		/**
+		 * 
+		 * =IF(temperature<4,0.000009*temperature^2-0.00008*temperature+0.0002,
+		 * IF(AND(temperature>=4,temperature<40), 0.0000055
+		 * *temperature^2-0.00002
+		 * *temperature-0.00003,IF(AND(temperature>=40,temperature
+		 * <60),0.0000042*temperature
+		 * ^2+0.00005*temperature-0.0009,0.00000286*temperature
+		 * ^2+0.0002*temperature-0.0051)))
+		 * 
+		 */
+		Float facteurCompensationDilatation;
+
+		if (temperature < 4) {
+			facteurCompensationDilatation = (float) (0.000009F * Math.pow(
+					temperature, 2 - 0.00008 * temperature + 0.0002));
+		}
+
+		else if (temperature <= 4 && temperature < 40) {
+			facteurCompensationDilatation = (float) (0.0000055 * Math.pow(
+					temperature, 2 - 0.00002 * temperature - 0.00003));
+		}
+
+		else if (temperature >= 4 && temperature < 60) {
+			facteurCompensationDilatation = (float) (0.0000042 * Math.pow(
+					temperature, 2 + 0.00005 * temperature - 0.0009));
+		} else {
+			facteurCompensationDilatation = (float) (0.00000286 * Math.pow(
+					temperature, 2 + 0.0002 * temperature - 0.0051));
+
+		}
+
+		Float hauteurColonneEauCompenseDilatation = hauteurColonneEau
+				* (1 + facteurCompensationDilatation);
+		Float CoteNGFNiveauStatiqueMesureeCompenseDilatation = altitudeDuCapteur
+				+ hauteurColonneEauCompenseDilatation;
+
+		/**
+		 * Pression barometrique à l'altitude du capteur (INFORMATIF de
+		 * controle)
+		 */
+		Float pressionBarometriqueAlAltitude = (float) (1013.25 * Math.pow(
+				(1 - (0.0065 * altitudeDuCapteur) / 288.15), 5.255));
+
+		trameDW.setValeur(CoteNGFNiveauStatiqueMesureeCompenseDilatation);
+
+		trameDWService.update(trameDW);
+
+		/**
+		 * TODO Voir à déporter ça pour être générique
+		 */
+		Mesure mesure = new Mesure();
+		mesure.setDate(new Date());
+		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
+		mesure.setEnregistreur(enregistreur);
+		mesure.setValeur(CoteNGFNiveauStatiqueMesureeCompenseDilatation);
+
+		this.create(mesure);
+
+		mesure = this.findById(mesure.getId());
+
+		try {
+			checkAlerteUtils.checkAlerte(enregistreur, mesure);
+		} catch (MessagingException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
 		return trameDW;
 	}
 

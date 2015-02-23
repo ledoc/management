@@ -80,6 +80,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									</form:select>
 								</div>
 								<div class="form-group">
+									<label for="typeMesureOrTrame">Donnée mesurée </label>
+									<form:select id="typeMesureOrTrame" path="typeMesureOrTrame"
+										data-parsley-required="true"
+										data-parsley-required-message="Choix requis"
+										class="form-control chosen" disabled="${readOnlyValue }">
+										<form:option value="" label="--- Choisir un type ---" />
+										<form:options items="${typesMesureOrTrameCombo}"
+											itemLabel="description" />
+									</form:select>
+								</div>
+
+								<div class="form-group">
 									<label for="mid">Identifiant DW</label>
 									<form:input type="text" class="transfertInput form-control"
 										id="mid" path="mid" placeholder=""

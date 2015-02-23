@@ -91,7 +91,9 @@ public class EnregistreurController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
+		
 		model.addAttribute("typesEnregistreurCombo", typesEnregistreurCombo);
+		model.addAttribute("typesMesureOrTrameCombo", typesMesureCombo);
 		model.addAttribute("enregistreur", enregistreur);
 		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
 		model.addAttribute("typesMesureCombo", typesMesureCombo);
@@ -223,6 +225,7 @@ public class EnregistreurController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 		model.addAttribute("typesEnregistreurCombo", typesEnregistreurCombo);
+		model.addAttribute("typesMesureOrTrameCombo", typesMesureCombo);
 		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
 		model.addAttribute("enregistreur", enregistreur);
 		model.addAttribute("typesMesureCombo", typesMesureCombo);

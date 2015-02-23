@@ -36,6 +36,11 @@ public class Enregistreur implements Serializable {
 	// Analogique ou numérique : différence pour calcul
 	@Enumerated(EnumType.STRING)
 	private TypeEnregistreur typeEnregistreur;
+	
+	// Ce qui va être mesuré
+	private TypeMesureOrTrame typeMesureOrTrame;
+	
+	
 	// figer la chronique en cas de changement d'un quelconque composant.
 	// fiche passera en écriture libre
 	// Un bouton de liaison NM apparaîtra afin da faire correspondre la nouvelle
@@ -576,5 +581,13 @@ public class Enregistreur implements Serializable {
 
 	public void setAlerteEmises(List<AlerteEmise> alerteEmises) {
 		this.alerteEmises = alerteEmises;
+	}
+
+	public TypeMesureOrTrame getTypeMesureOrTrame() {
+		return typeMesureOrTrame;
+	}
+
+	public void setTypeMesureOrTrame(TypeMesureOrTrame typeMesureOrTrame) {
+		this.typeMesureOrTrame = typeMesureOrTrame;
 	}
 }

@@ -1,7 +1,7 @@
 package fr.treeptik.model;
 
 public enum TypeMesureOrTrame {
-	NIVEAUDEAU("niveau d'eau"), PLUVIOMETRIE("pluviométrie"), NIVEAUMANUEL("niveau manuel");
+	NIVEAUDEAU("niveau d'eau"), PLUVIOMETRIE("pluviométrie"), NIVEAUMANUEL("niveau manuel"), CONDUCTIVITE("conductivité");
 	
 	private String description;
 

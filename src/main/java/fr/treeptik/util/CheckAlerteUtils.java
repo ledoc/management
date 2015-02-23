@@ -81,8 +81,6 @@ public class CheckAlerteUtils {
 								&& mesure.getValeur() >= alerteActive
 										.getSeuilAlerte()) {
 
-							
-							
 							// SI lA DERNIERE ALERTE EST UNE ALERTE
 							if (niveauAlerte == NiveauAlerte.ALERTE) {
 
@@ -108,6 +106,10 @@ public class CheckAlerteUtils {
 
 									alerteEmiseNew
 											.setNiveauAlerte(NiveauAlerte.PREALERTE);
+
+									alerteEmiseNew
+											.setCompteurCheckAcquittement(0);
+									alerteEmiseNew.setAcquittement(false);
 
 									mesureService.findById(mesure.getId());
 									alerteEmiseNew = alerteEmiseService
@@ -170,6 +172,9 @@ public class CheckAlerteUtils {
 
 								alerteEmiseNew
 										.setNiveauAlerte(NiveauAlerte.ALERTE);
+
+								alerteEmiseNew.setCompteurCheckAcquittement(0);
+								alerteEmiseNew.setAcquittement(false);
 
 								mesureService.findById(mesure.getId());
 								alerteEmiseNew = alerteEmiseService
@@ -241,14 +246,16 @@ public class CheckAlerteUtils {
 										.setNiveauAlerte(NiveauAlerte.PREALERTE);
 							}
 
+							alerteEmise.setCompteurCheckAcquittement(0);
+							alerteEmise.setAcquittement(false);
+
 							mesureService.findById(mesure.getId());
 							alerteEmise = alerteEmiseService
 									.create(alerteEmise);
-							
+
 							alerteActive.setaSurveiller(true);
 							alerteActive.setCompteurRetourNormal(0);
 							alerteDescriptionService.update(alerteActive);
-							
 
 							String destinataireEmails = this
 									.listAllDestinataire(alerteEmise);
@@ -265,11 +272,14 @@ public class CheckAlerteUtils {
 							alerteEmise.setEnregistreur(enregistreur);
 
 							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
+
+							alerteEmise.setCompteurCheckAcquittement(0);
+							alerteEmise.setAcquittement(false);
+
 							mesureService.findById(mesure.getId());
 							alerteEmise = alerteEmiseService
 									.create(alerteEmise);
-							
-							
+
 							alerteActive.setaSurveiller(true);
 							alerteActive.setCompteurRetourNormal(0);
 							alerteDescriptionService.update(alerteActive);
@@ -319,7 +329,6 @@ public class CheckAlerteUtils {
 
 								if (alerteActive.getCompteurRetourNormal() >= 3) {
 
-									
 									AlerteEmise alerteEmiseNew = this
 											.affectAlerteEmise(alerteActive);
 									alerteEmiseNew
@@ -329,20 +338,24 @@ public class CheckAlerteUtils {
 
 									alerteEmiseNew
 											.setNiveauAlerte(NiveauAlerte.PREALERTE);
-									
+
+									alerteEmiseNew
+											.setCompteurCheckAcquittement(0);
+									alerteEmiseNew.setAcquittement(false);
+
 									mesureService.findById(mesure.getId());
 									alerteEmiseNew = alerteEmiseService
 											.create(alerteEmiseNew);
 
 									String destinataireEmails = this
 											.listAllDestinataire(alerteEmise);
-									
+
 									emailUtils.sendFinAlerteEmail(alerteEmise,
 											mesure, destinataireEmails);
 
 									emailUtils.sendAcquittementEmail(
 											alerteEmiseNew, destinataireEmails);
-									
+
 									alerteActive.setCompteurRetourNormal(0);
 
 								}
@@ -354,8 +367,8 @@ public class CheckAlerteUtils {
 							if (niveauAlerte == NiveauAlerte.PREALERTE) {
 								alerteActive.setCompteurRetourNormal(0);
 								alerteDescriptionService.update(alerteActive);
-								
-								logger.info("alerteActive :"  + alerteActive);
+
+								logger.info("alerteActive :" + alerteActive);
 							}
 
 						}
@@ -380,8 +393,8 @@ public class CheckAlerteUtils {
 
 							}
 							alerteDescriptionService.update(alerteActive);
-							
-							logger.info("alerteActive :"  + alerteActive);
+
+							logger.info("alerteActive :" + alerteActive);
 						}
 
 						// si TOUJOURS au dessus d'ALERTE
@@ -398,6 +411,9 @@ public class CheckAlerteUtils {
 
 								alerteEmiseNew
 										.setNiveauAlerte(NiveauAlerte.ALERTE);
+
+								alerteEmiseNew.setCompteurCheckAcquittement(0);
+								alerteEmiseNew.setAcquittement(false);
 
 								mesureService.findById(mesure.getId());
 								alerteEmiseNew = alerteEmiseService
@@ -471,15 +487,17 @@ public class CheckAlerteUtils {
 										.setNiveauAlerte(NiveauAlerte.PREALERTE);
 							}
 
+							alerteEmise.setCompteurCheckAcquittement(0);
+							alerteEmise.setAcquittement(false);
+
 							mesureService.findById(mesure.getId());
 							alerteEmise = alerteEmiseService
 									.create(alerteEmise);
 
-							
 							alerteActive.setaSurveiller(true);
 							alerteActive.setCompteurRetourNormal(0);
 							alerteDescriptionService.update(alerteActive);
-							
+
 							String destinataireEmails = this
 									.listAllDestinataire(alerteEmise);
 							emailUtils.sendAcquittementEmail(alerteEmise,
@@ -495,11 +513,14 @@ public class CheckAlerteUtils {
 							alerteEmise.setEnregistreur(enregistreur);
 
 							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
+
+							alerteEmise.setCompteurCheckAcquittement(0);
+							alerteEmise.setAcquittement(false);
+
 							mesureService.findById(mesure.getId());
 							alerteEmise = alerteEmiseService
 									.create(alerteEmise);
-							
-							
+
 							alerteActive.setaSurveiller(true);
 							alerteActive.setCompteurRetourNormal(0);
 							alerteDescriptionService.update(alerteActive);
@@ -563,10 +584,13 @@ public class CheckAlerteUtils {
 								.affectAlerteEmise(alerteActive);
 						alerteEmise.setMesureLevantAlerte(mesure);
 						alerteEmise.setEnregistreur(enregistreur);
+
+						alerteEmise.setCompteurCheckAcquittement(0);
+						alerteEmise.setAcquittement(false);
+
 						mesureService.findById(mesure.getId());
 						alerteEmise = alerteEmiseService.create(alerteEmise);
-						
-						
+
 						alerteActive.setaSurveiller(true);
 						alerteActive.setCompteurRetourNormal(0);
 						alerteDescriptionService.update(alerteActive);
@@ -630,10 +654,13 @@ public class CheckAlerteUtils {
 								.affectAlerteEmise(alerteActive);
 						alerteEmise.setMesureLevantAlerte(mesure);
 						alerteEmise.setEnregistreur(enregistreur);
+
+						alerteEmise.setCompteurCheckAcquittement(0);
+						alerteEmise.setAcquittement(false);
+
 						mesureService.findById(mesure.getId());
 						alerteEmise = alerteEmiseService.create(alerteEmise);
-						
-						
+
 						alerteActive.setaSurveiller(true);
 						alerteActive.setCompteurRetourNormal(0);
 						alerteDescriptionService.update(alerteActive);
