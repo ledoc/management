@@ -116,6 +116,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type-message="valeur numérique"
 										readonly="${readOnlyValue }" />
 								</div>
+								Taux de salinité (g/kg)
+								<div class="form-group">
+									<label for="coeffTemperature">Taux de salinité (g/kg)</label>
+									<form:input type="text" class="form-control"
+										id="salinité" path="salinité" placeholder=""
+										data-parsley-trigger="change" step="any"
+										data-parsley-type="number"
+										data-parsley-type-message="valeur numérique"
+										readonly="${readOnlyValue }" />
+								</div>
 								<div class="form-group">
 									<label for="altitude">Altitude (mètre)</label>
 									<form:input type="text" class="form-control" id="altitude"
@@ -339,6 +349,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<form:hidden id="data-echelleCapteur" path="echelleCapteur" />
 								<form:hidden id="data-altitude" path="altitude" />
 								<form:hidden id="data-coeffTemperature" path="coeffTemperature" />
+								<form:hidden id="data-salinite" path="salinite" />
 
 								<div class="col-xs-6">
 									<label for="valeur">Valeur sans unité</label>

@@ -195,9 +195,9 @@ public class EmailUtils {
 		String body = "<p><div>Bonjour,</div></p>"
 				+ "<p>L'acquittement de l'alerte de niveau "
 				+ alerteEmise.getNiveauAlerte().getDescription()
-				+ " émise par le capteur n° "
+				+ " du capteur n° "
 				+ midEnregistreur
-				+ " n'a toujours pas été effectué "
+				+ " n'a toujours pas été effectué. "
 				+ "<p> Une prise de contact avec le client est peut être nécessaire ou bien l'acquittement peut être effectué pour lui</p>"
 				+ "<p>Pour acquitter cette "
 				+ alerteEmise.getNiveauAlerte().getDescription()

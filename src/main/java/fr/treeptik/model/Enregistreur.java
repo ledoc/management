@@ -50,6 +50,7 @@ public class Enregistreur implements Serializable {
 	private Boolean maintenance;
 	private Float altitude;
 	private Float coeffTemperature;
+	private Float salinite;
 	private Float echelleCapteur;
 
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
@@ -618,5 +619,13 @@ public class Enregistreur implements Serializable {
 
 	public void setTypeMesureOrTrame(TypeMesureOrTrame typeMesureOrTrame) {
 		this.typeMesureOrTrame = typeMesureOrTrame;
+	}
+
+	public Float getSalinite() {
+		return salinite;
+	}
+
+	public void setSalinite(Float salinite) {
+		this.salinite = salinite;
 	}
 }

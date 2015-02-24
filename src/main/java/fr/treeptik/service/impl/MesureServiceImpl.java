@@ -1,6 +1,5 @@
 package fr.treeptik.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,6 +52,7 @@ public class MesureServiceImpl implements MesureService {
 		 */
 		Float temperature = 25F;
 		Float compenseA25degre = 25F;
+		@SuppressWarnings("unused")
 		Float compenseA20degre = 20F;
 		Float signalBrut = trameDW.getSignalBrut();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
@@ -102,23 +102,18 @@ public class MesureServiceImpl implements MesureService {
 			throws ServiceException {
 		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
 
-		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
-		Float valeur;
-		Float salinite = 0F;
-		Float altitudeDuCapteur = trameDW.getEnregistreur().getAltitude();
 		Float accelerationGravitationnelle = 9.80665F;
-		Float masseVolumiqueEau = 995.651F;
+		Float temperature = 30F;
 
-		/**
-		 * TODO ajouter la temperature comme variable
-		 */
-		Float temperature = 25F;
-		Float compenseA25degre = 25F;
-		Float compenseA20degre = 20F;
 		Float signalBrut = trameDW.getSignalBrut();
+
 		Enregistreur enregistreur = trameDW.getEnregistreur();
-		Float coeffTemperature = enregistreur.getCoeffTemperature();
+		Float altitudeDuCapteur = enregistreur.getAltitude();
+		// Float altitudeDuCapteur = 289.7F;
+		Float salinite = enregistreur.getSalinite();
+		// Float salinite = 0F;
 		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
+		// Float valeurCapteurPleineEchelle = 0.05F;
 
 		Float pressionRelativeBrute = null;
 
@@ -130,6 +125,47 @@ public class MesureServiceImpl implements MesureService {
 			pressionRelativeBrute = signalBrut;
 		}
 
+		Float masseVolumiqueEau = (float) ((999.842594F
+				+ 0.06793952F
+				* temperature
+				- 0.00909529F
+				* (temperature * temperature)
+				+ 0.0001001685F
+				* (temperature * temperature * temperature)
+				- 0.000001120083F
+				* (temperature * temperature * temperature * temperature)
+				+ 0.000000006536332F
+				* (temperature * temperature * temperature * temperature * temperature)
+				+ 0.824493F * salinite - 0.0040899F * temperature * salinite
+				+ 0.000076438F * (temperature * temperature) * salinite
+				- 0.00000082467F * (temperature * temperature * temperature)
+				* salinite + 0.0000000053875F
+				* (temperature * temperature * temperature * temperature)
+				* salinite - 0.00572466F * Math.pow(salinite, 3 / 2)
+				+ 0.00010227F * temperature * Math.pow(salinite, 3 / 2)
+				- 0.0000016546F * (temperature * temperature)
+				* Math.pow(salinite, 3 / 2) + 0.00048314F * (salinite * salinite)) / (1F - (pressionRelativeBrute / (((19652.21F
+				+ 148.4206F
+				* temperature
+				- 2.327105F
+				* (temperature * temperature)
+				+ 0.01360477F
+				* (temperature * temperature * temperature) - 0.00005155288F * (temperature
+				* temperature * temperature * temperature))
+				+ (54.6746F - 0.603459F * temperature + 0.0109987F
+						* (temperature * temperature) - 0.00006167F * (temperature
+						* temperature * temperature)) * salinite + (0.07944F + 0.016483F * temperature - 0.00053009F * (temperature * temperature))
+				* Math.pow(salinite, 3 / 2))
+				+ ((3.239908F + 0.00143713F * temperature + 0.000116092F
+						* (temperature * temperature) - 0.000000577905F * (temperature
+						* temperature * temperature))
+						+ (0.0022838F - 0.000010981F * temperature - 0.0000016078F * (temperature * temperature))
+						* salinite + 0.000191075F * Math.pow(salinite, 3 / 2))
+				* pressionRelativeBrute + ((0.0000850935F - 0.00000612293F * temperature + 0.000000052787F * (temperature * temperature)) + (-0.000000099348F
+				+ 0.000000020816F * temperature + 0.00000000091697F * (temperature * temperature))
+				* salinite)
+				* (pressionRelativeBrute * pressionRelativeBrute)))));
+
 		/**
 		 * HAUTEUR DE COLONNE D'EAU EN METRES
 		 */
@@ -139,42 +175,31 @@ public class MesureServiceImpl implements MesureService {
 
 		/**
 		 * Cote NGF du Niveau Statique mesurée = Valeur à afficher sans
-		 * correction dérive
+		 * correction dérive sans correction barometrique
 		 */
 
+		@SuppressWarnings("unused")
 		Float CoteNGFNiveauStatiqueMesuree = altitudeDuCapteur
 				+ hauteurColonneEau;
 
-		/**
-		 * 
-		 * =IF(temperature<4,0.000009*temperature^2-0.00008*temperature+0.0002,
-		 * IF(AND(temperature>=4,temperature<40), 0.0000055
-		 * *temperature^2-0.00002
-		 * *temperature-0.00003,IF(AND(temperature>=40,temperature
-		 * <60),0.0000042*temperature
-		 * ^2+0.00005*temperature-0.0009,0.00000286*temperature
-		 * ^2+0.0002*temperature-0.0051)))
-		 * 
-		 */
 		Float facteurCompensationDilatation;
 
 		if (temperature < 4) {
-			facteurCompensationDilatation = (float) (0.000009F * Math.pow(
-					temperature, 2 - 0.00008 * temperature + 0.0002));
+			facteurCompensationDilatation = (float) (0.000009F
+					* (temperature * temperature) - 0.00008 * temperature + 0.0002);
 		}
 
-		else if (temperature <= 4 && temperature < 40) {
-			facteurCompensationDilatation = (float) (0.0000055 * Math.pow(
-					temperature, 2 - 0.00002 * temperature - 0.00003));
+		else if (temperature >= 4 && temperature < 40) {
+			facteurCompensationDilatation = (float) (0.0000055F
+					* (temperature * temperature) - 0.00002F * temperature - 0.00003F);
 		}
 
-		else if (temperature >= 4 && temperature < 60) {
-			facteurCompensationDilatation = (float) (0.0000042 * Math.pow(
-					temperature, 2 + 0.00005 * temperature - 0.0009));
+		else if (temperature >= 40 && temperature < 60) {
+			facteurCompensationDilatation = (float) (0.0000042
+					* (temperature * temperature) + 0.00005F * temperature - 0.0009F);
 		} else {
-			facteurCompensationDilatation = (float) (0.00000286 * Math.pow(
-					temperature, 2 + 0.0002 * temperature - 0.0051));
-
+			facteurCompensationDilatation = (float) (0.00000286
+					* (temperature * temperature) + 0.0002F * temperature - 0.0051F);
 		}
 
 		Float hauteurColonneEauCompenseDilatation = hauteurColonneEau
@@ -186,6 +211,7 @@ public class MesureServiceImpl implements MesureService {
 		 * Pression barometrique à l'altitude du capteur (INFORMATIF de
 		 * controle)
 		 */
+		@SuppressWarnings("unused")
 		Float pressionBarometriqueAlAltitude = (float) (1013.25 * Math.pow(
 				(1 - (0.0065 * altitudeDuCapteur) / 288.15), 5.255));
 
@@ -193,9 +219,6 @@ public class MesureServiceImpl implements MesureService {
 
 		trameDWService.update(trameDW);
 
-		/**
-		 * TODO Voir à déporter ça pour être générique
-		 */
 		Mesure mesure = new Mesure();
 		mesure.setDate(trameDW.getDate());
 		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
@@ -212,43 +235,8 @@ public class MesureServiceImpl implements MesureService {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
+
 		return trameDW;
-	}
-
-	// Ns0 = Nm0
-	// Nm0 : mesure manuelle initiale
-	// Nsi = Nsi-1 + (hauteurEau i - hauteurEau i-1)
-	@Override
-	public float conversionHauteurEau_CoteAltimetrique(TrameDW trameDW)
-			throws ServiceException {
-		logger.info("--conversionHauteurEau_CoteAltimetrique mesure --");
-
-		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
-		float niveauEau;
-		float dernierNiveauEau;
-		float derniereHauteurEau;
-		Enregistreur enregistreur = trameDW.getEnregistreur();
-		float hauteurEau = trameDW.getValeur();
-		derniereHauteurEau = enregistreur.getDerniereTrameDW().getValeur();
-
-		if (enregistreur.getDerniereMesure().getValeur() != null) {
-			dernierNiveauEau = enregistreur.getDerniereMesure().getValeur();
-
-		} else {
-			dernierNiveauEau = enregistreur.getNiveauManuel().getValeur();
-		}
-
-		niveauEau = dernierNiveauEau + (hauteurEau - derniereHauteurEau);
-
-		Mesure mesure = new Mesure();
-		mesure.setDate(new Date());
-		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
-		mesure.setEnregistreur(enregistreur);
-		mesure.setValeur(niveauEau);
-
-		enregistreur.getMesures().add(mesure);
-
-		return niveauEau;
 	}
 
 	@Override
@@ -289,20 +277,17 @@ public class MesureServiceImpl implements MesureService {
 	@Override
 	public List<Mesure> findAll() throws ServiceException {
 		logger.info("--FINDALL MesureService --");
-		
-		
-		
+
 		return mesureDAO.findAll();
 	}
-	
+
 	@Override
 	public List<Mesure> findAllDetails() throws ServiceException {
 		logger.info("--findAllDetails MesureService --");
-		
+
 		List<Mesure> mesures = mesureDAO.findAllDetails();
 		return mesures;
 	}
-	
 
 	@Override
 	public List<Mesure> findByEnregistreurId(Integer id)
