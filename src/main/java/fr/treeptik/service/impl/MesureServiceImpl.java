@@ -294,6 +294,15 @@ public class MesureServiceImpl implements MesureService {
 		
 		return mesureDAO.findAll();
 	}
+	
+	@Override
+	public List<Mesure> findAllDetails() throws ServiceException {
+		logger.info("--findAllDetails MesureService --");
+		
+		List<Mesure> mesures = mesureDAO.findAllDetails();
+		return mesures;
+	}
+	
 
 	@Override
 	public List<Mesure> findByEnregistreurId(Integer id)

@@ -115,8 +115,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<div class="tab-pane fade active in" id="quantitatif">
 							<div id="charts"></div>
 						</div>
-						<div class="tab-pane fade" id="qualitatif">
-							<h1 class="text-muted bolder pb25 pt25">Qualitatif</h1>
+						<div class="tab-pane fade text-left" id="qualitatif">
 
 
 							<!-- content wrapper -->
@@ -145,11 +144,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													<thead>
 														<tr>
 															<th>Date</th>
+															<th>Valeur</th>
 															<th>Ouvrage</th>
 															<th>Enregistreur (mid)</th>
 															<th>Type</th>
-															<th>Valeur</th>
-															<th class="nosort nosearch">Actions</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -159,20 +157,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<c:url var="urlMesureUpdate"
 																value="/mesure/update/${mesure.id}" />
 															<tr>
-																<td><c:out value="${mesure.date}" /></td>
+																<td><fmt:formatDate value="${mesure.date}"
+																		pattern="dd-MM-yyyy HH:mm:ss" /></td>
+																<td><c:out value="${mesure.valeur}" /></td>
 																<td><c:out
 																		value="${mesure.enregistreur.ouvrage.codeOuvrage}" /></td>
 																<td><c:out value="${mesure.enregistreur.mid}" /></td>
 																<td><c:out
 																		value="${mesure.typeMesureOrTrame.description}" /></td>
-																<td><c:out value="${mesure.valeur}" /></td>
-																<%-- 											<sec:authorize ifAllGranted="ADMIN"> --%>
-																<%-- 											<td><a data-url="${urlMesureDelete}" data-toggle="modal" --%>
-																<!-- 												data-target="#confirmModal" -->
-																<!-- 												class="btn btn-outline btn-danger btn-xs js-confirm-btn"> -->
-																<!-- 													<i class="fa fa-remove"></i> -->
-																<!-- 											</a></td> -->
-																<%-- 											</sec:authorize> --%>
 															</tr>
 														</c:forEach>
 													</tbody>

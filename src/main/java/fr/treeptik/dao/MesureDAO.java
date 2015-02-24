@@ -11,6 +11,10 @@ import fr.treeptik.model.Mesure;
 
 public interface MesureDAO extends JpaRepository<Mesure, Integer> {
 
+	@Query("select m from Mesure m join m.enregistreur e join e.mesures")
+	List<Mesure> findAllDetails()
+			throws DataAccessException;
+	
 	@Query("select m from Enregistreur e join e.mesures m where e.id = :id")
 	List<Mesure> findByEnregistreurId(@Param("id") Integer id)
 			throws DataAccessException;

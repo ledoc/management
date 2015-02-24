@@ -59,10 +59,6 @@ public class MesureController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		enregistreurCache = new HashMap<Integer, Enregistreur>();
-		for (Enregistreur enregistreur : enregistreursCombo) {
-			enregistreurCache.put(enregistreur.getId(), enregistreur);
-		}
 
 		model.addAttribute("typesMesureCombo", typesMesureCombo);
 		model.addAttribute("mesure", new Mesure());
@@ -135,11 +131,14 @@ public class MesureController {
 			throws ControllerException {
 		logger.info("--list MesureController--");
 
-		List<Mesure> mesures = null;
-		
+		List<Mesure> mesures = new ArrayList<Mesure>();
+		List<Enregistreur> enregistreurs = new ArrayList<Enregistreur>();
 		try {
-
-			mesures = mesureService.findAll();
+			enregistreurs = enregistreurService.findAll();
+			
+			for (Enregistreur enregistreur : enregistreurs) {
+				mesures.addAll(enregistreur.getMesures());
+			}
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());

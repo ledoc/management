@@ -1,4 +1,4 @@
-INSERT IGNORE INTO `Administrateur`  VALUES (1,'ID-1','administrateur','rvfontbonne@hotmail.com',NULL,'solices2015','administrateurNom','adminPreNom','ADMIN',NULL,'0623456789');
+INSERT IGNORE INTO `Administrateur`  VALUES (1,'ID-1','administrateur','rvfontbonne@hotmail.com',NULL,'aaa','administrateurNom','adminPreNom','ADMIN',NULL,'0623456789');
 
 INSERT IGNORE INTO `Client` VALUES (1,'ID-1','client','h.fontbonne@treeptik.fr','client2@solices.fr','client','clientnom01','chef','clientprenom01','CLIENT','0187575529','0687575529');
 
@@ -13,7 +13,7 @@ INSERT IGNORE INTO `Site` VALUES (1,'siteCode1','50.59718/1.97753','','13',50.59
 
 INSERT IGNORE INTO `Ouvrage` VALUES (1,'ouvrageCode1','','43.53157/5.25222','',1223,NULL,1234.43,NULL,43.5316,5.25222,120,110,'ouvrageNom1','0x00123t/123z',NULL,'\0',NULL,1,2);
 
-INSERT IGNORE INTO `Enregistreur` VALUES (1,230,'4.2',NULL,1,NULL,'',4,NULL,'\0','gps://ORANGE/+33781916177','',95,'solex',NULL,NULL,'1234567','1234','satellite',NULL,'ANALOGIQUE',NULL,NULL,FALSE,1);
 
-INSERT IGNORE INTO `AlerteDescription` VALUES (1,TRUE,'alerterouge','au dessus du seuil',0.5,0.4,'SUPERIEUR','CONDUCTIVITE',1);
+INSERT IGNORE INTO `Enregistreur` VALUES (1,230,'4.2',NULL,1,NULL,'',4,NULL,'\0','gps://ORANGE/+33781916177','',95,'solex',NULL,NULL,'1234567','1234','satellite',NULL,'ANALOGIQUE',3,NULL,NULL,FALSE,1);
 
+INSERT IGNORE INTO `AlerteDescription` VALUES (1,'\0',TRUE,'alerterouge',0,'au dessus du seuil',0.5,0.4,'SUPERIEUR','CONDUCTIVITE',1);

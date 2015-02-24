@@ -35,4 +35,6 @@ public interface MesureService {
 	TrameDW conversionSignalElectrique_CoteAltimetrique(TrameDW trameDW)
 			throws ServiceException;
 
+	List<Mesure> findAllDetails() throws ServiceException;
+
 }
