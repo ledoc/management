@@ -175,42 +175,6 @@ public class MesureController {
 		return "/mesure/list";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/list/enregistreur/{id}")
-	public String listByEnregistreur(Model model, HttpServletRequest request,
-			@PathVariable("id") Integer id) throws ControllerException {
-		logger.info("--listByEnregistreur MesureController--");
-
-		List<Mesure> mesures = null;
-		try {
-
-			mesures = mesureService.findByEnregistreurId(id);
-
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		model.addAttribute("mesures", mesures);
-		return "/mesure/list";
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/list/ouvrage/{id}")
-	public String listByOuvrage(Model model, HttpServletRequest request,
-			@PathVariable("id") Integer id) throws ControllerException {
-		logger.info("--listByOuvrage MesureController--");
-
-		List<Mesure> mesures = null;
-		try {
-
-			mesures = mesureService.findByEnregistreurId(id);
-
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		model.addAttribute("mesures", mesures);
-		return "/mesure/list";
-	}
-
 	@RequestMapping(method = RequestMethod.GET, value = "/enregistreur/points/{enregistreurId}")
 	public @ResponseBody List<Point> getEnregistreurPoints(
 			HttpServletRequest request,
@@ -226,10 +190,8 @@ public class MesureController {
 			Enregistreur enregistreur = enregistreurService
 					.findById(enregistreurId);
 			mesures = enregistreur.getMesures();
-			System.out.println(mesures.size());
 
 			for (Mesure item : mesures) {
-				System.out.println(item);
 				points.add(mesureService.transformMesureInPoint(item));
 			}
 			Collections.sort(points, new DatePointComparator());
@@ -253,7 +215,6 @@ public class MesureController {
 
 			alerteDescriptions = alerteDescriptionService
 					.findAlertesActivesByEnregistreurId(enregistreurId);
-			System.out.println(alerteDescriptions.size());
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -289,6 +250,74 @@ public class MesureController {
 		}
 
 		return allSites;
+
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/init/graph/points")
+	public @ResponseBody List<Point> initPointsGraph(HttpServletRequest request)
+			throws ControllerException {
+
+		logger.info("--initPointsGraph MesureController");
+
+		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
+		List<Mesure> mesures = new ArrayList<Mesure>();
+		List<Point> points = new ArrayList<Point>();
+
+		try {
+			Boolean isAdmin = request.isUserInRole("ADMIN");
+			logger.debug("USER ROLE ADMIN : " + isAdmin);
+			if (isAdmin) {
+				allEnregistreurs = enregistreurService.findAll();
+			} else {
+				String userLogin = SecurityContextHolder.getContext()
+						.getAuthentication().getName();
+				logger.debug("USER LOGIN : " + userLogin);
+				allEnregistreurs = enregistreurService.findAll();
+			}
+			Enregistreur enregistreur = allEnregistreurs.get(0);
+			mesures = enregistreur.getMesures();
+
+			for (Mesure item : mesures) {
+				points.add(mesureService.transformMesureInPoint(item));
+			}
+			Collections.sort(points, new DatePointComparator());
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return points;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/init/graph/plotLines")
+	public @ResponseBody List<AlerteDescription> initPlotLinesGraph(
+			HttpServletRequest request) throws ControllerException {
+
+		logger.info("--initPlotLinesGraph MesureController");
+
+		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
+		List<AlerteDescription> alerteDescriptions = new ArrayList<AlerteDescription>();
+
+		try {
+			Boolean isAdmin = request.isUserInRole("ADMIN");
+			logger.debug("USER ROLE ADMIN : " + isAdmin);
+			if (isAdmin) {
+				allEnregistreurs = enregistreurService.findAll();
+			} else {
+				String userLogin = SecurityContextHolder.getContext()
+						.getAuthentication().getName();
+				logger.debug("USER LOGIN : " + userLogin);
+				allEnregistreurs = enregistreurService.findAll();
+			}
+
+			alerteDescriptions = alerteDescriptionService
+					.findAlertesActivesByEnregistreurId(allEnregistreurs.get(0)
+							.getId());
+
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return alerteDescriptions;
 
 	}
 

@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @SuppressWarnings("serial")
 @Entity
 public class Mesure implements Serializable, Cloneable {
@@ -23,6 +25,7 @@ public class Mesure implements Serializable, Cloneable {
 	@Enumerated(EnumType.STRING)
 	private TypeMesureOrTrame typeMesureOrTrame;
 	private Date date;
+	@JsonIgnore
 	@ManyToOne
 	private Enregistreur enregistreur;
 

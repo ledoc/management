@@ -85,6 +85,7 @@ public class Enregistreur implements Serializable {
 	private String sonde;
 	// croquis dynamique de l'ensemble
 	private String croquis;
+	
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
 	private List<AlerteDescription> alerteDescriptions;
@@ -94,7 +95,6 @@ public class Enregistreur implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<TrameDW> trameDWs;
-
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<Mesure> mesures;
@@ -179,34 +179,6 @@ public class Enregistreur implements Serializable {
 	 * @param niveauManuel
 	 */
 	public void initNiveauManuel() {
-
-		// if (this.mesures != null) {
-		// List<Mesure> allMesureManuel = new ArrayList<Mesure>();
-		//
-		// for (Mesure mesure : this.mesures) {
-		//
-		// if (mesure.getTypeMesureOrTrame().equals(
-		// TypeMesureOrTrame.NIVEAUMANUEL)) {
-		// allMesureManuel.add(mesure);
-		// }
-		// }
-		//
-		// if (allMesureManuel.size() != 0) {
-		// if (allMesureManuel.size() > 1) {
-		// Comparator<Mesure> comparatorMesure = (m1, m2) -> m1
-		// .getDate().compareTo(m2.getDate());
-		//
-		// this.niveauManuel = Collections.max(allMesureManuel,
-		// comparatorMesure).cloneMe();
-		// } else {
-		//
-		// this.niveauManuel = allMesureManuel.get(0).cloneMe();
-		//
-		// }
-		//
-		// } else {
-		// this.niveauManuel = new Mesure();
-		// }
 
 		boolean typeManuelPresence = this.mesures.stream().anyMatch(
 				m -> m.getTypeMesureOrTrame().equals(

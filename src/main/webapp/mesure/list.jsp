@@ -25,7 +25,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-2 col-md-3 col-xs-12 tools">
 				<div class="bg-white shadow tools-inner">
 					<header>
-						<h1 class="h3 text-left p15 mt0 mb0">
+						<h1 class="labelSite h3 text-left p15 mt0 mb0">
 							<span class="text-muted hidden-sm hidden-xs">Site 1 ></span> <span
 								class="text-primary">Ouvrage 1</span>
 						</h1>
@@ -54,6 +54,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</select>
 
 							</div>
+							<div class="form-group ml15 mr15">
+								<label>Dates</label> <input type="date" value="dateDebut"
+									class="form-control" />
+							</div>
+							<div class="form-group ml15 mr15">
+								<input type="date" value="dateFin" class="form-control" />
+							</div>
+
+
 							<h3 class="h5 p15 mt0 mb0">
 								<b>Hauteur d'eau</b>
 							</h3>
@@ -77,7 +86,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</select>
 							</div>
 							<h3 class="h5 p15 mt0 mb0">
-								<b>Pluviométrie</b>
+								<b>Conductivité</b>
 							</h3>
 
 							<div class="form-group ml15 mr15">
@@ -385,7 +394,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													});
 								});
 
-				
 				// Modifie la selectBox enregistreur filtrer par l'ouvrage
 				$("#ouvrage")
 						.change(
@@ -447,5 +455,4 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 				$("#enregistreur").change($('#ouvrage').selected = false);
 				$("#enregistreur").change(initListOuvrage());
-
 			</script>

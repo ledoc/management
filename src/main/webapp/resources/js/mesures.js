@@ -57,7 +57,7 @@ var mesures = function() {
 								}
 							},
 							title : {
-								text : 'Pluviométrie',
+								text : 'Conductivité',
 								style : {
 									color : '#20AAE5'
 								}
@@ -83,7 +83,7 @@ var mesures = function() {
 									|| '#FFFFFF'
 						},
 						series : [ {
-							name : 'Pluviométrie',
+							name : 'Conductivité',
 							type : 'column',
 							yAxis : 1,
 							data : [],
@@ -120,6 +120,40 @@ var mesures = function() {
 					data : serieData
 				})
 			}
+			;
+
+			// initialise le graph avec les valeurs d'un enregistreur
+			$.getJSON(relayUrl + '/init/graph/points', function(data) {
+				updateSerie(1, data);
+			});
+
+			// initialise le graph avec les alertes d'un enregistreur
+			$.getJSON(relayUrl + '/init/graph/plotLines/', function(
+					listAlerte) {
+				$.each(listAlerte, function(index, alerte) {
+					chart.yAxis[0].addPlotLine({
+						id : alerte.id,
+						value : alerte.seuilPreAlerte,
+						color : '#E68A00',
+						width : 1,
+						zIndex : 4,
+						label : {
+							text : 'pré-alerte'
+						}
+					});
+					chart.yAxis[0].addPlotLine({
+						id : alerte.id,
+						value : alerte.seuilAlerte,
+						color : '#A30000',
+						width : 1,
+						zIndex : 4,
+						label : {
+							text : 'alerte'
+						}
+					});
+
+				});
+			});
 
 			$('#enregistreur').chosen().change(
 					function() {
@@ -130,49 +164,36 @@ var mesures = function() {
 								});
 					});
 
-			$('#enregistreur')
-					.chosen()
-					.change(
-							function() {
-								var id = $(this).val();
-								$
-										.getJSON(
-												relayUrl
-														+ '/enregistreur/plotLines/'
-														+ id,
-												function(listAlerte) {
-													$
-															.each(
-																	listAlerte,
-																	function(
-																			index,
-																			alerte) {
-																		chart.yAxis[0]
-																				.addPlotLine({
-																					id : alerte.id,
-																					value : alerte.seuilPreAlerte,
-																					color : '#E68A00',
-																					width : 1,
-																					zIndex : 4,
-																					label : {
-																						text : 'pré-alerte'
-																					}
-																				});
-																		chart.yAxis[0]
-																				.addPlotLine({
-																					id : alerte.id,
-																					value : alerte.seuilAlerte,
-																					color : '#A30000',
-																					width : 1,
-																					zIndex : 4,
-																					label : {
-																						text : 'alerte'
-																					}
-																				});
+			$('#enregistreur').chosen().change(
+					function() {
+						var id = $(this).val();
+						$.getJSON(relayUrl + '/enregistreur/plotLines/' + id,
+								function(listAlerte) {
+									$.each(listAlerte, function(index, alerte) {
+										chart.yAxis[0].addPlotLine({
+											id : alerte.id,
+											value : alerte.seuilPreAlerte,
+											color : '#E68A00',
+											width : 1,
+											zIndex : 4,
+											label : {
+												text : 'pré-alerte'
+											}
+										});
+										chart.yAxis[0].addPlotLine({
+											id : alerte.id,
+											value : alerte.seuilAlerte,
+											color : '#A30000',
+											width : 1,
+											zIndex : 4,
+											label : {
+												text : 'alerte'
+											}
+										});
 
-																	});
-												});
-							});
+									});
+								});
+					});
 
 			// function showAlert() {
 			// var plotLines = {
@@ -234,4 +255,5 @@ var mesures = function() {
 $(function() {
 	"use strict";
 	mesures.init();
+
 });
