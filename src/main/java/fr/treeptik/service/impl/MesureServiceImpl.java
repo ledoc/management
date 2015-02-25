@@ -15,6 +15,7 @@ import fr.treeptik.dao.MesureDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
+import fr.treeptik.model.Point;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
@@ -301,5 +302,20 @@ public class MesureServiceImpl implements MesureService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return mesures;
+	}
+
+	@Override
+	public Point transformMesureInPoint(Mesure item) throws ServiceException {
+		logger.info("--transformMesureInPoint MesureService -- Id : " + item.getId());
+
+		Point point = new Point();
+		try {
+			point.setDate(item.getDate());
+			point.setValeur(item.getValeur());
+		} catch (PersistenceException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return point;
 	}
 }

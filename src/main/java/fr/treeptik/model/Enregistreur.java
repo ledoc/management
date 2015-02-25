@@ -1,8 +1,6 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +21,8 @@ import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Enregistreur implements Serializable {
@@ -55,12 +55,15 @@ public class Enregistreur implements Serializable {
 
 	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
 	// historique NM
+	@JsonIgnore
 	@Transient
 	private Mesure niveauManuel;
 	// Mesure Enregistreur : dernière mesure relevé avec date et heure
+	@JsonIgnore
 	@Transient
 	private Mesure derniereMesure;
 	// nécessaire pour calcul du niveau d'eau
+	@JsonIgnore
 	@Transient
 	private TrameDW derniereTrameDW;
 
@@ -82,33 +85,47 @@ public class Enregistreur implements Serializable {
 	private String sonde;
 	// croquis dynamique de l'ensemble
 	private String croquis;
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
 	private List<AlerteDescription> alerteDescriptions;
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
 	private List<AlerteEmise> alerteEmises;
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<TrameDW> trameDWs;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<Mesure> mesures;
 
 	/**
 	 * TODO pas mettre de valeur par defaut
 	 */
+	@JsonIgnore
 	private Boolean valid = true;
 	/**
 	 * TODO : trouver la classe de cette bete là
 	 */
 
 	// private Class[] seamless;
+	@JsonIgnore
 	private Integer period;
+	@JsonIgnore
 	private Integer localizableStatus;
+	@JsonIgnore
 	private String clientName;
+	@JsonIgnore
 	private Integer until;
+	@JsonIgnore
 	private String pid;
+	@JsonIgnore
 	private String comment;
+	@JsonIgnore
 	private String type;
+	@JsonIgnore
 	private String userName;
+	@JsonIgnore
 	@ManyToOne
 	private Ouvrage ouvrage;
 
@@ -163,60 +180,58 @@ public class Enregistreur implements Serializable {
 	 */
 	public void initNiveauManuel() {
 
-		if (this.mesures != null) {
-			List<Mesure> allMesureManuel = new ArrayList<Mesure>();
+		// if (this.mesures != null) {
+		// List<Mesure> allMesureManuel = new ArrayList<Mesure>();
+		//
+		// for (Mesure mesure : this.mesures) {
+		//
+		// if (mesure.getTypeMesureOrTrame().equals(
+		// TypeMesureOrTrame.NIVEAUMANUEL)) {
+		// allMesureManuel.add(mesure);
+		// }
+		// }
+		//
+		// if (allMesureManuel.size() != 0) {
+		// if (allMesureManuel.size() > 1) {
+		// Comparator<Mesure> comparatorMesure = (m1, m2) -> m1
+		// .getDate().compareTo(m2.getDate());
+		//
+		// this.niveauManuel = Collections.max(allMesureManuel,
+		// comparatorMesure).cloneMe();
+		// } else {
+		//
+		// this.niveauManuel = allMesureManuel.get(0).cloneMe();
+		//
+		// }
+		//
+		// } else {
+		// this.niveauManuel = new Mesure();
+		// }
 
-			for (Mesure mesure : this.mesures) {
+		boolean typeManuelPresence = this.mesures.stream().anyMatch(
+				m -> m.getTypeMesureOrTrame().equals(
+						TypeMesureOrTrame.NIVEAUMANUEL));
 
-				System.out.println(mesure);
-				if (mesure.getTypeMesureOrTrame().equals(
-						TypeMesureOrTrame.NIVEAUMANUEL)) {
-					allMesureManuel.add(mesure);
-				}
-			}
+		if (typeManuelPresence) {
+			List<Mesure> allMesureManuel = this.mesures
+					.stream()
+					.filter(m -> m.getTypeMesureOrTrame().equals(
+							TypeMesureOrTrame.NIVEAUMANUEL))
+					.collect(Collectors.toList());
 
-			if (allMesureManuel.size() != 0) {
-				if (allMesureManuel.size() > 1) {
-					Comparator<Mesure> comparatorMesure = (m1, m2) -> m1
-							.getDate().compareTo(m2.getDate());
+			if (allMesureManuel.size() > 1) {
+				Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+						m2.getDate());
 
-					this.niveauManuel = Collections.max(allMesureManuel,
-							comparatorMesure).cloneMe();
-				} else {
+				Optional<Mesure> max = allMesureManuel.stream().max(c);
 
-					this.niveauManuel = allMesureManuel.get(0).cloneMe();
-
-				}
-
+				this.niveauManuel = max.isPresent() ? max.get().cloneMe()
+						: new Mesure();
 			} else {
-				this.niveauManuel = new Mesure();
+				this.niveauManuel = allMesureManuel.get(0).cloneMe();
 			}
-
-			// boolean typeManuelPresence = this.mesures.stream().anyMatch(
-			// m -> m.getTypeMesureOrTrame().equals(
-			// TypeMesureOrTrame.NIVEAUMANUEL));
-			//
-			// if (typeManuelPresence) {
-			// List<Mesure> allMesureManuel = this.mesures
-			// .stream()
-			// .filter(m -> m.getTypeMesureOrTrame().equals(
-			// TypeMesureOrTrame.NIVEAUMANUEL))
-			// .collect(Collectors.toList());
-			//
-			// if (allMesureManuel.size() < 1) {
-			// Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-			// m2.getDate());
-			//
-			// Optional<Mesure> max = allMesureManuel.stream().max(c);
-			//
-			// this.niveauManuel = max.isPresent() ? max.get().cloneMe()
-			// : new Mesure();
-			// } else {
-			// this.niveauManuel = allMesureManuel.get(0).cloneMe();
-			// }
-			// }
-
 		}
+
 	}
 
 	/**
@@ -248,7 +263,7 @@ public class Enregistreur implements Serializable {
 								TypeMesureOrTrame.NIVEAUMANUEL))
 						.collect(Collectors.toList());
 
-				if (allMesureNotManuel.size() < 1) {
+				if (allMesureNotManuel.size() > 1) {
 					Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
 							m2.getDate());
 
@@ -535,7 +550,7 @@ public class Enregistreur implements Serializable {
 				+ ", localizableStatus=" + localizableStatus + ", clientName="
 				+ clientName + ", until=" + until + ", pid=" + pid
 				+ ", comment=" + comment + ", type=" + type + ", userName="
-				+ userName + ", ouvrage=" + ouvrage.getCodeOuvrage() + "]";
+				+ userName + "]";
 	}
 
 	@Override

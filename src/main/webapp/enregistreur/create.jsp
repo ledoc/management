@@ -116,12 +116,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-type-message="valeur numérique"
 										readonly="${readOnlyValue }" />
 								</div>
-								Taux de salinité (g/kg)
 								<div class="form-group">
-									<label for="coeffTemperature">Taux de salinité (g/kg)</label>
-									<form:input type="text" class="form-control"
-										id="salinité" path="salinité" placeholder=""
-										data-parsley-trigger="change" step="any"
+									<label for="salinite">Taux de salinité (g/kg)</label>
+									<form:input class="form-control" id="salinite" path="salinite"
+										placeholder="" data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										readonly="${readOnlyValue }" />

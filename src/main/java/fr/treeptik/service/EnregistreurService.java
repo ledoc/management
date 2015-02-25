@@ -30,4 +30,6 @@ public interface EnregistreurService {
 		List<Enregistreur> findByClientLogin(String userLogin)
 				throws ServiceException;
 
+		List<Enregistreur> findBySiteId(Integer id) throws ServiceException;
+
 }

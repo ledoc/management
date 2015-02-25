@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @SuppressWarnings("serial")
 @Entity
 public class AlerteDescription implements Serializable {
@@ -30,6 +32,7 @@ public class AlerteDescription implements Serializable {
 	private Boolean aSurveiller;
 	private Integer compteurRetourNormal;
 
+	@JsonIgnore
 	@ManyToOne
 	private Enregistreur enregistreur;
 

@@ -79,7 +79,6 @@ public class OuvrageController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-
 		model.addAttribute("ouvrage", ouvrage);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		model.addAttribute("sitesCombo", sitesCombo);
@@ -122,6 +121,7 @@ public class OuvrageController {
 		List<Site> sitesCombo;
 		List<TypeOuvrage> typesOuvrageCombo;
 
+		
 		try {
 			ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(id);
 
@@ -132,6 +132,11 @@ public class OuvrageController {
 			enregistreursCombo.addAll(ouvrage.getEnregistreurs());
 			sitesCombo = siteService.findAll();
 
+			for (Enregistreur enregistreur : enregistreursCombo) {
+				System.out.println(enregistreur.getDerniereMesure());
+			}
+			
+			
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TrameDW;
+import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.model.deveryware.DeviceState;
 import fr.treeptik.service.DeverywareService;
@@ -68,34 +69,78 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		Enregistreur enregistreur = enregistreurService
-				.findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33781916177");
-		Object[] history = xmlRPCUtils.getHistory("gps://ORANGE/+33781916177",
-				sessionKey);
-		logger.debug(history.length + " trame History récupérée");
+		/**
+		 * ON LISTE TOUS LES ENREGISTREURS REPERTORIES
+		 */
 
-		TrameDW trameDW = new TrameDW();
+		List<Enregistreur> enregistreurList = this.enregistreurList(sessionKey);
 
-		for (Object historyXmlRpc : history) {
-			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) historyXmlRpc;
+		for (Enregistreur enregistreur : enregistreurList) {
+			enregistreur = enregistreurService
+					.findByMidWithJoinFetchTrameDWs(enregistreur.getMid());
+			Object[] history = xmlRPCUtils.getHistory(enregistreur.getMid(),
+					sessionKey);
 
-			logger.debug(hashMapHistoryXmlRpc);
+			// Enregistreur enregistreur = enregistreurService
+			// .findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33781916177");
+			// Object[] history =
+			// xmlRPCUtils.getHistory("gps://ORANGE/+33781916177",
+			// sessionKey);
+			logger.debug(history.length + " trame History récupérée");
 
-			trameDW = this.transfertHistoryToTrameDW(trameDW,
-					hashMapHistoryXmlRpc);
+			TrameDW trameDW = new TrameDW();
 
-			trameDW.setTypeTrameDW(enregistreur.getTypeMesureOrTrame());
+			for (Object historyXmlRpc : history) {
+				HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) historyXmlRpc;
 
-			if (enregistreur.getTrameDWs() != null) {
+				logger.debug(hashMapHistoryXmlRpc);
 
-				if (!this.containsSameDate(enregistreur.getTrameDWs(), trameDW)) {
+				trameDW = this.transfertHistoryToTrameDW(trameDW,
+						hashMapHistoryXmlRpc);
 
+				trameDW.setTypeTrameDW(enregistreur.getTypeMesureOrTrame());
+
+				if (enregistreur.getTrameDWs() != null) {
+
+					if (!this.containsSameDate(enregistreur.getTrameDWs(),
+							trameDW)) {
+
+						trameDW.setEnregistreur(enregistreur);
+
+						trameDW = trameDWService.create(trameDW);
+						trameDW = trameDWService.findById(trameDW.getId());
+
+						enregistreur.getTrameDWs().add(trameDW);
+
+						if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
+							mesureService
+									.conversionSignalElectrique_Conductivite(trameDW);
+						} else if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.NIVEAUDEAU) {
+							mesureService
+									.conversionSignalElectrique_CoteAltimetrique(trameDW);
+
+						}
+
+						else {
+							logger.error("Error DeverywareServiceImpl : ");
+							throw new ServiceException(
+									"ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
+						}
+
+					} else {
+
+						logger.debug("Pas de nouvelle trameDW a enregistrée");
+					}
+
+				} else {
 					trameDW.setEnregistreur(enregistreur);
 
 					trameDW = trameDWService.create(trameDW);
 					trameDW = trameDWService.findById(trameDW.getId());
 
-					enregistreur.getTrameDWs().add(trameDW);
+					List<TrameDW> trameDWs = new ArrayList<TrameDW>();
+					trameDWs.add(trameDW);
+					enregistreur.setTrameDWs(trameDWs);
 
 					if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
 						mesureService
@@ -112,72 +157,75 @@ public class DeverywareServiceImpl implements DeverywareService {
 								"ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
 					}
 
-				} else {
-
-					logger.debug("Pas de nouvelle trameDW a enregistrée");
-				}
-
-			} else {
-				trameDW.setEnregistreur(enregistreur);
-
-				trameDW = trameDWService.create(trameDW);
-				trameDW = trameDWService.findById(trameDW.getId());
-
-				List<TrameDW> trameDWs = new ArrayList<TrameDW>();
-				trameDWs.add(trameDW);
-				enregistreur.setTrameDWs(trameDWs);
-
-				if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.CONDUCTIVITE) {
-					mesureService
-							.conversionSignalElectrique_Conductivite(trameDW);
-				} else if (trameDW.getTypeTrameDW() == TypeMesureOrTrame.NIVEAUDEAU) {
-					mesureService
-							.conversionSignalElectrique_CoteAltimetrique(trameDW);
-
-				}
-
-				else {
-					logger.error("Error DeverywareServiceImpl : ");
-					throw new ServiceException(
-							"ERROR DeverywareServiceImpl -- Le type de trame n'est pas reconnu par l'application");
 				}
 
 			}
 
 		}
+
 	}
 
 	// Deveryflow.mobileList
-	public void enregistreurList() throws ServiceException {
+	public List<Enregistreur> enregistreurList(String sessionKey) throws ServiceException {
 		logger.info("--enregistreurList DeverywareServiceImpl --");
 
 		Enregistreur enregistreur = null;
 
-		String sessionKey;
-		try {
-			sessionKey = this.openSession();
-		} catch (Exception e) {
-			logger.error("Error DeverywareServiceImpl : " + e);
-			throw new ServiceException(e.getLocalizedMessage(), e);
-		}
+//		String sessionKey;
+//		try {
+//			sessionKey = this.openSession();
+//		} catch (Exception e) {
+//			logger.error("Error DeverywareServiceImpl : " + e);
+//			throw new ServiceException(e.getLocalizedMessage(), e);
+//		}
 
 		Object[] listEnregistreursXMLRPC = xmlRPCUtils
 				.enregistreurList(sessionKey);
 
+		List<Enregistreur> enregistreursFromDW = new ArrayList<Enregistreur>();
+
 		for (Object enregistreurXmlRpc : listEnregistreursXMLRPC) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> enregistreurHashMap = (HashMap<String, Object>) enregistreurXmlRpc;
-			Object seamless = enregistreurHashMap.get("seamless");
-			Object[] listSeamless = (Object[]) seamless;
-			for (Object object : listSeamless) {
-				logger.debug("seamlessClass : " + object);
-			}
+			// Object seamless = enregistreurHashMap.get("seamless");
+			// Object[] listSeamless = (Object[]) seamless;
+			// for (Object object : listSeamless) {
+			// logger.debug("seamlessClass : " + object);
+			// }
 
 			enregistreur = new Enregistreur(enregistreurHashMap);
-			logger.debug(enregistreur);
-			enregistreurService.create(enregistreur);
+
+			/**
+			 * 
+			 * TODO REMOVE §§§§§§§§§§§§§§§!!!!!!!!!!!!§§§§§§§§§§§§§§
+			 * 
+			 */
+
+			if (enregistreurService.findByMid(enregistreur.getMid()) != null) {
+				logger.debug("l'enregistreur n° " + enregistreur.getMid()
+						+ " est déjà répertorié");
+
+			} else {
+
+				enregistreur.setTypeEnregistreur(TypeEnregistreur.ANALOGIQUE);
+				enregistreur
+						.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
+
+				enregistreurService.create(enregistreur);
+
+				logger.debug(" nouvel enregistreur répertorié : "
+						+ enregistreur);
+			}
+			enregistreursFromDW.add(enregistreur);
+
+			/**
+			 * 
+			 * TODO REMOVE §§§§§§§§§§§§§§§!!!!!!!!!!!!§§§§§§§§§§§§§§
+			 * 
+			 */
 
 		}
+		return enregistreursFromDW;
 
 	}
 

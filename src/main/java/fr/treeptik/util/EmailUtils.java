@@ -151,6 +151,46 @@ public class EmailUtils {
 
 	}
 
+	public void sendAlerteAcquittementTimeout(AlerteEmise alerteEmise,
+			String destinataireEmails) throws AddressException,
+			MessagingException {
+		logger.info("--sendAlerteAcquittementTimeout EmailUtils--");
+
+		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
+
+		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String alerteSubject = "[Solices] - Une "
+				+ alerteEmise.getNiveauAlerte().getDescription()
+				+ " émise par le capteur n° " + midEnregistreur
+				+ " n'a pas encore été acquittée";
+
+		MimeMessage message = this.initEmail();
+
+		String body = "<p><div>Bonjour,</div></p>"
+				+ "<p>L'acquittement de l'alerte de niveau "
+				+ alerteEmise.getNiveauAlerte().getDescription()
+				+ " du capteur n° "
+				+ midEnregistreur
+				+ " n'a toujours pas été effectué. "
+				+ "<p> Une prise de contact avec le client est peut être nécessaire ou bien l'acquittement peut être effectué pour lui</p>"
+				+ "<p>Pour acquitter cette "
+				+ alerteEmise.getNiveauAlerte().getDescription()
+				+ " et accéder de détails, veuillez cliquer sur le lien ci-dessous :</p>"
+				+ "<p><a href=" + linkPrefix + "/" + alerteEmise.getId()
+				+ " >acquittement/détails</a></p>"
+				+ "<p> </div><div>Cordialement</div>"
+				+ "<div>L'équipe solices</div></p>";
+
+		message.setRecipients(Message.RecipientType.BCC,
+				InternetAddress.parse(destinataireEmails));
+
+		message.setSubject(alerteSubject);
+		message.setContent(body, "text/html; charset=utf-8");
+
+		Transport.send(message);
+
+	}
+
 	private String niveauAlerteToString(AlerteEmise alerteEmise) {
 
 		String niveauAlerte = null;
@@ -180,40 +220,4 @@ public class EmailUtils {
 
 	}
 
-	public void sendAlerteAcquittementTimeout(AlerteEmise alerteEmise,
-			String destinataireEmails) throws AddressException, MessagingException {
-		logger.info("--sendAlerteAcquittementTimeout EmailUtils--");
-
-		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
-
-		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
-		String alerteSubject = "[Solices] - Une "
-				+ alerteEmise.getNiveauAlerte().getDescription() + " émise par le capteur n° " + midEnregistreur + " n'a pas encore été acquittée" ;
-
-		MimeMessage message = this.initEmail();
-
-		String body = "<p><div>Bonjour,</div></p>"
-				+ "<p>L'acquittement de l'alerte de niveau "
-				+ alerteEmise.getNiveauAlerte().getDescription()
-				+ " du capteur n° "
-				+ midEnregistreur
-				+ " n'a toujours pas été effectué. "
-				+ "<p> Une prise de contact avec le client est peut être nécessaire ou bien l'acquittement peut être effectué pour lui</p>"
-				+ "<p>Pour acquitter cette "
-				+ alerteEmise.getNiveauAlerte().getDescription()
-				+ " et accéder de détails, veuillez cliquer sur le lien ci-dessous :</p>"
-				+ "<p><a href=" + linkPrefix + "/" + alerteEmise.getId()
-				+ " >acquittement/détails</a><p>" + ".</p>"
-				+ "<p> </div><div>Cordialement</div>"
-				+ "<div>L'équipe solices</div></p>";
-
-		message.setRecipients(Message.RecipientType.BCC,
-				InternetAddress.parse(destinataireEmails));
-
-		message.setSubject(alerteSubject);
-		message.setContent(body, "text/html; charset=utf-8");
-
-		Transport.send(message);
-
-	}
 }

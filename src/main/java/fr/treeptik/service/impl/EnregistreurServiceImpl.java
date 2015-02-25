@@ -116,4 +116,12 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 		logger.info("--findByClient EnregistreurServiceImpl-- userLogin : " + userLogin);
 		return enregistreurDAO.findByClientLogin(userLogin);
 	}
+	
+	@Override
+	public List<Enregistreur> findBySiteId(Integer id)
+			throws ServiceException {
+		logger.info("--findBySiteId EnregistreurServiceImpl-- id : " + id);
+		return enregistreurDAO.findBySiteId(id);
+	}
+	
 }

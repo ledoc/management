@@ -21,10 +21,19 @@ public class LoginAuditAspect {
 	@AfterReturning(pointcut = "execution(* fr.treeptik.dao.*.save(..))", returning = "result")
 	public void logAfterSave(JoinPoint joinPoint, Object result) {
 
-		if (!(joinPoint.getArgs()[0] instanceof TrameDW || joinPoint.getArgs()[0] instanceof Mesure || joinPoint.getArgs()[0] instanceof AlerteEmise)) {
+		if (!(joinPoint.getArgs()[0] instanceof TrameDW
+				|| joinPoint.getArgs()[0] instanceof Mesure || joinPoint
+					.getArgs()[0] instanceof AlerteEmise)) {
+
+			String loginName;
 
 			SecurityContext context = SecurityContextHolder.getContext();
-			String loginName = context.getAuthentication().getName();
+			if (context.getAuthentication() != null) {
+
+				loginName = context.getAuthentication().getName();
+			} else {
+				loginName = "deveryware";
+			}
 
 			logger.info("- " + loginName + " - Save / Update - "
 					+ result.getClass().getSimpleName() + " - " + result);

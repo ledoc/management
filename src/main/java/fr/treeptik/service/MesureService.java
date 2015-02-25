@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Mesure;
+import fr.treeptik.model.Point;
 import fr.treeptik.model.TrameDW;
 
 public interface MesureService {
@@ -30,5 +31,7 @@ public interface MesureService {
 			throws ServiceException;
 
 	List<Mesure> findAllDetails() throws ServiceException;
+
+	Point transformMesureInPoint(Mesure item) throws ServiceException;
 
 }

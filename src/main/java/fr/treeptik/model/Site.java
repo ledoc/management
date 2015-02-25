@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @SuppressWarnings("serial")
 @Entity
 public class Site implements Serializable {
@@ -35,9 +37,12 @@ public class Site implements Serializable {
 	private Float longitude;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
+	
+	@JsonIgnore
 	@ManyToOne
 	private Etablissement etablissement;
 
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy="site")
 	private List<Ouvrage> ouvrages;
 	

@@ -17,6 +17,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<section class="main-content" id="carto">
 
 
+		<c:url var="mesureUrl" value="/mesure" />
+		<a class="relayUrl" href="${mesureUrl}"></a>
+
 		<!-- content wrapper -->
 		<div class="content-wrap bg-default clearfix row">
 			<div class="col-lg-2 col-md-3 col-xs-12 tools">
@@ -31,23 +34,25 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<nav role="navigation">
 						<div class="no-padding">
 							<h3 class="h5 p15 mt0 mb0">
-								<b>Selection</b>
+								<b>Sélection</b>
 							</h3>
 
 							<div class="form-group ml15 mr15">
-								<select data-placeholder="Site"
-									class="chosen form-control text-uppercase">
-									<option value=""></option>
-									<option value="">Site 1</option>
-									<option value="">Site 2</option>
+								<select id="site" name="site"
+									data-placeholder="Filtrer par SITE" class="form-control">
 								</select>
 							</div>
 							<div class="form-group ml15 mr15">
-								<select data-placeholder="Ouvrage" class="chosen form-control">
-									<option value=""></option>
-									<option>Ouvrage 1</option>
-									<option>Ouvrage 2</option>
+								<select id="ouvrage" name="ouvrage"
+									data-placeholder="Filtrer par OUVRAGE" class="form-control">
 								</select>
+
+							</div>
+							<div class="form-group ml15 mr15">
+								<select id="enregistreur" name="enregistreur"
+									data-placeholder="choisir un ENREGISTREUR" class="form-control">
+								</select>
+
 							</div>
 							<h3 class="h5 p15 mt0 mb0">
 								<b>Hauteur d'eau</b>
@@ -60,8 +65,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<option value=""></option>
 									<option value="spline">Courbe</option>
 									<option value="column">Histogramme</option>
-									<option>Tableau</option>
-									<option>Export CSV</option>
 								</select>
 							</div>
 							<div class="form-group ml15 mr15 mb0">
@@ -84,8 +87,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<option value=""></option>
 									<option value="spline">Courbe</option>
 									<option value="column">Histogramme</option>
-									<option>Tableau</option>
-									<option>Export CSV</option>
 								</select>
 							</div>
 							<div class="form-group icheck ml15 mr15 mt5">
@@ -125,14 +126,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<header class="panel-heading no-b">
 											<h1 class="h3 text-primary mt0">Liste des mesures</h1>
 
-											<div class="pull-right mb15">
-
-												<sec:authorize ifAllGranted="ADMIN">
-													<a href="<c:url  value="/mesure/create" />"
-														class="btn btn-outline btn-primary btn-m">Créer une
-														mesure</a>
-												</sec:authorize>
-											</div>
 										</header>
 										<div class="panel-body">
 											<c:if test="${empty mesures }">
@@ -189,3 +182,270 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<a class="exit-offscreen"></a>
 			<!-- end page content -->
 			<jsp:include page="/template/footer.jsp" />
+
+			<script type="text/javascript">
+				$(function() {
+					initListSite();
+					initListOuvrage();
+					initListEnregistreur();
+				});
+
+				function initListSite() {
+
+					var $site = $('#site');
+
+					$
+							.getJSON(
+									$('.relayUrl').attr('href') + '/init/site',
+									null,
+									function(listSite) {
+
+										var output = []
+										$
+												.each(
+														listSite,
+														function(index, site) {
+															var tpl = '<option value="NONE"></option><option value="' + site.id + '">'
+																	+ site.codeSite
+																	+ '</option>';
+															output.push(tpl);
+														});
+										$site.html(output.join(''));
+										$site.chosen({
+											allow_single_deselect : true
+										}, {
+											disable_search_threshold : 10
+										});
+										$site.trigger("chosen:updated");
+									});
+				};
+
+				function initListOuvrage() {
+
+					var $ouvrage = $('#ouvrage');
+
+					$
+							.getJSON(
+									$('.relayUrl').attr('href')
+											+ '/init/ouvrage',
+									null,
+									function(listOuvrage) {
+
+										var output = []
+										$
+												.each(
+														listOuvrage,
+														function(index, ouvrage) {
+															var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
+																	+ ouvrage.codeOuvrage
+																	+ '</option>';
+															output.push(tpl);
+															console.log(tpl);
+														});
+										$ouvrage.html(output.join(''));
+										$ouvrage.chosen({
+											allow_single_deselect : true
+										}, {
+											disable_search_threshold : 10
+										});
+										$ouvrage.trigger("chosen:updated");
+									});
+				};
+
+				function initListEnregistreur() {
+
+					var $enregistreur = $('#enregistreur');
+
+					$
+							.getJSON(
+									$('.relayUrl').attr('href')
+											+ '/init/enregistreur',
+									null,
+									function(listEnregistreur) {
+
+										var output = []
+										$
+												.each(
+														listEnregistreur,
+														function(index,
+																enregistreur) {
+															var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																	+ enregistreur.mid
+																	+ '</option>';
+															output.push(tpl);
+														});
+										$enregistreur.html(output.join(''));
+										$enregistreur.chosen({
+											allow_single_deselect : true
+										}, {
+											disable_search_threshold : 10
+										});
+										$enregistreur.trigger("chosen:updated");
+									});
+				};
+				// Modifie la selectBox ouvrage filtrer par le site
+				$("#site")
+						.change(
+
+								function() {
+									var $ouvrage = $('#ouvrage');
+									$
+											.get(
+													$('.relayUrl').attr('href')
+															+ '/site/refresh/ouvrage/'
+															+ $(this).val(),
+													null,
+													function(listOuvrage) {
+														var output = [];
+														$ouvrage
+																.attr(
+																		'data-placeholder',
+																		'Filtrer par Ouvrage');
+														$
+																.each(
+																		listOuvrage,
+																		function(
+																				index,
+																				ouvrage) {
+																			var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
+																					+ ouvrage.codeOuvrage
+																					+ '</option>';
+																			output
+																					.push(tpl);
+																		});
+														$ouvrage.html(output
+																.join(''));
+														if (!listOuvrage.length) {
+															$ouvrage
+																	.attr(
+																			'data-placeholder',
+																			'Aucun ouvrage pour ce Site');
+
+														}
+
+														$ouvrage.selected = false;
+														$ouvrage
+																.chosen(
+																		{
+																			disable_search_threshold : 10
+																		})
+																.trigger(
+																		"chosen:updated");
+													});
+								});
+				// Modifie la selectBox enregistreur filtrer par le site
+				$("#site")
+						.change(
+
+								function() {
+									var $enregistreur = $('#enregistreur');
+									$
+											.get(
+													$('.relayUrl').attr('href')
+															+ '/site/refresh/enregistreur/'
+															+ $(this).val(),
+													null,
+													function(listEnregistreur) {
+														var output = [];
+														$enregistreur
+																.attr(
+																		'data-placeholder',
+																		'Choisir l\'ENREGISTREUR');
+														$
+																.each(
+																		listEnregistreur,
+																		function(
+																				index,
+																				enregistreur) {
+																			var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																					+ enregistreur.mid
+																					+ '</option>';
+																			output
+																					.push(tpl);
+																		});
+														$enregistreur
+																.html(output
+																		.join(''));
+														if (!listEnregistreur.length) {
+															$enregistreur
+																	.attr(
+																			'data-placeholder',
+																			'Aucun enregistreur pour ce filtre');
+
+														}
+
+														$enregistreur.selected = false;
+														$enregistreur
+																.chosen(
+																		{
+																			disable_search_threshold : 10
+																		})
+																.trigger(
+																		"chosen:updated");
+													});
+								});
+
+				
+				// Modifie la selectBox enregistreur filtrer par l'ouvrage
+				$("#ouvrage")
+						.change(
+
+								function() {
+									var $enregistreur = $('#enregistreur');
+									var $site = $('#site');
+									$
+											.get(
+													$('.relayUrl').attr('href')
+															+ '/ouvrage/refresh/enregistreur/'
+															+ $(this).val(),
+													null,
+													function(listEnregistreur) {
+														var output = [];
+														$enregistreur
+																.attr(
+																		'data-placeholder',
+																		'Choisir l\'ENREGISTREUR');
+														$
+																.each(
+																		listEnregistreur,
+																		function(
+																				index,
+																				enregistreur) {
+																			var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																					+ enregistreur.mid
+																					+ '</option>';
+																			output
+																					.push(tpl);
+																		});
+														$enregistreur
+																.html(output
+																		.join(''));
+														if (!listEnregistreur.length) {
+															$enregistreur
+																	.attr(
+																			'data-placeholder',
+																			'Aucun enregistreur pour ce filtre');
+
+														}
+
+														$enregistreur.selected = false;
+														$enregistreur
+																.chosen(
+																		{
+																			disable_search_threshold : 10
+																		})
+																.trigger(
+																		"chosen:updated");
+													});
+								});
+
+				$("#ouvrage").change($('#site').selected = false);
+				$("#ouvrage").change(initListSite());
+
+				$("#enregistreur").change($('#site').selected = false);
+				$("#enregistreur").change(initListSite());
+
+				$("#enregistreur").change($('#ouvrage').selected = false);
+				$("#enregistreur").change(initListOuvrage());
+
+			</script>
