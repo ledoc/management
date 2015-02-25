@@ -9,6 +9,7 @@ public class Point implements Serializable {
 
 	private Date date;
 	private Float valeur;
+	private String midEnregistreur;
 
 	public Date getDate() {
 		return date;
@@ -29,6 +30,14 @@ public class Point implements Serializable {
 	@Override
 	public String toString() {
 		return "Point [date=" + date + ", valeur=" + valeur + "]";
+	}
+
+	public String getMidEnregistreur() {
+		return midEnregistreur;
+	}
+
+	public void setMidEnregistreur(String midEnregistreur) {
+		this.midEnregistreur = midEnregistreur;
 	}
 
 	

@@ -114,6 +114,9 @@ var mesures = function() {
 					var item = {};
 					item.x = moment(line.date);
 					item.y = parseFloat(line.valeur);
+					$('.mid').text(line.midEnregistreur);
+					console.log(item.midEnregistreur)
+					
 					serieData.push(item);
 				});
 				chart.series[index].update({
@@ -161,6 +164,7 @@ var mesures = function() {
 						$.getJSON(relayUrl + '/enregistreur/points/' + id,
 								function(data) {
 									updateSerie(1, data);
+
 								});
 					});
 

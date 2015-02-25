@@ -19,16 +19,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 		<c:url var="mesureUrl" value="/mesure" />
 		<a class="relayUrl" href="${mesureUrl}"></a>
+		<c:url var="mapUrl" value="/carto" />
+		<a class="cartoUrl" href="${mapUrl}"></a>
+		<c:url var="resourcesUrl" value="/resources" />
+		<a class="resourcesUrl" href="${resourcesUrl}"></a>
 
 		<!-- content wrapper -->
 		<div class="content-wrap bg-default clearfix row">
 			<div class="col-lg-2 col-md-3 col-xs-12 tools">
 				<div class="bg-white shadow tools-inner">
+
 					<header>
-						<h1 class="labelSite h3 text-left p15 mt0 mb0">
-							<span class="text-muted hidden-sm hidden-xs">Site 1 ></span> <span
-								class="text-primary">Ouvrage 1</span>
-						</h1>
+						<div class="form-group ml15 mr15 h7 text-left mt0 mb0">
+							<span class="codeOuvrage text-muted hidden-sm hidden-xs"></span><span
+								class="mid text-primary"></span>
+						</div>
 					</header>
 
 					<nav role="navigation">
@@ -62,10 +67,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<input id="dateFin" type="date" class="form-control" />
 							</div>
 							<div class="form-group ml15 mr15">
-								<a id="confirmBetweenDate"
-									class="confirmBetweenDate btn btn-outline btn-success btn-xs ">
+								<button id="confirmBetweenDate" disabled="disabled"
+									class="btn btn-outline btn-success btn-xs ">
 									<i class="fa fa-check"></i>
-								</a>
+								</button>
 							</div>
 							<h3 class="h5 p15 mt0 mb0">
 								<b>Hauteur d'eau</b>
@@ -181,11 +186,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<!-- /inner content wrapper -->
 
-
-
-
-
-
 							</div>
 						</div>
 					</div>
@@ -202,6 +202,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					initListOuvrage();
 					initListEnregistreur();
 				});
+
+				function checkAllFieldsHaveValues() {
+
+					var enregistreurVal = $('#enregistreur').val();
+					var dateDebutVal = $('#dateDebut').val();
+					var dateFinVal = $('#dateFin').val();
+					console.log('enregistreur : ' + enregistreurVal);
+					console.log('dateDebut : ' + dateDebutVal);
+					console.log('dateFin : ' + dateFinVal);
+
+					if (enregistreurVal && dateDebutVal && dateFinVal) {
+
+						$('#confirmBetweenDate').attr('disabled', false);
+					}
+				}
 
 				function initListSite() {
 
@@ -405,6 +420,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								function() {
 									var $enregistreur = $('#enregistreur');
 									var $site = $('#site');
+									$('.codeOuvrage').text(
+											$(this).attr('text') + ' >');
 									$
 											.get(
 													$('.relayUrl').attr('href')
@@ -451,12 +468,22 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													});
 								});
 
-				$("#ouvrage").change($('#site').selected = false);
+				$("#ouvrage").change(function() {
+					$('#site').selected = false, initListSite()
+				});
 				$("#ouvrage").change(initListSite());
 
-				$("#enregistreur").change($('#site').selected = false);
-				$("#enregistreur").change(initListSite());
-
-				$("#enregistreur").change($('#ouvrage').selected = false);
-				$("#enregistreur").change(initListOuvrage());
+				$("#dateDebut").change(function() {
+					checkAllFieldsHaveValues()
+				});
+				$("#dateFin").change(function() {
+					checkAllFieldsHaveValues()
+				});
+				$("#enregistreur").change(
+						function() {
+							$('#site').selected = false,
+									checkAllFieldsHaveValues(), initListSite(),
+									$('#ouvrage').selected = false,
+									initListOuvrage()
+						})
 			</script>

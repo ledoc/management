@@ -23,7 +23,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header>
 						<h1 class="h3 p15 text-primary mt0">Cartographie</h1>
 						<c:url var="mapUrl" value="/carto" />
-						<a class="relayUrl" href="${mapUrl}"></a>
+						<a class="cartoUrl" href="${mapUrl}"></a>
 						<c:url var="resourcesUrl" value="/resources" />
 						<a class="resourcesUrl" href="${resourcesUrl}"></a>
 						<c:url var="ouvrageUrl" value="/ouvrage/update/" />

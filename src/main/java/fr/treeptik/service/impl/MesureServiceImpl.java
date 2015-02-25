@@ -326,6 +326,7 @@ public class MesureServiceImpl implements MesureService {
 
 		Point point = new Point();
 		try {
+			point.setMidEnregistreur(item.getEnregistreur().getMid());
 			point.setDate(item.getDate());
 			point.setValeur(item.getValeur());
 		} catch (PersistenceException e) {

@@ -7,7 +7,7 @@ var googlemap = function() {
 			+ '<a class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-line-chart"></i></a></div>';
 	var endContent = '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-edit"></i></a></div>';
 
-	var relayUrl = $('.relayUrl').attr('href');
+	var cartoUrl = $('.cartoUrl').attr('href');
 	var resourcesUrl = $('.resourcesUrl').attr('href');
 
 	var ouvrageUrl = $('.ouvrageUrl').attr('href');
@@ -31,7 +31,7 @@ var googlemap = function() {
 				zoom : 7
 			});
 
-			$.getJSON(relayUrl + '/allItems', null, function(listMarkers) {
+			$.getJSON(cartoUrl + '/allItems', null, function(listMarkers) {
 				$.each(listMarkers, function(index, marker) {
 					if (marker.type == 'ouvrage') {
 						url = ouvrageUrl;
@@ -71,7 +71,7 @@ var googlemap = function() {
 					function() {
 						var id = $(this).val();
 						map.removeMarkers();
-						$.getJSON(relayUrl + '/etablissement/' + id, null,
+						$.getJSON(cartoUrl + '/etablissement/' + id, null,
 								function(marker) {
 									url = etablissementUrl;
 									marker.icon = { 
@@ -97,7 +97,7 @@ var googlemap = function() {
 						var id = $(this).val();
 						map.removeMarkers();
 
-						$.getJSON(relayUrl + '/site/' + id, null, function(
+						$.getJSON(cartoUrl + '/site/' + id, null, function(
 								marker) {
 							url = siteUrl;
 
@@ -122,7 +122,7 @@ var googlemap = function() {
 					function() {
 						var id = $(this).val();
 						map.removeMarkers();
-						$.getJSON(relayUrl + '/ouvrage/' + id, null, function(
+						$.getJSON(cartoUrl + '/ouvrage/' + id, null, function(
 								marker) {
 
 							url = ouvrageUrl;
