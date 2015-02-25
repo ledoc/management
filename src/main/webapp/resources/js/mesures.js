@@ -128,32 +128,32 @@ var mesures = function() {
 			});
 
 			// initialise le graph avec les alertes d'un enregistreur
-			$.getJSON(relayUrl + '/init/graph/plotLines/', function(
-					listAlerte) {
-				$.each(listAlerte, function(index, alerte) {
-					chart.yAxis[0].addPlotLine({
-						id : alerte.id,
-						value : alerte.seuilPreAlerte,
-						color : '#E68A00',
-						width : 1,
-						zIndex : 4,
-						label : {
-							text : 'pré-alerte'
-						}
-					});
-					chart.yAxis[0].addPlotLine({
-						id : alerte.id,
-						value : alerte.seuilAlerte,
-						color : '#A30000',
-						width : 1,
-						zIndex : 4,
-						label : {
-							text : 'alerte'
-						}
-					});
+			$.getJSON(relayUrl + '/init/graph/plotLines/',
+					function(listAlerte) {
+						$.each(listAlerte, function(index, alerte) {
+							chart.yAxis[0].addPlotLine({
+								id : alerte.id,
+								value : alerte.seuilPreAlerte,
+								color : '#E68A00',
+								width : 1,
+								zIndex : 4,
+								label : {
+									text : 'pré-alerte'
+								}
+							});
+							chart.yAxis[0].addPlotLine({
+								id : alerte.id,
+								value : alerte.seuilAlerte,
+								color : '#A30000',
+								width : 1,
+								zIndex : 4,
+								label : {
+									text : 'alerte'
+								}
+							});
 
-				});
-			});
+						});
+					});
 
 			$('#enregistreur').chosen().change(
 					function() {
@@ -193,6 +193,22 @@ var mesures = function() {
 
 									});
 								});
+					});
+
+			$('#confirmBetweenDate').click(
+					function() {
+						var urlBase = $('.relayUrl').attr('href');
+						var enregistreurId = $("#enregistreur").val();
+						var dateDebut = $("#dateDebut").val();
+						var dateFin = $("#dateFin").val();
+						var url = urlBase + '/enregistreur/points' + '/' + enregistreurId
+								+ '/' + dateDebut + '/' + dateFin;
+
+						$.getJSON(url,
+								function(data) {
+									updateSerie(1, data);
+								});
+
 					});
 
 			// function showAlert() {

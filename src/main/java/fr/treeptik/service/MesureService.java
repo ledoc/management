@@ -1,5 +1,6 @@
 package fr.treeptik.service;
 
+import java.util.Date;
 import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
@@ -33,5 +34,8 @@ public interface MesureService {
 	List<Mesure> findAllDetails() throws ServiceException;
 
 	Point transformMesureInPoint(Mesure item) throws ServiceException;
+
+	List<Mesure> findByEnregistreurIdBetweenDates(Integer id, Date dateDebut,
+			Date dateFin) throws ServiceException;
 
 }

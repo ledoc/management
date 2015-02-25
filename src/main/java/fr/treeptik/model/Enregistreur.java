@@ -477,10 +477,13 @@ public class Enregistreur implements Serializable {
 	}
 
 	public List<Mesure> getMesures() {
+		System.out.println("miaouh get " +this.mesures.size());
+		
 		return mesures;
 	}
 
 	public void setMesures(List<Mesure> mesures) {
+		System.out.println("miaouh set " +this.mesures.size());
 		this.mesures = mesures;
 	}
 

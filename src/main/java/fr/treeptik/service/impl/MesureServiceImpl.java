@@ -1,5 +1,6 @@
 package fr.treeptik.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -303,10 +304,25 @@ public class MesureServiceImpl implements MesureService {
 		}
 		return mesures;
 	}
+	
+	
+	@Override
+	public List<Mesure> findByEnregistreurIdBetweenDates(Integer id, Date dateDebut, Date dateFin)
+			throws ServiceException {
+		logger.info("--findByEnregistreurIdBetweenDates MesureService -- Id : " + id);
+		List<Mesure> mesures;
+		try {
+			mesures = mesureDAO.findByEnregistreurIdBetweenDates(id, dateDebut, dateFin);
+		} catch (PersistenceException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return mesures;
+	}
 
 	@Override
 	public Point transformMesureInPoint(Mesure item) throws ServiceException {
-		logger.info("--transformMesureInPoint MesureService -- Id : " + item.getId());
+//		logger.info("--transformMesureInPoint MesureService -- Id : " + item.getId());
 
 		Point point = new Point();
 		try {

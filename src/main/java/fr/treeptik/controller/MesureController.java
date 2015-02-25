@@ -1,19 +1,21 @@
 package fr.treeptik.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,7 +29,6 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Point;
 import fr.treeptik.model.Site;
-import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
@@ -55,66 +56,6 @@ public class MesureController {
 
 	@Inject
 	private MesureService mesureService;
-
-	@RequestMapping(method = RequestMethod.GET, value = "/create")
-	public String initForm(Model model) throws ControllerException {
-		logger.info("--create formulaire MesureController--");
-
-		List<Enregistreur> enregistreursCombo;
-		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
-				Arrays.asList(TypeMesureOrTrame.values()));
-		try {
-			enregistreursCombo = enregistreurService.findAll();
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-
-		model.addAttribute("typesMesureCombo", typesMesureCombo);
-		model.addAttribute("mesure", new Mesure());
-		model.addAttribute("enregistreursCombo", enregistreursCombo);
-		return "/mesure/create";
-	}
-
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Mesure mesure, BindingResult result)
-			throws ControllerException {
-		logger.debug(result.getAllErrors());
-		logger.info("--create MesureController-- mesure : " + mesure);
-		try {
-
-			mesureService.create(mesure);
-
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return "redirect:/mesure/list";
-
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id)
-			throws ControllerException {
-		logger.info("--update MesureController-- mesureId : " + id);
-
-		Mesure mesure = null;
-		List<Enregistreur> enregistreursCombo;
-
-		try {
-			mesure = mesureService.findById(id);
-
-			enregistreursCombo = enregistreurService.findAll();
-
-		} catch (NumberFormatException | ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-
-		model.addAttribute("ouvragesCombo", enregistreursCombo);
-		model.addAttribute("mesure", mesure);
-		return "/mesure/create";
-	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}/{enregistreurId}")
 	public String delete(Model model, @PathVariable("id") Integer id,
@@ -187,9 +128,9 @@ public class MesureController {
 
 		try {
 
-			Enregistreur enregistreur = enregistreurService
-					.findById(enregistreurId);
-			mesures = enregistreur.getMesures();
+			mesures = mesureService.findByEnregistreurId(enregistreurId);
+
+			System.out.println(mesures.size());
 
 			for (Mesure item : mesures) {
 				points.add(mesureService.transformMesureInPoint(item));
@@ -437,6 +378,44 @@ public class MesureController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 		return allEnregistreurs;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/enregistreur/points/{enregistreurId}/{dateDebut}/{dateFin}")
+	public @ResponseBody List<Point> getEnregistreurPointsByDate(
+			HttpServletRequest request,
+			@PathVariable("enregistreurId") Integer enregistreurId,
+			@PathVariable("dateDebut") Date dateDebut,
+			@PathVariable("dateFin") Date dateFin) throws ControllerException {
+		logger.info("--getEnregistreurPoints MesureController--");
+
+		List<Mesure> mesures = new ArrayList<Mesure>();
+		List<Point> points = new ArrayList<Point>();
+
+		System.out.println(" dateDebut " +dateDebut);
+		System.out.println(" dateFin " +dateFin);
+		
+		try {
+			mesures = mesureService.findByEnregistreurIdBetweenDates(
+					enregistreurId, dateDebut, dateFin);
+
+			System.out.println(mesures.size());
+
+			for (Mesure item : mesures) {
+				points.add(mesureService.transformMesureInPoint(item));
+			}
+			Collections.sort(points, new DatePointComparator());
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return points;
+	}
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, false));
 	}
 
 }

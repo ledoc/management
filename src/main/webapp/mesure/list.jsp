@@ -55,14 +55,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 							</div>
 							<div class="form-group ml15 mr15">
-								<label>Dates</label> <input type="date" value="dateDebut"
+								<label>Dates</label> <input id="dateDebut" type="date"
 									class="form-control" />
 							</div>
 							<div class="form-group ml15 mr15">
-								<input type="date" value="dateFin" class="form-control" />
+								<input id="dateFin" type="date" class="form-control" />
 							</div>
-
-
+							<div class="form-group ml15 mr15">
+								<a id="confirmBetweenDate"
+									class="confirmBetweenDate btn btn-outline btn-success btn-xs ">
+									<i class="fa fa-check"></i>
+								</a>
+							</div>
 							<h3 class="h5 p15 mt0 mb0">
 								<b>Hauteur d'eau</b>
 							</h3>
