@@ -80,12 +80,6 @@ public class TrameDW implements Serializable {
 	}
 
 	@Override
-	public String toString() {
-		return "TrameDW [id=" + id + ", date=" + date + ", signalBrut="
-				+ signalBrut + ", hauteurEau=" + valeur + "]";
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -131,5 +125,12 @@ public class TrameDW implements Serializable {
 				.floatToIntBits(other.signalBrut))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TrameDW [id=" + id + ", typeTrameDW=" + typeTrameDW + ", date="
+				+ date + ", signalBrut=" + signalBrut + ", valeur=" + valeur
+				+ "]";
 	}
 }

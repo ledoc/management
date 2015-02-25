@@ -58,6 +58,9 @@ public class MesureServiceImpl implements MesureService {
 		Float compenseA20degre = 20F;
 		Float signalBrut = trameDW.getSignalBrut();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
+		
+		logger.debug("enregistreur : " + enregistreur);
+		
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
 		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
 

@@ -46,15 +46,18 @@ public class XMLRPCUtils {
 		String password = env.getProperty("deveryware.password");
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " username : " + username + " password : " + password);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " username : "
+				+ username + " password : " + password);
 
 		String sessionKey = null;
 		try {
 
-			Object[] params = new Object[] { new String(username), new String(password), new String(username),
+			Object[] params = new Object[] { new String(username),
+					new String(password), new String(username),
 					new String(password) };
 
-			sessionKey = (String) xmlRpcClient.execute("Deveryflow.openSession", params);
+			sessionKey = (String) xmlRpcClient.execute(
+					"Deveryflow.openSession", params);
 			logger.info("The DW key is: " + sessionKey);
 		} catch (Exception exception) {
 			System.err.println("JavaClient: " + exception);
@@ -66,6 +69,7 @@ public class XMLRPCUtils {
 
 	/**
 	 * Liste les mobiles du compte correspondant au couple clientName/userName.
+	 * 
 	 * @param sessionKey
 	 * @return Object[]
 	 */
@@ -74,12 +78,14 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey);
 
 		Object[] result = null;
 		try {
 			Object[] params = new Object[] { sessionKey, "33", true };
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.mobileList", params);
+			result = (Object[]) xmlRpcClient.execute("Deveryflow.mobileList",
+					params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,7 +98,8 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey + " - mid : " + mid);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey + " - mid : " + mid);
 
 		Object[] result = null;
 		int startDate = 0;
@@ -107,14 +114,18 @@ public class XMLRPCUtils {
 		}
 		try {
 
-			Object[] params = new Object[] { sessionKey, mid, port, startDate, endDate, compress };
+			Object[] params = new Object[] { sessionKey, mid, port, startDate,
+					endDate, compress };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid + " - port : " + port + " - startDate : "
+			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
+					+ " - port : " + port + " - startDate : "
 					+ DateUnixConverter.intToString(startDate) + "- endDate : "
-					+ DateUnixConverter.intToString(endDate) + " - compress : " + compress);
+					+ DateUnixConverter.intToString(endDate) + " - compress : "
+					+ compress);
 
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.getDataHistory", params);
+			result = (Object[]) xmlRpcClient.execute(
+					"Deveryflow.getDataHistory", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -123,24 +134,28 @@ public class XMLRPCUtils {
 	}
 
 	public Object[] getHistory(String mid, String sessionKey) {
-		logger.info("--getHistory -- sessionKey :" + sessionKey + " - mid : " + mid);
+		logger.info("--getHistory -- sessionKey :" + sessionKey + " - mid : "
+				+ mid);
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-
 		Object[] result = null;
-		int nbPos = 3;
+		int nbPos = 16;
 		int state = -1;
 		int content = 17;
 		int port = 0;
 		boolean compress = true;
 		try {
-			Object[] params = new Object[] { sessionKey, mid, nbPos, state, content, port, compress };
+			Object[] params = new Object[] { sessionKey, mid, nbPos, state,
+					content, port, compress };
 
-			logger.info("XMLRPC PARAMS = sessionKey : " + sessionKey + " - mid : " + mid + " - nbPos : " + nbPos + " - state : "
-					+ state + " - content : " + content + " - port : " + port + " - compress : " + compress);
+			logger.info("XMLRPC PARAMS = sessionKey : " + sessionKey
+					+ " - mid : " + mid + " - nbPos : " + nbPos + " - state : "
+					+ state + " - content : " + content + " - port : " + port
+					+ " - compress : " + compress);
 
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.getHistory", params);
+			result = (Object[]) xmlRpcClient.execute("Deveryflow.getHistory",
+					params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,7 +168,8 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey + " - mid : " + mid);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey + " - mid : " + mid);
 
 		Object[] result = null;
 		int findWay = 2;
@@ -172,16 +188,19 @@ public class XMLRPCUtils {
 		}
 		try {
 
-			Object[] params = new Object[] { sessionKey, mid, findWay, startDate, endDate, nbPos, state, content,
-					dataPort, true };
+			Object[] params = new Object[] { sessionKey, mid, findWay,
+					startDate, endDate, nbPos, state, content, dataPort, true };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid + " - findWay : " + findWay
-					+ " - startDate : " + DateUnixConverter.intToString(startDate) + "- endDate : "
-					+ DateUnixConverter.intToString(endDate) + " - nbPos : " + nbPos + " - state : " + state
-					+ " - content : " + content + " - dataPort : " + dataPort + " - compress : " + compress);
+			logger.debug(" = sessionKey : " + sessionKey + " - mid : " + mid
+					+ " - findWay : " + findWay + " - startDate : "
+					+ DateUnixConverter.intToString(startDate) + "- endDate : "
+					+ DateUnixConverter.intToString(endDate) + " - nbPos : "
+					+ nbPos + " - state : " + state + " - content : " + content
+					+ " - dataPort : " + dataPort + " - compress : " + compress);
 
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.getUnifyHistory", params);
+			result = (Object[]) xmlRpcClient.execute(
+					"Deveryflow.getUnifyHistory", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -194,7 +213,8 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey + " - mid : " + mid);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey + " - mid : " + mid);
 
 		Object[] result = null;
 		int startDate = 0;
@@ -210,10 +230,12 @@ public class XMLRPCUtils {
 			Object[] params = new Object[] { sessionKey, startDate, endDate };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.debug(" = sessionKey : " + sessionKey + " - startDate : " + DateUnixConverter.intToString(startDate)
-					+ "- endDate : " + DateUnixConverter.intToString(endDate));
+			logger.debug(" = sessionKey : " + sessionKey + " - startDate : "
+					+ DateUnixConverter.intToString(startDate) + "- endDate : "
+					+ DateUnixConverter.intToString(endDate));
 
-			result = (Object[]) xmlRpcClient.execute("Deveryflow.getEventHistory", params);
+			result = (Object[]) xmlRpcClient.execute(
+					"Deveryflow.getEventHistory", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -227,7 +249,8 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey);
 
 		HashMap<String, Object> result = null;
 		int timeout = 30;
@@ -235,9 +258,11 @@ public class XMLRPCUtils {
 			Object[] params = new Object[] { sessionKey, timeout };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.debug(" = sessionKey : " + sessionKey + " - timeout : " + timeout);
+			logger.debug(" = sessionKey : " + sessionKey + " - timeout : "
+					+ timeout);
 
-			result = (HashMap<String, Object>) xmlRpcClient.execute("Deveryflow.waitForMessage", params);
+			result = (HashMap<String, Object>) xmlRpcClient.execute(
+					"Deveryflow.waitForMessage", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -251,7 +276,8 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey);
 
 		HashMap<String, Object> result = null;
 		int timeout = 30;
@@ -260,10 +286,11 @@ public class XMLRPCUtils {
 			Object[] params = new Object[] { sessionKey, timeout, maxMessages };
 
 			logger.debug("--XMLRPC PARAMS--");
-			logger.debug(" = sessionKey : " + sessionKey + " - timeout : " + timeout + " - maxMessages : "
-					+ maxMessages);
+			logger.debug(" = sessionKey : " + sessionKey + " - timeout : "
+					+ timeout + " - maxMessages : " + maxMessages);
 
-			result = (HashMap<String, Object>) xmlRpcClient.execute("Deveryflow.waitForMessages", params);
+			result = (HashMap<String, Object>) xmlRpcClient.execute(
+					"Deveryflow.waitForMessages", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -277,7 +304,8 @@ public class XMLRPCUtils {
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :" + sessionKey);
+		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
+				+ sessionKey);
 
 		HashMap<String, Object> result = null;
 		int type = 3;
@@ -287,7 +315,8 @@ public class XMLRPCUtils {
 			logger.debug("--XMLRPC PARAMS--");
 			logger.debug(" = sessionKey : " + sessionKey + " - type : " + type);
 
-			result = (HashMap<String, Object>) xmlRpcClient.execute("Deveryflow.getInfo", params);
+			result = (HashMap<String, Object>) xmlRpcClient.execute(
+					"Deveryflow.getInfo", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -297,7 +326,11 @@ public class XMLRPCUtils {
 	public float extractAmperage(HashMap<String, Object> hashMapHistoryXmlRpc) {
 		byte[] arrayIntensite = (byte[]) hashMapHistoryXmlRpc.get("stream4");
 		String intensiteString = new String(arrayIntensite);
-		float intensite = Float.parseFloat(intensiteString.substring(0, intensiteString.indexOf("m")));
+		float intensite = Float.parseFloat(intensiteString.substring(0,
+				intensiteString.indexOf("m")));
 		return intensite;
 	}
+
+	// float intensite = Float.parseFloat(intensiteString.substring(0,
+	// intensiteString.indexOf("m")));
 }

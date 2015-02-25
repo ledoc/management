@@ -28,10 +28,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
 
-		// HACK pour avoir le chemin de l'application et retrouver les log facilement 
+		// HACK pour avoir le chemin de l'application et retrouver les log
+		// facilement
 		logger.debug("Context root path : " + servletContext.getRealPath("/"));
 		System.setProperty("rootPath", servletContext.getRealPath("/"));
-		
+
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(ApplicationConfiguration.class);
 		webApplicationContext.setServletContext(servletContext);
@@ -66,9 +67,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			ServletContext servletContext,
 			AnnotationConfigWebApplicationContext rootContext) {
 		logger.debug("Configuring Spring Web application context");
-		
+
 		AnnotationConfigWebApplicationContext dispatcherServletConfiguration = new AnnotationConfigWebApplicationContext();
-		
+
 		dispatcherServletConfiguration.setParent(rootContext);
 		dispatcherServletConfiguration
 				.register(DispatcherServletConfiguration.class);
