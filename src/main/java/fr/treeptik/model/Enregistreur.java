@@ -181,9 +181,14 @@ public class Enregistreur implements Serializable {
 	public void initNiveauManuel() {
 
 		boolean typeManuelPresence = this.mesures.stream().anyMatch(
-				m -> m.getTypeMesureOrTrame().equals(
-						TypeMesureOrTrame.NIVEAUMANUEL));
+				m -> {
+				System.out.println(m);
+				return
+				m.getTypeMesureOrTrame().equals(
+						TypeMesureOrTrame.NIVEAUMANUEL);});
 
+		System.out.println(typeManuelPresence);
+		
 		if (typeManuelPresence) {
 			List<Mesure> allMesureManuel = this.mesures
 					.stream()

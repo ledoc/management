@@ -20,7 +20,6 @@ import fr.treeptik.model.Point;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
-import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.CheckAlerteUtils;
@@ -37,8 +36,6 @@ public class MesureServiceImpl implements MesureService {
 	@Inject
 	private TrameDWService trameDWService;
 	
-	@Inject
-	private EnregistreurService enregistreurService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
@@ -256,10 +253,10 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
+	@Transactional
 	public Mesure findByIdWithFetch(Integer id) throws ServiceException {
 		logger.info("--findByIdWithFetch MesureService -- mesureId : " + id);
 		Mesure mesure = mesureDAO.findByIdWithFetch(id);
-		enregistreurService.findById(mesure.getEnregistreur().getId());
 		return mesure;
 	}
 
@@ -333,8 +330,8 @@ public class MesureServiceImpl implements MesureService {
 
 	@Override
 	public Point transformMesureInPoint(Mesure item) throws ServiceException {
-		// logger.info("--transformMesureInPoint MesureService -- Id : " +
-		// item.getId());
+		 logger.debug("--transformMesureInPoint MesureService -- Id : " +
+		 item.getId());
 
 		Point point = new Point();
 		try {
@@ -346,5 +343,15 @@ public class MesureServiceImpl implements MesureService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return point;
+	}
+
+	@Override
+	@Transactional
+	public void affectNewNiveauManuel(Integer mesureId) throws ServiceException {
+		Mesure mesure = this.findById(mesureId);
+		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUMANUEL);
+		this.update(mesure);
+		this.findByIdWithFetch(mesureId);
+		
 	}
 }

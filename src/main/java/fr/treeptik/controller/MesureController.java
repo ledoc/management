@@ -29,7 +29,6 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Point;
 import fr.treeptik.model.Site;
-import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
@@ -125,9 +124,8 @@ public class MesureController {
 		logger.debug("mesureId : " + mesureId);
 
 		try {
-			Mesure mesure = mesureService.findByIdWithFetch(mesureId);
-			mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUMANUEL);
-			mesureService.update(mesure);
+			mesureService.affectNewNiveauManuel(mesureId);
+
 
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());

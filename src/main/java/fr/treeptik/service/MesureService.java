@@ -40,4 +40,6 @@ public interface MesureService {
 
 	Mesure findByIdWithFetch(Integer id) throws ServiceException;
 
+	void affectNewNiveauManuel(Integer mesureId) throws ServiceException;
+
 }
