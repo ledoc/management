@@ -132,9 +132,6 @@ public class OuvrageController {
 			enregistreursCombo.addAll(ouvrage.getEnregistreurs());
 			sitesCombo = siteService.findAll();
 
-			for (Enregistreur enregistreur : enregistreursCombo) {
-				System.out.println(enregistreur.getDerniereMesure());
-			}
 			
 			
 		} catch (NumberFormatException | ServiceException e) {

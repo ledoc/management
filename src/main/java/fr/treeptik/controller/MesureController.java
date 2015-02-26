@@ -148,7 +148,6 @@ public class MesureController {
 
 			mesures = mesureService.findByEnregistreurId(enregistreurId);
 
-			System.out.println(mesures.size());
 
 			for (Mesure item : mesures) {
 				points.add(mesureService.transformMesureInPoint(item));
@@ -409,14 +408,11 @@ public class MesureController {
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
-		System.out.println(" dateDebut " + dateDebut);
-		System.out.println(" dateFin " + dateFin);
 
 		try {
 			mesures = mesureService.findByEnregistreurIdBetweenDates(
 					enregistreurId, dateDebut, dateFin);
 
-			System.out.println(mesures.size());
 
 			for (Mesure item : mesures) {
 				points.add(mesureService.transformMesureInPoint(item));

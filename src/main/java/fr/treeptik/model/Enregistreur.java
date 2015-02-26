@@ -85,7 +85,7 @@ public class Enregistreur implements Serializable {
 	private String sonde;
 	// croquis dynamique de l'ensemble
 	private String croquis;
-	
+
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
 	private List<AlerteDescription> alerteDescriptions;
@@ -180,15 +180,10 @@ public class Enregistreur implements Serializable {
 	 */
 	public void initNiveauManuel() {
 
-		boolean typeManuelPresence = this.mesures.stream().anyMatch(
-				m -> {
-				System.out.println(m);
-				return
-				m.getTypeMesureOrTrame().equals(
-						TypeMesureOrTrame.NIVEAUMANUEL);});
+		boolean typeManuelPresence = this.mesures.stream().anyMatch(m ->
 
-		System.out.println(typeManuelPresence);
-		
+		m.getTypeMesureOrTrame().equals(TypeMesureOrTrame.NIVEAUMANUEL));
+
 		if (typeManuelPresence) {
 			List<Mesure> allMesureManuel = this.mesures
 					.stream()
@@ -482,13 +477,11 @@ public class Enregistreur implements Serializable {
 	}
 
 	public List<Mesure> getMesures() {
-		System.out.println("miaouh get " +this.mesures.size());
-		
+
 		return mesures;
 	}
 
 	public void setMesures(List<Mesure> mesures) {
-		System.out.println("miaouh set " +this.mesures.size());
 		this.mesures = mesures;
 	}
 

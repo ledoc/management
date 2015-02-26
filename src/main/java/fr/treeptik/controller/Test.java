@@ -50,7 +50,6 @@ public class Test {
 		}
 	}
 
-	// System.out.println("coucou");
 	//
 	//
 	// float intensite = 200;
@@ -61,11 +60,9 @@ public class Test {
 	// // float hauteurEau =
 	// // MesureService.conversionSignalElectrique_HauteurEau(intensite,
 	// // profMax);
-	// // System.out.println("hauteurEau = " + hauteurEau );
 	// // float niveauEau =
 	// // MesureService.conversionHauteurEau_CoteAltimetrique(hauteurEau,
 	// // dernier_calcul_Niveau_Eau, derniere_HauteurEau);
-	// // System.out.println("niveauEau = " + niveauEau);
 	//
 	// }
 

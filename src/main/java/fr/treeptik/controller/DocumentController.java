@@ -78,7 +78,7 @@ public class DocumentController {
 		return "/document/assign";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
+	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--list DocumentController--");
@@ -251,14 +251,12 @@ public class DocumentController {
 	public @ResponseBody List<Ouvrage> refreshOuvrage(
 			@PathVariable("clientId") Integer clientId)
 			throws ControllerException {
-		System.out.println("--refreshOuvrage DocumentController-- clientId : "
+		logger.info("--refreshOuvrage DocumentController-- clientId : "
 				+ clientId);
 
 		List<Ouvrage> ouvragesOfClient;
 		try {
 			ouvragesOfClient = ouvrageService.findByClientId(clientId);
-			System.out.println("liste d'ouvrages renvoyée : "
-					+ ouvragesOfClient);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -270,17 +268,14 @@ public class DocumentController {
 	public @ResponseBody List<Client> findClientByOuvrageId(
 			@PathVariable("ouvrageId") Integer ouvrageId)
 			throws ControllerException {
-
-		System.out
-				.println("--findClientByOuvrageId DocumentController-- ouvrageId : "
-						+ ouvrageId);
+		logger.info("--findClientByOuvrageId DocumentController-- ouvrageId : "
+				+ ouvrageId);
 
 		List<Client> listClientTemp = new ArrayList<Client>();
 		Client clientOfOuvrage;
 		try {
 			clientOfOuvrage = clientService.findClientByOuvrageId(ouvrageId);
 			listClientTemp.add(clientOfOuvrage);
-			System.out.println("liste de client renvoyée : " + clientOfOuvrage);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
