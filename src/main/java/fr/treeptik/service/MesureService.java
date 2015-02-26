@@ -38,4 +38,6 @@ public interface MesureService {
 	List<Mesure> findByEnregistreurIdBetweenDates(Integer id, Date dateDebut,
 			Date dateFin) throws ServiceException;
 
+	Mesure findByIdWithFetch(Integer id) throws ServiceException;
+
 }

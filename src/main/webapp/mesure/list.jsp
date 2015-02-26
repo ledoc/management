@@ -27,103 +27,98 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<!-- content wrapper -->
 		<div class="content-wrap bg-default clearfix row">
 			<div class="col-lg-2 col-md-3 col-xs-12 tools">
-				<div class="bg-white shadow tools-inner">
+				<div class="bg-white shadow pb15">
+					<div class="tools-inner">
+						<nav role="navigation">
+							<div class="no-padding">
+								<h3 class="h5 p15 mt0 mb0">
+									<b>Sélection</b>
+								</h3>
 
-					<header>
-						<div class="form-group ml15 mr15 h7 text-left mt0 mb0">
-							<span class="codeOuvrage text-muted hidden-sm hidden-xs"></span><span
-								class="mid text-primary"></span>
-						</div>
-					</header>
+								<div class="form-group ml15 mr15">
+									<select id="site" name="site"
+										data-placeholder="Filtrer par SITE" class="form-control">
+									</select>
+								</div>
+								<div class="form-group ml15 mr15">
+									<select id="ouvrage" name="ouvrage"
+										data-placeholder="Filtrer par OUVRAGE" class="form-control">
+									</select>
 
-					<nav role="navigation">
-						<div class="no-padding">
-							<h3 class="h5 p15 mt0 mb0">
-								<b>Sélection</b>
-							</h3>
+								</div>
+								<div class="form-group ml15 mr15">
+									<select id="enregistreur" name="enregistreur"
+										data-placeholder="choisir un ENREGISTREUR"
+										class="form-control">
+									</select>
 
-							<div class="form-group ml15 mr15">
-								<select id="site" name="site"
-									data-placeholder="Filtrer par SITE" class="form-control">
-								</select>
-							</div>
-							<div class="form-group ml15 mr15">
-								<select id="ouvrage" name="ouvrage"
-									data-placeholder="Filtrer par OUVRAGE" class="form-control">
-								</select>
+								</div>
+								<div class="form-group ml15 mr15">
+									<label>Dates</label> <input id="dateDebut" type="date"
+										class="form-control" />
+								</div>
+								<div class="form-group ml15 mr15">
+									<input id="dateFin" type="date" class="form-control" />
+								</div>
+								<div class="form-group ml15 mr15">
+									<button id="confirmBetweenDate" disabled="disabled"
+										class="btn btn-outline btn-success btn-xs ">
+										<i class="fa fa-check"></i>
+									</button>
+								</div>
+								<h3 class="h5 p15 mt0 mb0">
+									<b>Hauteur d'eau</b>
+								</h3>
 
-							</div>
-							<div class="form-group ml15 mr15">
-								<select id="enregistreur" name="enregistreur"
-									data-placeholder="choisir un ENREGISTREUR" class="form-control">
-								</select>
+								<div class="form-group ml15 mr15">
+									<select data-placeholder="Options d'affichage"
+										class="chosen form-control display-options"
+										id="js-change-water-display">
+										<option value=""></option>
+										<option value="spline">Courbe</option>
+										<option value="column">Histogramme</option>
+									</select>
+								</div>
+								<div class="form-group ml15 mr15 mb0">
+									<select data-placeholder="Sélectionner les alertes"
+										class="chosen form-control show-alerts" multiple
+										id="js-show-alerts">
+										<option value=""></option>
+										<option value="78.25">C1 - 78,25m</option>
+										<option value="18.50">C2 - 18,50m</option>
+									</select>
+								</div>
+								<h3 class="h5 p15 mt0 mb0">
+									<b>Conductivité</b>
+								</h3>
 
-							</div>
-							<div class="form-group ml15 mr15">
-								<label>Dates</label> <input id="dateDebut" type="date"
-									class="form-control" />
-							</div>
-							<div class="form-group ml15 mr15">
-								<input id="dateFin" type="date" class="form-control" />
-							</div>
-							<div class="form-group ml15 mr15">
-								<button id="confirmBetweenDate" disabled="disabled"
-									class="btn btn-outline btn-success btn-xs ">
-									<i class="fa fa-check"></i>
-								</button>
-							</div>
-							<h3 class="h5 p15 mt0 mb0">
-								<b>Hauteur d'eau</b>
-							</h3>
+								<div class="form-group ml15 mr15">
+									<select data-placeholder="Options d'affichage"
+										class="chosen form-control display-options"
+										id="js-change-rainfall-display">
+										<option value=""></option>
+										<option value="spline">Courbe</option>
+										<option value="column">Histogramme</option>
+									</select>
+								</div>
+								<div class="form-group icheck ml15 mr15 mt5">
+									<input type="checkbox" id="js-reverseChart" checked> <label
+										for="js-reverseChart" class="">Inverser la courbe</label>
+								</div>
+								<h3 class="h5 p15 mt0 mb0">
+									<b>Localiser</b>
+								</h3>
 
-							<div class="form-group ml15 mr15">
-								<select data-placeholder="Options d'affichage"
-									class="chosen form-control display-options"
-									id="js-change-water-display">
-									<option value=""></option>
-									<option value="spline">Courbe</option>
-									<option value="column">Histogramme</option>
-								</select>
+								<div class="ml15 mr15">
+									<div id="map"></div>
+								</div>
 							</div>
-							<div class="form-group ml15 mr15 mb0">
-								<select data-placeholder="Sélectionner les alertes"
-									class="chosen form-control show-alerts" multiple
-									id="js-show-alerts">
-									<option value=""></option>
-									<option value="78.25">C1 - 78,25m</option>
-									<option value="18.50">C2 - 18,50m</option>
-								</select>
-							</div>
-							<h3 class="h5 p15 mt0 mb0">
-								<b>Conductivité</b>
-							</h3>
-
-							<div class="form-group ml15 mr15">
-								<select data-placeholder="Options d'affichage"
-									class="chosen form-control display-options"
-									id="js-change-rainfall-display">
-									<option value=""></option>
-									<option value="spline">Courbe</option>
-									<option value="column">Histogramme</option>
-								</select>
-							</div>
-							<div class="form-group icheck ml15 mr15 mt5">
-								<input type="checkbox" id="js-reverseChart" checked> <label
-									for="js-reverseChart" class="">Inverser la courbe</label>
-							</div>
-							<h3 class="h5 p15 mt0 mb0">
-								<b>Localiser</b>
-							</h3>
-
-							<div class="ml15 mr15">
-								<div id="map"></div>
-							</div>
-						</div>
-					</nav>
+						</nav>
+					</div>
 				</div>
 			</div>
 			<div class="col-lg-10 col-md-9 col-xs-12">
-				<div class="box-tab no-b p15 bg-white shadow content-inner">
+				<div class="box-tab no-b p15 bg-white shadow">
 					<ul class="nav nav-tabs no-b">
 						<li class="active"><a href="#quantitatif" data-toggle="tab">Données
 								quantitatives</a></li>
@@ -131,6 +126,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								qualitatives</a></li>
 					</ul>
 					<div class="tab-content text-center no-shadow">
+						<div class="descriptionEntities">
+							<span class="codeOuvrage text-muted hidden-sm hidden-xs h4"></span><span
+								class="mid text-primary h5" style="vertical-align: top"></span>
+						</div>
 						<div class="tab-pane fade active in" id="quantitatif">
 							<div id="charts"></div>
 						</div>
@@ -159,14 +158,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<th>Ouvrage</th>
 															<th>Enregistreur (mid)</th>
 															<th>Type</th>
+															<th class="nosort nosearch">Actions</th>
 														</tr>
 													</thead>
 													<tbody>
 														<c:forEach items="${mesures}" var="mesure">
-															<c:url var="urlMesureDelete"
-																value="/mesure/delete/${mesure.id}" />
-															<c:url var="urlMesureUpdate"
-																value="/mesure/update/${mesure.id}" />
+															<c:url var="urlAffectAsNewNiveauManuel"
+																value="/mesure/affect/niveau/manuel/${mesure.id}" />
 															<tr>
 																<td><fmt:formatDate value="${mesure.date}"
 																		pattern="dd-MM-yyyy HH:mm:ss" /></td>
@@ -176,6 +174,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																<td><c:out value="${mesure.enregistreur.mid}" /></td>
 																<td><c:out
 																		value="${mesure.typeMesureOrTrame.description}" /></td>
+																<td><a data-url="${urlAffectAsNewNiveauManuel}"
+																	data-toggle="modal" data-target="#confirmModal"
+																	class="btn btn-outline btn-success btn-xs js-confirm-btn">
+																		<i class="fa fa-check"></i>
+																</a></td>
 															</tr>
 														</c:forEach>
 													</tbody>
@@ -185,305 +188,345 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									</section>
 								</div>
 								<!-- /inner content wrapper -->
+								<!-- Fenetre modale -->
+								<div id="confirmModal" class="modal fade bs-modal-sm"
+									tabindex="-1" role="dialog" aria-hidden="true"
+									data-backdrop="false" data-show="false">
+									<div class="modal-dialog modal-sm">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-hidden="true">×</button>
+												<h4 class="modal-title">Nouveau niveau manuel</h4>
+											</div>
+											<div class="modal-body">
+												<p>Assigner cette mesure comme nouveau niveau manuel ?</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default"
+													data-dismiss="modal">Annuler</button>
+												<a id="js-confirm-button" class="btn btn-success">Confirmer</a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /Fenêtre modale -->
+
 
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- /content wrapper -->
-			<a class="exit-offscreen"></a>
-			<!-- end page content -->
-			<jsp:include page="/template/footer.jsp" />
+		</div>
+		<!-- /content wrapper -->
+		<a class="exit-offscreen"></a>
+		<!-- end page content -->
+		<jsp:include page="/template/footer.jsp" />
 
-			<script type="text/javascript">
-				$(function() {
-					initListSite();
-					initListOuvrage();
-					initListEnregistreur();
-				});
+		<script type="text/javascript">
+			$('#confirmModal').modal();
+			$('#confirmModal').on('show.bs.modal', function(e) {
+				var url = $(e.relatedTarget).data('url');
+				var $confirmButton = $('#js-confirm-button');
+				$confirmButton.attr('href', url);
+			});
 
-				function checkAllFieldsHaveValues() {
+			$(function() {
+				initListSite();
+				initListOuvrage();
+				initListEnregistreur();
+			});
 
-					var enregistreurVal = $('#enregistreur').val();
-					var dateDebutVal = $('#dateDebut').val();
-					var dateFinVal = $('#dateFin').val();
-					console.log('enregistreur : ' + enregistreurVal);
-					console.log('dateDebut : ' + dateDebutVal);
-					console.log('dateFin : ' + dateFinVal);
+			function checkAllFieldsHaveValues() {
 
-					if (enregistreurVal && dateDebutVal && dateFinVal) {
+				var enregistreurVal = $('#enregistreur').val();
+				var dateDebutVal = $('#dateDebut').val();
+				var dateFinVal = $('#dateFin').val();
+				console.log('enregistreur : ' + enregistreurVal);
+				console.log('dateDebut : ' + dateDebutVal);
+				console.log('dateFin : ' + dateFinVal);
 
-						$('#confirmBetweenDate').attr('disabled', false);
-					}
+				if (enregistreurVal && dateDebutVal && dateFinVal) {
+
+					$('#confirmBetweenDate').attr('disabled', false);
 				}
+			}
 
-				function initListSite() {
+			function initListSite() {
 
-					var $site = $('#site');
+				var $site = $('#site');
 
-					$
-							.getJSON(
-									$('.relayUrl').attr('href') + '/init/site',
-									null,
-									function(listSite) {
+				$
+						.getJSON(
+								$('.relayUrl').attr('href') + '/init/site',
+								null,
+								function(listSite) {
 
-										var output = []
-										$
-												.each(
-														listSite,
-														function(index, site) {
-															var tpl = '<option value="NONE"></option><option value="' + site.id + '">'
-																	+ site.codeSite
-																	+ '</option>';
-															output.push(tpl);
-														});
-										$site.html(output.join(''));
-										$site.chosen({
-											allow_single_deselect : true
-										}, {
-											disable_search_threshold : 10
-										});
-										$site.trigger("chosen:updated");
-									});
-				};
-
-				function initListOuvrage() {
-
-					var $ouvrage = $('#ouvrage');
-
-					$
-							.getJSON(
-									$('.relayUrl').attr('href')
-											+ '/init/ouvrage',
-									null,
-									function(listOuvrage) {
-
-										var output = []
-										$
-												.each(
-														listOuvrage,
-														function(index, ouvrage) {
-															var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
-																	+ ouvrage.codeOuvrage
-																	+ '</option>';
-															output.push(tpl);
-															console.log(tpl);
-														});
-										$ouvrage.html(output.join(''));
-										$ouvrage.chosen({
-											allow_single_deselect : true
-										}, {
-											disable_search_threshold : 10
-										});
-										$ouvrage.trigger("chosen:updated");
-									});
-				};
-
-				function initListEnregistreur() {
-
-					var $enregistreur = $('#enregistreur');
-
-					$
-							.getJSON(
-									$('.relayUrl').attr('href')
-											+ '/init/enregistreur',
-									null,
-									function(listEnregistreur) {
-
-										var output = []
-										$
-												.each(
-														listEnregistreur,
-														function(index,
-																enregistreur) {
-															var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-																	+ enregistreur.mid
-																	+ '</option>';
-															output.push(tpl);
-														});
-										$enregistreur.html(output.join(''));
-										$enregistreur.chosen({
-											allow_single_deselect : true
-										}, {
-											disable_search_threshold : 10
-										});
-										$enregistreur.trigger("chosen:updated");
-									});
-				};
-				// Modifie la selectBox ouvrage filtrer par le site
-				$("#site")
-						.change(
-
-								function() {
-									var $ouvrage = $('#ouvrage');
+									var output = []
 									$
-											.get(
-													$('.relayUrl').attr('href')
-															+ '/site/refresh/ouvrage/'
-															+ $(this).val(),
-													null,
-													function(listOuvrage) {
-														var output = [];
+											.each(
+													listSite,
+													function(index, site) {
+														var tpl = '<option value="NONE"></option><option value="' + site.id + '">'
+																+ site.codeSite
+																+ '</option>';
+														output.push(tpl);
+													});
+									$site.html(output.join(''));
+									$site.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$site.trigger("chosen:updated");
+								});
+			};
+
+			function initListOuvrage() {
+
+				var $ouvrage = $('#ouvrage');
+
+				$
+						.getJSON(
+								$('.relayUrl').attr('href') + '/init/ouvrage',
+								null,
+								function(listOuvrage) {
+
+									var output = []
+									$
+											.each(
+													listOuvrage,
+													function(index, ouvrage) {
+														var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
+																+ ouvrage.codeOuvrage
+																+ '</option>';
+														output.push(tpl);
+														console.log(tpl);
+													});
+									$ouvrage.html(output.join(''));
+									$ouvrage.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$ouvrage.trigger("chosen:updated");
+								});
+			};
+
+			function initListEnregistreur() {
+
+				var $enregistreur = $('#enregistreur');
+
+				$
+						.getJSON(
+								$('.relayUrl').attr('href')
+										+ '/init/enregistreur',
+								null,
+								function(listEnregistreur) {
+
+									var output = []
+									$
+											.each(
+													listEnregistreur,
+													function(index,
+															enregistreur) {
+														var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																+ enregistreur.mid
+																+ '</option>';
+														output.push(tpl);
+													});
+									$enregistreur.html(output.join(''));
+									$enregistreur.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$enregistreur.trigger("chosen:updated");
+								});
+			};
+			// Modifie la selectBox ouvrage filtrer par le site
+			$("#site")
+					.change(
+
+							function() {
+								var $ouvrage = $('#ouvrage');
+								$
+										.get(
+												$('.relayUrl').attr('href')
+														+ '/site/refresh/ouvrage/'
+														+ $(this).val(),
+												null,
+												function(listOuvrage) {
+													var output = [];
+													$ouvrage
+															.attr(
+																	'data-placeholder',
+																	'Filtrer par Ouvrage');
+													$
+															.each(
+																	listOuvrage,
+																	function(
+																			index,
+																			ouvrage) {
+																		var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
+																				+ ouvrage.codeOuvrage
+																				+ '</option>';
+																		output
+																				.push(tpl);
+																	});
+													$ouvrage.html(output
+															.join(''));
+													if (!listOuvrage.length) {
 														$ouvrage
 																.attr(
 																		'data-placeholder',
-																		'Filtrer par Ouvrage');
-														$
-																.each(
-																		listOuvrage,
-																		function(
-																				index,
-																				ouvrage) {
-																			var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
-																					+ ouvrage.codeOuvrage
-																					+ '</option>';
-																			output
-																					.push(tpl);
-																		});
-														$ouvrage.html(output
-																.join(''));
-														if (!listOuvrage.length) {
-															$ouvrage
-																	.attr(
-																			'data-placeholder',
-																			'Aucun ouvrage pour ce Site');
+																		'Aucun ouvrage pour ce Site');
 
-														}
+													}
 
-														$ouvrage.selected = false;
-														$ouvrage
-																.chosen(
-																		{
-																			disable_search_threshold : 10
-																		})
-																.trigger(
-																		"chosen:updated");
-													});
-								});
-				// Modifie la selectBox enregistreur filtrer par le site
-				$("#site")
-						.change(
+													$ouvrage.selected = false;
+													$ouvrage
+															.chosen(
+																	{
+																		disable_search_threshold : 10
+																	})
+															.trigger(
+																	"chosen:updated");
+												});
+							});
+			// Modifie la selectBox enregistreur filtrer par le site
+			$("#site")
+					.change(
 
-								function() {
-									var $enregistreur = $('#enregistreur');
-									$
-											.get(
-													$('.relayUrl').attr('href')
-															+ '/site/refresh/enregistreur/'
-															+ $(this).val(),
-													null,
-													function(listEnregistreur) {
-														var output = [];
+							function() {
+
+										$('.codeOuvrage').text('');
+								
+								
+								var $enregistreur = $('#enregistreur');
+								$
+										.get(
+												$('.relayUrl').attr('href')
+														+ '/site/refresh/enregistreur/'
+														+ $(this).val(),
+												null,
+												function(listEnregistreur) {
+													var output = [];
+													$enregistreur
+															.attr(
+																	'data-placeholder',
+																	'Choisir l\'ENREGISTREUR');
+													$
+															.each(
+																	listEnregistreur,
+																	function(
+																			index,
+																			enregistreur) {
+																		var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																				+ enregistreur.mid
+																				+ '</option>';
+																		output
+																				.push(tpl);
+																	});
+													$enregistreur.html(output
+															.join(''));
+													if (!listEnregistreur.length) {
 														$enregistreur
 																.attr(
 																		'data-placeholder',
-																		'Choisir l\'ENREGISTREUR');
-														$
-																.each(
-																		listEnregistreur,
-																		function(
-																				index,
-																				enregistreur) {
-																			var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-																					+ enregistreur.mid
-																					+ '</option>';
-																			output
-																					.push(tpl);
-																		});
-														$enregistreur
-																.html(output
-																		.join(''));
-														if (!listEnregistreur.length) {
-															$enregistreur
-																	.attr(
-																			'data-placeholder',
-																			'Aucun enregistreur pour ce filtre');
+																		'Aucun enregistreur pour ce filtre');
 
-														}
+													}
 
-														$enregistreur.selected = false;
-														$enregistreur
-																.chosen(
-																		{
-																			disable_search_threshold : 10
-																		})
-																.trigger(
-																		"chosen:updated");
-													});
-								});
+													$enregistreur.selected = false;
+													$enregistreur
+															.chosen(
+																	{
+																		disable_search_threshold : 10
+																	})
+															.trigger(
+																	"chosen:updated");
+												});
+							});
 
-				// Modifie la selectBox enregistreur filtrer par l'ouvrage
-				$("#ouvrage")
-						.change(
+			// Modifie la selectBox enregistreur filtrer par l'ouvrage
+			$("#ouvrage")
+					.change(
 
-								function() {
-									var $enregistreur = $('#enregistreur');
-									var $site = $('#site');
+							function(e) {
+								var currentOuvrage = e.currentTarget.innerText;
+								var $enregistreur = $('#enregistreur');
+								var $site = $('#site');
+
+								if (!currentOuvrage) {
+									return
+								} else {
 									$('.codeOuvrage').text(
-											$(this).attr('text') + ' >');
-									$
-											.get(
-													$('.relayUrl').attr('href')
-															+ '/ouvrage/refresh/enregistreur/'
-															+ $(this).val(),
-													null,
-													function(listEnregistreur) {
-														var output = [];
+											currentOuvrage + ' > ');
+								}
+
+								$
+										.get(
+												$('.relayUrl').attr('href')
+														+ '/ouvrage/refresh/enregistreur/'
+														+ $(this).val(),
+												null,
+												function(listEnregistreur) {
+													var output = [];
+													$enregistreur
+															.attr(
+																	'data-placeholder',
+																	'Choisir l\'ENREGISTREUR');
+													$
+															.each(
+																	listEnregistreur,
+																	function(
+																			index,
+																			enregistreur) {
+																		var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																				+ enregistreur.mid
+																				+ '</option>';
+																		output
+																				.push(tpl);
+																	});
+													$enregistreur.html(output
+															.join(''));
+													if (!listEnregistreur.length) {
 														$enregistreur
 																.attr(
 																		'data-placeholder',
-																		'Choisir l\'ENREGISTREUR');
-														$
-																.each(
-																		listEnregistreur,
-																		function(
-																				index,
-																				enregistreur) {
-																			var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-																					+ enregistreur.mid
-																					+ '</option>';
-																			output
-																					.push(tpl);
-																		});
-														$enregistreur
-																.html(output
-																		.join(''));
-														if (!listEnregistreur.length) {
-															$enregistreur
-																	.attr(
-																			'data-placeholder',
-																			'Aucun enregistreur pour ce filtre');
+																		'Aucun enregistreur pour ce filtre');
 
-														}
+													}
 
-														$enregistreur.selected = false;
-														$enregistreur
-																.chosen(
-																		{
-																			disable_search_threshold : 10
-																		})
-																.trigger(
-																		"chosen:updated");
-													});
-								});
+													$enregistreur.selected = false;
+													$enregistreur
+															.chosen(
+																	{
+																		disable_search_threshold : 10
+																	})
+															.trigger(
+																	"chosen:updated");
+												});
+							});
 
-				$("#ouvrage").change(function() {
-					$('#site').selected = false, initListSite()
-				});
-				$("#ouvrage").change(initListSite());
+			$("#ouvrage").change(function() {
+				$('#site').selected = false, initListSite()
+			});
+			$("#ouvrage").change(initListSite());
 
-				$("#dateDebut").change(function() {
-					checkAllFieldsHaveValues()
-				});
-				$("#dateFin").change(function() {
-					checkAllFieldsHaveValues()
-				});
-				$("#enregistreur").change(
-						function() {
-							$('#site').selected = false,
-									checkAllFieldsHaveValues(), initListSite(),
-									$('#ouvrage').selected = false,
-									initListOuvrage()
-						})
-			</script>
+			$("#dateDebut").change(function() {
+				checkAllFieldsHaveValues()
+			});
+			$("#dateFin").change(function() {
+				checkAllFieldsHaveValues()
+			});
+			$("#enregistreur").change(
+					function() {
+						$('#site').selected = false,
+								checkAllFieldsHaveValues(), initListSite(),
+								$('#ouvrage').selected = false,
+								initListOuvrage()
+					})
+		</script>

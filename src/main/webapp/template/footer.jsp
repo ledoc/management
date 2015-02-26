@@ -44,8 +44,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="${urlResources}/plugins/datatables/jquery.dataTables.js"></script>
 <script src="${urlResources}/js/bootstrap-datatables.js"></script>
 <script src="${urlResources}/plugins/icheck/icheck.js"></script>
-<script src="${urlResources}/plugins/hightcharts/js/highcharts.js"></script>
+<%-- <script src="${urlResources}/plugins/hightcharts/js/highcharts.js"></script> --%>
+<script src="${urlResources}/plugins/hightcharts/js/highstock.js"></script>
 <script type="text/javascript" src="${urlResources}/js/bootstrap-filestyle.min.js"> </script>
+<script src="${urlResources}/plugins/daterangepicker/moment.js"></script>
+<script src="${urlResources}/plugins/daterangepicker/daterangepicker.js"></script>
 
 <!-- /page level scripts -->
 
@@ -57,8 +60,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- page script -->
 <script src="${urlResources}/js/datatables.js"></script>
 <script src="${urlResources}/js/maps.js"></script>
-<!-- /page script -->
 <script src="${urlResources}/js/mesures.js"></script>
+<script src="${urlResources}/js/pickers.js"></script>
+<!-- /page script -->
 
 
 </body>

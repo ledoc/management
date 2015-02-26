@@ -140,11 +140,11 @@ public class XMLRPCUtils {
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
 		Object[] result = null;
-		int nbPos = 16;
+		int nbPos = 50;
 		int state = -1;
 		int content = 17;
 		int port = 0;
-		boolean compress = true;
+		boolean compress = false;
 		try {
 			Object[] params = new Object[] { sessionKey, mid, nbPos, state,
 					content, port, compress };

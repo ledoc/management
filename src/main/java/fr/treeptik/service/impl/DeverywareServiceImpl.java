@@ -43,10 +43,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 	private MesureService mesureService;
 
 	public String openSession() throws Exception {
-		logger.info("-- openSession --");
 
 		String sessionKey = xmlRPCUtils.openSession();
-		logger.info("sessionKey : " + sessionKey);
 		return sessionKey;
 	}
 
@@ -74,30 +72,35 @@ public class DeverywareServiceImpl implements DeverywareService {
 		 * ON LISTE TOUS LES ENREGISTREURS REPERTORIES
 		 */
 
-		List<Enregistreur> enregistreurList = this.enregistreurList(sessionKey);
+		// List<Enregistreur> enregistreurList =
+		// this.enregistreurList(sessionKey);
 
-		for (Enregistreur enregistreur : enregistreurList) {
-			enregistreur = enregistreurService
-					.findByMidWithJoinFetchTrameDWs(enregistreur.getMid());
-			Object[] history = xmlRPCUtils.getHistory(enregistreur.getMid(),
-					sessionKey);
+		// for (Enregistreur enregistreur : enregistreurList) {
+		// enregistreur = enregistreurService
+		// .findByMidWithJoinFetchTrameDWs(enregistreur.getMid());
+		// Object[] history = xmlRPCUtils.getHistory(enregistreur.getMid(),
+		// sessionKey);
 
-			// Enregistreur enregistreur = enregistreurService
-			// .findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33781916177");
-			// Object[] history =
-			// xmlRPCUtils.getHistory("gps://ORANGE/+33781916177",
-			// sessionKey);
-			logger.debug(history.length + " trame History récupérée");
+		/**
+		 * gps://ORANGE/+33781916177 gps://ORANGE/+33687575529
+		 */
 
-			TrameDW trameDW = new TrameDW();
+		Enregistreur enregistreur = enregistreurService
+				.findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33687575529");
+		Object[] history = xmlRPCUtils.getHistory("gps://ORANGE/+33687575529",
+				sessionKey);
 
-			for (Object historyXmlRpc : history) {
-				HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) historyXmlRpc;
+		logger.debug(history.length + " trame(s) History récupérée(s)");
 
-				logger.debug(hashMapHistoryXmlRpc);
+		for (Object historyXmlRpc : history) {
+			HashMap<String, Object> hashMapHistoryXmlRpc = (HashMap<String, Object>) historyXmlRpc;
 
-				trameDW = this.transfertHistoryToTrameDW(enregistreur, trameDW,
-						hashMapHistoryXmlRpc);
+			logger.debug(hashMapHistoryXmlRpc);
+
+			TrameDW trameDW = this.transfertHistoryToTrameDW(enregistreur,
+					hashMapHistoryXmlRpc);
+
+			if (trameDW.getSignalBrut() != null) {
 
 				if (enregistreur.getTrameDWs() != null) {
 
@@ -402,9 +405,11 @@ public class DeverywareServiceImpl implements DeverywareService {
 	}
 
 	private TrameDW transfertHistoryToTrameDW(Enregistreur enregistreur,
-			TrameDW trameDW, HashMap<String, Object> hashMapHistoryXmlRpc)
+			HashMap<String, Object> hashMapHistoryXmlRpc)
 			throws ServiceException {
 		logger.info("--transfertHistoryToTrameDW DeverywareServiceImpl--");
+
+		TrameDW trameDW = new TrameDW();
 
 		byte[] arrayIntensite = (byte[]) hashMapHistoryXmlRpc.get("stream4");
 		String intensiteString = new String(arrayIntensite);
@@ -420,92 +425,80 @@ public class DeverywareServiceImpl implements DeverywareService {
 			String[] split = intensiteString.split(" ");
 			Map<String, String> mapMetricAndValue = new HashMap<>();
 
-			for (int i = 0; i < split.length; i++) {
-				if (i % 2 == 0) {
-					mapMetricAndValue.put(split[i], split[i + 1]);
+			/**
+			 * TODO remove
+			 */
+			if (split.length > 1) {
+				/**
+				 * TODO
+				 */
+
+				for (int i = 0; i < split.length; i++) {
+					if (i % 2 == 0) {
+						mapMetricAndValue.put(split[i], split[i + 1]);
+					}
 				}
-
-			}
-
-			switch (enregistreur.getTypeMesureOrTrame().getDescription()) {
-			case "niveau d'eau":
-
 				if (mapMetricAndValue.containsKey("103Analogic-hauteur")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("103Analogic-hauteur")));
-				}
-				if (mapMetricAndValue.containsKey("107Num-Hauteur-mm")) {
+				} else if (mapMetricAndValue.containsKey("107Num-Hauteur-mm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("107Num-Hauteur-mm")));
-				}
-				if (mapMetricAndValue.containsKey("108Num-Hauteur-cm")) {
+				} else if (mapMetricAndValue.containsKey("108Num-Hauteur-cm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("108Num-Hauteur-cm")));
-				}
-				if (mapMetricAndValue.containsKey("109Num-Hauteur-m")) {
+				} else if (mapMetricAndValue.containsKey("109Num-Hauteur-m")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("109Num-Hauteur-m")));
-				}
-
-				break;
-			case "conductivité":
-
-				if (mapMetricAndValue.containsKey("102Analogic-cond")) {
+				} else if (mapMetricAndValue.containsKey("102Analogic-cond")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("102Analogic-cond")));
-				}
-				if (mapMetricAndValue.containsKey("105Num-Cond-µs/cm")) {
+				} else if (mapMetricAndValue.containsKey("105Num-Cond-µs/cm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("105Num-Cond-µs/cm")));
-				}
-
-				if (mapMetricAndValue.containsKey("106Num-Cond-ms/cm")) {
+				} else if (mapMetricAndValue.containsKey("106Num-Cond-ms/cm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("106Num-Cond-ms/cm")));
-				}
-
-				break;
-			case "pluviométrie":
-
-				if (mapMetricAndValue.containsKey("110Pluvio-impuls/période")) {
+				} else if (mapMetricAndValue
+						.containsKey("110Pluvio-impuls/période")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("110Pluvio-impuls/période")));
-				}
-				if (mapMetricAndValue.containsKey("114Impuls/period-Q-10")) {
+				} else if (mapMetricAndValue
+						.containsKey("114Impuls/period-Q-10")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("114Impuls/period-Q-10")));
-				}
-				if (mapMetricAndValue.containsKey("115Impuls/period-Q-100")) {
+				} else if (mapMetricAndValue
+						.containsKey("115Impuls/period-Q-100")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("115Impuls/period-Q-100")));
-				}
-				if (mapMetricAndValue.containsKey("116Impuls/period-Q-1000")) {
+				} else if (mapMetricAndValue
+						.containsKey("116Impuls/period-Q-1000")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("116Impuls/period-Q-1000")));
-				}
-
-				break;
-			case "température":
-				if (mapMetricAndValue.containsKey("101Analogic-temp")) {
+				} else if (mapMetricAndValue.containsKey("101Analogic-temp")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("101Analogic-temp")));
-				}
-				if (mapMetricAndValue.containsKey("104Num-Temp-C")) {
+				} else if (mapMetricAndValue.containsKey("104Num-Temp-C")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("104Num-Temp-C")));
+				} else {
+					throw new ServiceException(
+							"ERROR DeverywareServiceImpl -- la trame n'a pas pu être analysée correctement");
+
 				}
 
-				break;
-
-			default:
-				throw new ServiceException(
-						"ERROR DeverywareServiceImpl -- la trame n'a pas pu être analysée correctement");
+				/**
+				 * TODO remove
+				 */
 			}
+			/**
+			 * TODO remove
+			 */
 
 		}
-		int dateInt = (int) hashMapHistoryXmlRpc.get("date");
 		try {
-			trameDW.setDate(DateUnixConverter.intToDate(dateInt));
+			trameDW.setDate(DateUnixConverter
+					.intToDate((int) hashMapHistoryXmlRpc.get("date")));
 		} catch (ParseException e) {
 			logger.error("Error DeverywareServiceImpl : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);

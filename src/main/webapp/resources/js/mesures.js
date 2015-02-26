@@ -3,7 +3,7 @@ var mesures = function() {
 	return {
 		init : function() {
 			var relayUrl = $('.relayUrl').attr('href');
-			var reversed = true, $chart = $('#charts'), $reverseBtn = $('#js-reverseChart'), chartHeight = $(
+			var reversed = true, $chart = $('#charts'), $reverseBtn = $('#js-reverseChart'),  $rangePicker = $('#js-range-selector'), chartHeight = $(
 					'.tools-inner').innerHeight() / 1.5, chart;
 			if (!$chart.length) {
 				return;
@@ -12,96 +12,105 @@ var mesures = function() {
 			// chart constructor
 
 			$chart
-					.highcharts({
-						chart : {
-							zoomType : 'xy',
-							height : chartHeight
-						},
-						title : {
-							text : ''
-						},
-						rangeSelector : {
-							selected : 1
-						},
-						subtitle : {
-							text : ''
-						},
-						xAxis : [ {
-							type : 'datetime',
-							dateTimeLabelFormats : {
-								month : '%e. %b',
-								year : '%b'
-							}
-						} ],
-						yAxis : [ { // Primary yAxis
-							labels : {
-								format : '{value} m',
-								style : {
-									color : '#94ECD9'
-								}
-							},
-							title : {
-								text : 'Hauteur d\'eau',
-								style : {
-									color : '#94ECD9'
-								}
-							},
-							min : 0,
+					.highcharts(
+							'StockChart',
+							{
+								chart : {
+									zoomType : 'xy',
+									height : chartHeight
+								},
+								title : {
+									text : ''
+								},
+								rangeSelector : {
+									selected : false
+								},
+								subtitle : {
+									text : ''
+								},
+								xAxis : [ {
+									type : 'datetime',
+									dateTimeLabelFormats : {
+										month : '%e. %b',
+										year : '%b'
+									}
+								} ],
+								yAxis : [ { // Primary yAxis
+									labels : {
+										format : '{value} m',
+										style : {
+											color : '#94ECD9'
+										}
+									},
+									title : {
+										text : 'Hauteur d\'eau',
+										style : {
+											color : '#94ECD9'
+										}
+									},
+									min : 0,
+									opposite : false
 
-						// plotLines : []
-						}, { // Secondary yAxis
-							labels : {
-								format : '{value} mm',
-								style : {
-									color : '#20AAE5'
 								}
-							},
-							title : {
-								text : 'Conductivité',
-								style : {
-									color : '#20AAE5'
-								}
-							},
-							opposite : true,
-							min : 0,
-							reversed : reversed
-						} ],
-						tooltip : {
-							shared : true
-						},
-						legend : {
-							enabled : true,
-							verticalAlign : 'top',
-							title : {
-								text : 'Cliquez sur la légende pour afficher / cacher une courbe',
-								style : {
-									fontWeight : 'normal',
-									color : '#b3b3b3'
-								}
-							},
-							backgroundColor : (Highcharts.theme && Highcharts.theme.legendBackgroundColor)
-									|| '#FFFFFF'
-						},
-						series : [ {
-							name : 'Conductivité',
-							type : 'column',
-							yAxis : 1,
-							data : [],
-							color : '#20AAE5',
-							tooltip : {
-								valueSuffix : ' mm'
-							}
-						}, {
-							name : 'Hauteur d\'eau',
-							type : 'line',
-							data : [],
-							yAxis : 0,
-							color : '#94ECD9',
-							tooltip : {
-								valueSuffix : ' m'
-							}
-						} ]
-					});
+								
+// , { // Secondary yAxis
+// labels : {
+// format : '{value} mm',
+// style : {
+// color : '#20AAE5'
+// }
+// },
+// title : {
+// text : 'Conductivité',
+// style : {
+// color : '#20AAE5'
+// }
+// },
+// opposite : true,
+// min : 0,
+// reversed : reversed
+// }
+								
+								],
+								tooltip : {
+									shared : true
+								},
+								legend : {
+									enabled : true,
+									verticalAlign : 'top',
+									title : {
+										text : 'Cliquez sur la légende pour afficher / cacher une courbe',
+										style : {
+											fontWeight : 'normal',
+											color : '#b3b3b3'
+										}
+									},
+									backgroundColor : (Highcharts.theme && Highcharts.theme.legendBackgroundColor)
+											|| '#FFFFFF'
+								},
+								series : [ 
+// {
+// name : 'Conductivité',
+// type : 'column',
+// yAxis : 1,
+// data : [],
+// color : '#20AAE5',
+// tooltip : {
+// valueSuffix : ' mm'
+// }
+// },
+								
+								{
+									name : 'Hauteur d\'eau',
+									type : 'line',
+									data : [],
+									yAxis : 0,
+									color : '#94ECD9',
+									tooltip : {
+										valueSuffix : ' m'
+									}
+								} ]
+							});
 
 			// render chart
 
@@ -115,8 +124,7 @@ var mesures = function() {
 					item.x = moment(line.date);
 					item.y = parseFloat(line.valeur);
 					$('.mid').text(line.midEnregistreur);
-					console.log(item.midEnregistreur)
-					
+
 					serieData.push(item);
 				});
 				chart.series[index].update({
@@ -127,7 +135,7 @@ var mesures = function() {
 
 			// initialise le graph avec les valeurs d'un enregistreur
 			$.getJSON(relayUrl + '/init/graph/points', function(data) {
-				updateSerie(1, data);
+				updateSerie(0, data);
 			});
 
 			// initialise le graph avec les alertes d'un enregistreur
@@ -163,7 +171,7 @@ var mesures = function() {
 						var id = $(this).val();
 						$.getJSON(relayUrl + '/enregistreur/points/' + id,
 								function(data) {
-									updateSerie(1, data);
+									updateSerie(0, data);
 
 								});
 					});
@@ -205,13 +213,14 @@ var mesures = function() {
 						var enregistreurId = $("#enregistreur").val();
 						var dateDebut = $("#dateDebut").val();
 						var dateFin = $("#dateFin").val();
-						var url = urlBase + '/enregistreur/points' + '/' + enregistreurId
-								+ '/' + dateDebut + '/' + dateFin;
+						var url = urlBase + '/enregistreur/points' + '/'
+								+ enregistreurId + '/' + dateDebut + '/'
+								+ dateFin;
 
-						$.getJSON(url,
-								function(data) {
-									updateSerie(1, data);
-								});
+						$.getJSON(url, function(data) {
+							updateSerie(1, data);
+							chart.xAxis[0].setExtremes(moment(dateDebut), moment(dateFin))
+						});
 
 					});
 
@@ -268,6 +277,18 @@ var mesures = function() {
 					type : $(this).val()
 				})
 			});
+			
+            // range selector
+
+//            $rangePicker.on('apply.daterangepicker', function (ev, picker) {
+//                var startDate = moment(picker.startDate).utc().format();
+//                var endDate = moment(picker.endDate).utc().format();
+//                console.log(startDate  );
+//                console.log(endDate);
+//                if (startDate && endDate) {
+//                    chart.xAxis[0].setExtremes(startDate, endDate);
+//                }
+//            });
 		}
 	};
 }();

@@ -20,6 +20,7 @@ import fr.treeptik.model.Point;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.CheckAlerteUtils;
@@ -35,6 +36,9 @@ public class MesureServiceImpl implements MesureService {
 
 	@Inject
 	private TrameDWService trameDWService;
+	
+	@Inject
+	private EnregistreurService enregistreurService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
@@ -58,9 +62,9 @@ public class MesureServiceImpl implements MesureService {
 		Float compenseA20degre = 20F;
 		Float signalBrut = trameDW.getSignalBrut();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
-		
+
 		logger.debug("enregistreur : " + enregistreur);
-		
+
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
 		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
 
@@ -252,10 +256,17 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
+	public Mesure findByIdWithFetch(Integer id) throws ServiceException {
+		logger.info("--findByIdWithFetch MesureService -- mesureId : " + id);
+		Mesure mesure = mesureDAO.findByIdWithFetch(id);
+		enregistreurService.findById(mesure.getEnregistreur().getId());
+		return mesure;
+	}
+
+	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Mesure create(Mesure mesure) throws ServiceException {
-		logger.info("--CREATE MesureService --");
-		logger.debug("mesure : " + mesure);
+		logger.info("--CREATE MesureService -- mesure : " + mesure);
 		return mesureDAO.save(mesure);
 	}
 
@@ -272,11 +283,7 @@ public class MesureServiceImpl implements MesureService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE MesureService -- mesureId : " + id);
-
-		Mesure mesure = this.findById(id);
-
-		logger.debug("--DELETE MesureService -- : " + mesure);
-		mesureDAO.delete(mesure);
+		mesureDAO.delete(id);
 	}
 
 	@Override
@@ -300,22 +307,23 @@ public class MesureServiceImpl implements MesureService {
 		logger.info("--findByEnregistreurId MesureService -- Id : " + id);
 		List<Mesure> mesures;
 		try {
-			mesures = mesureDAO.findByEnregistreurId(id);
+			mesures = mesureDAO.findByEnregistreurIdWithFetch(id);
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return mesures;
 	}
-	
-	
+
 	@Override
-	public List<Mesure> findByEnregistreurIdBetweenDates(Integer id, Date dateDebut, Date dateFin)
-			throws ServiceException {
-		logger.info("--findByEnregistreurIdBetweenDates MesureService -- Id : " + id);
+	public List<Mesure> findByEnregistreurIdBetweenDates(Integer id,
+			Date dateDebut, Date dateFin) throws ServiceException {
+		logger.info("--findByEnregistreurIdBetweenDates MesureService -- Id : "
+				+ id);
 		List<Mesure> mesures;
 		try {
-			mesures = mesureDAO.findByEnregistreurIdBetweenDates(id, dateDebut, dateFin);
+			mesures = mesureDAO.findByEnregistreurIdBetweenDates(id, dateDebut,
+					dateFin);
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
@@ -325,7 +333,8 @@ public class MesureServiceImpl implements MesureService {
 
 	@Override
 	public Point transformMesureInPoint(Mesure item) throws ServiceException {
-//		logger.info("--transformMesureInPoint MesureService -- Id : " + item.getId());
+		// logger.info("--transformMesureInPoint MesureService -- Id : " +
+		// item.getId());
 
 		Point point = new Point();
 		try {

@@ -62,7 +62,6 @@ var googlemap = function() {
 							scaledSize:new google.maps.Size(22,32),
 							url : (resourcesUrl + marker.iconPath)
 								};
-					console.log(marker.icon);
 				});
 				map.addMarkers(listMarkers);
 			});
@@ -82,9 +81,6 @@ var googlemap = function() {
 									marker.infoWindow.content = startContent
 											+ marker.itemName + middleContent
 											+ url + marker.itemId + endContent;
-
-									console.log('marker d\'établissement : '
-											+ marker);
 
 									map.addMarker(marker);
 									map.setCenter(marker.lat, marker.lng);
@@ -110,8 +106,6 @@ var googlemap = function() {
 									+ marker.itemName + middleContent + url
 									+ marker.itemId + endContent;
 
-							console.log(marker);
-
 							map.addMarker(marker);
 							map.setCenter(marker.lat, marker.lng);
 							map.zoomIn(1);
@@ -135,8 +129,6 @@ var googlemap = function() {
 							marker.infoWindow.content = startContent
 									+ marker.itemName + middleContent + url
 									+ marker.itemId + endContentOuvrage;
-
-							console.log(marker);
 
 							map.addMarker(marker);
 							map.setCenter(marker.lat, marker.lng);

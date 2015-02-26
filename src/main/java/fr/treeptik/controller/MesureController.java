@@ -29,6 +29,7 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Point;
 import fr.treeptik.model.Site;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
@@ -114,6 +115,25 @@ public class MesureController {
 		model.addAttribute("sitesCombo", sitesCombo);
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
 		return "/mesure/list";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/affect/niveau/manuel/{mesureId}")
+	public String affectNewNiveauManuel(
+			@PathVariable("mesureId") Integer mesureId)
+			throws ControllerException {
+		logger.info("--affectNewNiveauManuel MesureController--");
+		logger.debug("mesureId : " + mesureId);
+
+		try {
+			Mesure mesure = mesureService.findByIdWithFetch(mesureId);
+			mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUMANUEL);
+			mesureService.update(mesure);
+
+		} catch (NumberFormatException | ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return "redirect:/mesure/list";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/enregistreur/points/{enregistreurId}")
@@ -391,9 +411,9 @@ public class MesureController {
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
-		System.out.println(" dateDebut " +dateDebut);
-		System.out.println(" dateFin " +dateFin);
-		
+		System.out.println(" dateDebut " + dateDebut);
+		System.out.println(" dateFin " + dateFin);
+
 		try {
 			mesures = mesureService.findByEnregistreurIdBetweenDates(
 					enregistreurId, dateDebut, dateFin);
