@@ -1,46 +1,46 @@
 package fr.treeptik.conf;
 
-import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRegistration;
 
 import org.apache.log4j.Logger;
-import org.springframework.core.annotation.Order;
-import org.springframework.web.WebApplicationInitializer;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@Order(HIGHEST_PRECEDENCE)
-public class ApplicationInitializer implements WebApplicationInitializer {
 
-	private Logger logger = Logger.getLogger(ApplicationInitializer.class);
+@Configuration
+public class WebConfigurer implements ServletContextListener {
+	private Logger logger = Logger.getLogger(WebConfigurer.class);
 
 	@Override
-	public void onStartup(ServletContext servletContext)
-			throws ServletException {
+	public void contextInitialized(ServletContextEvent sce) {
+		ServletContext servletContext = sce.getServletContext();
 
-		// HACK pour avoir le chemin de l'application et retrouver les log
-		// facilement
-		logger.debug("Context root path : " + servletContext.getRealPath("/"));
-		System.setProperty("rootPath", servletContext.getRealPath("/"));
+		logger.info("Web application configuration");
 
-		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
-		webApplicationContext.register(ApplicationConfiguration.class);
-		webApplicationContext.setServletContext(servletContext);
-		webApplicationContext.refresh();
+		logger.debug("Configuring Spring root application context");
+		AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
+		rootContext.register(ApplicationConfiguration.class);
+		rootContext.setServletContext(servletContext);
+		rootContext.refresh();
 
 		servletContext.setAttribute(
 				WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-				webApplicationContext);
+				rootContext);
 
 		EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST,
 				DispatcherType.FORWARD, DispatcherType.ASYNC);
@@ -48,17 +48,19 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
 		characterEncodingFilter.setEncoding("UTF-8");
 		characterEncodingFilter.setForceEncoding(true);
-
+		
 		EnumSet<DispatcherType> dispatcherTypes = EnumSet.of(
 				DispatcherType.REQUEST, DispatcherType.FORWARD);
 		FilterRegistration.Dynamic characterEncoding = servletContext
 				.addFilter("characterEncoding", characterEncodingFilter);
 		characterEncoding.addMappingForUrlPatterns(dispatcherTypes, true, "/*");
 
-		this.initSpring(servletContext, webApplicationContext);
+		
+		initSpring(servletContext, rootContext);
+		initSpringSecurity(servletContext, disps);
 
-		this.initSpringSecurity(servletContext, disps);
 	}
+	
 
 	/**
 	 * Initializes Spring and Spring MVC.
@@ -67,9 +69,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 			ServletContext servletContext,
 			AnnotationConfigWebApplicationContext rootContext) {
 		logger.debug("Configuring Spring Web application context");
-
 		AnnotationConfigWebApplicationContext dispatcherServletConfiguration = new AnnotationConfigWebApplicationContext();
-
 		dispatcherServletConfiguration.setParent(rootContext);
 		dispatcherServletConfiguration
 				.register(DispatcherServletConfiguration.class);
@@ -78,17 +78,15 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		ServletRegistration.Dynamic dispatcherServlet = servletContext
 				.addServlet("dispatcher", new DispatcherServlet(
 						dispatcherServletConfiguration));
-
 		/**
 		 * Catch tout ce qui n'a pas de suffixe (.jsp, .do , .html, .json)
 		 * autrement dit toutes les requêtes REST mais pas api-docs et
 		 * api-docs/module server, user et application donc il faut les ignorer
-		 * au niveau de la SecurityConfiguration
+		 * au niveau de la SecurityConfiguratin
 		 */
 		dispatcherServlet.addMapping("/");
 		dispatcherServlet.setLoadOnStartup(1);
 		dispatcherServlet.setAsyncSupported(true);
-
 		return dispatcherServlet;
 	}
 
@@ -104,4 +102,16 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 		springSecurityFilter.addMappingForUrlPatterns(disps, false, "/*");
 		springSecurityFilter.setAsyncSupported(true);
 	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		logger.info("Destroying Web application");
+		WebApplicationContext ac = WebApplicationContextUtils
+				.getRequiredWebApplicationContext(sce.getServletContext());
+		AnnotationConfigWebApplicationContext gwac = (AnnotationConfigWebApplicationContext) ac;
+		gwac.close();
+		logger.debug("Web application destroyed");
+
+	}
+
 }
