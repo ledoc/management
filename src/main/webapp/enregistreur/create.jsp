@@ -233,7 +233,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<c:if test="${not empty listNiveauxManuels }">
 										<header class="panel-heading clearfix brtl brtr no-b">
 											<div class="overflow-hidden">
-												<span class="h4 show no-m pt10">Historiques niveaux
+												<span class="h4 show no-m pt10">Historique des niveaux
 													manuels</span>
 											</div>
 										</header>
@@ -256,7 +256,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 															<td class=""><fmt:formatDate
 																	value="${niveauManuel.date}"
-																	pattern="dd-MM-yyyy hh:mm:ss" /></td>
+																	pattern="dd-MM-yyyy HH:mm:ss" /></td>
 															<td><div class="list-group-item">
 																	<c:out value="${niveauManuel.valeur}" />
 																</div></td>

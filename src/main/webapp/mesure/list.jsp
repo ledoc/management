@@ -26,7 +26,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 		<!-- content wrapper -->
 		<div class="content-wrap bg-default clearfix row">
-			<div class="col-lg-2 col-md-3 col-xs-12 tools">
+			<div class="sidePanelForGraph col-lg-2 col-md-3 col-xs-12 tools">
 				<div class="bg-white shadow pb15">
 					<div class="tools-inner">
 						<nav role="navigation">
@@ -117,13 +117,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-10 col-md-9 col-xs-12">
+			<div class="mainPanel col-lg-10 col-md-9 col-xs-12">
 				<div class="box-tab no-b p15 bg-white shadow">
 					<ul class="nav nav-tabs no-b">
-						<li class="active"><a href="#quantitatif" data-toggle="tab">Données
-								quantitatives</a></li>
-						<li><a href="#qualitatif" data-toggle="tab">Données
-								qualitatives</a></li>
+						<li id="ongletQuantitatif" class="active"><a
+							href="#quantitatif" data-toggle="tab">Données quantitatives</a></li>
+						<li><a id="ongletQualitatif" href="#qualitatif"
+							data-toggle="tab">Données qualitatives</a></li>
 					</ul>
 					<div class="tab-content text-center no-shadow">
 						<div class="descriptionEntities">
@@ -150,7 +150,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<H2>Ooops !&nbsp;Liste vide.</H2>
 											</c:if>
 											<c:if test="${not empty mesures }">
-												<table class="table table-striped list no-m">
+												<table id="tableMesures">
 													<thead>
 														<tr>
 															<th>Date</th>
@@ -161,6 +161,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<th class="nosort nosearch">Actions</th>
 														</tr>
 													</thead>
+													<tfoot>
+														<tr>
+															<th>Date</th>
+															<th>Valeur</th>
+															<th>Ouvrage</th>
+															<th>Enregistreur (mid)</th>
+															<th>Type</th>
+														</tr>
+													</tfoot>
 													<tbody>
 														<c:forEach items="${mesures}" var="mesure">
 															<c:url var="urlAffectAsNewNiveauManuel"
@@ -182,6 +191,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															</tr>
 														</c:forEach>
 													</tbody>
+
 												</table>
 											</c:if>
 										</div>
@@ -211,8 +221,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									</div>
 								</div>
 								<!-- /Fenêtre modale -->
-
-
 							</div>
 						</div>
 					</div>
@@ -225,6 +233,96 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<jsp:include page="/template/footer.jsp" />
 
 		<script type="text/javascript">
+			$(document)
+					.ready(
+							function() {
+								$('#tableMesures').attr('class',
+										"table table-striped list no-m");
+								$('#tableMesures')
+										.DataTable(
+												{
+													initComplete : function() {
+														var api = this.api();
+
+														api
+																.columns()
+																.indexes()
+																.flatten()
+																.each(
+																		function(
+																				i) {
+																			var column = api
+																					.column(i);
+																			var select = $(
+																					'<select><option value=""></option></select>')
+																					.appendTo(
+																							$(
+																									column
+																											.footer())
+																									.empty())
+																					.on(
+																							'change',
+																							function() {
+																								var val = $(
+																										this)
+																										.val();
+																								column
+																										.search(
+																												val ? '^'
+																														+ val
+																														+ '$'
+																														: '',
+																												true,
+																												false)
+																										.draw();
+																							});
+
+																			column
+																					.data()
+																					.unique()
+																					.sort()
+																					.each(
+																							function(
+																									d,
+																									j) {
+																								select
+																										.append('<option value="'+d+'">'
+																												+ d
+																												+ '</option>')
+																							});
+																		});
+													}
+												});
+							});
+
+			$('#ongletQualitatif').click(function() {
+				switchToList()
+			})
+			$('#ongletQuantitatif').click(function() {
+				switchToGraph()
+			})
+
+			function switchToGraph() {
+				console.log('switchToGraph')
+				$('.sidePanelForGraph').attr('style', 'display: block;');
+				$('.mainPanel').attr('class',
+						"mainPanel col-lg-10 col-md-9 col-xs-12");
+				$('.descriptionEntities').show();
+				$('.sidePanelForGraph').show();
+
+			}
+
+			function switchToList() {
+				console.log('switchToList')
+
+				$('.sidePanelForGraph').attr('style', 'display: none;');
+				$('.mainPanel').attr('class',
+						"mainPanel col-lg-12 col-md-12 col-xs-12");
+				$('.descriptionEntities').hide();
+				$('.sidePanelForGraph').hide();
+
+			}
+
 			$('#confirmModal').modal();
 			$('#confirmModal').on('show.bs.modal', function(e) {
 				var url = $(e.relatedTarget).data('url');
@@ -349,6 +447,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								});
 			};
 			// Modifie la selectBox ouvrage filtrer par le site
+
 			$("#site")
 					.change(
 

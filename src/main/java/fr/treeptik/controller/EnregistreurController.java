@@ -3,6 +3,7 @@ package fr.treeptik.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,8 @@ import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.OuvrageService;
+import fr.treeptik.util.DateMesureComparator;
+import fr.treeptik.util.DatePointComparator;
 
 @Controller
 @RequestMapping("/enregistreur")
@@ -65,18 +68,18 @@ public class EnregistreurController {
 		logger.info("--create EnregistreurController-- " + enregistreur
 				+ " - niveau manuel : " + enregistreur.getNiveauManuel());
 
-		List<AlerteDescription> alertesCombo;
+//		List<AlerteDescription> alertesCombo;
 		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
-
-		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
-				Arrays.asList(TypeMesureOrTrame.values()));
-
-		List<TypeEnregistreur> typesEnregistreurCombo = new ArrayList<TypeEnregistreur>(
-				Arrays.asList(TypeEnregistreur.values()));
+//
+//		List<TypeMesureOrTrame> typesMesureCombo = new ArrayList<TypeMesureOrTrame>(
+//				Arrays.asList(TypeMesureOrTrame.values()));
+//
+//		List<TypeEnregistreur> typesEnregistreurCombo = new ArrayList<TypeEnregistreur>(
+//				Arrays.asList(TypeEnregistreur.values()));
 
 		try {
 
-			alertesCombo = alerteDescriptionService.findAll();
+//			alertesCombo = alerteDescriptionService.findAll();
 
 			if (enregistreur.getMesures() != null) {
 				listNiveauxManuels = enregistreur
@@ -87,17 +90,12 @@ public class EnregistreurController {
 						.collect(Collectors.toList());
 			}
 
-		} catch (NumberFormatException | ServiceException e) {
+		} catch (NumberFormatException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 		
-		model.addAttribute("typesEnregistreurCombo", typesEnregistreurCombo);
-		model.addAttribute("typesMesureOrTrameCombo", typesMesureCombo);
-		model.addAttribute("enregistreur", enregistreur);
 		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
-		model.addAttribute("typesMesureCombo", typesMesureCombo);
-		model.addAttribute("alertesCombo", alertesCombo);
 
 		return "/enregistreur/create";
 
@@ -219,6 +217,11 @@ public class EnregistreurController {
 								TypeMesureOrTrame.NIVEAUMANUEL))
 						.collect(Collectors.toList());
 			}
+			
+			
+			Collections.sort(listNiveauxManuels, new DateMesureComparator());
+			Collections.reverse(listNiveauxManuels);
+		
 
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
@@ -250,32 +253,7 @@ public class EnregistreurController {
 		return "redirect:/ouvrage/update/" + ouvrageId;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
-	public String list(Model model, HttpServletRequest request)
-			throws ControllerException {
-		logger.info("--list EnregistreurController--");
-
-		List<Enregistreur> enregistreurs = null;
-		try {
-
-			Boolean isAdmin = request.isUserInRole("ADMIN");
-			logger.debug("USER ROLE ADMIN : " + isAdmin);
-			if (isAdmin) {
-				enregistreurs = enregistreurService.findAll();
-			} else {
-				String userLogin = SecurityContextHolder.getContext()
-						.getAuthentication().getName();
-				logger.debug("USER LOGIN : " + userLogin);
-				enregistreurs = enregistreurService.findAll();
-			}
-
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		model.addAttribute("enregistreurs", enregistreurs);
-		return "/enregistreur/list";
-	}
+	
 
 	@RequestMapping(value = "/update/niveau/manuel", method = RequestMethod.POST)
 	public String updateNiveauManuel(@ModelAttribute Enregistreur enregistreur,

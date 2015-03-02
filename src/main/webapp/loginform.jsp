@@ -11,12 +11,14 @@
 	content="Flat, Clean, Responsive, application admin template built with bootstrap 3">
 <meta name="viewport"
 	content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+	
+	
+<c:url var="urlResources" value="/resources" />
 <link rel="shortcut icon" href="${urlResources}/favicon.ico">
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700'
 	rel='stylesheet' type='text/css'>
 <!-- /meta -->
 
-<c:url var="urlResources" value="/resources" />
 
 <title>Solices - Connexion</title>
 

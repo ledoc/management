@@ -34,6 +34,7 @@ import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
+import fr.treeptik.util.DateMesureComparator;
 import fr.treeptik.util.DatePointComparator;
 
 @Controller
@@ -84,7 +85,6 @@ public class MesureController {
 		List<Mesure> mesures = new ArrayList<Mesure>();
 
 		try {
-
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
 			if (isAdmin) {
@@ -107,6 +107,19 @@ public class MesureController {
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
+		}
+		
+		Collections.sort(mesures, new DateMesureComparator());
+		Collections.reverse(mesures);
+		
+		
+		/**
+		 * TODO
+		 */
+		int i = 0;
+		for (Mesure mesure : mesures) {
+			
+			System.out.println(i++ + " " + mesure.getDate());
 		}
 
 		model.addAttribute("mesures", mesures);
@@ -199,7 +212,6 @@ public class MesureController {
 				allSites = siteService.findByClientLogin(userLogin);
 			}
 
-			logger.debug("liste de site renvoyée : " + allSites);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -336,7 +348,8 @@ public class MesureController {
 	public @ResponseBody List<Ouvrage> refreshOuvrageBySite(
 			HttpServletRequest request, @PathVariable("siteId") Integer siteId)
 			throws ControllerException {
-		logger.info("--refreshOuvrageBySite MesureController");
+		logger.info("--refreshOuvrageBySite MesureController -- siteId : "
+				+ siteId);
 
 		List<Ouvrage> allOuvrages = new ArrayList<Ouvrage>();
 		Site site;
@@ -357,7 +370,8 @@ public class MesureController {
 	public @ResponseBody List<Enregistreur> refreshEnregistreurBySite(
 			HttpServletRequest request, @PathVariable("siteId") Integer siteId)
 			throws ControllerException {
-		logger.info("--refreshEnregistreurBySite MesureController");
+		logger.info("--refreshEnregistreurBySite MesureController -- siteId : "
+				+ siteId);
 
 		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
 		try {
@@ -377,7 +391,8 @@ public class MesureController {
 			HttpServletRequest request,
 			@PathVariable("ouvrageId") Integer ouvrageId)
 			throws ControllerException {
-		logger.info("--refreshEnregistreurByOuvrage MesureController");
+		logger.info("--refreshEnregistreurByOuvrage MesureController -- ouvrageId : "
+				+ ouvrageId);
 
 		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
 		Ouvrage ouvrage;
@@ -401,7 +416,9 @@ public class MesureController {
 			@PathVariable("enregistreurId") Integer enregistreurId,
 			@PathVariable("dateDebut") Date dateDebut,
 			@PathVariable("dateFin") Date dateFin) throws ControllerException {
-		logger.info("--getEnregistreurPoints MesureController--");
+		logger.info("--getEnregistreurPoints MesureController-- id : "
+				+ enregistreurId + " dateDebut : " + dateDebut
+				+ " -- dateFin : " + dateFin);
 
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
