@@ -247,9 +247,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				console.log('dateDebut : ' + dateDebutVal);
 				console.log('dateFin : ' + dateFinVal);
 
-				if (enregistreurVal && dateDebutVal && dateFinVal) {
+				if ((enregistreurVal && enregistreurVal != 'NONE')
+						&& dateDebutVal && dateFinVal) {
 
 					$('#confirmBetweenDate').attr('disabled', false);
+				} else {
+					$('#confirmBetweenDate').attr('disabled', true);
 				}
 			}
 
@@ -382,7 +385,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																.attr(
 																		'data-placeholder',
 																		'Aucun ouvrage pour ce Site');
-
 													}
 
 													$ouvrage.selected = false;
@@ -394,16 +396,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															.trigger(
 																	"chosen:updated");
 												});
+
 							});
 			// Modifie la selectBox enregistreur filtrer par le site
 			$("#site")
 					.change(
-
 							function() {
-
-										$('.codeOuvrage').text('');
-								
-								
+								$('.codeOuvrage').text('');
 								var $enregistreur = $('#enregistreur');
 								$
 										.get(
@@ -447,25 +446,30 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																	})
 															.trigger(
 																	"chosen:updated");
+													checkAllFieldsHaveValues();
 												});
+
 							});
+
+			$("#ouvrage").change(function() {
+				$('#site').selected = false, initListSite()
+			});
 
 			// Modifie la selectBox enregistreur filtrer par l'ouvrage
 			$("#ouvrage")
 					.change(
-
 							function(e) {
 								var currentOuvrage = e.currentTarget.innerText;
 								var $enregistreur = $('#enregistreur');
 								var $site = $('#site');
 
 								if (!currentOuvrage) {
-									return
+									return;
+
 								} else {
 									$('.codeOuvrage').text(
 											currentOuvrage + ' > ');
 								}
-
 								$
 										.get(
 												$('.relayUrl').attr('href')
@@ -508,13 +512,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																	})
 															.trigger(
 																	"chosen:updated");
+													checkAllFieldsHaveValues()
 												});
-							});
 
-			$("#ouvrage").change(function() {
-				$('#site').selected = false, initListSite()
-			});
-			$("#ouvrage").change(initListSite());
+							});
 
 			$("#dateDebut").change(function() {
 				checkAllFieldsHaveValues()
@@ -525,8 +526,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			$("#enregistreur").change(
 					function() {
 						$('#site').selected = false,
-								checkAllFieldsHaveValues(), initListSite(),
 								$('#ouvrage').selected = false,
+								checkAllFieldsHaveValues(), initListSite(),
 								initListOuvrage()
 					})
 		</script>
