@@ -20,6 +20,7 @@ import fr.treeptik.model.Point;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.CheckAlerteUtils;
@@ -35,6 +36,9 @@ public class MesureServiceImpl implements MesureService {
 
 	@Inject
 	private TrameDWService trameDWService;
+	
+	@Inject
+	private EnregistreurService enregistreurService;
 	
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
@@ -280,6 +284,11 @@ public class MesureServiceImpl implements MesureService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE MesureService -- mesureId : " + id);
+		Mesure mesure = this.findById(id);
+		Enregistreur enregistreur = enregistreurService.findById(mesure.getEnregistreur().getId());
+		boolean success = enregistreur.getMesures().remove(mesure);
+		logger.debug("remove mesure from enregistreur success ? : " + success);
+		
 		mesureDAO.delete(id);
 	}
 

@@ -61,8 +61,8 @@ public class MesureController {
 	public String delete(Model model, @PathVariable("id") Integer id,
 			@PathVariable("enregistreurId") Integer enregistreurId)
 			throws ControllerException {
-		logger.info("--delete MesureController--");
-		logger.debug("mesureId : " + id);
+		logger.info("--delete MesureController-- mesureId : " + id
+				+ " -- enregistreurId : " + enregistreurId);
 
 		try {
 			mesureService.remove(id);
@@ -126,7 +126,6 @@ public class MesureController {
 		try {
 			mesureService.affectNewNiveauManuel(mesureId);
 
-
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -147,7 +146,6 @@ public class MesureController {
 		try {
 
 			mesures = mesureService.findByEnregistreurId(enregistreurId);
-
 
 			for (Mesure item : mesures) {
 				points.add(mesureService.transformMesureInPoint(item));
@@ -408,11 +406,9 @@ public class MesureController {
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
-
 		try {
 			mesures = mesureService.findByEnregistreurIdBetweenDates(
 					enregistreurId, dateDebut, dateFin);
-
 
 			for (Mesure item : mesures) {
 				points.add(mesureService.transformMesureInPoint(item));

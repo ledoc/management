@@ -167,7 +167,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 		List<Enregistreur> enregistreursFromDW = new ArrayList<Enregistreur>();
 
 		for (Object enregistreurXmlRpc : listEnregistreursXMLRPC) {
-			
+
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> enregistreurHashMap = (HashMap<String, Object>) enregistreurXmlRpc;
 			Enregistreur enregistreur = new Enregistreur(enregistreurHashMap);
@@ -222,11 +222,11 @@ public class DeverywareServiceImpl implements DeverywareService {
 			logger.debug(unifyHistoryXmlRpc);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> hashMapunifyHistoryXmlRpc = (HashMap<String, Object>) unifyHistoryXmlRpc;
-			
+
 			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc
 					.entrySet()) {
 				logger.debug("key : " + object3.getKey());
-			
+
 				if (object3.getKey().equals("alertList")) {
 					Object[] alertList = (Object[]) object3.getValue();
 					for (Object object : alertList) {
@@ -373,8 +373,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 			logger.info("trame de type ancien : " + intensiteString);
 			trameDW.setSignalBrut(Float.parseFloat(intensiteString.substring(0,
 					intensiteString.indexOf("m"))));
-			trameDW.setTypeTrameDW(enregistreur
-					.getTypeMesureOrTrame());
+			trameDW.setTypeTrameDW(enregistreur.getTypeMesureOrTrame());
 
 		} else {
 			logger.info("trame de type photospace : " + intensiteString);
@@ -393,89 +392,118 @@ public class DeverywareServiceImpl implements DeverywareService {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("103Analogic-hauteur")));
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.NIVEAUDEAU);
-					
+
 				} else if (mapMetricAndValue.containsKey("107Num-Hauteur-mm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("107Num-Hauteur-mm")));
 					trameDW.setUnite("mm");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.NIVEAUDEAU);
-					
+
 				} else if (mapMetricAndValue.containsKey("108Num-Hauteur-cm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("108Num-Hauteur-cm")));
 					trameDW.setUnite("cm");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.NIVEAUDEAU);
-					
+
 				} else if (mapMetricAndValue.containsKey("109Num-Hauteur-m")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("109Num-Hauteur-m")));
 					trameDW.setUnite("m");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.NIVEAUDEAU);
-					
+
 				} else if (mapMetricAndValue.containsKey("102Analogic-cond")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("102Analogic-cond")));
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.CONDUCTIVITE);
-					
+
 				} else if (mapMetricAndValue.containsKey("105Num-Cond-µs/cm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("105Num-Cond-µs/cm")));
 					trameDW.setUnite("µs/cm");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.CONDUCTIVITE);
-					
+
 				} else if (mapMetricAndValue.containsKey("106Num-Cond-ms/cm")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("106Num-Cond-ms/cm")));
 					trameDW.setUnite("ms/cm");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.CONDUCTIVITE);
-					
+
 				} else if (mapMetricAndValue
 						.containsKey("110Pluvio-impuls/période")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("110Pluvio-impuls/période")));
 					trameDW.setUnite("impuls/periode");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.PLUVIOMETRIE);
-					
+
 				} else if (mapMetricAndValue
 						.containsKey("114Impuls/period-Q-10")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("114Impuls/period-Q-10")));
 					trameDW.setUnite("period-Q-10");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.PLUVIOMETRIE);
-					
-					
+
 				} else if (mapMetricAndValue
 						.containsKey("115Impuls/period-Q-100")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("115Impuls/period-Q-100")));
 					trameDW.setUnite("period-Q-100");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.PLUVIOMETRIE);
-					
+
 				} else if (mapMetricAndValue
 						.containsKey("116Impuls/period-Q-1000")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("116Impuls/period-Q-1000")));
 					trameDW.setUnite("period-Q-1000");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.PLUVIOMETRIE);
-					
+
 				} else if (mapMetricAndValue.containsKey("101Analogic-temp")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("101Analogic-temp")));
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
-					
+
 				} else if (mapMetricAndValue.containsKey("104Num-Temp-C")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("104Num-Temp-C")));
 					trameDW.setUnite("°C");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
-					
+
+				} else if (mapMetricAndValue.containsKey("111Vent-m/s")) {
+					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+							.get("111Vent-m/s")));
+					trameDW.setUnite("m/s");
+					trameDW.setTypeTrameDW(TypeMesureOrTrame.VENT);
+
+				} else if (mapMetricAndValue.containsKey("112Debit-l/min")) {
+					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+							.get("112Debit-l/min")));
+					trameDW.setUnite("l/min");
+					trameDW.setTypeTrameDW(TypeMesureOrTrame.DEBIT);
+
+				} else if (mapMetricAndValue.containsKey("113Debit-m3/s")) {
+					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+							.get("113Debit-m3/s")));
+					trameDW.setUnite("m3/s");
+					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
+
+				} else if (mapMetricAndValue
+						.containsKey("117Pression-air-hectopascal")) {
+					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+							.get("117Pression-air-hectopascal")));
+					trameDW.setUnite("hectopascal");
+					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
+
+				} else if (mapMetricAndValue
+						.containsKey("118Pression-air-pascal")) {
+					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+							.get("118Pression-air-pascal")));
+					trameDW.setUnite("pascal");
+					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
+
 				} else {
 					throw new ServiceException(
 							"ERROR DeverywareServiceImpl -- la trame n'a pas pu être analysée correctement");
-
 				}
 			}
-
 		}
 		try {
 			trameDW.setDate(DateUnixConverter

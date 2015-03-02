@@ -43,8 +43,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Client update(Client client) throws ServiceException {
-		logger.info("--UPDATE ClientServiceImpl --");
-		logger.debug("client : " + client);
+		logger.info("--UPDATE ClientServiceImpl -- client : " + client);
 		return clientDAO.saveAndFlush(client);
 	}
 
@@ -52,8 +51,7 @@ public class ClientServiceImpl implements ClientService {
 	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE ClientServiceImpl --");
-		logger.debug("clientId : " + id);
+		logger.info("--DELETE ClientServiceImpl -- clientId : " + id);
 		clientDAO.delete(id);
 	}
 
@@ -70,8 +68,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public Client findByIdWithJoinFetchEtablissements(Integer id)
 			throws ServiceException {
-		logger.info("--findByIdWithJoinFetchEtablissements ClientServiceImpl --");
-		logger.info("id : " + id);
+		logger.info("--findByIdWithJoinFetchEtablissements ClientServiceImpl -- id : " + id);
 		Client client = clientDAO.findByIdWithJoinFetchEtablissements(id);
 		return client;
 	}

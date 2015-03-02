@@ -56,7 +56,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 		Ouvrage ouvrage = ouvrageService.findByIdWithJoinFetchEnregistreurs(enregistreur.getOuvrage().getId());
 		boolean success = ouvrage.getEnregistreurs().remove(enregistreur);
 		
-		logger.debug("remove enregistreur from ouvrage succes ? : " + success);
+		logger.debug("remove enregistreur from ouvrage success ? : " + success);
 		ouvrageService.update(ouvrage);
 		enregistreurDAO.delete(id);
 	}

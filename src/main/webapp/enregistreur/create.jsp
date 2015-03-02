@@ -243,9 +243,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													<tr>
 														<th>Date</th>
 														<th>Valeur</th>
-														<%-- 														<sec:authorize ifAllGranted="ADMIN"> --%>
-														<!-- 															<th class="nosort nosearch">Actions</th> -->
-														<%-- 														</sec:authorize> --%>
+														<sec:authorize ifAllGranted="ADMIN">
+															<th class="nosort nosearch">Actions</th>
+														</sec:authorize>
 													</tr>
 												</thead>
 												<c:forEach items="${listNiveauxManuels}" var="niveauManuel">
@@ -260,12 +260,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<td><div class="list-group-item">
 																	<c:out value="${niveauManuel.valeur}" />
 																</div></td>
-															<%-- 															<sec:authorize ifAllGranted="ADMIN"> --%>
-															<%-- 																<td><a data-url="${urlMesureDelete}" --%>
-															<!-- 																	data-toggle="modal" data-target="#confirmModal" -->
-															<!-- 																	class="btn btn-outline btn-danger btn-xs js-confirm-btn"><i -->
-															<!-- 																		class="fa fa-remove"></i> </a></td> -->
-															<%-- 															</sec:authorize> --%>
+															<sec:authorize ifAllGranted="ADMIN">
+																<td><a data-url="${urlMesureDelete}"
+																	data-toggle="modal" data-target="#confirmModal"
+																	class="btn btn-outline btn-danger btn-xs js-confirm-btn"><i
+																		class="fa fa-remove"></i> </a></td>
+															</sec:authorize>
 														</tr>
 													</tbody>
 												</c:forEach>
