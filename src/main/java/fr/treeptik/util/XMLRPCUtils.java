@@ -140,7 +140,7 @@ public class XMLRPCUtils {
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
 		Object[] result = null;
-		int nbPos = 50;
+		int nbPos = 24;
 		int state = -1;
 		int content = 17;
 		int port = 0;

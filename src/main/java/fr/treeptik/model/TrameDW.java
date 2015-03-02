@@ -26,6 +26,7 @@ public class TrameDW implements Serializable {
 	private Float signalBrut;
 	// 1ere conversion
 	private Float valeur;
+	private String unite;
 
 	public TrameDW() {
 		super();
@@ -77,6 +78,14 @@ public class TrameDW implements Serializable {
 
 	public void setValeur(Float hauteurEau) {
 		this.valeur = hauteurEau;
+	}
+
+	public String getUnite() {
+		return unite;
+	}
+
+	public void setUnite(String unite) {
+		this.unite = unite;
 	}
 
 	@Override
@@ -133,4 +142,5 @@ public class TrameDW implements Serializable {
 				+ date + ", signalBrut=" + signalBrut + ", valeur=" + valeur
 				+ "]";
 	}
+
 }
