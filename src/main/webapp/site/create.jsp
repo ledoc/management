@@ -136,7 +136,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
 										path="etablissement.id" disabled="${readOnlyValue}">
-										<form:option value=""></form:option>
+										<form:option value="">--- Choisir un établissement ---</form:option>
 										<form:options items="${etablissementsCombo}" itemValue="id"
 											itemLabel="codeEtablissement" />
 									</form:select>

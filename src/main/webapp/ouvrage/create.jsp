@@ -101,7 +101,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis" path="site.id"
 										disabled="${readOnlyValue }">
-										<form:option value=""></form:option>
+										<form:option value="">--- Choisir un site ---</form:option>
 										<form:options items="${sitesCombo}" itemValue="id"
 											itemLabel="codeSite" />
 									</form:select>

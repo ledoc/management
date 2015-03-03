@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
-import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeOuvrage;
@@ -33,10 +32,6 @@ import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
 import fr.treeptik.service.TypeOuvrageService;
-import fr.treeptik.spring.EnregistreurCustomEditor;
-import fr.treeptik.spring.MesureCustomEditor;
-import fr.treeptik.spring.OuvrageCustomEditor;
-import fr.treeptik.spring.SiteCustomEditor;
 
 @Controller
 @RequestMapping("/ouvrage")
@@ -52,14 +47,6 @@ public class OuvrageController {
 	private SiteService siteService;
 	@Inject
 	private TypeOuvrageService typeOuvrageService;
-	@Inject
-	private EnregistreurCustomEditor enregistreurCustomEditor;
-	@Inject
-	private SiteCustomEditor siteCustomEditor;
-	@Inject
-	private OuvrageCustomEditor ouvrageCustomEditor;
-	@Inject
-	private MesureCustomEditor mesureCustomEditor;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForm(Model model) throws ControllerException {
@@ -186,19 +173,6 @@ public class OuvrageController {
 		return "/ouvrage/list";
 	}
 
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) throws ControllerException {
-		binder.registerCustomEditor(Site.class, "site", siteCustomEditor);
-		binder.registerCustomEditor(Ouvrage.class, "ouvrageMaitre",
-				ouvrageCustomEditor);
-		binder.registerCustomEditor(Enregistreur.class,
-				enregistreurCustomEditor);
-		binder.registerCustomEditor(Mesure.class, mesureCustomEditor);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(
-				new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"), true));
-
-	}
-
 	@RequestMapping(method = RequestMethod.GET, value = "/init/type/ouvrage")
 	public @ResponseBody List<TypeOuvrage> initSelectTypeOuvrage()
 			throws ControllerException {
@@ -216,5 +190,14 @@ public class OuvrageController {
 		}
 		return allTypeOuvrage;
 	}
+	
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) throws ControllerException {
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"), true));
+
+	}
+
+
 
 }
