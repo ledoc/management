@@ -35,6 +35,7 @@ public class Enregistreur implements Serializable {
 
 	// identifiant applicatif
 	private String mid;
+	private String nom;
 
 	// Analogique ou numérique : différence pour calcul
 	@Enumerated(EnumType.STRING)
@@ -180,29 +181,33 @@ public class Enregistreur implements Serializable {
 	 */
 	public void initNiveauManuel() {
 
-		boolean typeManuelPresence = this.mesures.stream().anyMatch(m ->
+		if (this.mesures != null) {
 
-		m.getTypeMesureOrTrame().equals(TypeMesureOrTrame.NIVEAUMANUEL));
+			boolean typeManuelPresence = this.mesures.stream().anyMatch(m ->
 
-		if (typeManuelPresence) {
-			List<Mesure> allMesureManuel = this.mesures
-					.stream()
-					.filter(m -> m.getTypeMesureOrTrame().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL))
-					.collect(Collectors.toList());
+			m.getTypeMesureOrTrame().equals(TypeMesureOrTrame.NIVEAUMANUEL));
 
-			if (allMesureManuel.size() > 1) {
-				Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-						m2.getDate());
+			if (typeManuelPresence) {
+				List<Mesure> allMesureManuel = this.mesures
+						.stream()
+						.filter(m -> m.getTypeMesureOrTrame().equals(
+								TypeMesureOrTrame.NIVEAUMANUEL))
+						.collect(Collectors.toList());
 
-				Optional<Mesure> max = allMesureManuel.stream().max(c);
+				if (allMesureManuel.size() > 1) {
+					Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
+							m2.getDate());
 
-				this.niveauManuel = max.isPresent() ? max.get().cloneMe()
-						: new Mesure();
-			} else {
-				this.niveauManuel = allMesureManuel.get(0).cloneMe();
+					Optional<Mesure> max = allMesureManuel.stream().max(c);
+
+					this.niveauManuel = max.isPresent() ? max.get().cloneMe()
+							: new Mesure();
+				} else {
+					this.niveauManuel = allMesureManuel.get(0).cloneMe();
+				}
 			}
 		}
+		this.niveauManuel = new Mesure();
 
 	}
 
@@ -248,6 +253,7 @@ public class Enregistreur implements Serializable {
 				}
 			}
 		}
+		this.derniereMesure = new Mesure();
 	}
 
 	public TrameDW getDerniereTrameDW() {
@@ -273,6 +279,7 @@ public class Enregistreur implements Serializable {
 				this.derniereTrameDW = this.trameDWs.get(0);
 			}
 		}
+		this.derniereTrameDW = new TrameDW();
 
 	}
 
@@ -292,6 +299,9 @@ public class Enregistreur implements Serializable {
 		this.mid = mid;
 	}
 
+	
+	
+	
 	public TypeEnregistreur getTypeEnregistreur() {
 		return typeEnregistreur;
 	}
@@ -615,5 +625,13 @@ public class Enregistreur implements Serializable {
 
 	public void setSalinite(Float salinite) {
 		this.salinite = salinite;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 }

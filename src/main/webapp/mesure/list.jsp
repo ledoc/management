@@ -82,7 +82,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group ml15 mr15 mb0">
 									<select data-placeholder="Sélectionner les alertes"
 										class="chosen form-control show-alerts" multiple
-										id="js-show-alerts">
+										id="js-show-alerts-hauteurEau">
 										<option value=""></option>
 										<option value="78.25">C1 - 78,25m</option>
 										<option value="18.50">C2 - 18,50m</option>
@@ -99,6 +99,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<option value=""></option>
 										<option value="spline">Courbe</option>
 										<option value="column">Histogramme</option>
+									</select>
+								</div>
+								<div class="form-group ml15 mr15 mb0">
+									<select data-placeholder="Sélectionner les alertes"
+										class="chosen form-control show-alerts" multiple
+										id="js-show-alerts-conductivite">
+										<option value=""></option>
+										<option value="78.25">C1 - 78,25m</option>
+										<option value="18.50">C2 - 18,50m</option>
 									</select>
 								</div>
 								<div class="form-group icheck ml15 mr15 mt5">
@@ -161,22 +170,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<th class="nosort nosearch">Actions</th>
 														</tr>
 													</thead>
-													<tfoot>
-														<tr>
-															<th>Date</th>
-															<th>Valeur</th>
-															<th>Ouvrage</th>
-															<th>Enregistreur (mid)</th>
-															<th>Type</th>
-														</tr>
-													</tfoot>
 													<tbody>
 														<c:forEach items="${mesures}" var="mesure">
 															<c:url var="urlAffectAsNewNiveauManuel"
 																value="/mesure/affect/niveau/manuel/${mesure.id}" />
 															<tr>
 																<td><fmt:formatDate value="${mesure.date}"
-																		pattern="dd-MM-yyyy HH:mm:ss" /></td>
+																		type="both" pattern="dd-MM-yyyy HH:mm:ss" /></td>
+																<%-- 																<td><c:out value="${mesure.date}" /></td> --%>
 																<td><c:out value="${mesure.valeur}" /></td>
 																<td><c:out
 																		value="${mesure.enregistreur.ouvrage.codeOuvrage}" /></td>
@@ -233,67 +234,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<jsp:include page="/template/footer.jsp" />
 
 		<script type="text/javascript">
-			$(document)
-					.ready(
-							function() {
-								$('#tableMesures').attr('class',
-										"table table-striped list no-m");
-								$('#tableMesures')
-										.DataTable(
-												{
-													initComplete : function() {
-														var api = this.api();
+			$(document).ready(
+					function() {
+						
+						$('#tableMesures').DataTable({
+							"columnDefs" : [ {
+								"type" : "date",
+								"targets" : [ 0 ]
+							} ],
+							"order": [[ 0, 'desc' ]]
+						});
+						
+						$('#tableMesures').attr('class',
+								"table table-striped list no-m")
 
-														api
-																.columns()
-																.indexes()
-																.flatten()
-																.each(
-																		function(
-																				i) {
-																			var column = api
-																					.column(i);
-																			var select = $(
-																					'<select><option value=""></option></select>')
-																					.appendTo(
-																							$(
-																									column
-																											.footer())
-																									.empty())
-																					.on(
-																							'change',
-																							function() {
-																								var val = $(
-																										this)
-																										.val();
-																								column
-																										.search(
-																												val ? '^'
-																														+ val
-																														+ '$'
-																														: '',
-																												true,
-																												false)
-																										.draw();
-																							});
-
-																			column
-																					.data()
-																					.unique()
-																					.sort()
-																					.each(
-																							function(
-																									d,
-																									j) {
-																								select
-																										.append('<option value="'+d+'">'
-																												+ d
-																												+ '</option>')
-																							});
-																		});
-													}
-												});
-							});
+					});
 
 			$('#ongletQualitatif').click(function() {
 				switchToList()
@@ -303,7 +258,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			})
 
 			function switchToGraph() {
-				console.log('switchToGraph')
 				$('.sidePanelForGraph').attr('style', 'display: block;');
 				$('.mainPanel').attr('class',
 						"mainPanel col-lg-10 col-md-9 col-xs-12");
@@ -313,8 +267,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			}
 
 			function switchToList() {
-				console.log('switchToList')
-
 				$('.sidePanelForGraph').attr('style', 'display: none;');
 				$('.mainPanel').attr('class',
 						"mainPanel col-lg-12 col-md-12 col-xs-12");
@@ -403,7 +355,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																+ ouvrage.codeOuvrage
 																+ '</option>';
 														output.push(tpl);
-														console.log(tpl);
 													});
 									$ouvrage.html(output.join(''));
 									$ouvrage.chosen({

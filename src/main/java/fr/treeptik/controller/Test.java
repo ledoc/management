@@ -1,13 +1,8 @@
 package fr.treeptik.controller;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import org.springframework.stereotype.Controller;
 
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.MesureService;
@@ -28,13 +23,23 @@ public class Test {
 	// }
 	//
 	private static MesureService mesureService = new MesureServiceImpl();
+//	private static EnregistreurServiceImpl enregistreurServiceImpl = new EnregistreurServiceImpl();
 
 	public static void main(String[] args) {
 
-		testCoteAltimetrique();
+		testAddMobile();
 
 	}
 
+	public static void testAddMobile() {
+//		Enregistreur enregistreur = new Enregistreur(); 
+//		try {
+//			enregistreurServiceImpl.addMobile(enregistreur);
+//		} catch (ServiceException e) {
+//			e.printStackTrace();
+//		}
+	}
+	
 	public static void testCoteAltimetrique() {
 
 		TrameDW trameDW = new TrameDW();

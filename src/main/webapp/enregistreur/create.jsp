@@ -102,6 +102,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
+									<label for="nom">Nom</label>
+									<form:input type="text" class="transfertInput form-control"
+										id="nom" path="nom" placeholder=""
+										data-parsley-required="true" data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis"
+										data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
+								</div>
+								<div class="form-group">
 									<label for="ouvrage">Ouvrage </label>
 									<form:input readonly="true" type="text" class="form-control"
 										id="ouvrage" path="ouvrage.codeOuvrage" />
@@ -332,6 +342,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 								<form:hidden id="data-id" path="id" />
 								<form:hidden id="data-mid" path="mid" />
+								<form:hidden id="data-nom" path="nom" />
 								<form:hidden id="data-maintenance" path="maintenance" />
 								<form:hidden id="data-derniereMesure" path="derniereMesure" />
 								<form:hidden id="data-modem" path="modem" />

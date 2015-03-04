@@ -3,7 +3,7 @@ var mesures = function() {
 	return {
 		init : function() {
 			var relayUrl = $('.relayUrl').attr('href');
-			var reversed = true, $chart = $('#charts'), $reverseBtn = $('#js-reverseChart'),  $rangePicker = $('#js-range-selector'), chartHeight = $(
+			var reversed = true, $chart = $('#charts'), $reverseBtn = $('#js-reverseChart'), $rangePicker = $('#js-range-selector'), chartHeight = $(
 					'.tools-inner').innerHeight() / 1.5, chart;
 			if (!$chart.length) {
 				return;
@@ -23,7 +23,9 @@ var mesures = function() {
 									text : ''
 								},
 								rangeSelector : {
-									selected : false
+									selected : false,
+									inputDateFormat : '%d/%m/%Y',
+									inputEditDateFormat : '%d/%m/%Y'
 								},
 								subtitle : {
 									text : ''
@@ -31,7 +33,7 @@ var mesures = function() {
 								xAxis : [ {
 									type : 'datetime',
 									dateTimeLabelFormats : {
-										month : '%e. %b',
+										month : '%d %m',
 										year : '%b'
 									}
 								} ],
@@ -52,25 +54,25 @@ var mesures = function() {
 									opposite : false
 
 								}
-								
-// , { // Secondary yAxis
-// labels : {
-// format : '{value} mm',
-// style : {
-// color : '#20AAE5'
-// }
-// },
-// title : {
-// text : 'Conductivité',
-// style : {
-// color : '#20AAE5'
-// }
-// },
-// opposite : true,
-// min : 0,
-// reversed : reversed
-// }
-								
+
+								// , { // Secondary yAxis
+								// labels : {
+								// format : '{value} mm',
+								// style : {
+								// color : '#20AAE5'
+								// }
+								// },
+								// title : {
+								// text : 'Conductivité',
+								// style : {
+								// color : '#20AAE5'
+								// }
+								// },
+								// opposite : true,
+								// min : 0,
+								// reversed : reversed
+								// }
+
 								],
 								tooltip : {
 									shared : true
@@ -88,18 +90,18 @@ var mesures = function() {
 									backgroundColor : (Highcharts.theme && Highcharts.theme.legendBackgroundColor)
 											|| '#FFFFFF'
 								},
-								series : [ 
-// {
-// name : 'Conductivité',
-// type : 'column',
-// yAxis : 1,
-// data : [],
-// color : '#20AAE5',
-// tooltip : {
-// valueSuffix : ' mm'
-// }
-// },
-								
+								series : [
+								// {
+								// name : 'Conductivité',
+								// type : 'column',
+								// yAxis : 1,
+								// data : [],
+								// color : '#20AAE5',
+								// tooltip : {
+								// valueSuffix : ' mm'
+								// }
+								// },
+
 								{
 									name : 'Hauteur d\'eau',
 									type : 'line',
@@ -149,7 +151,10 @@ var mesures = function() {
 								width : 1,
 								zIndex : 4,
 								label : {
-									text : 'pré-alerte'
+									text : 'pré-alerte',
+									verticalAlign : "bottom",
+									y : 12,
+									x : 0
 								}
 							});
 							chart.yAxis[0].addPlotLine({
@@ -159,7 +164,10 @@ var mesures = function() {
 								width : 1,
 								zIndex : 4,
 								label : {
-									text : 'alerte'
+									text : 'alerte',
+									verticalAlign : "top",
+									y : -6,
+									x : 0
 								}
 							});
 
@@ -180,6 +188,43 @@ var mesures = function() {
 					function() {
 						var id = $(this).val();
 						$.getJSON(relayUrl + '/enregistreur/plotLines/' + id,
+								function(listAlerte) {
+									$.each(listAlerte, function(index, alerte) {
+										chart.yAxis[0].addPlotLine({
+											id : alerte.id,
+											value : alerte.seuilPreAlerte,
+											color : '#E68A00',
+											width : 1,
+											zIndex : 4,
+											label : {
+												text : 'pré-alerte',
+												verticalAlign : "bottom",
+												y : 12,
+												x : 0
+											}
+										});
+										chart.yAxis[0].addPlotLine({
+											id : alerte.id,
+											value : alerte.seuilAlerte,
+											color : '#A30000',
+											width : 1,
+											zIndex : 4,
+											label : {
+												text : 'alerte',
+												verticalAlign : "top",
+												y : -6,
+												x : 0
+											}
+										});
+
+									});
+								});
+					});
+
+			$('#alerte').chosen().change(
+					function() {
+						var id = $(this).val();
+						$.getJSON(relayUrl + '/alerte/plotLines/' + id,
 								function(listAlerte) {
 									$.each(listAlerte, function(index, alerte) {
 										chart.yAxis[0].addPlotLine({
@@ -219,7 +264,8 @@ var mesures = function() {
 
 						$.getJSON(url, function(data) {
 							updateSerie(1, data);
-							chart.xAxis[0].setExtremes(moment(dateDebut), moment(dateFin))
+							chart.xAxis[0].setExtremes(moment(dateDebut),
+									moment(dateFin))
 						});
 
 					});
@@ -277,18 +323,18 @@ var mesures = function() {
 					type : $(this).val()
 				})
 			});
-			
-            // range selector
 
-//            $rangePicker.on('apply.daterangepicker', function (ev, picker) {
-//                var startDate = moment(picker.startDate).utc().format();
-//                var endDate = moment(picker.endDate).utc().format();
-//                console.log(startDate  );
-//                console.log(endDate);
-//                if (startDate && endDate) {
-//                    chart.xAxis[0].setExtremes(startDate, endDate);
-//                }
-//            });
+			// range selector
+
+			// $rangePicker.on('apply.daterangepicker', function (ev, picker) {
+			// var startDate = moment(picker.startDate).utc().format();
+			// var endDate = moment(picker.endDate).utc().format();
+			// console.log(startDate );
+			// console.log(endDate);
+			// if (startDate && endDate) {
+			// chart.xAxis[0].setExtremes(startDate, endDate);
+			// }
+			// });
 		}
 	};
 }();

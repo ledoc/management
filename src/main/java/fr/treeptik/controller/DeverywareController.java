@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Enregistreur;
 import fr.treeptik.service.DeverywareService;
+import fr.treeptik.service.EnregistreurService;
 
 @Controller
 @RequestMapping("/deveryware")
@@ -21,8 +23,11 @@ public class DeverywareController {
 
 	@Inject
 	private DeverywareService deverywareService;
+	
+	@Inject
+	private EnregistreurService enregistreurService;
 
-	// gps://ORANGE/+33781916177
+	// gps://ORANGE/+33781916177  gps://SFR/+33627872238
 	@RequestMapping(headers = { "content-type=application/x-www-form-urlencoded" }, method = RequestMethod.POST, value = "/history")
 	public @ResponseBody String getHistory(@RequestParam String mid)
 			throws ControllerException {
@@ -50,5 +55,20 @@ public class DeverywareController {
 		}
 		return response;
 	}
+	
+	
+	// gps://ORANGE/+33781916177
+//		@RequestMapping(method = RequestMethod.GET, value = "/add/mobile")
+//		public void addMobile() throws ControllerException {
+//			logger.info("--addMobile DeverywareController--");
+//			
+//			Enregistreur enregistreur = new Enregistreur();
+//			try {
+//				enregistreurService.addMobile(enregistreur);
+//			} catch (NumberFormatException | ServiceException e) {
+//				logger.error(e.getMessage());
+//				throw new ControllerException(e.getMessage(), e);
+//			}
+//		}
 
 }

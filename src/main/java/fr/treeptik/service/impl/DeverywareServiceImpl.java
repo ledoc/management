@@ -67,11 +67,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		/**
-		 * ON LISTE TOUS LES ENREGISTREURS REPERTORIES
-		 */
 
-		List<Enregistreur> enregistreurList = this.enregistreurList(sessionKey);
+		List<Enregistreur> enregistreurList = enregistreurService.findAll();
 
 		for (Enregistreur enregistreur : enregistreurList) {
 			enregistreur = enregistreurService
@@ -368,6 +365,18 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 		byte[] arrayIntensite = (byte[]) hashMapHistoryXmlRpc.get("stream4");
 		String intensiteString = new String(arrayIntensite);
+		
+		byte[] stream1 = (byte[]) hashMapHistoryXmlRpc.get("stream1");
+		String stream1String = new String(stream1);
+		System.out.println("stream1 : " + stream1String);
+		byte[] stream2 = (byte[]) hashMapHistoryXmlRpc.get("stream2");
+		String stream2String = new String(stream2);
+		System.out.println("stream2 : " + stream2String);
+		byte[] stream3 = (byte[]) hashMapHistoryXmlRpc.get("stream3");
+		String stream3String = new String(stream3);
+		System.out.println("stream3 : " + stream3String);
+		
+		
 
 		if (intensiteString.endsWith("mA")) {
 			logger.info("trame de type ancien : " + intensiteString);

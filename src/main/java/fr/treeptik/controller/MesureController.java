@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -91,6 +92,7 @@ public class MesureController {
 				enregistreursCombo = enregistreurService.findAll();
 				sitesCombo = siteService.findAll();
 				ouvragesCombo = ouvrageService.findAll();
+
 			} else {
 				String userLogin = SecurityContextHolder.getContext()
 						.getAuthentication().getName();
@@ -108,20 +110,10 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		
+
 		Collections.sort(mesures, new DateMesureComparator());
 		Collections.reverse(mesures);
 		
-		
-		/**
-		 * TODO
-		 */
-		int i = 0;
-		for (Mesure mesure : mesures) {
-			
-			System.out.println(i++ + " " + mesure.getDate());
-		}
-
 		model.addAttribute("mesures", mesures);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		model.addAttribute("sitesCombo", sitesCombo);
@@ -255,6 +247,14 @@ public class MesureController {
 		}
 		return points;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/init/graph/plotLines")
 	public @ResponseBody List<AlerteDescription> initPlotLinesGraph(
@@ -440,7 +440,9 @@ public class MesureController {
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		logger.info("--initBinder MesureController --");
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				dateFormat, false));
 	}

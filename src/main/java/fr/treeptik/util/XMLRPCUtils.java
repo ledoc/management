@@ -14,6 +14,9 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Enregistreur;
+
 @Component
 public class XMLRPCUtils {
 
@@ -68,6 +71,94 @@ public class XMLRPCUtils {
 	}
 
 	/**
+	 * <int> Deveryflow.mobileAdd (<string> sessionKey, <Mobile> mobile)
+	 */
+	public Integer addMobile(Enregistreur enregistreur) throws ServiceException {
+		logger.info("-- addMobile --");
+
+		String sessionKey = this.openSession();
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
+		HashMap<String, String> hashMobile = new HashMap<String, String>();
+		hashMobile.put("mid", enregistreur.getMid());
+		hashMobile.put("comment", enregistreur.getNom());
+
+		Integer result = null;
+
+		try {
+			Object[] params = new Object[] { sessionKey, hashMobile };
+			result = (Integer) xmlRpcClient.execute("Deveryflow.mobileAdd",
+					params);
+
+			if (result == 1) {
+				logger.debug("-- Résultat de l'ajout d'enregistreur = "
+						+ result + " - accepté et validé");
+			}
+
+			else if (result == 2) {
+				logger.debug("-- Résultat de l'ajout d'enregistreur = "
+						+ result + " - accepté mais en attente de validation");
+			} else if (result == 3) {
+				logger.debug("-- Résultat de l'ajout d'enregistreur = "
+						+ result
+						+ " - accepté mais en attente de validation par l'utilisateur du mobile");
+			} else {
+				logger.error("EnregistreurServiceImpl addMobile ERROR - " + result + " - REFUSE - reportez vous à la doc pour des renseignements sur le code erreur");
+				throw new ServiceException(
+						"EnregistreurServiceImpl addMobile ERROR - " + result + " - REFUSE - reportez vous à la documentation pour des renseignements sur le code erreur");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * <int> Deveryflow.mobileDel (<string> sessionKey, <string> mid)
+	 */
+	public Integer removeMobile(Enregistreur enregistreur) throws ServiceException {
+		logger.info("--removeMobile --");
+
+		String sessionKey = this.openSession();
+		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
+
+		String mid = enregistreur.getMid();
+
+		Integer result = null;
+
+		try {
+			Object[] params = new Object[] { sessionKey, mid };
+			result = (Integer) xmlRpcClient.execute("Deveryflow.mobileDel",
+					params);
+
+			if (result == 1) {
+				logger.debug("-- Résultat du retrait de l'enregistreur = "
+						+ result + " - accepté et validé");
+			}
+
+			else if (result == 2) {
+				logger.debug("-- Résultat du retrait de l'enregistreur = "
+						+ result + " - accepté mais en attente de validation");
+			} else if (result == 3) {
+				logger.debug("-- Résultat du retrait de l'enregistreur = "
+						+ result
+						+ " - accepté mais en attente de validation par l'utilisateur du mobile");
+			} else {
+				logger.error("EnregistreurServiceImpl removeMobile ERROR - " + result + " - REFUSE - reportez vous à la doc pour des renseignements sur le code erreur");
+				throw new ServiceException(
+						"EnregistreurServiceImpl removeMobile ERROR - " + result + " - REFUSE - reportez vous à la documentation pour des renseignements sur le code erreur");
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
 	 * Liste les mobiles du compte correspondant au couple clientName/userName.
 	 * 
 	 * @param sessionKey
@@ -77,9 +168,6 @@ public class XMLRPCUtils {
 		logger.info("--enregistreurList --");
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
-
-		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
-				+ sessionKey);
 
 		Object[] result = null;
 		try {
@@ -140,7 +228,7 @@ public class XMLRPCUtils {
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
 		Object[] result = null;
-		int nbPos = 2;
+		int nbPos = 3;
 		int state = -1;
 		int content = 17;
 		int port = 0;

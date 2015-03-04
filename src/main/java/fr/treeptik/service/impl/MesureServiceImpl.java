@@ -339,8 +339,6 @@ public class MesureServiceImpl implements MesureService {
 
 	@Override
 	public Point transformMesureInPoint(Mesure item) throws ServiceException {
-		 logger.debug("--transformMesureInPoint MesureService -- Id : " +
-		 item.getId());
 
 		Point point = new Point();
 		try {

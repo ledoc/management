@@ -17,9 +17,6 @@ public interface AlerteDescriptionService {
 
 	void remove(Integer id) throws ServiceException;
 
-	List<AlerteDescription> findAllByClientLogin(String userLogin)
-			throws ServiceException;
-
 	Long countAll() throws ServiceException;
 
 	Long countAllActives() throws ServiceException;
@@ -31,5 +28,11 @@ public interface AlerteDescriptionService {
 
 	List<AlerteDescription> findAlertesActivesByEnregistreurId(
 			Integer enregistreurId) throws ServiceException;
+
+	List<AlerteDescription> findAllAlertesActivesByClientLogin(String userLogin)
+			throws ServiceException;
+
+	List<AlerteDescription> findAllByClientLogin(String userLogin)
+			throws ServiceException;
 
 }

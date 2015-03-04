@@ -57,13 +57,20 @@ public class AlerteDescriptionServiceImpl implements AlerteDescriptionService {
 		return alerteDescriptionDAO.findAll();
 	}
 
+	
 	@Override
-	public List<AlerteDescription> findAllByClientLogin(String userLogin)
+	public List<AlerteDescription> findAllByClientLogin(String userLogin) throws ServiceException {
+		logger.info("--findAllByClientLogin AlerteServiceImpl --");
+		return alerteDescriptionDAO.findAllByClientLogin(userLogin);
+	}
+	
+	@Override
+	public List<AlerteDescription> findAllAlertesActivesByClientLogin(String userLogin)
 			throws ServiceException {
 		logger.info("--findByClient userLogin AlerteServiceImpl -- userLogin : "
 				+ userLogin);
 
-		return alerteDescriptionDAO.findAllByClientLogin(userLogin);
+		return alerteDescriptionDAO.findAllAlertesActivesByClientLogin(userLogin);
 	}
 
 	@Override
