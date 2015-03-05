@@ -2,8 +2,6 @@ package fr.treeptik.conf;
 
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;

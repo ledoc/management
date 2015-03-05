@@ -228,7 +228,7 @@ public class XMLRPCUtils {
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
 		Object[] result = null;
-		int nbPos = 3;
+		int nbPos = 1;
 		int state = -1;
 		int content = 17;
 		int port = 0;
@@ -265,11 +265,11 @@ public class XMLRPCUtils {
 		int endDate = 0;
 		int nbPos = 2;
 		int state = -1;
-		int content = 9;
+		int content = 17;
 		int dataPort = 0;
-		boolean compress = true;
+		boolean compress = false;
 		try {
-			startDate = DateUnixConverter.stringToInt("17/01/2015 07:12:12");
+			startDate = DateUnixConverter.stringToInt("05/03/2015 07:12:12");
 			endDate = DateUnixConverter.dateToInt(new Date());
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -358,8 +358,7 @@ public class XMLRPCUtils {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public HashMap<String, Object> waitForMessages(String sessionKey) {
+	public Object[] waitForMessages(String sessionKey) {
 		logger.info("--waitForMessages --");
 
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
@@ -367,9 +366,9 @@ public class XMLRPCUtils {
 		logger.debug("xmlRpcClient : " + xmlRpcClient + " - sessionKey :"
 				+ sessionKey);
 
-		HashMap<String, Object> result = null;
+		Object[] result = null;
 		int timeout = 30;
-		int maxMessages = 10;
+		int maxMessages = 50;
 		try {
 			Object[] params = new Object[] { sessionKey, timeout, maxMessages };
 
@@ -377,7 +376,7 @@ public class XMLRPCUtils {
 			logger.debug(" = sessionKey : " + sessionKey + " - timeout : "
 					+ timeout + " - maxMessages : " + maxMessages);
 
-			result = (HashMap<String, Object>) xmlRpcClient.execute(
+			result =  (Object[]) xmlRpcClient.execute(
 					"Deveryflow.waitForMessages", params);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -199,8 +199,10 @@ public class DeverywareServiceImpl implements DeverywareService {
 		}
 	}
 
-	public void getUnifyHistory(String mid) throws ServiceException {
-		logger.info("--getUnifyHistory DeverywareServiceImpl -- mid : " + mid);
+	
+
+	public void getUnifyHistory() throws ServiceException {
+		logger.info("--getUnifyHistory DeverywareServiceImpl --");
 
 		String sessionKey;
 		try {
@@ -210,7 +212,11 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(mid,
+		List<Enregistreur> enregistreurList = enregistreurService.findAll();
+
+		for (Enregistreur enregistreur : enregistreurList) {
+		
+		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(enregistreur.getMid(),
 				sessionKey);
 
 		logger.debug(unifyHistoryArray.length + " unifyHistory retournée");
@@ -238,6 +244,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 			for (Object object : deviceDataList) {
 				logger.debug(object);
 			}
+		}
+		
 		}
 	}
 
@@ -302,7 +310,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 		return waitForMessage.toString();
 	}
 
-	public void waitForMessages() throws Exception {
+	@Override
+	public void waitForMessages() throws ServiceException {
 		logger.info("--waitForMessages DeverywareServiceImpl--");
 
 		String sessionKey;
@@ -313,23 +322,22 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		HashMap<String, Object> waitForMessages = xmlRPCUtils
+		Object[] waitForMessages = xmlRPCUtils
 				.waitForMessages(sessionKey);
 
-		logger.debug(waitForMessages.size() + " waitForMessages retournée");
+		logger.debug(waitForMessages.length + " waitForMessages retournée");
 		logger.debug(waitForMessages);
-		for (Entry<String, Object> object3 : waitForMessages.entrySet()) {
-			logger.debug("key : " + object3.getKey());
-			if (object3.getKey().contains("ate")) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(
-						"dd/MM/yyyy HH:mm:ss");
-				int dateInt = (int) object3.getValue();
-				Long dateLong = (long) dateInt;
-				String dateString = dateFormat
-						.format(new Date(dateLong * 1000));
-				logger.debug("date  ==== " + dateString);
-			}
-			logger.debug("value : " + object3.getValue());
+		
+		for (Object object3 : waitForMessages) {
+			
+			logger.debug(object3);
+//			@SuppressWarnings("unchecked")
+//			HashMap<String, Object> hashMapMessageyXmlRpc = (HashMap<String, Object>) object3;
+//			for (Entry<String, Object> object4 : hashMapMessageyXmlRpc
+//					.entrySet()) {
+//				logger.debug(object4.getKey());
+//				logger.debug(object4.getValue());
+//			}
 		}
 	}
 
@@ -366,15 +374,15 @@ public class DeverywareServiceImpl implements DeverywareService {
 		byte[] arrayIntensite = (byte[]) hashMapHistoryXmlRpc.get("stream4");
 		String intensiteString = new String(arrayIntensite);
 		
-		byte[] stream1 = (byte[]) hashMapHistoryXmlRpc.get("stream1");
-		String stream1String = new String(stream1);
-		System.out.println("stream1 : " + stream1String);
-		byte[] stream2 = (byte[]) hashMapHistoryXmlRpc.get("stream2");
-		String stream2String = new String(stream2);
-		System.out.println("stream2 : " + stream2String);
-		byte[] stream3 = (byte[]) hashMapHistoryXmlRpc.get("stream3");
-		String stream3String = new String(stream3);
-		System.out.println("stream3 : " + stream3String);
+//		byte[] stream1 = (byte[]) hashMapHistoryXmlRpc.get("stream1");
+//		String stream1String = new String(stream1);
+//		System.out.println("stream1 : " + stream1String);
+//		byte[] stream2 = (byte[]) hashMapHistoryXmlRpc.get("stream2");
+//		String stream2String = new String(stream2);
+//		System.out.println("stream2 : " + stream2String);
+//		byte[] stream3 = (byte[]) hashMapHistoryXmlRpc.get("stream3");
+//		String stream3String = new String(stream3);
+//		System.out.println("stream3 : " + stream3String);
 		
 		
 
@@ -476,39 +484,46 @@ public class DeverywareServiceImpl implements DeverywareService {
 					trameDW.setUnite("°C");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
 
-				} else if (mapMetricAndValue.containsKey("111Vent-m/s")) {
-					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-							.get("111Vent-m/s")));
-					trameDW.setUnite("m/s");
-					trameDW.setTypeTrameDW(TypeMesureOrTrame.VENT);
-
-				} else if (mapMetricAndValue.containsKey("112Debit-l/min")) {
-					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-							.get("112Debit-l/min")));
-					trameDW.setUnite("l/min");
-					trameDW.setTypeTrameDW(TypeMesureOrTrame.DEBIT);
-
-				} else if (mapMetricAndValue.containsKey("113Debit-m3/s")) {
+				}
+//				else if (mapMetricAndValue.containsKey("111Vent-m/s")) {
+//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+//							.get("111Vent-m/s")));
+//					trameDW.setUnite("m/s");
+//					trameDW.setTypeTrameDW(TypeMesureOrTrame.VENT);
+//
+//				} 
+//				else if (mapMetricAndValue.containsKey("112Debit-l/min")) {
+//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+//							.get("112Debit-l/min")));
+//					trameDW.setUnite("l/min");
+//					trameDW.setTypeTrameDW(TypeMesureOrTrame.DEBIT);
+//
+//				} 
+				
+				else if (mapMetricAndValue.containsKey("113Debit-m3/s")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("113Debit-m3/s")));
 					trameDW.setUnite("m3/s");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
 
-				} else if (mapMetricAndValue
-						.containsKey("117Pression-air-hectopascal")) {
-					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-							.get("117Pression-air-hectopascal")));
-					trameDW.setUnite("hectopascal");
-					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
-
-				} else if (mapMetricAndValue
-						.containsKey("118Pression-air-pascal")) {
-					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-							.get("118Pression-air-pascal")));
-					trameDW.setUnite("pascal");
-					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
-
-				} else {
+				} 
+//				else if (mapMetricAndValue
+//						.containsKey("117Pression-air-hectopascal")) {
+//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+//							.get("117Pression-air-hectopascal")));
+//					trameDW.setUnite("hectopascal");
+//					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
+//
+//				} else if (mapMetricAndValue
+//						.containsKey("118Pression-air-pascal")) {
+//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+//							.get("118Pression-air-pascal")));
+//					trameDW.setUnite("pascal");
+//					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
+//
+//				} 
+				
+				else {
 					throw new ServiceException(
 							"ERROR DeverywareServiceImpl -- la trame n'a pas pu être analysée correctement");
 				}

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -33,7 +34,6 @@ import fr.treeptik.spring.SessionHandlerInterceptor;
 
 @Configuration
 @EnableWebMvc
-@EnableScheduling
 @ComponentScan(basePackages = { "fr.treeptik.controller" })
 @PropertySource({ "classpath:/config.properties" })
 public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
@@ -113,5 +113,6 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 			DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
+
 
 }

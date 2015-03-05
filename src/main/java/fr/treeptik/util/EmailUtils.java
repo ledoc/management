@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import fr.treeptik.exception.ServiceException;
@@ -70,6 +71,7 @@ public class EmailUtils {
 	 * @throws AddressException
 	 * @throws MessagingException
 	 */
+	@Async
 	public void sendAcquittementEmail(AlerteEmise alerteEmise,
 			String destinataireEmails) throws ServiceException,
 			AddressException, MessagingException {
@@ -117,6 +119,7 @@ public class EmailUtils {
 
 	}
 
+	@Async
 	public void sendFinAlerteEmail(AlerteEmise alerteEmise, Mesure mesure,
 			String destinataireEmails) throws ServiceException,
 			AddressException, MessagingException {
@@ -151,6 +154,7 @@ public class EmailUtils {
 
 	}
 
+	@Async
 	public void sendAlerteAcquittementTimeout(AlerteEmise alerteEmise,
 			String destinataireEmails) throws AddressException,
 			MessagingException {

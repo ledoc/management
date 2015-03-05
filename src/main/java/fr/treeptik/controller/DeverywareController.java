@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Enregistreur;
 import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
 
@@ -55,6 +54,19 @@ public class DeverywareController {
 		}
 		return response;
 	}
+	
+	
+	// gps://ORANGE/+33781916177
+		@RequestMapping(method = RequestMethod.GET, value = "/wait/messages")
+		public void waitForMessages() throws ControllerException {
+			logger.info("--waitForMessage DeverywareController--");
+			try {
+				deverywareService.waitForMessages();
+			} catch (NumberFormatException | ServiceException e) {
+				logger.error(e.getMessage());
+				throw new ControllerException(e.getMessage(), e);
+			}
+		}
 	
 	
 	// gps://ORANGE/+33781916177

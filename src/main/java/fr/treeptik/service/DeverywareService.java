@@ -7,4 +7,6 @@ public interface DeverywareService {
 	public void getHistory() throws ServiceException;
 	
 	public String waitForMessage() throws ServiceException;
+
+	void waitForMessages() throws ServiceException;
 }
