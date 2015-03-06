@@ -67,7 +67,7 @@ public class Ouvrage implements Serializable {
 	 * Spécifique À EAU DE SURFACE TODO : comprendre :( Côte Sol « berge » : à
 	 * indiquer
 	 */
-	private Float coteSol;
+	private Float coteSolBerge;
 
 	/**
 	 * Spécifique à NAPPE SOUTERRAINE
@@ -246,8 +246,8 @@ public class Ouvrage implements Serializable {
 	 * 
 	 * @return
 	 */
-	public Float getCoteSol() {
-		return coteSol;
+	public Float getCoteSolBerge() {
+		return coteSolBerge;
 	}
 
 	/**
@@ -255,8 +255,8 @@ public class Ouvrage implements Serializable {
 	 * 
 	 * @return
 	 */
-	public void setCoteSol(Float coteSol) {
-		this.coteSol = coteSol;
+	public void setCoteSolBerge(Float coteSol) {
+		this.coteSolBerge = coteSol;
 	}
 
 	public String getNumeroBSS() {
@@ -312,7 +312,7 @@ public class Ouvrage implements Serializable {
 				+ ", coteRepereNGF=" + coteRepereNGF + ", commentaire="
 				+ commentaire + ", asservissement=" + rattachement + ", photo="
 				+ photo + ", croquisDynamique=" + croquisDynamique
-				+ ", coteSol=" + coteSol + ", numeroBSS=" + numeroBSS
+				+ ", coteSol=" + coteSolBerge + ", numeroBSS=" + numeroBSS
 				+ ", mesureRepereNGFSol=" + mesureRepereNGFSol
 				+ ", mesureProfondeur=" + mesureProfondeur + ", coteSolNGF="
 				+ coteSolNGF + "]";

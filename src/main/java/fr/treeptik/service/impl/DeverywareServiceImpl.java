@@ -54,7 +54,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * @param mid
 	 * @throws ServiceException
 	 */
-	@Scheduled(fixedRate = 600000)
+	@Scheduled(fixedRate = 3600000)
 	@SuppressWarnings("unchecked")
 	public void getHistory() throws ServiceException {
 		logger.info("--getHistory DeverywareServiceImpl --");
@@ -66,7 +66,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 			logger.error("Error DeverywareServiceImpl : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
-
 
 		List<Enregistreur> enregistreurList = enregistreurService.findAll();
 
@@ -175,8 +174,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 	}
 
-	public void getDataHistory(String mid) throws ServiceException {
-		logger.info("--getDataHistory DeverywareServiceImpl -- mid : " + mid);
+	public void getDataHistory() throws ServiceException {
+		logger.info("--getDataHistory DeverywareServiceImpl --");
 
 		String sessionKey;
 		try {
@@ -186,20 +185,23 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		Object[] dataArray = xmlRPCUtils.getDataHistory(mid, sessionKey);
+		List<Enregistreur> enregistreurList = enregistreurService.findAll();
 
-		logger.debug(dataArray.length + " DeviceData retournée");
-		DeviceState deviceState;
-		for (Object dataXmlRpc : dataArray) {
+		for (Enregistreur enregistreur : enregistreurList) {
+			Object[] dataArray = xmlRPCUtils.getDataHistory(
+					enregistreur.getMid(), sessionKey);
+			logger.debug(dataArray.length + " DeviceData retournée");
+			DeviceState deviceState;
+			for (Object dataXmlRpc : dataArray) {
 
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> hashMapDataXmlRpc = (HashMap<String, Object>) dataXmlRpc;
-			deviceState = new DeviceState(hashMapDataXmlRpc);
-			logger.debug(deviceState);
+				logger.debug("dataXmlRpc : " + dataXmlRpc);
+				@SuppressWarnings("unchecked")
+				HashMap<String, Object> hashMapDataXmlRpc = (HashMap<String, Object>) dataXmlRpc;
+				deviceState = new DeviceState(hashMapDataXmlRpc);
+				logger.debug(deviceState);
+			}
 		}
 	}
-
-	
 
 	public void getUnifyHistory() throws ServiceException {
 		logger.info("--getUnifyHistory DeverywareServiceImpl --");
@@ -215,42 +217,42 @@ public class DeverywareServiceImpl implements DeverywareService {
 		List<Enregistreur> enregistreurList = enregistreurService.findAll();
 
 		for (Enregistreur enregistreur : enregistreurList) {
-		
-		Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(enregistreur.getMid(),
-				sessionKey);
 
-		logger.debug(unifyHistoryArray.length + " unifyHistory retournée");
-		logger.debug(unifyHistoryArray);
-		for (Object unifyHistoryXmlRpc : unifyHistoryArray) {
-			logger.debug(unifyHistoryXmlRpc);
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> hashMapunifyHistoryXmlRpc = (HashMap<String, Object>) unifyHistoryXmlRpc;
+			Object[] unifyHistoryArray = xmlRPCUtils.getUnifyHistory(
+					enregistreur.getMid(), sessionKey);
 
-			for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc
-					.entrySet()) {
-				logger.debug("key : " + object3.getKey());
+			logger.debug(unifyHistoryArray.length + " unifyHistory retournée");
+			logger.debug(unifyHistoryArray);
+			for (Object unifyHistoryXmlRpc : unifyHistoryArray) {
+				logger.debug(unifyHistoryXmlRpc);
+				@SuppressWarnings("unchecked")
+				HashMap<String, Object> hashMapunifyHistoryXmlRpc = (HashMap<String, Object>) unifyHistoryXmlRpc;
 
-				if (object3.getKey().equals("alertList")) {
-					Object[] alertList = (Object[]) object3.getValue();
-					for (Object object : alertList) {
-						logger.debug("le beau array alertlist : " + object);
+				for (Entry<String, Object> object3 : hashMapunifyHistoryXmlRpc
+						.entrySet()) {
+					logger.debug("key : " + object3.getKey());
+
+					if (object3.getKey().equals("alertList")) {
+						Object[] alertList = (Object[]) object3.getValue();
+						for (Object object : alertList) {
+							logger.debug("le beau array alertlist : " + object);
+						}
 					}
+					logger.debug("value : " + object3.getValue());
 				}
-				logger.debug("value : " + object3.getValue());
+
+				Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc
+						.get("deviceDataList");
+				for (Object object : deviceDataList) {
+					logger.debug(object);
+				}
 			}
 
-			Object[] deviceDataList = (Object[]) hashMapunifyHistoryXmlRpc
-					.get("deviceDataList");
-			for (Object object : deviceDataList) {
-				logger.debug(object);
-			}
-		}
-		
 		}
 	}
 
-	public void getEventHistory(String mid) throws ServiceException {
-		logger.info("--getEventHistory DeverywareServiceImpl -- mid : " + mid);
+	public void getEventHistory() throws ServiceException {
+		logger.info("--getEventHistory DeverywareServiceImpl --");
 
 		String sessionKey;
 		try {
@@ -260,19 +262,25 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(mid,
-				sessionKey);
+		List<Enregistreur> enregistreurList = enregistreurService.findAll();
 
-		logger.debug(eventHistoryArray.length + " eventHistoryArray retournée");
-		logger.debug(eventHistoryArray);
-		for (Object eventHistoryXmlRpc : eventHistoryArray) {
-			logger.debug(eventHistoryXmlRpc);
-			@SuppressWarnings("unchecked")
-			HashMap<String, Object> hashMapEventHistoryXmlRpc = (HashMap<String, Object>) eventHistoryXmlRpc;
-			for (Entry<String, Object> object3 : hashMapEventHistoryXmlRpc
-					.entrySet()) {
-				logger.debug(object3.getKey());
-				logger.debug(object3.getValue());
+		for (Enregistreur enregistreur : enregistreurList) {
+
+			Object[] eventHistoryArray = xmlRPCUtils.getEventHistory(
+					enregistreur.getMid(), sessionKey);
+
+			logger.debug(eventHistoryArray.length
+					+ " eventHistoryArray retournée");
+			logger.debug(eventHistoryArray);
+			for (Object eventHistoryXmlRpc : eventHistoryArray) {
+				logger.debug(eventHistoryXmlRpc);
+				@SuppressWarnings("unchecked")
+				HashMap<String, Object> hashMapEventHistoryXmlRpc = (HashMap<String, Object>) eventHistoryXmlRpc;
+				for (Entry<String, Object> object3 : hashMapEventHistoryXmlRpc
+						.entrySet()) {
+					logger.debug(object3.getKey());
+					logger.debug(object3.getValue());
+				}
 			}
 
 		}
@@ -322,22 +330,22 @@ public class DeverywareServiceImpl implements DeverywareService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		Object[] waitForMessages = xmlRPCUtils
-				.waitForMessages(sessionKey);
+		Object[] waitForMessages = xmlRPCUtils.waitForMessages(sessionKey);
 
 		logger.debug(waitForMessages.length + " waitForMessages retournée");
 		logger.debug(waitForMessages);
-		
+
 		for (Object object3 : waitForMessages) {
-			
+
 			logger.debug(object3);
-//			@SuppressWarnings("unchecked")
-//			HashMap<String, Object> hashMapMessageyXmlRpc = (HashMap<String, Object>) object3;
-//			for (Entry<String, Object> object4 : hashMapMessageyXmlRpc
-//					.entrySet()) {
-//				logger.debug(object4.getKey());
-//				logger.debug(object4.getValue());
-//			}
+			// @SuppressWarnings("unchecked")
+			// HashMap<String, Object> hashMapMessageyXmlRpc = (HashMap<String,
+			// Object>) object3;
+			// for (Entry<String, Object> object4 : hashMapMessageyXmlRpc
+			// .entrySet()) {
+			// logger.debug(object4.getKey());
+			// logger.debug(object4.getValue());
+			// }
 		}
 	}
 
@@ -373,18 +381,16 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 		byte[] arrayIntensite = (byte[]) hashMapHistoryXmlRpc.get("stream4");
 		String intensiteString = new String(arrayIntensite);
-		
-//		byte[] stream1 = (byte[]) hashMapHistoryXmlRpc.get("stream1");
-//		String stream1String = new String(stream1);
-//		System.out.println("stream1 : " + stream1String);
-//		byte[] stream2 = (byte[]) hashMapHistoryXmlRpc.get("stream2");
-//		String stream2String = new String(stream2);
-//		System.out.println("stream2 : " + stream2String);
-//		byte[] stream3 = (byte[]) hashMapHistoryXmlRpc.get("stream3");
-//		String stream3String = new String(stream3);
-//		System.out.println("stream3 : " + stream3String);
-		
-		
+
+		// byte[] stream1 = (byte[]) hashMapHistoryXmlRpc.get("stream1");
+		// String stream1String = new String(stream1);
+		// System.out.println("stream1 : " + stream1String);
+		// byte[] stream2 = (byte[]) hashMapHistoryXmlRpc.get("stream2");
+		// String stream2String = new String(stream2);
+		// System.out.println("stream2 : " + stream2String);
+		// byte[] stream3 = (byte[]) hashMapHistoryXmlRpc.get("stream3");
+		// String stream3String = new String(stream3);
+		// System.out.println("stream3 : " + stream3String);
 
 		if (intensiteString.endsWith("mA")) {
 			logger.info("trame de type ancien : " + intensiteString);
@@ -485,44 +491,44 @@ public class DeverywareServiceImpl implements DeverywareService {
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
 
 				}
-//				else if (mapMetricAndValue.containsKey("111Vent-m/s")) {
-//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-//							.get("111Vent-m/s")));
-//					trameDW.setUnite("m/s");
-//					trameDW.setTypeTrameDW(TypeMesureOrTrame.VENT);
-//
-//				} 
-//				else if (mapMetricAndValue.containsKey("112Debit-l/min")) {
-//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-//							.get("112Debit-l/min")));
-//					trameDW.setUnite("l/min");
-//					trameDW.setTypeTrameDW(TypeMesureOrTrame.DEBIT);
-//
-//				} 
-				
+				// else if (mapMetricAndValue.containsKey("111Vent-m/s")) {
+				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+				// .get("111Vent-m/s")));
+				// trameDW.setUnite("m/s");
+				// trameDW.setTypeTrameDW(TypeMesureOrTrame.VENT);
+				//
+				// }
+				// else if (mapMetricAndValue.containsKey("112Debit-l/min")) {
+				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+				// .get("112Debit-l/min")));
+				// trameDW.setUnite("l/min");
+				// trameDW.setTypeTrameDW(TypeMesureOrTrame.DEBIT);
+				//
+				// }
+
 				else if (mapMetricAndValue.containsKey("113Debit-m3/s")) {
 					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
 							.get("113Debit-m3/s")));
 					trameDW.setUnite("m3/s");
 					trameDW.setTypeTrameDW(TypeMesureOrTrame.TEMPERATURE);
 
-				} 
-//				else if (mapMetricAndValue
-//						.containsKey("117Pression-air-hectopascal")) {
-//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-//							.get("117Pression-air-hectopascal")));
-//					trameDW.setUnite("hectopascal");
-//					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
-//
-//				} else if (mapMetricAndValue
-//						.containsKey("118Pression-air-pascal")) {
-//					trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-//							.get("118Pression-air-pascal")));
-//					trameDW.setUnite("pascal");
-//					trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
-//
-//				} 
-				
+				}
+				// else if (mapMetricAndValue
+				// .containsKey("117Pression-air-hectopascal")) {
+				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+				// .get("117Pression-air-hectopascal")));
+				// trameDW.setUnite("hectopascal");
+				// trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
+				//
+				// } else if (mapMetricAndValue
+				// .containsKey("118Pression-air-pascal")) {
+				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
+				// .get("118Pression-air-pascal")));
+				// trameDW.setUnite("pascal");
+				// trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
+				//
+				// }
+
 				else {
 					throw new ServiceException(
 							"ERROR DeverywareServiceImpl -- la trame n'a pas pu être analysée correctement");

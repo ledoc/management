@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -84,6 +83,7 @@ public class MesureController {
 		List<Ouvrage> ouvragesCombo;
 		List<Enregistreur> enregistreursCombo = new ArrayList<Enregistreur>();
 		List<Mesure> mesures = new ArrayList<Mesure>();
+		List<AlerteDescription> alertesActivesCombo = new ArrayList<AlerteDescription>();
 
 		try {
 			Boolean isAdmin = request.isUserInRole("ADMIN");
@@ -114,6 +114,7 @@ public class MesureController {
 		Collections.sort(mesures, new DateMesureComparator());
 		Collections.reverse(mesures);
 		
+		model.addAttribute("alertesActivesCombo", alertesActivesCombo);
 		model.addAttribute("mesures", mesures);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		model.addAttribute("sitesCombo", sitesCombo);
@@ -164,24 +165,25 @@ public class MesureController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/enregistreur/plotLines/{enregistreurId}")
-	public @ResponseBody List<AlerteDescription> getEnregistreurAlertes(
+	public @ResponseBody AlerteDescription refreshAlertePlotLinesByEnregistreur(
 			HttpServletRequest request,
 			@PathVariable("enregistreurId") Integer enregistreurId)
 			throws ControllerException {
-		logger.info("--getEnregistreurAlertes MesureController--");
+		logger.info("--refreshAlertePlotLinesByEnregistreur MesureController--");
 
 		List<AlerteDescription> alerteDescriptions = new ArrayList<AlerteDescription>();
+		AlerteDescription alerteDescription = new AlerteDescription();
 
 		try {
 
 			alerteDescriptions = alerteDescriptionService
 					.findAlertesActivesByEnregistreurId(enregistreurId);
-
+			alerteDescription = alerteDescriptions.get(0);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return alerteDescriptions;
+		return alerteDescription;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/init/site")
@@ -248,22 +250,15 @@ public class MesureController {
 		return points;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-
 	@RequestMapping(method = RequestMethod.GET, value = "/init/graph/plotLines")
-	public @ResponseBody List<AlerteDescription> initPlotLinesGraph(
+	public @ResponseBody AlerteDescription initPlotLinesGraph(
 			HttpServletRequest request) throws ControllerException {
 
 		logger.info("--initPlotLinesGraph MesureController");
 
 		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
 		List<AlerteDescription> alerteDescriptions = new ArrayList<AlerteDescription>();
+		AlerteDescription alerteDescription = new AlerteDescription();
 
 		try {
 			Boolean isAdmin = request.isUserInRole("ADMIN");
@@ -280,15 +275,39 @@ public class MesureController {
 			alerteDescriptions = alerteDescriptionService
 					.findAlertesActivesByEnregistreurId(allEnregistreurs.get(0)
 							.getId());
+			alerteDescription = alerteDescriptions.get(0);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return alerteDescriptions;
-
+		return alerteDescription;
 	}
 
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/change/alerte/plotLines/{alerteId}")
+	public @ResponseBody AlerteDescription changeAlertePlotLinesGraph(
+			HttpServletRequest request, @PathVariable("alerteId") Integer alerteId) throws ControllerException {
+		
+		logger.info("--changeAlertePlotLinesGraph MesureController -- alerteId : "
+					+ alerteId);
+
+		AlerteDescription alerteDescription = new AlerteDescription();
+
+		try {
+			alerteDescription = alerteDescriptionService
+					.findById(alerteId);
+
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return alerteDescription;
+
+	}
+	
+	
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/init/ouvrage")
 	public @ResponseBody List<Ouvrage> initOuvrageCombobox(
 			HttpServletRequest request) throws ControllerException {
@@ -365,6 +384,36 @@ public class MesureController {
 		}
 		return allOuvrages;
 	}
+	
+	
+	
+	@RequestMapping(method = RequestMethod.GET, value = "enregistreur/refresh/alerte/{enregistreurId}")
+	public @ResponseBody List<AlerteDescription> refreshAlerteComboboxByEnregistreur(
+			HttpServletRequest request, @PathVariable("enregistreurId") Integer enregistreurId)
+			throws ControllerException {
+		logger.info("--refreshAlerteByEnregistreur MesureController -- enregistreurId : "
+				+ enregistreurId);
+
+		List<AlerteDescription> allAlertesActives = new ArrayList<AlerteDescription>();
+		Enregistreur enregistreur;
+		try {
+			enregistreur = enregistreurService.findByIdWithJoinFetchAlertesActives(enregistreurId);
+
+			allAlertesActives = enregistreur.getAlerteDescriptions();
+
+			logger.debug("liste d'alertes renvoyée : " + allAlertesActives);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return allAlertesActives;
+	}
+	
+	
+	
+	
+	
+	
 
 	@RequestMapping(method = RequestMethod.GET, value = "site/refresh/enregistreur/{siteId}")
 	public @ResponseBody List<Enregistreur> refreshEnregistreurBySite(

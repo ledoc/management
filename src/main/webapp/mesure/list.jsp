@@ -67,9 +67,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									</button>
 								</div>
 								<h3 class="h5 p15 mt0 mb0">
-									<b>Hauteur d'eau</b>
+									<b>Conductivité</b>
 								</h3>
-
+								
+								<div class="form-group ml15 mr15">
+									<select id="alerte" class="form-control display-options"
+										data-placeholder="Alerte">
+										<option value="NONE"></option>
+									</select>
+								</div>
+								
 								<div class="form-group ml15 mr15">
 									<select data-placeholder="Options d'affichage"
 										class="chosen form-control display-options"
@@ -79,41 +86,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<option value="column">Histogramme</option>
 									</select>
 								</div>
-								<div class="form-group ml15 mr15 mb0">
-									<select data-placeholder="Sélectionner les alertes"
-										class="chosen form-control show-alerts" multiple
-										id="js-show-alerts-hauteurEau">
-										<option value=""></option>
-										<option value="78.25">C1 - 78,25m</option>
-										<option value="18.50">C2 - 18,50m</option>
-									</select>
-								</div>
-								<h3 class="h5 p15 mt0 mb0">
-									<b>Conductivité</b>
-								</h3>
 
-								<div class="form-group ml15 mr15">
-									<select data-placeholder="Options d'affichage"
-										class="chosen form-control display-options"
-										id="js-change-rainfall-display">
-										<option value=""></option>
-										<option value="spline">Courbe</option>
-										<option value="column">Histogramme</option>
-									</select>
-								</div>
-								<div class="form-group ml15 mr15 mb0">
-									<select data-placeholder="Sélectionner les alertes"
-										class="chosen form-control show-alerts" multiple
-										id="js-show-alerts-conductivite">
-										<option value=""></option>
-										<option value="78.25">C1 - 78,25m</option>
-										<option value="18.50">C2 - 18,50m</option>
-									</select>
-								</div>
-								<div class="form-group icheck ml15 mr15 mt5">
-									<input type="checkbox" id="js-reverseChart" checked> <label
-										for="js-reverseChart" class="">Inverser la courbe</label>
-								</div>
 								<h3 class="h5 p15 mt0 mb0">
 									<b>Localiser</b>
 								</h3>
@@ -236,18 +209,22 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<script type="text/javascript">
 			$(document).ready(
 					function() {
-						
+
 						$('#tableMesures').DataTable({
 							"columnDefs" : [ {
 								"type" : "date",
 								"targets" : [ 0 ]
 							} ],
-							"order": [[ 0, 'desc' ]]
+							"order" : [ [ 0, 'desc' ] ]
 						});
-						
+
 						$('#tableMesures').attr('class',
 								"table table-striped list no-m")
-
+						//select box pour le nombre de résultats à afficher
+						$('.chosen').chosen({
+							width : "80px",
+							disable_search_threshold : 10
+						});
 					});
 
 			$('#ongletQualitatif').click(function() {
@@ -580,4 +557,61 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								checkAllFieldsHaveValues(), initListSite(),
 								initListOuvrage()
 					})
+
+			$("#enregistreur")
+					.change(
+							function() {
+
+								var $alerte = $('#alerte');
+										$('#site').selected = false,
+										$('#ouvrage').selected = false,
+										checkAllFieldsHaveValues(),
+										initListSite(),
+										initListOuvrage(),
+
+										$
+												.get(
+														$('.relayUrl').attr(
+																'href')
+																+ '/enregistreur/refresh/alerte/'
+																+ $(this).val(),
+														null,
+														function(listAlerte) {
+															var output = [];
+															$alerte
+																	.attr(
+																			'data-placeholder',
+																			'Choisir l\'Alerte');
+															$
+																	.each(
+																			listAlerte,
+																			function(
+																					index,
+																					alerte) {
+																				var tpl = '<option value="NONE"></option><option value="' + alerte.id + '">'
+																						+ alerte.codeAlerte
+																						+ '</option>';
+																				output
+																						.push(tpl);
+																			});
+															$alerte.html(output
+																	.join(''));
+															if (!listAlerte.length) {
+																$alerte
+																		.attr(
+																				'data-placeholder',
+																				'Aucune alerte active');
+
+															}
+															$alerte.selected = false;
+															$alerte
+																	.chosen(
+																			{
+																				disable_search_threshold : 10
+																			})
+																	.trigger(
+																			"chosen:updated");
+														});
+
+							})
 		</script>

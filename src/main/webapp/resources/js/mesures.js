@@ -45,7 +45,7 @@ var mesures = function() {
 										}
 									},
 									title : {
-										text : 'Hauteur d\'eau',
+										text : 'Conductivité',
 										style : {
 											color : '#94ECD9'
 										}
@@ -53,27 +53,7 @@ var mesures = function() {
 									min : 0,
 									opposite : false
 
-								}
-
-								// , { // Secondary yAxis
-								// labels : {
-								// format : '{value} mm',
-								// style : {
-								// color : '#20AAE5'
-								// }
-								// },
-								// title : {
-								// text : 'Conductivité',
-								// style : {
-								// color : '#20AAE5'
-								// }
-								// },
-								// opposite : true,
-								// min : 0,
-								// reversed : reversed
-								// }
-
-								],
+								} ],
 								tooltip : {
 									shared : true
 								},
@@ -91,19 +71,9 @@ var mesures = function() {
 											|| '#FFFFFF'
 								},
 								series : [
-								// {
-								// name : 'Conductivité',
-								// type : 'column',
-								// yAxis : 1,
-								// data : [],
-								// color : '#20AAE5',
-								// tooltip : {
-								// valueSuffix : ' mm'
-								// }
-								// },
 
 								{
-									name : 'Hauteur d\'eau',
+									name : 'Conductivité',
 									type : 'line',
 									data : [],
 									yAxis : 0,
@@ -141,38 +111,48 @@ var mesures = function() {
 			});
 
 			// initialise le graph avec les alertes d'un enregistreur
-			$.getJSON(relayUrl + '/init/graph/plotLines/',
-					function(listAlerte) {
-						$.each(listAlerte, function(index, alerte) {
-							chart.yAxis[0].addPlotLine({
-								id : alerte.id,
-								value : alerte.seuilPreAlerte,
-								color : '#E68A00',
-								width : 1,
-								zIndex : 4,
-								label : {
-									text : 'pré-alerte',
-									verticalAlign : "bottom",
-									y : 12,
-									x : 0
-								}
-							});
-							chart.yAxis[0].addPlotLine({
-								id : alerte.id,
-								value : alerte.seuilAlerte,
-								color : '#A30000',
-								width : 1,
-								zIndex : 4,
-								label : {
-									text : 'alerte',
-									verticalAlign : "top",
-									y : -6,
-									x : 0
-								}
-							});
+			$.getJSON(relayUrl + '/init/graph/plotLines/', function(alerte) {
 
-						});
-					});
+				if (alerte.tendance == 'INFERIEUR') {
+					var alignPreAlerte = 'top';
+					var alignAlerte = 'bottom';
+					var yPrealerte = -6;
+					var yAlerte = 12;
+
+				} else {
+					var alignPreAlerte = 'bottom';
+					var alignAlerte = 'top';
+					var yPrealerte = 12;
+					var yAlerte = -6;
+				}
+
+				chart.yAxis[0].addPlotLine({
+					id : 1,
+					value : alerte.seuilPreAlerte,
+					color : '#E68A00',
+					width : 1,
+					zIndex : 4,
+					label : {
+						text : 'pré-alerte',
+						verticalAlign : alignPreAlerte,
+						y : yPrealerte,
+						x : 0
+					}
+				});
+				chart.yAxis[0].addPlotLine({
+					id : 1,
+					value : alerte.seuilAlerte,
+					color : '#A30000',
+					width : 1,
+					zIndex : 4,
+					label : {
+						text : 'alerte',
+						verticalAlign : alignAlerte,
+						y : yAlerte,
+						x : 0
+					}
+				});
+			});
 
 			$('#enregistreur').chosen().change(
 					function() {
@@ -184,70 +164,110 @@ var mesures = function() {
 								});
 					});
 
-			$('#enregistreur').chosen().change(
-					function() {
-						var id = $(this).val();
-						$.getJSON(relayUrl + '/enregistreur/plotLines/' + id,
-								function(listAlerte) {
-									$.each(listAlerte, function(index, alerte) {
-										chart.yAxis[0].addPlotLine({
-											id : alerte.id,
-											value : alerte.seuilPreAlerte,
-											color : '#E68A00',
-											width : 1,
-											zIndex : 4,
-											label : {
-												text : 'pré-alerte',
-												verticalAlign : "bottom",
-												y : 12,
-												x : 0
-											}
-										});
-										chart.yAxis[0].addPlotLine({
-											id : alerte.id,
-											value : alerte.seuilAlerte,
-											color : '#A30000',
-											width : 1,
-											zIndex : 4,
-											label : {
-												text : 'alerte',
-												verticalAlign : "top",
-												y : -6,
-												x : 0
-											}
-										});
+			$('#enregistreur')
+					.chosen()
+					.change(
+							function() {
+								var id = $(this).val();
+								$
+										.getJSON(
+												relayUrl
+														+ '/enregistreur/plotLines/'
+														+ id,
+												function(alerte) {
 
-									});
-								});
-					});
+													if (alerte.tendance == 'INFERIEUR') {
+														var alignPreAlerte = 'top';
+														var alignAlerte = 'bottom';
+														var yPrealerte = -6;
+														var yAlerte = 12;
+
+													} else {
+														var alignPreAlerte = 'bottom';
+														var alignAlerte = 'top';
+														var yPrealerte = 12;
+														var yAlerte = -6;
+													}
+													
+													removeAlert(1);
+													chart.yAxis[0]
+															.addPlotLine({
+																id : 1,
+																value : alerte.seuilPreAlerte,
+																color : '#E68A00',
+																width : 1,
+																zIndex : 4,
+																label : {
+																	text : 'pré-alerte',
+																	verticalAlign : alignPreAlerte,
+																	y : yPrealerte,
+																	x : 0
+																}
+															});
+													chart.yAxis[0]
+															.addPlotLine({
+																id : 1,
+																value : alerte.seuilAlerte,
+																color : '#A30000',
+																width : 1,
+																zIndex : 4,
+																label : {
+																	text : 'alerte',
+																	verticalAlign : alignAlerte,
+																	y : yAlerte,
+																	x : 0
+																}
+															});
+												});
+							});
 
 			$('#alerte').chosen().change(
 					function() {
 						var id = $(this).val();
-						$.getJSON(relayUrl + '/alerte/plotLines/' + id,
-								function(listAlerte) {
-									$.each(listAlerte, function(index, alerte) {
-										chart.yAxis[0].addPlotLine({
-											id : alerte.id,
-											value : alerte.seuilPreAlerte,
-											color : '#E68A00',
-											width : 1,
-											zIndex : 4,
-											label : {
-												text : 'pré-alerte'
-											}
-										});
-										chart.yAxis[0].addPlotLine({
-											id : alerte.id,
-											value : alerte.seuilAlerte,
-											color : '#A30000',
-											width : 1,
-											zIndex : 4,
-											label : {
-												text : 'alerte'
-											}
-										});
+						$.getJSON(relayUrl + '/change/alerte/plotLines/' + id,
+								function(alerte) {
+							
+							console.log(alerte.tendance);
+							
+							if (alerte.tendance == 'INFERIEUR') {
+								var alignPreAlerte = 'top';
+								var alignAlerte = 'bottom';
+								var yPrealerte = -6;
+								var yAlerte = 12;
 
+							} else {
+								var alignPreAlerte = 'bottom';
+								var alignAlerte = 'top';
+								var yPrealerte = 12;
+								var yAlerte = -6;
+							}
+							console.log(yPrealerte);
+									removeAlert(1);
+									chart.yAxis[0].addPlotLine({
+										id : 1,
+										value : alerte.seuilPreAlerte,
+										color : '#E68A00',
+										width : 1,
+										zIndex : 4,
+										label : {
+											text : 'pré-alerte',
+											verticalAlign : alignPreAlerte,
+											y : yPrealerte,
+											x : 0
+										}
+									});
+									chart.yAxis[0].addPlotLine({
+										id : 1,
+										value : alerte.seuilAlerte,
+										color : '#A30000',
+										width : 1,
+										zIndex : 4,
+										label : {
+											text : 'alerte',
+												verticalAlign : alignAlerte,
+												y : yAlerte,
+												x : 0
+										}
 									});
 								});
 					});

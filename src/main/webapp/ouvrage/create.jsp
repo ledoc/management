@@ -189,8 +189,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										readonly="${readOnlyValue }" />
 								</div>
 								<div style="display: none;" class="eaudesurface form-group">
-									<label for="coteSol">Cote Sol Berge (eau de surface)</label>
-									<form:input class="form-control" id="coteSol" path="coteSol"
+									<label for="coteSolBerge">Cote Sol Berge (eau de surface)</label>
+									<form:input class="form-control" id="coteSolBerge" path="coteSolBerge"
 										placeholder="" data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"

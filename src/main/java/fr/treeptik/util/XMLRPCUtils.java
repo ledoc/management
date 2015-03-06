@@ -195,7 +195,7 @@ public class XMLRPCUtils {
 		int port = 1;
 		boolean compress = true;
 		try {
-			startDate = DateUnixConverter.stringToInt("16/01/2015 07:12:12");
+			startDate = DateUnixConverter.stringToInt("05/03/2015 07:12:12");
 			endDate = DateUnixConverter.dateToInt(new Date());
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -308,7 +308,7 @@ public class XMLRPCUtils {
 		int startDate = 0;
 		int endDate = 0;
 		try {
-			startDate = DateUnixConverter.stringToInt("16/01/2015 07:12:12");
+			startDate = DateUnixConverter.stringToInt("05/03/2015 07:12:12");
 			endDate = DateUnixConverter.dateToInt(new Date());
 		} catch (ParseException e) {
 			e.printStackTrace();

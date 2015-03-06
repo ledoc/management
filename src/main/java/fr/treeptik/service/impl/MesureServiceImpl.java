@@ -105,6 +105,74 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	/**
+	 * NiveauEauDeSurface
+	 */
+	@Override
+	public TrameDW conversionSignalElectrique_NiveauEauDeSurface(TrameDW trameDW)
+			throws ServiceException {
+		logger.info("--conversionSignalElectrique_NiveauEauDeSurface mesure --");
+
+		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
+		Float valeur;
+
+		/**
+		 * TODO ajouter la temperature comme variable
+		 */
+		Float temperature = 25F;
+		Float compenseA25degre = 25F;
+		@SuppressWarnings("unused")
+		Float compenseA20degre = 20F;
+		Float signalBrut = trameDW.getSignalBrut();
+		Enregistreur enregistreur = trameDW.getEnregistreur();
+
+		logger.debug("enregistreur : " + enregistreur);
+
+		Float coeffTemperature = enregistreur.getCoeffTemperature();
+		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
+
+		if (enregistreur.getTypeEnregistreur().equals(
+				TypeEnregistreur.ANALOGIQUE)) {
+			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
+					* (valeurCapteurPleineEchelle / 16) * (signalBrut - 4);
+		} else {
+			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
+					* signalBrut;
+		}
+		
+		Float repereFilEau = ((enregistreur.getOuvrage().getCoteSolBerge() -  enregistreur.getOuvrage().getCoteRepereNGF()) + valeur);
+		
+//		Float profondeurHauteurDEauEnM = ((enregistreur.getOuvrage().getCoteSolBerge() - enregistreur.getOuvrage().get)
+		
+		
+		trameDW.setValeur(valeur);
+
+		trameDWService.update(trameDW);
+
+		/**
+		 * TODO Voir à déporter ça pour être générique
+		 */
+		Mesure mesure = new Mesure();
+		mesure.setDate(trameDW.getDate());
+		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
+		mesure.setEnregistreur(enregistreur);
+		mesure.setValeur(valeur);
+
+		this.create(mesure);
+
+		mesure = this.findById(mesure.getId());
+
+		try {
+			checkAlerteUtils.checkAlerte(enregistreur, mesure);
+		} catch (MessagingException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+
+		return trameDW;
+	}
+	
+	
+	/**
 	 * COTE ALTIMETRIQUE
 	 */
 	@Override

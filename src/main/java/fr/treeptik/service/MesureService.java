@@ -42,4 +42,7 @@ public interface MesureService {
 
 	void affectNewNiveauManuel(Integer mesureId) throws ServiceException;
 
+	TrameDW conversionSignalElectrique_NiveauEauDeSurface(TrameDW trameDW)
+			throws ServiceException;
+
 }

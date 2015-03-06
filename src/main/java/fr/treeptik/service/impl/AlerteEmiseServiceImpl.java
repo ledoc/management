@@ -114,7 +114,7 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 		return alerteEmises;
 	}
 
-	@Scheduled(fixedRate = 650000)
+	@Scheduled(fixedRate = 3650000)
 	@Override
 	public void scheduledAllAlerteAcquittement() throws ServiceException {
 		logger.info("--scheduledAlerteAcquittement AlerteServiceImpl --");
