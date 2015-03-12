@@ -37,7 +37,7 @@ public class AlerteEmise implements Serializable {
 	private Integer compteurCheckAcquittement;
 
 	@ManyToOne
-	private Enregistreur enregistreur;
+	private Capteur capteur;
 
 	public String getCodeAlerte() {
 		return codeAlerte;
@@ -111,12 +111,12 @@ public class AlerteEmise implements Serializable {
 		this.seuilPreAlerte = seuilPreAlerte;
 	}
 
-	public Enregistreur getEnregistreur() {
-		return enregistreur;
+	public Capteur getCapteur() {
+		return capteur;
 	}
 
-	public void setEnregistreur(Enregistreur enregistreur) {
-		this.enregistreur = enregistreur;
+	public void setCapteur(Capteur capteur) {
+		this.capteur = capteur;
 	}
 
 	public Boolean getAcquittement() {

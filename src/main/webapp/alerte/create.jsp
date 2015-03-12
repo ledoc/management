@@ -60,6 +60,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<form:hidden path="id" />
 							<form:hidden path="compteurRetourNormal" />
 							<form:hidden path="aSurveiller" />
+							<form:hidden path="capteur.id" />
 
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 								<div class="form-group">
@@ -83,20 +84,21 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-placeholder="Choisir un enregistreur ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
-										path="enregistreur.id" disabled="${readOnlyValue }">
+										path="capteur.enregistreur.id" disabled="${readOnlyValue }">
 										<form:option value=""></form:option>
 										<form:options items="${enregistreursCombo}" itemValue="id"
 											itemLabel="mid" />
 									</form:select>
 								</div>
+
 								<div class="form-group">
 									<label for="typeAlerte">Type de l'alerte</label>
 									<form:select id="typeAlerte" name="typeAlerte"
-										path="typeAlerte" data-parsley-required="true"
+										path="capteur.typeMesureOrTrame" data-parsley-required="true"
 										data-parsley-required-message="Champ requis"
 										class="form-control chosen" disabled="${readOnlyValue }">
 										<form:option value="" label="--- Choisir un type ---" />
-										<form:options items="${typesAlerteCombo}"
+										<form:options items="${typesMesureOrTrameCombo}"
 											itemLabel="description" />
 									</form:select>
 								</div>

@@ -79,10 +79,12 @@ public class XMLRPCUtils {
 		String sessionKey = this.openSession();
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
-		HashMap<String, String> hashMobile = new HashMap<String, String>();
+		HashMap<String, Object> hashMobile = new HashMap<String, Object>();
 		hashMobile.put("mid", enregistreur.getMid());
 		hashMobile.put("comment", enregistreur.getNom());
-
+		hashMobile.put("valid", true);
+		hashMobile.put("type", "slexcrgprs");
+		hashMobile.put("until", 2000000000);
 		Integer result = null;
 
 		try {
@@ -228,7 +230,7 @@ public class XMLRPCUtils {
 		XmlRpcClient xmlRpcClient = this.getXMLRPCClient();
 
 		Object[] result = null;
-		int nbPos = 1;
+		int nbPos = 15;
 		int state = -1;
 		int content = 17;
 		int port = 0;

@@ -11,16 +11,16 @@ import fr.treeptik.model.AlerteEmise;
 
 public interface AlerteEmiseDAO extends JpaRepository<AlerteEmise, Integer> {
 
-	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteEmises a where c.login = :userLogin")
+	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.capteurs c2 join c2.alerteEmises a where c.login = :userLogin")
 	public List<AlerteEmise> findAllByClientLogin(
 			@Param("userLogin") String userLogin) throws DataAccessException;
 
 	@Query("select a from AlerteEmise a where a.acquittement = FALSE")
 	public List<AlerteEmise> findAllNonAcquittees() throws DataAccessException;
 
-	@Query("select a from Enregistreur e join e.alerteEmises a where e.id = :enregistreurId")
-	public List<AlerteEmise> findAlertesActivesByEnregistreurId(
-			@Param("enregistreurId") Integer enregistreurId)
+	@Query("select a from Capteur c join c.alerteEmises a where c.id = :capteurId")
+	public List<AlerteEmise> findAlertesActivesByCapteurId(
+			@Param("capteurId") Integer capteurId)
 			throws DataAccessException;
 
 	@Query("select a from AlerteEmise a where a.codeAlerte = :codeAlerte  and a.date=(select max(a.date) from a) ")

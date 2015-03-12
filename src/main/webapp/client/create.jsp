@@ -137,7 +137,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										path="etablissements" items="${etablissementsCombo}"
 										itemValue="id" itemLabel="codeEtablissement"
 										data-placeholder=" Sélectionnez
-							une entité"
+							un ou des établissement"
 										class="form-control chosen" disabled="${readOnlyValue }">
 									</form:select>
 								</div>

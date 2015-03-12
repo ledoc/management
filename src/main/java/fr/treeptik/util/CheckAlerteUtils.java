@@ -14,7 +14,7 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Administrateur;
 import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.AlerteEmise;
-import fr.treeptik.model.Enregistreur;
+import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.NiveauAlerte;
@@ -43,14 +43,14 @@ public class CheckAlerteUtils {
 	@Inject
 	private MesureService mesureService;
 
-	public void checkAlerte(Enregistreur enregistreur, Mesure mesure)
+	public void checkAlerte(Capteur capteur, Mesure mesure)
 			throws ServiceException, AddressException, MessagingException {
 		logger.info("-- checkAlerte CheckAlerteUtils-- Enregistreur mid: "
-				+ enregistreur.getMid() + " mesure.getValeur() : "
-				+ mesure.getValeur());
+				+ capteur.getTypeMesureOrTrame().getDescription()
+				+ " mesure.getValeur() : " + mesure.getValeur());
 
 		List<AlerteDescription> alertesActives = alerteDescriptionService
-				.findAlertesActivesByEnregistreurId(enregistreur.getId());
+				.findAlertesActivesByCapteurId(capteur.getId());
 
 		for (AlerteDescription alerteActive : alertesActives) {
 
@@ -61,7 +61,7 @@ public class CheckAlerteUtils {
 			 */
 			case "inférieur à":
 				/**
-				 * suivi d'unne alerte déjà émise
+				 * suivi d'une alerte déjà émise
 				 */
 				if (alerteActive.getaSurveiller()) {
 
@@ -101,8 +101,8 @@ public class CheckAlerteUtils {
 											.affectAlerteEmise(alerteActive);
 									alerteEmiseNew
 											.setMesureLevantAlerte(mesure);
-									alerteEmiseNew
-											.setEnregistreur(enregistreur);
+									alerteEmiseNew.setCapteur(alerteActive
+											.getCapteur());
 
 									alerteEmiseNew
 											.setNiveauAlerte(NiveauAlerte.PREALERTE);
@@ -168,7 +168,8 @@ public class CheckAlerteUtils {
 								AlerteEmise alerteEmiseNew = this
 										.affectAlerteEmise(alerteActive);
 								alerteEmiseNew.setMesureLevantAlerte(mesure);
-								alerteEmiseNew.setEnregistreur(enregistreur);
+								alerteEmiseNew.setCapteur(alerteActive
+										.getCapteur());
 
 								alerteEmiseNew
 										.setNiveauAlerte(NiveauAlerte.ALERTE);
@@ -234,7 +235,7 @@ public class CheckAlerteUtils {
 							AlerteEmise alerteEmise = this
 									.affectAlerteEmise(alerteActive);
 							alerteEmise.setMesureLevantAlerte(mesure);
-							alerteEmise.setEnregistreur(enregistreur);
+							alerteEmise.setCapteur(alerteActive.getCapteur());
 
 							if (mesure.getValeur() < alerteActive
 									.getSeuilAlerte()) {
@@ -269,7 +270,7 @@ public class CheckAlerteUtils {
 							AlerteEmise alerteEmise = this
 									.affectAlerteEmise(alerteActive);
 							alerteEmise.setMesureLevantAlerte(mesure);
-							alerteEmise.setEnregistreur(enregistreur);
+							alerteEmise.setCapteur(alerteActive.getCapteur());
 
 							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
 
@@ -333,8 +334,8 @@ public class CheckAlerteUtils {
 											.affectAlerteEmise(alerteActive);
 									alerteEmiseNew
 											.setMesureLevantAlerte(mesure);
-									alerteEmiseNew
-											.setEnregistreur(enregistreur);
+									alerteEmiseNew.setCapteur(alerteActive
+											.getCapteur());
 
 									alerteEmiseNew
 											.setNiveauAlerte(NiveauAlerte.PREALERTE);
@@ -407,7 +408,8 @@ public class CheckAlerteUtils {
 								AlerteEmise alerteEmiseNew = this
 										.affectAlerteEmise(alerteActive);
 								alerteEmiseNew.setMesureLevantAlerte(mesure);
-								alerteEmiseNew.setEnregistreur(enregistreur);
+								alerteEmiseNew.setCapteur(alerteActive
+										.getCapteur());
 
 								alerteEmiseNew
 										.setNiveauAlerte(NiveauAlerte.ALERTE);
@@ -474,7 +476,7 @@ public class CheckAlerteUtils {
 							AlerteEmise alerteEmise = this
 									.affectAlerteEmise(alerteActive);
 							alerteEmise.setMesureLevantAlerte(mesure);
-							alerteEmise.setEnregistreur(enregistreur);
+							alerteEmise.setCapteur(alerteActive.getCapteur());
 
 							if (mesure.getValeur() > alerteActive
 									.getSeuilAlerte()) {
@@ -510,7 +512,7 @@ public class CheckAlerteUtils {
 							AlerteEmise alerteEmise = this
 									.affectAlerteEmise(alerteActive);
 							alerteEmise.setMesureLevantAlerte(mesure);
-							alerteEmise.setEnregistreur(enregistreur);
+							alerteEmise.setCapteur(alerteActive.getCapteur());
 
 							alerteEmise.setNiveauAlerte(NiveauAlerte.ALERTE);
 
@@ -583,7 +585,7 @@ public class CheckAlerteUtils {
 						AlerteEmise alerteEmise = this
 								.affectAlerteEmise(alerteActive);
 						alerteEmise.setMesureLevantAlerte(mesure);
-						alerteEmise.setEnregistreur(enregistreur);
+						alerteEmise.setCapteur(alerteActive.getCapteur());
 
 						alerteEmise.setCompteurCheckAcquittement(0);
 						alerteEmise.setAcquittement(false);
@@ -653,7 +655,7 @@ public class CheckAlerteUtils {
 						AlerteEmise alerteEmise = this
 								.affectAlerteEmise(alerteActive);
 						alerteEmise.setMesureLevantAlerte(mesure);
-						alerteEmise.setEnregistreur(enregistreur);
+						alerteEmise.setCapteur(alerteActive.getCapteur());
 
 						alerteEmise.setCompteurCheckAcquittement(0);
 						alerteEmise.setAcquittement(false);
@@ -703,8 +705,8 @@ public class CheckAlerteUtils {
 		logger.info("-- checkAlerte checkAlerte-- alerteEmise : "
 				+ alerteEmise.getCodeAlerte());
 		StringBuilder strbld = new StringBuilder();
-		Etablissement etablissement = alerteEmise.getEnregistreur()
-				.getOuvrage().getSite().getEtablissement();
+		Etablissement etablissement = alerteEmise.getCapteur()
+				.getEnregistreur().getOuvrage().getSite().getEtablissement();
 		etablissement = etablissementService
 				.findByIdWithJoinFetchClients(etablissement.getId());
 		etablissement.getClients().forEach(

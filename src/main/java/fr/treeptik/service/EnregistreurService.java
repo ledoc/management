@@ -7,29 +7,28 @@ import fr.treeptik.model.Enregistreur;
 
 public interface EnregistreurService {
 
-		Enregistreur findById(Integer id) throws ServiceException;
-		
-		Enregistreur create(Enregistreur enregistreur)
-				throws ServiceException;
+	Enregistreur findById(Integer id) throws ServiceException;
 
-		Enregistreur update(Enregistreur enregistreur) throws ServiceException;
-		
-		List<Enregistreur> findAll() throws ServiceException;
+	Enregistreur create(Enregistreur enregistreur) throws ServiceException;
 
-		Enregistreur findByMid(String mid) throws ServiceException;
+	Enregistreur update(Enregistreur enregistreur) throws ServiceException;
 
-		public Enregistreur findByMidWithJoinFetchTrameDWs(String mid) throws ServiceException;
+	List<Enregistreur> findAll() throws ServiceException;
 
-		Enregistreur findByIdWithJoinFetchAlertesActives(Integer id)
-				throws ServiceException;
+	Enregistreur findByMid(String mid) throws ServiceException;
 
-		void remove(Integer id) throws ServiceException;
+	public Enregistreur findByMidWithJoinFetchTrameDWs(String mid)
+			throws ServiceException;
 
-		List<Enregistreur> findFreeEnregistreurs() throws ServiceException;
+	void remove(Integer id) throws ServiceException;
 
-		List<Enregistreur> findByClientLogin(String userLogin)
-				throws ServiceException;
+	List<Enregistreur> findFreeEnregistreurs() throws ServiceException;
 
-		List<Enregistreur> findBySiteId(Integer id) throws ServiceException;
+	List<Enregistreur> findByClientLogin(String userLogin)
+			throws ServiceException;
+
+	List<Enregistreur> findBySiteId(Integer id) throws ServiceException;
+
+	Enregistreur findByIdWithJoinCapteurs(Integer id) throws ServiceException;
 
 }

@@ -40,26 +40,35 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-placeholder="Filtrer par SITE" class="form-control">
 									</select>
 								</div>
+
 								<div class="form-group ml15 mr15">
 									<select id="ouvrage" name="ouvrage"
 										data-placeholder="Filtrer par OUVRAGE" class="form-control">
 									</select>
-
 								</div>
+
 								<div class="form-group ml15 mr15">
 									<select id="enregistreur" name="enregistreur"
-										data-placeholder="choisir un ENREGISTREUR"
+										data-placeholder="Filtrer par ENREGISTREUR"
 										class="form-control">
 									</select>
-
 								</div>
+
+								<div class="form-group ml15 mr15">
+									<select id="capteur" name="capteur"
+										data-placeholder="choix CAPTEUR" class="form-control">
+									</select>
+								</div>
+
 								<div class="form-group ml15 mr15">
 									<label>Dates</label> <input id="dateDebut" type="date"
 										class="form-control" />
 								</div>
+
 								<div class="form-group ml15 mr15">
 									<input id="dateFin" type="date" class="form-control" />
 								</div>
+
 								<div class="form-group ml15 mr15">
 									<button id="confirmBetweenDate" disabled="disabled"
 										class="btn btn-outline btn-success btn-xs ">
@@ -69,14 +78,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<h3 class="h5 p15 mt0 mb0">
 									<b>Conductivité</b>
 								</h3>
-								
+
 								<div class="form-group ml15 mr15">
 									<select id="alerte" class="form-control display-options"
-										data-placeholder="Alerte">
+										data-placeholder="Choix Alerte">
 										<option value="NONE"></option>
 									</select>
 								</div>
-								
+
 								<div class="form-group ml15 mr15">
 									<select data-placeholder="Options d'affichage"
 										class="chosen form-control display-options"
@@ -110,7 +119,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<div class="tab-content text-center no-shadow">
 						<div class="descriptionEntities">
 							<span class="codeOuvrage text-muted hidden-sm hidden-xs h4"></span><span
-								class="mid text-primary h5" style="vertical-align: top"></span>
+								class="description text-primary h5" style="vertical-align: top"></span>
 						</div>
 						<div class="tab-pane fade active in" id="quantitatif">
 							<div id="charts"></div>
@@ -153,8 +162,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																<%-- 																<td><c:out value="${mesure.date}" /></td> --%>
 																<td><c:out value="${mesure.valeur}" /></td>
 																<td><c:out
-																		value="${mesure.enregistreur.ouvrage.codeOuvrage}" /></td>
-																<td><c:out value="${mesure.enregistreur.mid}" /></td>
+																		value="${mesure.capteur.enregistreur.ouvrage.codeOuvrage}" /></td>
+																<td><c:out
+																		value="${mesure.capteur.enregistreur.mid}" /></td>
 																<td><c:out
 																		value="${mesure.typeMesureOrTrame.description}" /></td>
 																<td><a data-url="${urlAffectAsNewNiveauManuel}"
@@ -267,15 +277,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 			function checkAllFieldsHaveValues() {
 
-				var enregistreurVal = $('#enregistreur').val();
+				var capteurVal = $('#capteur').val();
 				var dateDebutVal = $('#dateDebut').val();
 				var dateFinVal = $('#dateFin').val();
-				console.log('enregistreur : ' + enregistreurVal);
+				console.log('capteur : ' + capteurVal);
 				console.log('dateDebut : ' + dateDebutVal);
 				console.log('dateFin : ' + dateFinVal);
 
-				if ((enregistreurVal && enregistreurVal != 'NONE')
-						&& dateDebutVal && dateFinVal) {
+				if ((capteurVal && capteurVal != 'NONE') && dateDebutVal
+						&& dateFinVal) {
 
 					$('#confirmBetweenDate').attr('disabled', false);
 				} else {
@@ -283,97 +293,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				}
 			}
 
-			function initListSite() {
-
-				var $site = $('#site');
-
-				$
-						.getJSON(
-								$('.relayUrl').attr('href') + '/init/site',
-								null,
-								function(listSite) {
-
-									var output = []
-									$
-											.each(
-													listSite,
-													function(index, site) {
-														var tpl = '<option value="NONE"></option><option value="' + site.id + '">'
-																+ site.codeSite
-																+ '</option>';
-														output.push(tpl);
-													});
-									$site.html(output.join(''));
-									$site.chosen({
-										allow_single_deselect : true
-									}, {
-										disable_search_threshold : 10
-									});
-									$site.trigger("chosen:updated");
-								});
-			};
-
-			function initListOuvrage() {
-
-				var $ouvrage = $('#ouvrage');
-
-				$
-						.getJSON(
-								$('.relayUrl').attr('href') + '/init/ouvrage',
-								null,
-								function(listOuvrage) {
-
-									var output = []
-									$
-											.each(
-													listOuvrage,
-													function(index, ouvrage) {
-														var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
-																+ ouvrage.codeOuvrage
-																+ '</option>';
-														output.push(tpl);
-													});
-									$ouvrage.html(output.join(''));
-									$ouvrage.chosen({
-										allow_single_deselect : true
-									}, {
-										disable_search_threshold : 10
-									});
-									$ouvrage.trigger("chosen:updated");
-								});
-			};
-
-			function initListEnregistreur() {
-
-				var $enregistreur = $('#enregistreur');
-
-				$
-						.getJSON(
-								$('.relayUrl').attr('href')
-										+ '/init/enregistreur',
-								null,
-								function(listEnregistreur) {
-
-									var output = []
-									$
-											.each(
-													listEnregistreur,
-													function(index,
-															enregistreur) {
-														var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-																+ enregistreur.mid
-																+ '</option>';
-														output.push(tpl);
-													});
-									$enregistreur.html(output.join(''));
-									$enregistreur.chosen({
-										allow_single_deselect : true
-									}, {
-										disable_search_threshold : 10
-									});
-									$enregistreur.trigger("chosen:updated");
-								});
-			};
 			// Modifie la selectBox ouvrage filtrer par le site
 
 			$("#site")
@@ -550,30 +469,112 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			$("#dateFin").change(function() {
 				checkAllFieldsHaveValues()
 			});
-			$("#enregistreur").change(
-					function() {
-						$('#site').selected = false,
-								$('#ouvrage').selected = false,
-								checkAllFieldsHaveValues(), initListSite(),
-								initListOuvrage()
-					})
+			$("#enregistreur").change(function() {
+				$('#site').selected = false;
+				$('#ouvrage').selected = false;
+				checkAllFieldsHaveValues();
+				initListSite();
+				initListOuvrage();
+			});
 
-			$("#enregistreur")
+			$("#enregistreur").change(function() {
+
+				var $capteur = $('#capteur');
+
+				$
+						.getJSON(
+								$('.relayUrl').attr('href')
+										+ '/enregistreur/refresh/capteur/'
+										+ $(this).val(),
+								null,
+								function(listCapteur) {
+									var output = []
+									$
+											.each(
+													listCapteur,
+													function(index, capteur) {
+														var tpl = '<option value="NONE"></option><option value="' + capteur.id + '">'
+																+ capteur.typeMesureOrTrame
+																+ '</option>';
+														output.push(tpl);
+													});
+									$capteur.attr('data-placeholder',
+											'Choisir le capteur');
+									$capteur.html(output.join(''));
+									$capteur.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$capteur.trigger("chosen:updated");
+								});
+			});
+
+			$("#capteur")
 					.change(
 							function() {
 
+								var $alerte = $('#alerte');
+
+								$
+										.get(
+												$('.relayUrl').attr('href')
+														+ '/capteur/refresh/alerte/'
+														+ $(this).val(),
+												null,
+												function(listAlerte) {
+													var output = [];
+													$alerte
+															.attr(
+																	'data-placeholder',
+																	'Choisir l\'Alerte');
+													$
+															.each(
+																	listAlerte,
+																	function(
+																			index,
+																			alerte) {
+																		var tpl = '<option value="NONE"></option><option value="' + alerte.id + '">'
+																				+ alerte.codeAlerte
+																				+ '</option>';
+																		output
+																				.push(tpl);
+																	});
+													$alerte.html(output
+															.join(''));
+													if (!listAlerte.length) {
+														$alerte
+																.attr(
+																		'data-placeholder',
+																		'Aucune alerte active');
+
+													}
+													$alerte.selected = false;
+													$alerte
+															.chosen(
+																	{
+																		disable_search_threshold : 10
+																	})
+															.trigger(
+																	"chosen:updated");
+												});
+
+							})
+
+			$("#capteur")
+					.change(
+							function() {
 								var $alerte = $('#alerte');
 										$('#site').selected = false,
 										$('#ouvrage').selected = false,
 										checkAllFieldsHaveValues(),
 										initListSite(),
 										initListOuvrage(),
-
 										$
 												.get(
 														$('.relayUrl').attr(
 																'href')
-																+ '/enregistreur/refresh/alerte/'
+																+ '/capteur/refresh/alerte/'
 																+ $(this).val(),
 														null,
 														function(listAlerte) {
@@ -614,4 +615,96 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 														});
 
 							})
+
+			function initListSite() {
+
+				var $site = $('#site');
+
+				$
+						.getJSON(
+								$('.relayUrl').attr('href') + '/init/site',
+								null,
+								function(listSite) {
+
+									var output = []
+									$
+											.each(
+													listSite,
+													function(index, site) {
+														var tpl = '<option value="NONE"></option><option value="' + site.id + '">'
+																+ site.codeSite
+																+ '</option>';
+														output.push(tpl);
+													});
+									$site.html(output.join(''));
+									$site.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$site.trigger("chosen:updated");
+								});
+			};
+
+			function initListOuvrage() {
+
+				var $ouvrage = $('#ouvrage');
+
+				$
+						.getJSON(
+								$('.relayUrl').attr('href') + '/init/ouvrage',
+								null,
+								function(listOuvrage) {
+
+									var output = []
+									$
+											.each(
+													listOuvrage,
+													function(index, ouvrage) {
+														var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
+																+ ouvrage.codeOuvrage
+																+ '</option>';
+														output.push(tpl);
+													});
+									$ouvrage.html(output.join(''));
+									$ouvrage.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$ouvrage.trigger("chosen:updated");
+								});
+			};
+
+			function initListEnregistreur() {
+
+				var $enregistreur = $('#enregistreur');
+
+				$
+						.getJSON(
+								$('.relayUrl').attr('href')
+										+ '/init/enregistreur',
+								null,
+								function(listEnregistreur) {
+
+									var output = []
+									$
+											.each(
+													listEnregistreur,
+													function(index,
+															enregistreur) {
+														var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
+																+ enregistreur.mid
+																+ '</option>';
+														output.push(tpl);
+													});
+									$enregistreur.html(output.join(''));
+									$enregistreur.chosen({
+										allow_single_deselect : true
+									}, {
+										disable_search_threshold : 10
+									});
+									$enregistreur.trigger("chosen:updated");
+								});
+			};
 		</script>

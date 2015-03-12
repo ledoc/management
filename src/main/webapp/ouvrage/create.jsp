@@ -13,8 +13,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="Solices - Détail Ouvrage" name="titreOnglet" />
 </jsp:include>
 
-<c:url var="initTypeOuvrage" value="/ouvrage/init/type/ouvrage" />
-<a class="relayUrl" href="${initTypeOuvrage}"></a>
+
 
 
 <!-- Seulement une visualisation pour les clients -->
@@ -47,7 +46,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'un
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}&nbspd'un
 							Ouvrage</h1>
 						<p class="text-muted">Pour ajouter un ou des enregistreurs
 							l'ouvrage doit d'abord être créé</p>
@@ -58,6 +57,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<form:form id="form" method="POST" action="${createOuvrage}"
 							modelAttribute="ouvrage" role="form" class="parsley-form"
 							data-validate="parsley" data-show-errors="true">
+
+							<!--  Construction d'URL utiles -->
+							<c:url var="initTypeOuvrage" value="/ouvrage/init/type/ouvrage" />
+							<a class="relayUrl" href="${initTypeOuvrage}"></a>
 
 							<form:hidden path="id" />
 
@@ -188,16 +191,20 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck-message="2 caractères minimum"
 										readonly="${readOnlyValue }" />
 								</div>
+
 								<div style="display: none;" class="eaudesurface form-group">
-									<label for="coteSolBerge">Cote Sol Berge (eau de surface)</label>
-									<form:input class="form-control" id="coteSolBerge" path="coteSolBerge"
-										placeholder="" data-parsley-trigger="change" step="any"
+									<label for="coteSolBerge">Cote Repère Pont (eau de
+										surface)</label>
+									<form:input class="form-control" id="coteSolBerge"
+										path="coteSolBerge" placeholder=""
+										data-parsley-trigger="change" step="any"
 										data-parsley-type="number"
 										data-parsley-type-message="valeur numérique"
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum"
 										readonly="${readOnlyValue }" />
 								</div>
+
 								<div style="display: none;" class="nappesouterraine form-group">
 									<label for="numeroBSS">Numéro BSS (nappe souterraine)</label>
 									<form:input type="text" class="form-control" path="numeroBSS"
@@ -270,8 +277,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<thead>
 											<tr>
 												<th>MID</th>
-												<th>Dernière mesure</th>
-												<th>Niveau manuel</th>
 												<th>% Batterie</th>
 												<sec:authorize ifAllGranted="ADMIN">
 													<th class="nosort nosearch">Actions</th>
@@ -289,9 +294,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<tr>
 													<td class="text-primary"><a
 														href="${urlEnregistreurUpdate}">${enregistreur.mid}</a></td>
-													<td><c:out
-															value="${enregistreur.derniereMesure.valeur}" /></td>
-													<td><c:out value="${enregistreur.niveauManuel.valeur}" /></td>
 													<td><c:out value="${enregistreur.niveauBatterie}" /></td>
 													<sec:authorize ifAllGranted="ADMIN">
 														<td><a data-url="${urlEnregistreurDelete}"

@@ -15,25 +15,25 @@ public interface AlerteDescriptionDAO extends
 	@Query("select count(a) from AlerteDescription a where a.activation is true")
 	public Long countAllActives() throws DataAccessException;
 
-	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteDescriptions a where c.login = :userLogin")
+	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.capteurs c2 join c2.alerteDescriptions a where c.login = :userLogin")
 	public List<AlerteDescription> findAllByClientLogin(
 			@Param("userLogin") String userLogin) throws DataAccessException;
 	
-	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteDescriptions a where c.login = :userLogin and a.activation is true")
+	@Query("select a from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.capteurs c2 join c2.alerteDescriptions a where c.login = :userLogin and a.activation is true")
 	public List<AlerteDescription> findAllAlertesActivesByClientLogin(
 			@Param("userLogin") String userLogin) throws DataAccessException;
 
-	@Query("select count(a) from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteDescriptions a where c.login = :userLogin")
+	@Query("select count(a) from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.capteurs c2 join c2.alerteDescriptions a where c.login = :userLogin")
 	public Long countAllByClientLogin(@Param("userLogin") String userLogin)
 			throws DataAccessException;
 
-	@Query("select count(a) from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.alerteDescriptions a where c.login = :userLogin and a.activation is true")
+	@Query("select count(a) from Client c join c.etablissements e join e.sites s join s.ouvrages o join o.enregistreurs e join e.capteurs c2 join c2.alerteDescriptions a where c.login = :userLogin and a.activation is true")
 	public Long countAllActivesByClientLogin(
 			@Param("userLogin") String userLogin) throws DataAccessException;
 
-	@Query("select a from Enregistreur e join e.alerteDescriptions a where e.id = :enregistreurId and a.activation is true")
-	public List<AlerteDescription> findAlertesActivesByEnregistreurId(
-			@Param("enregistreurId") Integer enregistreurId)
+	@Query("select a from Capteur c join c.alerteDescriptions a where c.id = :capteurId and a.activation is true")
+	public List<AlerteDescription> findAlertesActivesByCapteurId(
+			@Param("capteurId") Integer capteurId)
 			throws DataAccessException;
 
 }

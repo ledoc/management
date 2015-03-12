@@ -98,10 +98,10 @@ public class AlerteDescriptionServiceImpl implements AlerteDescriptionService {
 	}
 	
 	@Override
-	public List<AlerteDescription> findAlertesActivesByEnregistreurId(Integer enregistreurId) throws ServiceException {
-		logger.info("--findAlertesActivesByEnregistreurId AlerteServiceImpl -- enregistreurId : "
-				+ enregistreurId);
-		return alerteDescriptionDAO.findAlertesActivesByEnregistreurId(enregistreurId);
+	public List<AlerteDescription> findAlertesActivesByCapteurId(Integer capteurId) throws ServiceException {
+		logger.info("--findAlertesActivesByCapteurId AlerteServiceImpl -- capteurId : "
+				+ capteurId);
+		return alerteDescriptionDAO.findAlertesActivesByCapteurId(capteurId);
 	}
 	
 }

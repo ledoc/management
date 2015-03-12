@@ -80,7 +80,7 @@ public class EmailUtils {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
 				"E dd-MM-y 'à' HH:mm", new Locale("fr"));
 		String date = dateFormatter.format(alerteEmise.getDate());
-		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String midEnregistreur = alerteEmise.getCapteur().getEnregistreur().getMid();
 		String alerteSubject = "[Solices] - Une "
 				+ alerteEmise.getNiveauAlerte().getDescription()
 				+ " a été émise par ";
@@ -129,7 +129,7 @@ public class EmailUtils {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
 				"E dd-MM-y 'à' HH:mm", new Locale("fr"));
 		String date = dateFormatter.format(mesure.getDate());
-		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String midEnregistreur = alerteEmise.getCapteur().getEnregistreur().getMid();
 		String alerteSubject = "[Solices] - Une FIN "
 				+ this.niveauAlerteToString(alerteEmise) + " a été émise par ";
 
@@ -162,7 +162,7 @@ public class EmailUtils {
 
 		String linkPrefix = env.getProperty("mail.acquittement.url.prefix");
 
-		String midEnregistreur = alerteEmise.getEnregistreur().getMid();
+		String midEnregistreur = alerteEmise.getCapteur().getEnregistreur().getMid();
 		String alerteSubject = "[Solices] - Une "
 				+ alerteEmise.getNiveauAlerte().getDescription()
 				+ " émise par le capteur n° " + midEnregistreur

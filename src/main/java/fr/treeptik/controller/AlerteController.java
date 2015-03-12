@@ -22,11 +22,14 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.AlerteEmise;
+import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TendanceAlerte;
 import fr.treeptik.model.TypeAlerte;
+import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.AlerteEmiseService;
+import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
 
 @Controller
@@ -39,6 +42,9 @@ public class AlerteController {
 	private AlerteDescriptionService alerteDescriptionService;
 	@Inject
 	private AlerteEmiseService alerteEmiseService;
+
+	@Inject
+	private CapteurService capteurService;
 	@Inject
 	private EnregistreurService enregistreurService;
 
@@ -67,8 +73,8 @@ public class AlerteController {
 		logger.info("--initForm AlerteController--");
 
 		List<Enregistreur> enregistreursCombo;
-		List<TypeAlerte> typesAlerteCombo = new ArrayList<TypeAlerte>(
-				Arrays.asList(TypeAlerte.values()));
+		List<TypeMesureOrTrame> typesMesureOrTrameCombo = new ArrayList<TypeMesureOrTrame>(
+				Arrays.asList(TypeMesureOrTrame.values()));
 
 		List<TendanceAlerte> tendancesAlerteCombo = new ArrayList<TendanceAlerte>(
 				Arrays.asList(TendanceAlerte.values()));
@@ -84,7 +90,7 @@ public class AlerteController {
 
 		model.addAttribute("alerte", new AlerteDescription());
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
-		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
+		model.addAttribute("typesMesureOrTrameCombo", typesMesureOrTrameCombo);
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
 		return "/alerte/create";
 	}
@@ -94,10 +100,25 @@ public class AlerteController {
 			Model model, BindingResult result) throws ControllerException {
 		logger.info("--create AlerteController-- alerte : " + alerteDescription);
 		try {
+			Capteur capteur;
+
+			System.out.println(alerteDescription.getCapteur()
+					.getTypeMesureOrTrame()
+					+ " -- - - -- "
+					+ alerteDescription.getCapteur().getEnregistreur().getId());
+
 			if (alerteDescription.getId() != null) {
+				capteur = capteurService.findById(alerteDescription
+						.getCapteur().getId());
 				alerteDescriptionService.create(alerteDescription);
 			} else {
-
+				capteur = capteurService
+						.findByEnregistreurAndTypeMesureOrTrame(
+								alerteDescription.getCapteur()
+										.getTypeMesureOrTrame(),
+								alerteDescription.getCapteur()
+										.getEnregistreur().getId());
+				alerteDescription.setCapteur(capteur);
 				alerteDescription.setaSurveiller(false);
 				alerteDescription.setCompteurRetourNormal(0);
 				alerteDescriptionService.create(alerteDescription);

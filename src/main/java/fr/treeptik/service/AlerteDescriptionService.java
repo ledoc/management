@@ -26,13 +26,13 @@ public interface AlerteDescriptionService {
 	Long countAllActivesByClientLogin(String userLogin)
 			throws ServiceException;
 
-	List<AlerteDescription> findAlertesActivesByEnregistreurId(
-			Integer enregistreurId) throws ServiceException;
-
 	List<AlerteDescription> findAllAlertesActivesByClientLogin(String userLogin)
 			throws ServiceException;
 
 	List<AlerteDescription> findAllByClientLogin(String userLogin)
+			throws ServiceException;
+
+	List<AlerteDescription> findAlertesActivesByCapteurId(Integer capteurId)
 			throws ServiceException;
 
 }

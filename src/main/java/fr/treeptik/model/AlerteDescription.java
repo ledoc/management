@@ -34,7 +34,7 @@ public class AlerteDescription implements Serializable {
 
 	@JsonIgnore
 	@ManyToOne
-	private Enregistreur enregistreur;
+	private Capteur capteur;
 
 	public String getCodeAlerte() {
 		return codeAlerte;
@@ -100,12 +100,12 @@ public class AlerteDescription implements Serializable {
 		this.seuilPreAlerte = seuilPreAlerte;
 	}
 
-	public Enregistreur getEnregistreur() {
-		return enregistreur;
+	public Capteur getCapteur() {
+		return capteur;
 	}
 
-	public void setEnregistreur(Enregistreur enregistreur) {
-		this.enregistreur = enregistreur;
+	public void setCapteur(Capteur capteur) {
+		this.capteur = capteur;
 	}
 
 	public Boolean getaSurveiller() {

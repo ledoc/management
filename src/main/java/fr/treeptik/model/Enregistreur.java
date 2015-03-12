@@ -1,11 +1,8 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,10 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
-import javax.persistence.PostPersist;
-import javax.persistence.PostUpdate;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -41,9 +34,6 @@ public class Enregistreur implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private TypeEnregistreur typeEnregistreur;
 
-	// Ce qui va être mesuré
-	private TypeMesureOrTrame typeMesureOrTrame;
-
 	// figer la chronique en cas de changement d'un quelconque composant.
 	// fiche passera en écriture libre
 	// Un bouton de liaison NM apparaîtra afin da faire correspondre la nouvelle
@@ -52,21 +42,6 @@ public class Enregistreur implements Serializable {
 	private Float altitude;
 	private Float coeffTemperature;
 	private Float salinite;
-	private Float echelleCapteur;
-
-	// Mesure 3 (Niveau Manuel) : à indiquer dernier NM + date + accès
-	// historique NM
-	@JsonIgnore
-	@Transient
-	private Mesure niveauManuel;
-	// Mesure Enregistreur : dernière mesure relevé avec date et heure
-	@JsonIgnore
-	@Transient
-	private Mesure derniereMesure;
-	// nécessaire pour calcul du niveau d'eau
-	@JsonIgnore
-	@Transient
-	private TrameDW derniereTrameDW;
 
 	// modem : nom, modèle, numéro série…
 	private String modem;
@@ -88,17 +63,12 @@ public class Enregistreur implements Serializable {
 	private String croquis;
 
 	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
-	private List<AlerteDescription> alerteDescriptions;
-	@JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "enregistreur")
-	private List<AlerteEmise> alerteEmises;
-	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
 	private List<TrameDW> trameDWs;
+
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
-	private List<Mesure> mesures;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "enregistreur")
+	private List<Capteur> capteurs;
 
 	/**
 	 * TODO pas mettre de valeur par defaut
@@ -130,15 +100,12 @@ public class Enregistreur implements Serializable {
 	@ManyToOne
 	private Ouvrage ouvrage;
 
-	// private String server;
-
+	// private String server;	
+	
 	public Enregistreur() {
 		super();
-		this.niveauManuel = new Mesure();
-		this.derniereMesure = new Mesure();
-		this.derniereTrameDW = new TrameDW();
 	}
-
+	
 	public Enregistreur(HashMap<String, Object> xmlrpcHashMap) {
 		super();
 		this.valid = (boolean) xmlrpcHashMap.get("valid");
@@ -152,135 +119,6 @@ public class Enregistreur implements Serializable {
 		this.comment = (String) xmlrpcHashMap.get("comment");
 		this.type = (String) xmlrpcHashMap.get("type");
 		this.userName = (String) xmlrpcHashMap.get("userName");
-	}
-
-	@PostUpdate
-	@PostLoad
-	@PostPersist
-	public void setDynamicMesures() {
-		this.initNiveauManuel();
-		this.initDerniereMesure();
-		this.initDerniereTrameDW();
-	}
-
-	/**
-	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
-	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
-	 * 
-	 * @param niveauManuel
-	 */
-	public Mesure getNiveauManuel() {
-		return niveauManuel;
-	}
-
-	/**
-	 * d'après ce que j'ai compris, niveau mesuré en premier et par la suite
-	 * manuellement du niveau d'eau par rapport au NGF (CoteRepereNGF)
-	 * 
-	 * @param niveauManuel
-	 */
-	public void initNiveauManuel() {
-
-		if (this.mesures != null) {
-
-			boolean typeManuelPresence = this.mesures.stream().anyMatch(m ->
-
-			m.getTypeMesureOrTrame().equals(TypeMesureOrTrame.NIVEAUMANUEL));
-
-			if (typeManuelPresence) {
-				List<Mesure> allMesureManuel = this.mesures
-						.stream()
-						.filter(m -> m.getTypeMesureOrTrame().equals(
-								TypeMesureOrTrame.NIVEAUMANUEL))
-						.collect(Collectors.toList());
-
-				if (allMesureManuel.size() > 1) {
-					Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-							m2.getDate());
-
-					Optional<Mesure> max = allMesureManuel.stream().max(c);
-
-					this.niveauManuel = max.isPresent() ? max.get().cloneMe()
-							: new Mesure();
-				} else {
-					this.niveauManuel = allMesureManuel.get(0).cloneMe();
-				}
-			}
-		}
-		this.niveauManuel = new Mesure();
-
-	}
-
-	/**
-	 * récupérer la dernière mesure enregistrée
-	 * 
-	 * @return
-	 */
-	public Mesure getDerniereMesure() {
-		return derniereMesure;
-	}
-
-	/**
-	 * affecter la dernière mesure enregistrée
-	 * 
-	 * @return
-	 */
-	public void initDerniereMesure() {
-		if (this.mesures != null) {
-
-			boolean typeNotManuelPresence = this.mesures.stream().anyMatch(
-					m -> !m.getTypeMesureOrTrame().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL));
-
-			if (typeNotManuelPresence) {
-
-				List<Mesure> allMesureNotManuel = this.mesures
-						.stream()
-						.filter(m -> !m.getTypeMesureOrTrame().equals(
-								TypeMesureOrTrame.NIVEAUMANUEL))
-						.collect(Collectors.toList());
-
-				if (allMesureNotManuel.size() > 1) {
-					Comparator<Mesure> c = (m1, m2) -> m1.getDate().compareTo(
-							m2.getDate());
-
-					Optional<Mesure> max = allMesureNotManuel.stream().max(c);
-
-					this.derniereMesure = max.isPresent() ? max.get()
-							: new Mesure();
-				} else {
-					this.derniereMesure = allMesureNotManuel.get(0);
-				}
-			}
-		}
-		this.derniereMesure = new Mesure();
-	}
-
-	public TrameDW getDerniereTrameDW() {
-		return derniereTrameDW;
-	}
-
-	public void initDerniereTrameDW() {
-
-		if (this.trameDWs != null) {
-
-			if (this.trameDWs.size() < 1) {
-
-				Comparator<TrameDW> c = (t1, t2) -> t1.getDate().compareTo(
-						t2.getDate());
-
-				Optional<TrameDW> optional = this.trameDWs.stream().max(c);
-
-				this.derniereTrameDW = optional.isPresent() ? optional.get()
-						: new TrameDW();
-			}
-
-			else {
-				this.derniereTrameDW = this.trameDWs.get(0);
-			}
-		}
-		this.derniereTrameDW = new TrameDW();
-
 	}
 
 	public Integer getId() {
@@ -299,9 +137,6 @@ public class Enregistreur implements Serializable {
 		this.mid = mid;
 	}
 
-	
-	
-	
 	public TypeEnregistreur getTypeEnregistreur() {
 		return typeEnregistreur;
 	}
@@ -324,14 +159,6 @@ public class Enregistreur implements Serializable {
 
 	public void setCoeffTemperature(Float coeffTemperature) {
 		this.coeffTemperature = coeffTemperature;
-	}
-
-	public Float getEchelleCapteur() {
-		return echelleCapteur;
-	}
-
-	public void setEchelleCapteur(Float echelleCapteur) {
-		this.echelleCapteur = echelleCapteur;
 	}
 
 	public Ouvrage getOuvrage() {
@@ -486,19 +313,6 @@ public class Enregistreur implements Serializable {
 		this.croquis = croquis;
 	}
 
-	public List<Mesure> getMesures() {
-
-		return mesures;
-	}
-
-	public void setMesures(List<Mesure> mesures) {
-		this.mesures = mesures;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public void setPeriod(Integer period) {
 		this.period = period;
 	}
@@ -511,6 +325,30 @@ public class Enregistreur implements Serializable {
 		this.until = until;
 	}
 
+	public Boolean getValid() {
+		return valid;
+	}
+
+	public void setValid(Boolean valid) {
+		this.valid = valid;
+	}
+
+	public Float getSalinite() {
+		return salinite;
+	}
+
+	public void setSalinite(Float salinite) {
+		this.salinite = salinite;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
 	public List<TrameDW> getTrameDWs() {
 		return trameDWs;
 	}
@@ -519,21 +357,27 @@ public class Enregistreur implements Serializable {
 		this.trameDWs = trameDWs;
 	}
 
+	public List<Capteur> getCapteurs() {
+		return capteurs;
+	}
+
+	public void setCapteurs(List<Capteur> capteurs) {
+		this.capteurs = capteurs;
+	}
+
 	@Override
 	public String toString() {
 		return "Enregistreur [id=" + id + ", mid=" + mid + ", maintenance="
 				+ maintenance + ", altitude=" + altitude
-				+ ", coeffTemperature=" + coeffTemperature + ", niveauManuel="
-				+ niveauManuel + ", derniereMesure=" + derniereMesure
-				+ ", modem=" + modem + ", transmission=" + transmission
-				+ ", sim=" + sim + ", batterie=" + batterie
-				+ ", niveauBatterie=" + niveauBatterie + ", panneauSolaire="
-				+ panneauSolaire + ", sonde=" + sonde + ", croquis=" + croquis
-				+ ", valid=" + valid + ", period=" + period
-				+ ", localizableStatus=" + localizableStatus + ", clientName="
-				+ clientName + ", until=" + until + ", pid=" + pid
-				+ ", comment=" + comment + ", type=" + type + ", userName="
-				+ userName + "]";
+				+ ", coeffTemperature=" + coeffTemperature + ", modem=" + modem
+				+ ", transmission=" + transmission + ", sim=" + sim
+				+ ", batterie=" + batterie + ", niveauBatterie="
+				+ niveauBatterie + ", panneauSolaire=" + panneauSolaire
+				+ ", sonde=" + sonde + ", croquis=" + croquis + ", valid="
+				+ valid + ", period=" + period + ", localizableStatus="
+				+ localizableStatus + ", clientName=" + clientName + ", until="
+				+ until + ", pid=" + pid + ", comment=" + comment + ", type="
+				+ type + ", userName=" + userName + "]";
 	}
 
 	@Override
@@ -575,63 +419,4 @@ public class Enregistreur implements Serializable {
 		return true;
 	}
 
-	public Boolean getValid() {
-		return valid;
-	}
-
-	public void setValid(Boolean valid) {
-		this.valid = valid;
-	}
-
-	public void setNiveauManuel(Mesure niveauManuel) {
-		this.niveauManuel = niveauManuel;
-	}
-
-	public void setDerniereMesure(Mesure derniereMesure) {
-		this.derniereMesure = derniereMesure;
-	}
-
-	public void setDerniereTrameDW(TrameDW derniereTrameDW) {
-		this.derniereTrameDW = derniereTrameDW;
-	}
-
-	public List<AlerteDescription> getAlerteDescriptions() {
-		return alerteDescriptions;
-	}
-
-	public void setAlerteDescriptions(List<AlerteDescription> alerteDescriptions) {
-		this.alerteDescriptions = alerteDescriptions;
-	}
-
-	public List<AlerteEmise> getAlerteEmises() {
-		return alerteEmises;
-	}
-
-	public void setAlerteEmises(List<AlerteEmise> alerteEmises) {
-		this.alerteEmises = alerteEmises;
-	}
-
-	public TypeMesureOrTrame getTypeMesureOrTrame() {
-		return typeMesureOrTrame;
-	}
-
-	public void setTypeMesureOrTrame(TypeMesureOrTrame typeMesureOrTrame) {
-		this.typeMesureOrTrame = typeMesureOrTrame;
-	}
-
-	public Float getSalinite() {
-		return salinite;
-	}
-
-	public void setSalinite(Float salinite) {
-		this.salinite = salinite;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
 }

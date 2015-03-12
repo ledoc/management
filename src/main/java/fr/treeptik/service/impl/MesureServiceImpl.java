@@ -1,6 +1,7 @@
 package fr.treeptik.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,15 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.MesureDAO;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Point;
-import fr.treeptik.model.TrameDW;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
-import fr.treeptik.service.TrameDWService;
 import fr.treeptik.util.CheckAlerteUtils;
 
 @Service
@@ -35,169 +36,231 @@ public class MesureServiceImpl implements MesureService {
 	private CheckAlerteUtils checkAlerteUtils;
 
 	@Inject
-	private TrameDWService trameDWService;
-	
+	private CapteurService capteurService;
+
 	@Inject
 	private EnregistreurService enregistreurService;
-	
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
+
+	/**
+	 * TEMPERATURE
+	 */
+	@Override
+	public Mesure conversionSignal_Temperature(Mesure mesureTemp)
+			throws ServiceException {
+		logger.info("--conversionSignalElectrique_Temperature MesureServiceImpl --");
+
+		Float valeur;
+		Float signalBrut = mesureTemp.getSignalBrut();
+		Capteur capteur = mesureTemp.getCapteur();
+		Enregistreur enregistreur = capteur.getEnregistreur();
+		Float echelleMinCapteur = capteur.getEchelleMinCapteur();
+		Float echelleMaxCapteur = capteur.getEchelleMaxCapteur();
+
+		if (enregistreur.getTypeEnregistreur().equals(
+				TypeEnregistreur.ANALOGIQUE)) {
+			valeur = (((echelleMaxCapteur - echelleMinCapteur) / 16) * (signalBrut - 4))
+					/ echelleMinCapteur;
+		} else {
+			valeur = signalBrut;
+		}
+		mesureTemp.setValeur(valeur);
+		this.create(mesureTemp);
+
+		return mesureTemp;
+	}
 
 	/**
 	 * CONDUCTIVITE
 	 */
 	@Override
-	public TrameDW conversionSignalElectrique_Conductivite(TrameDW trameDW)
+	public Mesure conversionSignal_Conductivite(
+			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
 			throws ServiceException {
-		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
+		logger.info("--conversionSignal_Conductivite MesureServiceImpl --");
 
-		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
 		Float valeur;
 
-		/**
-		 * TODO ajouter la temperature comme variable
-		 */
+		Mesure mesureCond = hashMapCalcul.get(TypeMesureOrTrame.CONDUCTIVITE);
+		Mesure mesureTemp = null;
 		Float temperature = 25F;
 		Float compenseA25degre = 25F;
 		@SuppressWarnings("unused")
 		Float compenseA20degre = 20F;
-		Float signalBrut = trameDW.getSignalBrut();
-		Enregistreur enregistreur = trameDW.getEnregistreur();
 
-		logger.debug("enregistreur : " + enregistreur);
+		Float signalBrut = mesureCond.getSignalBrut();
 
+		Capteur capteur = mesureCond.getCapteur();
+		Float echelleMaxCapteur = capteur.getEchelleMaxCapteur();
+		Float echelleMinCapteur = capteur.getEchelleMinCapteur();
+
+		Enregistreur enregistreur = capteur.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
-		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
+
+		if (hashMapCalcul.containsKey(TypeMesureOrTrame.TEMPERATURE)) {
+			mesureTemp = this.conversionSignal_Temperature(hashMapCalcul
+					.get(TypeMesureOrTrame.TEMPERATURE));
+			temperature = mesureTemp.getValeur();
+		}
 
 		if (enregistreur.getTypeEnregistreur().equals(
 				TypeEnregistreur.ANALOGIQUE)) {
 			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
-					* (valeurCapteurPleineEchelle / 16) * (signalBrut - 4);
+					* (echelleMaxCapteur - echelleMinCapteur / 16)
+					* (signalBrut - 4);
 		} else {
 			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
 					* signalBrut;
 		}
-		trameDW.setValeur(valeur);
+		mesureCond.setValeur(valeur);
 
-		trameDWService.update(trameDW);
-
-		/**
-		 * TODO Voir à déporter ça pour être générique
-		 */
-		Mesure mesure = new Mesure();
-		mesure.setDate(trameDW.getDate());
-		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
-		mesure.setEnregistreur(enregistreur);
-		mesure.setValeur(valeur);
-
-		this.create(mesure);
-
-		mesure = this.findById(mesure.getId());
+		mesureCond = this.create(mesureCond);
 
 		try {
-			checkAlerteUtils.checkAlerte(enregistreur, mesure);
+			checkAlerteUtils.checkAlerte(capteur, mesureCond);
 		} catch (MessagingException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		return trameDW;
+		return mesureCond;
 	}
 
 	/**
-	 * NiveauEauDeSurface
+	 * TODO : NiveauEauDeSurface
 	 */
 	@Override
-	public TrameDW conversionSignalElectrique_NiveauEauDeSurface(TrameDW trameDW)
+	public Mesure conversionSignal_NiveauEauDeSurface(
+			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
 			throws ServiceException {
 		logger.info("--conversionSignalElectrique_NiveauEauDeSurface mesure --");
 
-		// hauteur d’eau au-dessus de l’enregistreur à un instant t (en mètre)
-		Float valeur;
-
-		/**
-		 * TODO ajouter la temperature comme variable
-		 */
+		Mesure mesureNiveauEau = hashMapCalcul
+				.get(TypeMesureOrTrame.CONDUCTIVITE);
+		Mesure mesureTemp = null;
 		Float temperature = 25F;
 		Float compenseA25degre = 25F;
-		@SuppressWarnings("unused")
 		Float compenseA20degre = 20F;
-		Float signalBrut = trameDW.getSignalBrut();
-		Enregistreur enregistreur = trameDW.getEnregistreur();
 
-		logger.debug("enregistreur : " + enregistreur);
+		Float signalBrut = mesureNiveauEau.getSignalBrut();
 
+		Capteur capteur = mesureNiveauEau.getCapteur();
+		Float echelleMaxCapteur = capteur.getEchelleMaxCapteur();
+		Float echelleMinCapteur = capteur.getEchelleMinCapteur();
+
+		Enregistreur enregistreur = capteur.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
-		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
+
+		if (hashMapCalcul.containsKey(TypeMesureOrTrame.TEMPERATURE)) {
+			mesureTemp = this.conversionSignal_Temperature(hashMapCalcul
+					.get(TypeMesureOrTrame.TEMPERATURE));
+			temperature = mesureTemp.getValeur();
+		}
+
+		Float hauteurDeVide;
 
 		if (enregistreur.getTypeEnregistreur().equals(
 				TypeEnregistreur.ANALOGIQUE)) {
-			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
-					* (valeurCapteurPleineEchelle / 16) * (signalBrut - 4);
+			hauteurDeVide = ((echelleMaxCapteur - echelleMinCapteur) / 16)
+					* (signalBrut - 4) + 1;
 		} else {
-			valeur = ((((temperature - compenseA25degre) * coeffTemperature) / 100) + 1)
-					* signalBrut;
+			hauteurDeVide = signalBrut;
 		}
-		
-		Float repereFilEau = ((enregistreur.getOuvrage().getCoteSolBerge() -  enregistreur.getOuvrage().getCoteRepereNGF()) + valeur);
-		
-//		Float profondeurHauteurDEauEnM = ((enregistreur.getOuvrage().getCoteSolBerge() - enregistreur.getOuvrage().get)
-		
-		
-		trameDW.setValeur(valeur);
 
-		trameDWService.update(trameDW);
+		Float repereFilEau = ((enregistreur.getOuvrage().getCoteSolBerge() - enregistreur
+				.getOuvrage().getCoteRepereNGF()) + hauteurDeVide);
+
+		Float profondeurHauteurDEauEnM = (enregistreur.getOuvrage()
+				.getCoteSolBerge() - enregistreur.getOuvrage()
+				.getMesureRepereNGFSol());
+
+		Float debit = (-4000000F * (profondeurHauteurDEauEnM
+				* profondeurHauteurDEauEnM * profondeurHauteurDEauEnM * profondeurHauteurDEauEnM))
+				+ (18288F * (profondeurHauteurDEauEnM
+						* profondeurHauteurDEauEnM * profondeurHauteurDEauEnM))
+				+ (22424F * (profondeurHauteurDEauEnM * profondeurHauteurDEauEnM))
+				+ (22.444F * profondeurHauteurDEauEnM - 0.0235F);
 
 		/**
-		 * TODO Voir à déporter ça pour être générique
+		 * =IF(D28=D23,(J133*(E31-E29)*24*60*60),IF(D28=D24,J133*(E31-E29)*24*60
+		 * ,IF(D28=D25,(J133*(E31-E29)*24),IF(D28=D26,(J133*(E31-E29)*24*60*60*
+		 * 1000),IF(D28=D27,(J133*(E31-E29)*24*60*60*1000/3600))))))
 		 */
-		Mesure mesure = new Mesure();
-		mesure.setDate(trameDW.getDate());
-		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
-		mesure.setEnregistreur(enregistreur);
-		mesure.setValeur(valeur);
 
-		this.create(mesure);
+		/**
+		 * CUMUL
+		 */
+		// Float cumulSansCorrecDeriveEnLitre;
+		//
+		//
+		// String choixUnite = null;
+		//
+		// if(choixUnite == "l/s" ) {
+		//
+		// moyenneNonRecalee * (dateN - dateMoinsN) * 24 * 60 * 60
+		//
+		// }
 
-		mesure = this.findById(mesure.getId());
+		Float coteNGFNiveauEauMesure = enregistreur.getOuvrage()
+				.getCoteRepereNGF() - hauteurDeVide;
+
+		mesureNiveauEau.setValeur(coteNGFNiveauEauMesure);
+
+		this.create(mesureNiveauEau);
+
+		mesureNiveauEau = this.findById(mesureNiveauEau.getId());
 
 		try {
-			checkAlerteUtils.checkAlerte(enregistreur, mesure);
+			checkAlerteUtils.checkAlerte(capteur, mesureNiveauEau);
 		} catch (MessagingException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		return trameDW;
+		return mesureNiveauEau;
 	}
-	
-	
+
 	/**
 	 * COTE ALTIMETRIQUE
 	 */
 	@Override
-	public TrameDW conversionSignalElectrique_CoteAltimetrique(TrameDW trameDW)
+	public Mesure conversionSignal_NiveauEauNappeSouterraine(
+			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
 			throws ServiceException {
-		logger.info("--conversionSignalElectrique_HauteurEau mesure --");
+		logger.info("--conversionSignalElectrique_CoteAltimetrique mesure --");
 
+		Mesure mesureNiveauEau = hashMapCalcul
+				.get(TypeMesureOrTrame.NIVEAUDEAU);
+		Mesure mesureTemp = null;
 		Float accelerationGravitationnelle = 9.80665F;
-		Float temperature = 30F;
+		Float temperature = 25F;
+		Float compenseA25degre = 25F;
+		@SuppressWarnings("unused")
+		Float compenseA20degre = 20F;
 
-		Float signalBrut = trameDW.getSignalBrut();
+		Float signalBrut = mesureNiveauEau.getSignalBrut();
 
-		Enregistreur enregistreur = trameDW.getEnregistreur();
-		Float altitudeDuCapteur = enregistreur.getAltitude();
-		// Float altitudeDuCapteur = 289.7F;
+		Capteur capteur = mesureNiveauEau.getCapteur();
+		Float echelleMaxCapteur = capteur.getEchelleMaxCapteur();
+		Float echelleMinCapteur = capteur.getEchelleMinCapteur();
+
+		Enregistreur enregistreur = capteur.getEnregistreur();
 		Float salinite = enregistreur.getSalinite();
-		// Float salinite = 0F;
-		Float valeurCapteurPleineEchelle = enregistreur.getEchelleCapteur();
-		// Float valeurCapteurPleineEchelle = 0.05F;
+		Float coeffTemperature = enregistreur.getCoeffTemperature();
+		Float altitudeDuCapteur = enregistreur.getAltitude();
+
+		if (hashMapCalcul.containsKey(TypeMesureOrTrame.TEMPERATURE)) {
+			mesureTemp = this.conversionSignal_Temperature(hashMapCalcul
+					.get(TypeMesureOrTrame.TEMPERATURE));
+			temperature = mesureTemp.getValeur();
+		}
 
 		Float pressionRelativeBrute = null;
 
 		if (enregistreur.getTypeEnregistreur().equals(
 				TypeEnregistreur.ANALOGIQUE)) {
-			pressionRelativeBrute = (valeurCapteurPleineEchelle / 16)
+			pressionRelativeBrute = (echelleMaxCapteur - echelleMinCapteur / 16)
 					* (signalBrut - 4);
 		} else {
 			pressionRelativeBrute = signalBrut;
@@ -247,7 +310,6 @@ public class MesureServiceImpl implements MesureService {
 		/**
 		 * HAUTEUR DE COLONNE D'EAU EN METRES
 		 */
-
 		Float hauteurColonneEau = (pressionRelativeBrute * 10000)
 				/ (accelerationGravitationnelle * masseVolumiqueEau);
 
@@ -255,7 +317,6 @@ public class MesureServiceImpl implements MesureService {
 		 * Cote NGF du Niveau Statique mesurée = Valeur à afficher sans
 		 * correction dérive sans correction barometrique
 		 */
-
 		@SuppressWarnings("unused")
 		Float CoteNGFNiveauStatiqueMesuree = altitudeDuCapteur
 				+ hauteurColonneEau;
@@ -293,28 +354,21 @@ public class MesureServiceImpl implements MesureService {
 		Float pressionBarometriqueAlAltitude = (float) (1013.25 * Math.pow(
 				(1 - (0.0065 * altitudeDuCapteur) / 288.15), 5.255));
 
-		trameDW.setValeur(CoteNGFNiveauStatiqueMesureeCompenseDilatation);
+		mesureNiveauEau
+				.setValeur(CoteNGFNiveauStatiqueMesureeCompenseDilatation);
 
-		trameDWService.update(trameDW);
+		this.create(mesureNiveauEau);
 
-		Mesure mesure = new Mesure();
-		mesure.setDate(trameDW.getDate());
-		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
-		mesure.setEnregistreur(enregistreur);
-		mesure.setValeur(CoteNGFNiveauStatiqueMesureeCompenseDilatation);
-
-		this.create(mesure);
-
-		mesure = this.findById(mesure.getId());
+		mesureNiveauEau = this.findById(mesureNiveauEau.getId());
 
 		try {
-			checkAlerteUtils.checkAlerte(enregistreur, mesure);
+			checkAlerteUtils.checkAlerte(capteur, mesureNiveauEau);
 		} catch (MessagingException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		return trameDW;
+		return mesureNiveauEau;
 	}
 
 	@Override
@@ -344,7 +398,9 @@ public class MesureServiceImpl implements MesureService {
 	public Mesure update(Mesure mesure) throws ServiceException {
 		logger.info("--UPDATE MesureService --");
 		logger.debug("mesure : " + mesure);
-		return mesureDAO.saveAndFlush(mesure);
+		mesure = mesureDAO.saveAndFlush(mesure);
+		mesure = this.findByIdWithFetch(mesure.getId());
+		return mesure;
 	}
 
 	@Override
@@ -353,10 +409,10 @@ public class MesureServiceImpl implements MesureService {
 	public void remove(Integer id) throws ServiceException {
 		logger.info("--DELETE MesureService -- mesureId : " + id);
 		Mesure mesure = this.findById(id);
-		Enregistreur enregistreur = enregistreurService.findById(mesure.getEnregistreur().getId());
-		boolean success = enregistreur.getMesures().remove(mesure);
+		Capteur capteur = capteurService.findById(mesure.getCapteur().getId());
+		boolean success = capteur.getMesures().remove(mesure);
 		logger.debug("remove mesure from enregistreur success ? : " + success);
-		
+
 		mesureDAO.delete(id);
 	}
 
@@ -376,12 +432,12 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
-	public List<Mesure> findByEnregistreurId(Integer id)
+	public List<Mesure> findByCapteurIdWithFetch(Integer id)
 			throws ServiceException {
-		logger.info("--findByEnregistreurId MesureService -- Id : " + id);
+		logger.info("--findByCapteurId MesureService -- Id : " + id);
 		List<Mesure> mesures;
 		try {
-			mesures = mesureDAO.findByEnregistreurIdWithFetch(id);
+			mesures = mesureDAO.findByCapteurIdWithFetch(id);
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
@@ -390,13 +446,13 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
-	public List<Mesure> findByEnregistreurIdBetweenDates(Integer id,
-			Date dateDebut, Date dateFin) throws ServiceException {
+	public List<Mesure> findByCapteurIdBetweenDates(Integer id, Date dateDebut,
+			Date dateFin) throws ServiceException {
 		logger.info("--findByEnregistreurIdBetweenDates MesureService -- Id : "
 				+ id);
 		List<Mesure> mesures;
 		try {
-			mesures = mesureDAO.findByEnregistreurIdBetweenDates(id, dateDebut,
+			mesures = mesureDAO.findByCapteurIdBetweenDates(id, dateDebut,
 					dateFin);
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
@@ -410,9 +466,12 @@ public class MesureServiceImpl implements MesureService {
 
 		Point point = new Point();
 		try {
-			point.setMidEnregistreur(item.getEnregistreur().getMid());
+			point.setMid(item.getCapteur().getEnregistreur().getMid());
+			point.setTypeMesureOrTrameDescription(item.getCapteur()
+					.getTypeMesureOrTrame().getDescription());
 			point.setDate(item.getDate());
 			point.setValeur(item.getValeur());
+			point.setUnite(item.getUnite());
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
@@ -427,6 +486,6 @@ public class MesureServiceImpl implements MesureService {
 		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUMANUEL);
 		this.update(mesure);
 		this.findByIdWithFetch(mesureId);
-		
+
 	}
 }

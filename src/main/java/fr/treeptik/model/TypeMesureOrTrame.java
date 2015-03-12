@@ -1,8 +1,9 @@
 package fr.treeptik.model;
 
 public enum TypeMesureOrTrame {
-	NIVEAUDEAU("niveau d'eau"), PLUVIOMETRIE("pluviométrie"), NIVEAUMANUEL("niveau manuel"), CONDUCTIVITE("conductivité"), TEMPERATURE("température");
-//	, VENT("vent"), PRESSIONAIR("pression air"), DEBIT("débit") ;
+	NIVEAUDEAU("niveau d'eau"), NIVEAUMANUEL("niveau manuel"), CONDUCTIVITE("conductivité"), TEMPERATURE("température");
+//	, PLUVIOMETRIE("pluviométrie"), DEBIT("débit") ;
+//	, VENT("vent"), PRESSIONAIR("pression air"), 
 	
 	private String description;
 

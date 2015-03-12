@@ -42,17 +42,17 @@ public class Test {
 	
 	public static void testCoteAltimetrique() {
 
-		TrameDW trameDW = new TrameDW();
-
-		trameDW.setSignalBrut(6.025F);
-		trameDW.setTypeTrameDW(TypeMesureOrTrame.NIVEAUDEAU);
-
-		try {
-			mesureService.conversionSignalElectrique_CoteAltimetrique(trameDW);
-		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		TrameDW trameDW = new TrameDW();
+//
+//		trameDW.setConcatenationValeurs(6.025F);
+//		trameDW.setTypeTrameDW(TypeMesureOrTrame.NIVEAUDEAU);
+//
+//		try {
+//			mesureService.conversionSignalElectrique_NiveauEauNappeSouterraine(trameDW);
+//		} catch (ServiceException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	//

@@ -27,4 +27,7 @@ public interface AlerteEmiseService {
 
 	void scheduledAllAlerteAcquittement() throws ServiceException;
 
+	List<AlerteEmise> findAlertesActivesByCapteurId(Integer id)
+			throws ServiceException;
+
 }

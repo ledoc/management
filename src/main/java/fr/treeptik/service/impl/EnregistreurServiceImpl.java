@@ -42,7 +42,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 		logger.info("--CREATE EnregistreurServiceImpl -- enregistreur : "
 				+ enregistreur);
 
-//		xmlrpcUtils.addMobile(enregistreur);
+		xmlrpcUtils.addMobile(enregistreur);
 
 		return enregistreurDAO.save(enregistreur);
 	}
@@ -60,7 +60,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	@Secured("ADMIN")
 	@Transactional(rollbackFor = ServiceException.class)
 	public void remove(Integer id) throws ServiceException {
-		logger.info("--DELETE EnregistreurServiceImpl -- enregistreurId : "
+		logger.info("--remove EnregistreurServiceImpl -- enregistreurId : "
 				+ id);
 
 		try {
@@ -126,20 +126,6 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 		return enregistreur;
 	}
 
-	/**
-	 * Méthode spécifique pour récupérer les trameDWs associées au enregistreur
-	 * dû au FetchType.Lazy
-	 */
-	@Override
-	public Enregistreur findByIdWithJoinFetchAlertesActives(Integer id)
-			throws ServiceException {
-		logger.info("--findByIdWithJoinFechAlertesActives EnregistreurServiceImpl -- id : "
-				+ id);
-		Enregistreur enregistreur = enregistreurDAO
-				.findByIdWithJoinFetchAlertesActives(id);
-		logger.debug(enregistreur);
-		return enregistreur;
-	}
 
 	@Override
 	public List<Enregistreur> findByClientLogin(String userLogin)
@@ -153,6 +139,12 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 	public List<Enregistreur> findBySiteId(Integer id) throws ServiceException {
 		logger.info("--findBySiteId EnregistreurServiceImpl-- id : " + id);
 		return enregistreurDAO.findBySiteId(id);
+	}
+	
+	@Override
+	public Enregistreur findByIdWithJoinCapteurs(Integer id) throws ServiceException {
+		logger.info("--findByIdWithJoinCapteurs EnregistreurServiceImpl-- id : " + id);
+		return enregistreurDAO.findByIdWithJoinCapteurs(id);
 	}
 
 }

@@ -58,16 +58,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="enregistreur">Enregistreur (identifiant DW)</label>
 									<form:input type="text" class="form-control" id="enregistreur"
-										path="enregistreur.mid" readonly="true" />
+										path="capteur.enregistreur.mid" readonly="true" />
 								</div>
 								<div class="form-group">
 									<label for="ouvrage">Ouvrage</label>
 									<form:input type="text" class="form-control" id="ouvrage"
-										path="enregistreur.ouvrage.codeOuvrage" readonly="true" />
+										path="capteur.enregistreur.ouvrage.codeOuvrage" readonly="true" />
 								</div>
 								<div class="form-group">
 									<label for="typeAlerte">Type</label>
-									<form:input id="typeAlerte" path="typeAlerte.description"
+									<form:input id="typeMesureOrTrameDescription" path="capteur.typeMesureOrTrame.description"
 										class="form-control" readonly="true" />
 								</div>
 								<div class="form-group">

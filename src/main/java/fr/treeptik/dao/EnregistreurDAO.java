@@ -20,11 +20,11 @@ public interface EnregistreurDAO extends JpaRepository<Enregistreur, Integer> {
 	@Query("select e from Enregistreur e left join fetch e.trameDWs where e.mid = :mid")
 	public Enregistreur findByMidWithJoinFechTrameDWs(@Param("mid") String mid)
 			throws DataAccessException;
-
-	@Query("select e from Enregistreur e left join fetch e.alerteDescriptions where e.id = :id")
-	public Enregistreur findByIdWithJoinFetchAlertesActives(
-			@Param("id") Integer id) throws DataAccessException;
-
+	
+	@Query("select e from Enregistreur e left join fetch e.capteurs where e.id = :id")
+	public Enregistreur findByIdWithJoinCapteurs(@Param("id") Integer mid)
+			throws DataAccessException;
+	
 	@Query("select e from Enregistreur e where e not in (select e2 from Ouvrage o join o.enregistreurs e2)")
 	public List<Enregistreur> findFreeEnregistreurs()
 			throws DataAccessException;

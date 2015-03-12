@@ -95,13 +95,14 @@ public class AlerteEmiseServiceImpl implements AlerteEmiseService {
 		this.update(alerteEmise);
 	}
 
-	public List<AlerteEmise> findAlertesActivesByEnregistreurId(Integer id)
+	@Override
+	public List<AlerteEmise> findAlertesActivesByCapteurId(Integer id)
 			throws ServiceException {
-		logger.info("--findAlertesActivesByEnregistreurId AlerteServiceImpl -- alerteId : "
+		logger.info("--findAlertesActivesByCapteurId AlerteServiceImpl -- alerteId : "
 				+ id);
 
 		List<AlerteEmise> alerteEmises = alerteEmiseDAO
-				.findAlertesActivesByEnregistreurId(id);
+				.findAlertesActivesByCapteurId(id);
 
 		return alerteEmises;
 	}

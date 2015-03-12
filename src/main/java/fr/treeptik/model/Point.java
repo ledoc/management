@@ -9,7 +9,9 @@ public class Point implements Serializable {
 
 	private Date date;
 	private Float valeur;
-	private String midEnregistreur;
+	private String typeMesureOrTrameDescription;
+	private String mid;
+	private String unite;
 
 	public Date getDate() {
 		return date;
@@ -32,14 +34,28 @@ public class Point implements Serializable {
 		return "Point [date=" + date + ", valeur=" + valeur + "]";
 	}
 
-	public String getMidEnregistreur() {
-		return midEnregistreur;
+	public String getTypeMesureOrTrameDescription() {
+		return typeMesureOrTrameDescription;
 	}
 
-	public void setMidEnregistreur(String midEnregistreur) {
-		this.midEnregistreur = midEnregistreur;
+	public void setTypeMesureOrTrameDescription(String typeMesureOrTrameDescription) {
+		this.typeMesureOrTrameDescription = typeMesureOrTrameDescription;
 	}
 
-	
+	public String getMid() {
+		return mid;
+	}
+
+	public void setMid(String mid) {
+		this.mid = mid;
+	}
+
+	public String getUnite() {
+		return unite;
+	}
+
+	public void setUnite(String unite) {
+		this.unite = unite;
+	}
 	
 }

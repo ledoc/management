@@ -98,9 +98,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<td class="text-success"><b><c:out value="oui" /></b></td>
 											</c:if>
 											<td><c:out
-													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
-											<td><c:out value="${alerte.enregistreur.mid}" /></td>
-											<td><c:out value="${alerte.typeAlerte.description}" /></td>
+													value="${alerte.capteur.enregistreur.ouvrage.codeOuvrage}" /></td>
+											<td><c:out value="${alerte.capteur.enregistreur.mid}" /></td>
+											<td><c:out value="${alerte.capteur.typeMesureOrTrame.description}" /></td>
 											<sec:authorize ifAllGranted="ADMIN">
 												<td><a data-url="${urlAlerteDescriptionDelete}"
 													data-toggle="modal" data-target="#confirmModal"
@@ -158,9 +158,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td class="text-primary" ><a href="${urlAlerteEmiseUpdate}">${alerte.codeAlerte}</a>
 											</td>
 											<td><c:out
-													value="${alerte.enregistreur.ouvrage.codeOuvrage}" /></td>
-											<td><c:out value="${alerte.enregistreur.mid}" /></td>
-											<td><c:out value="${alerte.typeAlerte.description}" /></td>
+													value="${alerte.capteur.enregistreur.ouvrage.codeOuvrage}" /></td>
+											<td><c:out value="${alerte.capteur.enregistreur.mid}" /></td>
+											<td><c:out value="${alerte.capteur.typeMesureOrTrame.description}" /></td>
 											<td><c:out value="${alerte.mesureLevantAlerte.valeur}" /></td>
 											<c:set var="acquittement" value="${alerte.acquittement}" />
 											<c:if test="${ acquittement == false }">
@@ -220,7 +220,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												data-placeholder="Choisir un enregistreur ..."
 												data-parsley-required="true" data-parsley-trigger="change"
 												data-parsley-required-message="Champ requis"
-												path="enregistreur.id" disabled="${readOnlyValue }">
+												path="capteur.enregistreur.id" disabled="${readOnlyValue }">
 												<form:option value=""></form:option>
 												<form:options items="${enregistreursCombo}" itemValue="id"
 													itemLabel="mid" />
@@ -229,12 +229,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<div class="form-group">
 											<label for="typeAlerte">Type de l'alerte</label>
 											<form:select id="typeAlerte" name="typeAlerte"
-												path="typeAlerte" data-parsley-required="true"
+												path="capteur.typeMesureOrTrame" data-parsley-required="true"
 												data-parsley-required-message="Champ requis"
 												class="form-control chosen-select"
 												disabled="${readOnlyValue }">
 												<form:option value="" label="--- Choisir un type ---" />
-												<form:options items="${typesAlerteCombo}"
+												<form:options items="${typesMesureOrTrameCombo}"
 													itemLabel="description" />
 											</form:select>
 										</div>

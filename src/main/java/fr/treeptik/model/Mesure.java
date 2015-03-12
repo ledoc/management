@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,16 +23,16 @@ public class Mesure implements Serializable, Cloneable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	// niveaux d'eau, pluviometrie, niveau batterie
 	@Enumerated(EnumType.STRING)
 	private TypeMesureOrTrame typeMesureOrTrame;
-//	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-	@Temporal(TemporalType.TIMESTAMP)
+//	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date date;
+	private String unite;
 	@JsonIgnore
 	@ManyToOne
-	private Enregistreur enregistreur;
-
+	private Capteur capteur;
+	private Float signalBrut;
 	private Float valeur;
 
 	public Mesure() {
@@ -49,8 +47,6 @@ public class Mesure implements Serializable, Cloneable {
 		this.date = date;
 		this.valeur = valeur;
 	}
-	
-
 
 	public Integer getId() {
 		return id;
@@ -76,12 +72,28 @@ public class Mesure implements Serializable, Cloneable {
 		this.date = date;
 	}
 
-	public Enregistreur getEnregistreur() {
-		return enregistreur;
+	public Capteur getCapteur() {
+		return capteur;
 	}
 
-	public void setEnregistreur(Enregistreur enregistreur) {
-		this.enregistreur = enregistreur;
+	public void setCapteur(Capteur capteur) {
+		this.capteur = capteur;
+	}
+
+	public String getUnite() {
+		return unite;
+	}
+
+	public void setUnite(String unite) {
+		this.unite = unite;
+	}
+
+	public Float getSignalBrut() {
+		return signalBrut;
+	}
+
+	public void setSignalBrut(Float signalBrut) {
+		this.signalBrut = signalBrut;
 	}
 
 	public Float getValeur() {
@@ -93,19 +105,15 @@ public class Mesure implements Serializable, Cloneable {
 	}
 
 	@Override
-	public String toString() {
-		return "Mesure [id=" + id + ", typeMesurTrameAlert=" + typeMesureOrTrame + ", date="
-				+ date + ", valeur=" + valeur + "]";
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((typeMesureOrTrame == null) ? 0 : typeMesureOrTrame.hashCode());
+		result = prime
+				* result
+				+ ((typeMesureOrTrame == null) ? 0 : typeMesureOrTrame
+						.hashCode());
 		result = prime * result + Float.floatToIntBits(valeur);
 		return result;
 	}
@@ -135,14 +143,20 @@ public class Mesure implements Serializable, Cloneable {
 			return false;
 		return true;
 	}
-	
-	public Mesure cloneMe(){
+
+	public Mesure cloneMe() {
 		try {
 			return (Mesure) this.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "Mesure [id=" + id + ", typeMesureOrTrame=" + typeMesureOrTrame
+				+ "capteur : " + capteur + "]";
 	}
 
 }
