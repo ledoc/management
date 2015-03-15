@@ -23,8 +23,6 @@ public class AlerteEmise implements Serializable {
 	private String codeAlerte;
 	private String intitule;
 	@Enumerated(EnumType.STRING)
-	private TypeAlerte typeAlerte;
-	@Enumerated(EnumType.STRING)
 	private TendanceAlerte tendance;
 	private Float seuilPreAlerte;
 	private Float seuilAlerte;
@@ -77,14 +75,6 @@ public class AlerteEmise implements Serializable {
 
 	public void setNiveauAlerte(NiveauAlerte niveauAlerte) {
 		this.niveauAlerte = niveauAlerte;
-	}
-
-	public TypeAlerte getTypeAlerte() {
-		return typeAlerte;
-	}
-
-	public void setTypeAlerte(TypeAlerte typeAlerte) {
-		this.typeAlerte = typeAlerte;
 	}
 
 	public TendanceAlerte getTendance() {
@@ -146,8 +136,7 @@ public class AlerteEmise implements Serializable {
 	@Override
 	public String toString() {
 		return "AlerteEmise [id=" + id + ", codeAlerte=" + codeAlerte
-				+ ", intitule=" + intitule + ", typeAlerte=" + typeAlerte
-				+ ", tendance=" + tendance + ", seuilPreAlerte="
+				+ ", intitule=" + intitule + ", tendance=" + tendance + ", seuilPreAlerte="
 				+ seuilPreAlerte + ", seuilAlerte=" + seuilAlerte
 				+ ", niveauAlerte=" + niveauAlerte + ", date=" + date
 				+ ", acquittement=" + acquittement

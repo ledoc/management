@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
-import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
 import javax.persistence.Transient;
 
@@ -36,8 +35,8 @@ public class Capteur implements Serializable {
 	private Enregistreur enregistreur;
 
 	// Ce qui va être mesuré
-	@Enumerated(EnumType.STRING)
-	private TypeMesureOrTrame typeMesureOrTrame;
+	@ManyToOne
+	private TypeCaptAlerteMesure typeCaptAlerteMesure;
 
 	private Float echelleMaxCapteur;
 	private Float echelleMinCapteur;
@@ -69,7 +68,6 @@ public class Capteur implements Serializable {
 
 	@PostUpdate
 	@PostLoad
-	@PostPersist
 	public void setDynamicMesures() {
 		this.initNiveauManuel();
 		this.initDerniereMesure();
@@ -83,15 +81,15 @@ public class Capteur implements Serializable {
 
 		if (this.mesures != null) {
 
-			boolean typeManuelPresence = this.mesures.stream().anyMatch(m ->
-
-			m.getTypeMesureOrTrame().equals(TypeMesureOrTrame.NIVEAUMANUEL));
+			boolean typeManuelPresence = this.mesures.stream().anyMatch(
+					m -> m.getTypeCaptAlerteMesure().getNom()
+							.equals("NIVEAUMANUEL"));
 
 			if (typeManuelPresence) {
 				List<Mesure> allMesureManuel = this.mesures
 						.stream()
-						.filter(m -> m.getTypeMesureOrTrame().equals(
-								TypeMesureOrTrame.NIVEAUMANUEL))
+						.filter(m -> m.getTypeCaptAlerteMesure().getNom()
+								.equals("NIVEAUMANUEL"))
 						.collect(Collectors.toList());
 
 				if (allMesureManuel.size() > 1) {
@@ -121,15 +119,15 @@ public class Capteur implements Serializable {
 		if (this.mesures != null) {
 
 			boolean typeNotManuelPresence = this.mesures.stream().anyMatch(
-					m -> !m.getTypeMesureOrTrame().equals(
-							TypeMesureOrTrame.NIVEAUMANUEL));
+					m -> !m.getTypeCaptAlerteMesure().getNom()
+							.equals("NIVEAUMANUEL"));
 
 			if (typeNotManuelPresence) {
 
 				List<Mesure> allMesureNotManuel = this.mesures
 						.stream()
-						.filter(m -> !m.getTypeMesureOrTrame().equals(
-								TypeMesureOrTrame.NIVEAUMANUEL))
+						.filter(m -> !m.getTypeCaptAlerteMesure().getNom()
+								.equals("NIVEAUMANUEL"))
 						.collect(Collectors.toList());
 
 				if (allMesureNotManuel.size() > 1) {
@@ -165,12 +163,13 @@ public class Capteur implements Serializable {
 		this.enregistreur = enregistreur;
 	}
 
-	public TypeMesureOrTrame getTypeMesureOrTrame() {
-		return typeMesureOrTrame;
+	public TypeCaptAlerteMesure getTypeCaptAlerteMesure() {
+		return typeCaptAlerteMesure;
 	}
 
-	public void setTypeMesureOrTrame(TypeMesureOrTrame typeMesureOrTrame) {
-		this.typeMesureOrTrame = typeMesureOrTrame;
+	public void setTypeCaptAlerteMesure(
+			TypeCaptAlerteMesure typeCaptAlerteMesure) {
+		this.typeCaptAlerteMesure = typeCaptAlerteMesure;
 	}
 
 	public Float getEchelleMaxCapteur() {
@@ -231,9 +230,10 @@ public class Capteur implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Capteur [id=" + id + ", typeMesureOrTrame=" + typeMesureOrTrame
-				+ ", echelleMaxCapteur=" + echelleMaxCapteur
-				+ ", echelleMinCapteur=" + echelleMinCapteur + "]";
+		return "Capteur [id=" + id + ", typeCaptAlerteMesure="
+				+ typeCaptAlerteMesure + ", echelleMaxCapteur="
+				+ echelleMaxCapteur + ", echelleMinCapteur="
+				+ echelleMinCapteur + "]";
 	}
 
 }

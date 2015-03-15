@@ -67,19 +67,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<a class="relayUrl" href="${initNiveauManuelUrl}"></a>
 
 							<form:hidden class="transfertInput" path="id" />
-
-
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 
 								<div class="form-group">
-									<label for="typeMesureOrTrame">Donnée mesurée </label>
-									<form:select id="typeMesureOrTrame"
+
+									<label for="typeCaptAlerteMesure">Donnée mesurée </label>
+									<form:select id="typeCaptAlerteMesure"
 										class="form-control transfertInput chosen"
-										path="typeMesureOrTrame" data-parsley-required="true"
+										path="typeCaptAlerteMesure.id" data-parsley-required="true"
 										data-parsley-required-message="Choix requis"
 										disabled="${readOnlyValue }">
 										<form:option value="" label="--- Choisir le type ---" />
-										<form:options items="${typeMesureOrTramesCombo}"
+										<form:options items="${typeCaptAlerteMesureCombo}" itemValue="id"
 											itemLabel="description" />
 									</form:select>
 								</div>
@@ -110,7 +109,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										disabled="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<form:hidden class="transfertInput" path="enregistreur.id" />
+									<form:hidden id="enregistreur.id" class="transfertInput"
+										path="enregistreur.id" />
 									<label for="enregistreur">Enregistreur </label>
 									<form:input readonly="true" type="text"
 										class="form-control transfertInput" id="enregistreur"
@@ -225,8 +225,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<input type="hidden" name="niveauManuel.id" value="" />
 								<form:hidden id="data-id" path="id" />
 
-								<form:hidden id="data-typeMesureOrTrame"
-									path="typeMesureOrTrame" />
+								<form:hidden id="data-typeCaptAlerteMesure.id"
+									path="typeCaptAlerteMesure.id" />
 								<form:hidden id="data-echelleMinCapteur"
 									path="echelleMinCapteur" />
 								<form:hidden id="data-echelleMaxCapteur"

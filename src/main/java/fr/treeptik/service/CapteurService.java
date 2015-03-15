@@ -4,7 +4,7 @@ import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Capteur;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 
 public interface CapteurService {
 
@@ -21,8 +21,8 @@ public interface CapteurService {
 	Capteur findByIdWithJoinFetchAlertesActives(Integer id)
 			throws ServiceException;
 
-	Capteur findByEnregistreurAndTypeMesureOrTrame(
-			TypeMesureOrTrame typeMesureOrTrame, Integer enregistreurId)
+	Capteur findByEnregistreurAndTypeCaptAlerteMesure(
+			TypeCaptAlerteMesure typeCaptAlerteMesure, Integer enregistreurId)
 			throws ServiceException;
 
 	List<Capteur> findAllByEnregistreurId(Integer enregistreurId)

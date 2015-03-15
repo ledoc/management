@@ -29,6 +29,7 @@ public class Enregistreur implements Serializable {
 	// identifiant applicatif
 	private String mid;
 	private String nom;
+	private String commentaire;
 
 	// Analogique ou numérique : différence pour calcul
 	@Enumerated(EnumType.STRING)
@@ -135,6 +136,14 @@ public class Enregistreur implements Serializable {
 
 	public void setMid(String mid) {
 		this.mid = mid;
+	}
+
+	public String getCommentaire() {
+		return commentaire;
+	}
+
+	public void setCommentaire(String commentaire) {
+		this.commentaire = commentaire;
 	}
 
 	public TypeEnregistreur getTypeEnregistreur() {

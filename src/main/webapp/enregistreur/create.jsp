@@ -14,7 +14,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 </jsp:include>
 
 
-
 <!-- Seulement une visualisation pour les clients -->
 <sec:authorize ifAllGranted="ADMIN">
 	<c:set var="readOnlyValue" value="false"></c:set>
@@ -48,8 +47,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">${textCreateUpdate}&nbspd'un
 							Enregistreur</h1>
-						<p class="text-muted">Permet de ${sentenceCreateUpdate} un
-							enregistreur.</p>
+						<sec:authorize ifAllGranted="ADMIN">
+							<c:if test="${empty enregistreur.id}">
+								<p class="text-muted">Pour ajouter un ou des capteurs
+									l'enregistreur doit d'abord être créé.</p>
+							</c:if>
+							<c:if test="${not empty enregistreur.id}">
+								<p class="text-muted">Ajouter et consulter les capteurs en
+									bas de page.</p>
+							</c:if>
+						</sec:authorize>
 					</header>
 					<div class="panel-body">
 						<c:url var="createEnregistreur" value="/enregistreur/create" />
@@ -140,7 +147,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required-message="Choix requis"
 										readonly="${readOnlyValue }" />
 								</div>
-
+								<div class="form-group">
+									<label for="commentaire">Commentaire</label>
+									<form:textarea type="text" class="form-control"
+										id="commentaire" path="commentaire" placeholder=""
+										data-parsley-trigger="change" data-parsley-mincheck="2"
+										data-parsley-mincheck-message="2 caractères minimum"
+										readonly="${readOnlyValue }" />
+								</div>
 
 								<div class="pull-right">
 									<a
@@ -268,7 +282,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												<c:url var="urlMesuresView"
 													value="/mesure/list/capteur/${capteur.id}" />
 												<tr>
-													<td class="text-primary"><a href="${urlCapteurUpdate}">${capteur.typeMesureOrTrame.description}</a></td>
+													<td class="text-primary"><a href="${urlCapteurUpdate}">${capteur.typeCaptAlerteMesure.description}</a></td>
 													<td><c:out value="${capteur.derniereMesure.valeur}" /></td>
 													<td><c:out value="${capteur.niveauManuel.valeur}" /></td>
 													<sec:authorize ifAllGranted="ADMIN">

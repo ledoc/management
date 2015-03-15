@@ -47,12 +47,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des alertes</h1>
 						<p class="text-muted">Alertes actives : ${alertesActives} /
 							${alertesTotales}</p>
-							
-							<c:if test='${ messageSuccess == "OK" }'>
-								<div style="text-align: center">
-									<span class="text-success h3">Votre Alerte a bien été acquittée.</span>
-								</div>
-							</c:if>
+
+						<!--  Construction d'URL utiles -->
+						<c:url var="urlResources" value="/resources" />
+						<c:url var="alerteUrl" value="/alerte" />
+						<a class="alerteUrl" href="${alerteUrl}"></a>
+
+						<c:if test='${ messageSuccess == "OK" }'>
+							<div style="text-align: center">
+								<span class="text-success h3">Votre Alerte a bien été
+									acquittée.</span>
+							</div>
+						</c:if>
 
 						<div class="pull-right mb15">
 							<sec:authorize ifAllGranted="ADMIN">
@@ -88,7 +94,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlAlerteDescriptionUpdate"
 											value="/alerte/description/update/${alerte.id}" />
 										<tr>
-											<td class="text-primary" ><a
+											<td class="text-primary"><a
 												href="${urlAlerteDescriptionUpdate}">${alerte.codeAlerte}</a></td>
 											<c:set var="activation" value="${alerte.activation}" />
 											<c:if test="${ activation == false }">
@@ -100,7 +106,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out
 													value="${alerte.capteur.enregistreur.ouvrage.codeOuvrage}" /></td>
 											<td><c:out value="${alerte.capteur.enregistreur.mid}" /></td>
-											<td><c:out value="${alerte.capteur.typeMesureOrTrame.description}" /></td>
+											<td><c:out
+													value="${alerte.capteur.typeCaptAlerteMesure.description}" /></td>
 											<sec:authorize ifAllGranted="ADMIN">
 												<td><a data-url="${urlAlerteDescriptionDelete}"
 													data-toggle="modal" data-target="#confirmModal"
@@ -119,12 +126,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				</section>
 			</div>
 			<c:if test="${empty historiqueAlertes }">
-			<div class="col-lg-12 col-md-12 col-xs-12">
-				<div class="panel-body">
-				<section class="panel">
-					<H2>Pas d'historique</H2>
-					</section>
-				</div>
+				<div class="col-lg-12 col-md-12 col-xs-12">
+					<div class="panel-body">
+						<section class="panel">
+							<H2>Pas d'historique</H2>
+						</section>
+					</div>
 				</div>
 			</c:if>
 			<c:if test="${not empty historiqueAlertes }">
@@ -155,12 +162,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<tr>
 											<td><fmt:formatDate value="${alerte.date}"
 													pattern="dd-MM-yyyy HH:mm:ss" /></td>
-											<td class="text-primary" ><a href="${urlAlerteEmiseUpdate}">${alerte.codeAlerte}</a>
-											</td>
+											<td class="text-primary"><a
+												href="${urlAlerteEmiseUpdate}">${alerte.codeAlerte}</a></td>
 											<td><c:out
 													value="${alerte.capteur.enregistreur.ouvrage.codeOuvrage}" /></td>
 											<td><c:out value="${alerte.capteur.enregistreur.mid}" /></td>
-											<td><c:out value="${alerte.capteur.typeMesureOrTrame.description}" /></td>
+											<td><c:out
+													value="${alerte.capteur.typeCaptAlerteMesure.description}" /></td>
 											<td><c:out value="${alerte.mesureLevantAlerte.valeur}" /></td>
 											<c:set var="acquittement" value="${alerte.acquittement}" />
 											<c:if test="${ acquittement == false }">
@@ -215,8 +223,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												readonly="${readOnlyValue }" />
 										</div>
 										<div class="form-group">
-											<label for="site">Rattacher à un Enregistreur</label>
-											<form:select class="form-control chosen-select"
+											<label for="enregistreur">Rattacher à un Enregistreur</label>
+											<form:select id="enregistreur"
+												class="form-control chosen-select"
 												data-placeholder="Choisir un enregistreur ..."
 												data-parsley-required="true" data-parsley-trigger="change"
 												data-parsley-required-message="Champ requis"
@@ -227,15 +236,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											</form:select>
 										</div>
 										<div class="form-group">
-											<label for="typeAlerte">Type de l'alerte</label>
-											<form:select id="typeAlerte" name="typeAlerte"
-												path="capteur.typeMesureOrTrame" data-parsley-required="true"
+											<label for="typeCaptAlerteMesure">Type de l'alerte</label>
+											<form:select id="typeCaptAlerteMesure" path="capteur.typeCaptAlerteMesure.id"
+												data-parsley-required="true"
 												data-parsley-required-message="Champ requis"
 												class="form-control chosen-select"
 												disabled="${readOnlyValue }">
-												<form:option value="" label="--- Choisir un type ---" />
-												<form:options items="${typesMesureOrTrameCombo}"
-													itemLabel="description" />
 											</form:select>
 										</div>
 										<div class="form-group">
@@ -285,7 +291,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 												readonly="${readOnlyValue }" />
 										</div>
 										<div class="form-group">
-											<label for="intitule">Intitulé</label>
+											<label for="intitule">Commentaire</label>
 											<form:input type="text" class="form-control" id="intitule"
 												path="intitule" placeholder="" data-parsley-trigger="change"
 												data-parsley-mincheck="2"
@@ -370,4 +376,49 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				var $confirmButton = $('#js-confirm-button');
 				$confirmButton.attr('href', url);
 			});
+
+			$("#enregistreur")
+					.change(
+							function() {
+
+								var $typeCaptAlerteMesure = $('#typeCaptAlerteMesure');
+
+								$
+										.getJSON(
+												$('.alerteUrl').attr('href')
+														+ '/enregistreur/refresh/typeCaptAlerteMesure/'
+														+ $(this).val(),
+												null,
+												function(listTypeCaptAlerteMesure) {
+													var output = []
+													$
+															.each(
+																	listTypeCaptAlerteMesure,
+																	function(
+																			index,
+																			typeCaptAlerteMesure) {
+																		var tpl = '<option value="NONE"></option><option value="' + typeCaptAlerteMesure.id + '">'
+																				+ typeCaptAlerteMesure.description
+																				+ '</option>';
+																		output
+																				.push(tpl);
+																	});
+													$typeCaptAlerteMesure
+															.attr(
+																	'data-placeholder',
+																	' --- Choisir un type --- ');
+													$typeCaptAlerteMesure.html(output
+															.join(''));
+													$typeCaptAlerteMesure
+															.chosen(
+																	{
+																		allow_single_deselect : true
+																	},
+																	{
+																		disable_search_threshold : 10
+																	});
+													$typeCaptAlerteMesure
+															.trigger("chosen:updated");
+												});
+							});
 		</script>

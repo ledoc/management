@@ -166,7 +166,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																<td><c:out
 																		value="${mesure.capteur.enregistreur.mid}" /></td>
 																<td><c:out
-																		value="${mesure.typeMesureOrTrame.description}" /></td>
+																		value="${mesure.typeCaptAlerteMesure.description}" /></td>
 																<td><a data-url="${urlAffectAsNewNiveauManuel}"
 																	data-toggle="modal" data-target="#confirmModal"
 																	class="btn btn-outline btn-success btn-xs js-confirm-btn">
@@ -219,10 +219,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<script type="text/javascript">
 			$(document).ready(
 					function() {
-
+						$.fn.dataTable.moment( 'dd-MM-yyyy HH:mm:ss' );
 						$('#tableMesures').DataTable({
 							"columnDefs" : [ {
-								"type" : "date",
+								"sType" : "datetime-moment",
 								"targets" : [ 0 ]
 							} ],
 							"order" : [ [ 0, 'desc' ] ]
@@ -477,38 +477,50 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				initListOuvrage();
 			});
 
-			$("#enregistreur").change(function() {
+			$("#enregistreur")
+					.change(
+							function() {
 
-				var $capteur = $('#capteur');
+								var $capteur = $('#capteur');
 
-				$
-						.getJSON(
-								$('.relayUrl').attr('href')
-										+ '/enregistreur/refresh/capteur/'
-										+ $(this).val(),
-								null,
-								function(listCapteur) {
-									var output = []
-									$
-											.each(
-													listCapteur,
-													function(index, capteur) {
-														var tpl = '<option value="NONE"></option><option value="' + capteur.id + '">'
-																+ capteur.typeMesureOrTrame
-																+ '</option>';
-														output.push(tpl);
-													});
-									$capteur.attr('data-placeholder',
-											'Choisir le capteur');
-									$capteur.html(output.join(''));
-									$capteur.chosen({
-										allow_single_deselect : true
-									}, {
-										disable_search_threshold : 10
-									});
-									$capteur.trigger("chosen:updated");
-								});
-			});
+								$
+										.getJSON(
+												$('.relayUrl').attr('href')
+														+ '/enregistreur/refresh/capteur/'
+														+ $(this).val(),
+												null,
+												function(listCapteur) {
+													var output = []
+													$
+															.each(
+																	listCapteur,
+																	function(
+																			index,
+																			capteur) {
+																		var tpl = '<option value="NONE"></option><option value="' + capteur.id + '">'
+																				+ capteur.typeCaptAlerteMesure.description
+																				+ '</option>';
+																		output
+																				.push(tpl);
+																	});
+													$capteur
+															.attr(
+																	'data-placeholder',
+																	'Choisir le capteur');
+													$capteur.html(output
+															.join(''));
+													$capteur
+															.chosen(
+																	{
+																		allow_single_deselect : true
+																	},
+																	{
+																		disable_search_threshold : 10
+																	});
+													$capteur
+															.trigger("chosen:updated");
+												});
+							});
 
 			$("#capteur")
 					.change(

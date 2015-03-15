@@ -48,8 +48,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 					<header class="panel-heading no-b col-lg-offset-2">
 						<h1 class="h3 text-primary mt0">${textCreateUpdate}&nbspd'un
 							Ouvrage</h1>
-						<p class="text-muted">Pour ajouter un ou des enregistreurs
-							l'ouvrage doit d'abord être créé</p>
+
+						<sec:authorize ifAllGranted="ADMIN">
+							<c:if test="${empty ouvrage.id}">
+								<p class="text-muted">Pour ajouter un ou des enregistreurs
+									l'ouvrage doit d'abord être créé</p>
+							</c:if>
+							<c:if test="${not empty ouvrage.id}">
+								<p class="text-muted">Ajouter et consulter les enregistreurs
+									en bas de page.</p>
+							</c:if>
+						</sec:authorize>
 					</header>
 
 					<div class="panel-body">
@@ -99,7 +108,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 								<div class="form-group">
 									<label for="site">Rattacher à un site</label>
-									<form:select class="form-control chosen-select"
+									<form:select class="form-control chosen"
 										data-placeholder="Choisir un etablissement ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis" path="site.id"

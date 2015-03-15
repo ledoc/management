@@ -20,10 +20,11 @@ import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Point;
 import fr.treeptik.model.TypeEnregistreur;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
+import fr.treeptik.service.TypeCaptAlerteMesureService;
 import fr.treeptik.util.CheckAlerteUtils;
 
 @Service
@@ -39,7 +40,7 @@ public class MesureServiceImpl implements MesureService {
 	private CapteurService capteurService;
 
 	@Inject
-	private EnregistreurService enregistreurService;
+	private TypeCaptAlerteMesureService typeCaptAlerteMesureService;
 
 	private Logger logger = Logger.getLogger(MesureServiceImpl.class);
 
@@ -47,42 +48,65 @@ public class MesureServiceImpl implements MesureService {
 	 * TEMPERATURE
 	 */
 	@Override
-	public Mesure conversionSignal_Temperature(Mesure mesureTemp)
+	public HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_Temperature(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException {
+
+		TypeCaptAlerteMesure typeCaptAlerteMesureTemperature = typeCaptAlerteMesureService
+				.findByNom("TEMPERATURE");
+
 		logger.info("--conversionSignalElectrique_Temperature MesureServiceImpl --");
-
-		Float valeur;
-		Float signalBrut = mesureTemp.getSignalBrut();
-		Capteur capteur = mesureTemp.getCapteur();
-		Enregistreur enregistreur = capteur.getEnregistreur();
-		Float echelleMinCapteur = capteur.getEchelleMinCapteur();
-		Float echelleMaxCapteur = capteur.getEchelleMaxCapteur();
-
-		if (enregistreur.getTypeEnregistreur().equals(
-				TypeEnregistreur.ANALOGIQUE)) {
-			valeur = (((echelleMaxCapteur - echelleMinCapteur) / 16) * (signalBrut - 4))
-					/ echelleMinCapteur;
+		Mesure mesureTemp = hashMapCalcul.get(typeCaptAlerteMesureTemperature);
+		if (mesureTemp.getId() != null) {
+			logger.debug("température déjà enregistrée ");
 		} else {
-			valeur = signalBrut;
-		}
-		mesureTemp.setValeur(valeur);
-		this.create(mesureTemp);
 
-		return mesureTemp;
+			Float valeur;
+			Float signalBrut = mesureTemp.getSignalBrut();
+			
+			System.out.println(signalBrut);
+			
+			Capteur capteur = mesureTemp.getCapteur();
+			Enregistreur enregistreur = capteur.getEnregistreur();
+			Float echelleMinCapteur = capteur.getEchelleMinCapteur();
+			Float echelleMaxCapteur = capteur.getEchelleMaxCapteur();
+
+			if (enregistreur.getTypeEnregistreur().equals(
+					TypeEnregistreur.ANALOGIQUE)) {
+				valeur = (((echelleMaxCapteur - echelleMinCapteur) / 16) * (signalBrut - 4))
+						+ echelleMinCapteur;
+			} else {
+				valeur = signalBrut;
+			}
+
+			System.out.println(valeur);
+			
+			mesureTemp.setValeur(valeur);
+			this.create(mesureTemp);
+
+			hashMapCalcul.replace(typeCaptAlerteMesureTemperature, mesureTemp);
+
+		}
+		return hashMapCalcul;
 	}
 
 	/**
 	 * CONDUCTIVITE
 	 */
 	@Override
-	public Mesure conversionSignal_Conductivite(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
+	public HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_Conductivite(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException {
 		logger.info("--conversionSignal_Conductivite MesureServiceImpl --");
 
 		Float valeur;
 
-		Mesure mesureCond = hashMapCalcul.get(TypeMesureOrTrame.CONDUCTIVITE);
+		TypeCaptAlerteMesure typeCaptAlerteMesureTemperature = typeCaptAlerteMesureService
+				.findByNom("TEMPERATURE");
+		TypeCaptAlerteMesure typeCaptAlerteMesureConductivite = typeCaptAlerteMesureService
+				.findByNom("CONDUCTIVITE");
+
+		Mesure mesureCond = hashMapCalcul.get(typeCaptAlerteMesureConductivite);
 		Mesure mesureTemp = null;
 		Float temperature = 25F;
 		Float compenseA25degre = 25F;
@@ -98,9 +122,9 @@ public class MesureServiceImpl implements MesureService {
 		Enregistreur enregistreur = capteur.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
 
-		if (hashMapCalcul.containsKey(TypeMesureOrTrame.TEMPERATURE)) {
-			mesureTemp = this.conversionSignal_Temperature(hashMapCalcul
-					.get(TypeMesureOrTrame.TEMPERATURE));
+		if (hashMapCalcul.containsKey(typeCaptAlerteMesureTemperature)) {
+			hashMapCalcul = this.conversionSignal_Temperature(hashMapCalcul);
+			mesureTemp = hashMapCalcul.get(typeCaptAlerteMesureTemperature);
 			temperature = mesureTemp.getValeur();
 		}
 
@@ -124,20 +148,25 @@ public class MesureServiceImpl implements MesureService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		return mesureCond;
+		return hashMapCalcul;
 	}
 
 	/**
 	 * TODO : NiveauEauDeSurface
 	 */
 	@Override
-	public Mesure conversionSignal_NiveauEauDeSurface(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
+	public HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_NiveauEauDeSurface(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException {
 		logger.info("--conversionSignalElectrique_NiveauEauDeSurface mesure --");
 
+		TypeCaptAlerteMesure typeCaptAlerteMesureTemperature = typeCaptAlerteMesureService
+				.findByNom("TEMPERATURE");
+		TypeCaptAlerteMesure typeCaptAlerteMesureNiveauEau = typeCaptAlerteMesureService
+				.findByNom("NIVEAUEAU");
+
 		Mesure mesureNiveauEau = hashMapCalcul
-				.get(TypeMesureOrTrame.CONDUCTIVITE);
+				.get(typeCaptAlerteMesureNiveauEau);
 		Mesure mesureTemp = null;
 		Float temperature = 25F;
 		Float compenseA25degre = 25F;
@@ -152,9 +181,9 @@ public class MesureServiceImpl implements MesureService {
 		Enregistreur enregistreur = capteur.getEnregistreur();
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
 
-		if (hashMapCalcul.containsKey(TypeMesureOrTrame.TEMPERATURE)) {
-			mesureTemp = this.conversionSignal_Temperature(hashMapCalcul
-					.get(TypeMesureOrTrame.TEMPERATURE));
+		if (hashMapCalcul.containsKey(typeCaptAlerteMesureTemperature)) {
+			hashMapCalcul = this.conversionSignal_Temperature(hashMapCalcul);
+			mesureTemp = hashMapCalcul.get(typeCaptAlerteMesureTemperature);
 			temperature = mesureTemp.getValeur();
 		}
 
@@ -218,20 +247,30 @@ public class MesureServiceImpl implements MesureService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		return mesureNiveauEau;
+		return hashMapCalcul;
 	}
 
 	/**
 	 * COTE ALTIMETRIQUE
 	 */
 	@Override
-	public Mesure conversionSignal_NiveauEauNappeSouterraine(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
+	public HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_NiveauEauNappeSouterraine(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException {
 		logger.info("--conversionSignalElectrique_CoteAltimetrique mesure --");
 
+		TypeCaptAlerteMesure typeCaptAlerteMesureTemperature = typeCaptAlerteMesureService
+				.findByNom("TEMPERATURE");
+		TypeCaptAlerteMesure typeCaptAlerteMesureNiveauEau = typeCaptAlerteMesureService
+				.findByNom("NIVEAUDEAU");
+		
+		
+		
 		Mesure mesureNiveauEau = hashMapCalcul
-				.get(TypeMesureOrTrame.NIVEAUDEAU);
+				.get(typeCaptAlerteMesureNiveauEau);
+		
+		logger.info("mesureNiveauEau : " + mesureNiveauEau);
+		
 		Mesure mesureTemp = null;
 		Float accelerationGravitationnelle = 9.80665F;
 		Float temperature = 25F;
@@ -250,9 +289,9 @@ public class MesureServiceImpl implements MesureService {
 		Float coeffTemperature = enregistreur.getCoeffTemperature();
 		Float altitudeDuCapteur = enregistreur.getAltitude();
 
-		if (hashMapCalcul.containsKey(TypeMesureOrTrame.TEMPERATURE)) {
-			mesureTemp = this.conversionSignal_Temperature(hashMapCalcul
-					.get(TypeMesureOrTrame.TEMPERATURE));
+		if (hashMapCalcul.containsKey(typeCaptAlerteMesureTemperature)) {
+			hashMapCalcul = this.conversionSignal_Temperature(hashMapCalcul);
+			mesureTemp = hashMapCalcul.get(typeCaptAlerteMesureTemperature);
 			temperature = mesureTemp.getValeur();
 		}
 
@@ -368,7 +407,7 @@ public class MesureServiceImpl implements MesureService {
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 
-		return mesureNiveauEau;
+		return hashMapCalcul;
 	}
 
 	@Override
@@ -390,7 +429,9 @@ public class MesureServiceImpl implements MesureService {
 	@Transactional(rollbackFor = ServiceException.class)
 	public Mesure create(Mesure mesure) throws ServiceException {
 		logger.info("--CREATE MesureService -- mesure : " + mesure);
-		return mesureDAO.save(mesure);
+		mesure = mesureDAO.save(mesure);
+		this.findByIdWithFetch(mesure.getId());
+		return mesure;
 	}
 
 	@Override
@@ -467,11 +508,12 @@ public class MesureServiceImpl implements MesureService {
 		Point point = new Point();
 		try {
 			point.setMid(item.getCapteur().getEnregistreur().getMid());
-			point.setTypeMesureOrTrameDescription(item.getCapteur()
-					.getTypeMesureOrTrame().getDescription());
+			point.setTypeCaptAlerteMesure(item.getCapteur()
+					.getTypeCaptAlerteMesure());
 			point.setDate(item.getDate());
 			point.setValeur(item.getValeur());
 			point.setUnite(item.getUnite());
+
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
@@ -482,8 +524,12 @@ public class MesureServiceImpl implements MesureService {
 	@Override
 	@Transactional
 	public void affectNewNiveauManuel(Integer mesureId) throws ServiceException {
+
+		TypeCaptAlerteMesure typeCaptAlerteMesureNiveauManuel = typeCaptAlerteMesureService
+				.findByNom("NIVEAUMANUEL");
+
 		Mesure mesure = this.findById(mesureId);
-		mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUMANUEL);
+		mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureNiveauManuel);
 		this.update(mesure);
 		this.findByIdWithFetch(mesureId);
 

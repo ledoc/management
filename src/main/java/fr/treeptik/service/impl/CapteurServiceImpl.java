@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.CapteurDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Capteur;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 import fr.treeptik.service.CapteurService;
 
 @Service
@@ -74,19 +74,19 @@ public class CapteurServiceImpl implements CapteurService {
 	}
 
 	@Override
-	public Capteur findByEnregistreurAndTypeMesureOrTrame(
-			TypeMesureOrTrame typeMesureOrTrame, Integer enregistreurId)
+	public Capteur findByEnregistreurAndTypeCaptAlerteMesure(
+			TypeCaptAlerteMesure typeCaptAlerteMesure, Integer enregistreurId)
 			throws ServiceException {
-		logger.info("--findByEnregistreurAndTypeMesureOrTrame CapteurServiceImpl -- typeMesureOrTrame : "
-				+ typeMesureOrTrame + " -- enregistreurId : " + enregistreurId);
-		return capteurDAO.findByEnregistreurIdAndTypeMesureOrTrame(
-				typeMesureOrTrame, enregistreurId);
+		logger.info("--findByEnregistreurAndTypeCaptAlerteMesure CapteurServiceImpl -- typeCaptAlerteMesure : "
+				+ typeCaptAlerteMesure + " -- enregistreurId : " + enregistreurId);
+		return capteurDAO.findByEnregistreurIdAndTypeCaptAlerteMesure(
+				typeCaptAlerteMesure, enregistreurId);
 	}
 
 	@Override
 	public List<Capteur> findAllByEnregistreurId(Integer enregistreurId)
 			throws ServiceException {
-		logger.info("--findByTypeMesureOrTrame CapteurServiceImpl --");
+		logger.info("--findByTypeCaptAlerteMesure CapteurServiceImpl --");
 		return capteurDAO.findAllByEnregistreurId(enregistreurId);
 	}
 

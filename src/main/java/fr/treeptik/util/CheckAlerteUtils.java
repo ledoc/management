@@ -46,7 +46,7 @@ public class CheckAlerteUtils {
 	public void checkAlerte(Capteur capteur, Mesure mesure)
 			throws ServiceException, AddressException, MessagingException {
 		logger.info("-- checkAlerte CheckAlerteUtils-- Enregistreur mid: "
-				+ capteur.getTypeMesureOrTrame().getDescription()
+				+ capteur.getTypeCaptAlerteMesure().getDescription()
 				+ " mesure.getValeur() : " + mesure.getValeur());
 
 		List<AlerteDescription> alertesActives = alerteDescriptionService
@@ -694,7 +694,7 @@ public class CheckAlerteUtils {
 		alerteEmise.setSeuilAlerte(alerteActive.getSeuilAlerte());
 		alerteEmise.setSeuilPreAlerte(alerteActive.getSeuilPreAlerte());
 		alerteEmise.setTendance(alerteActive.getTendance());
-		alerteEmise.setTypeAlerte(alerteActive.getTypeAlerte());
+		alerteEmise.setCapteur(alerteActive.getCapteur());
 		alerteEmise.setDate(new Date());
 
 		return alerteEmise;

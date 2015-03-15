@@ -2,9 +2,6 @@ package fr.treeptik.controller;
 
 import org.springframework.stereotype.Controller;
 
-import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.TrameDW;
-import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.impl.MesureServiceImpl;
 

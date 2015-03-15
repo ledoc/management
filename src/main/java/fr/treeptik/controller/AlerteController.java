@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fr.treeptik.exception.ControllerException;
@@ -25,12 +26,12 @@ import fr.treeptik.model.AlerteEmise;
 import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.TendanceAlerte;
-import fr.treeptik.model.TypeAlerte;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.AlerteEmiseService;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
+import fr.treeptik.service.TypeCaptAlerteMesureService;
 
 @Controller
 @RequestMapping("/alerte")
@@ -42,6 +43,8 @@ public class AlerteController {
 	private AlerteDescriptionService alerteDescriptionService;
 	@Inject
 	private AlerteEmiseService alerteEmiseService;
+	@Inject
+	private TypeCaptAlerteMesureService typeCaptAlerteMesureService;
 
 	@Inject
 	private CapteurService capteurService;
@@ -73,14 +76,15 @@ public class AlerteController {
 		logger.info("--initForm AlerteController--");
 
 		List<Enregistreur> enregistreursCombo;
-		List<TypeMesureOrTrame> typesMesureOrTrameCombo = new ArrayList<TypeMesureOrTrame>(
-				Arrays.asList(TypeMesureOrTrame.values()));
-
+		List<TypeCaptAlerteMesure> typeCaptAlerteMesureCombo;
 		List<TendanceAlerte> tendancesAlerteCombo = new ArrayList<TendanceAlerte>(
 				Arrays.asList(TendanceAlerte.values()));
 
 		try {
+			typeCaptAlerteMesureCombo = typeCaptAlerteMesureService.findAll();
 
+			typeCaptAlerteMesureCombo
+					.removeIf(t -> t.getNom() == "NIVEAUMANUEL");
 			enregistreursCombo = enregistreurService.findAll();
 
 		} catch (NumberFormatException | ServiceException e) {
@@ -90,7 +94,8 @@ public class AlerteController {
 
 		model.addAttribute("alerte", new AlerteDescription());
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
-		model.addAttribute("typesMesureOrTrameCombo", typesMesureOrTrameCombo);
+		model.addAttribute("typeCaptAlerteMesureCombo",
+				typeCaptAlerteMesureCombo);
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
 		return "/alerte/create";
 	}
@@ -102,20 +107,15 @@ public class AlerteController {
 		try {
 			Capteur capteur;
 
-			System.out.println(alerteDescription.getCapteur()
-					.getTypeMesureOrTrame()
-					+ " -- - - -- "
-					+ alerteDescription.getCapteur().getEnregistreur().getId());
-
 			if (alerteDescription.getId() != null) {
 				capteur = capteurService.findById(alerteDescription
 						.getCapteur().getId());
 				alerteDescriptionService.create(alerteDescription);
 			} else {
 				capteur = capteurService
-						.findByEnregistreurAndTypeMesureOrTrame(
+						.findByEnregistreurAndTypeCaptAlerteMesure(
 								alerteDescription.getCapteur()
-										.getTypeMesureOrTrame(),
+										.getTypeCaptAlerteMesure(),
 								alerteDescription.getCapteur()
 										.getEnregistreur().getId());
 				alerteDescription.setCapteur(capteur);
@@ -139,15 +139,19 @@ public class AlerteController {
 		logger.info("--update AlerteController-- alerteId : " + id);
 
 		List<Enregistreur> enregistreursCombo;
-		List<TypeAlerte> typesAlerteCombo = new ArrayList<TypeAlerte>(
-				Arrays.asList(TypeAlerte.values()));
-
+		List<TypeCaptAlerteMesure> typeCaptAlerteMesureCombo;
 		List<TendanceAlerte> tendancesAlerteCombo = new ArrayList<TendanceAlerte>(
 				Arrays.asList(TendanceAlerte.values()));
+
 		AlerteDescription alerteDescription = null;
+
 		try {
 			alerteDescription = alerteDescriptionService.findById(id);
 			enregistreursCombo = enregistreurService.findAll();
+			typeCaptAlerteMesureCombo = typeCaptAlerteMesureService.findAll();
+
+			typeCaptAlerteMesureCombo
+					.removeIf(t -> t.getNom() == "NIVEAUMANUEL");
 
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
@@ -156,7 +160,9 @@ public class AlerteController {
 
 		model.addAttribute("alerte", alerteDescription);
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
-		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
+		model.addAttribute("typeCaptAlerteMesureCombo",
+				typeCaptAlerteMesureCombo);
+
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
 		return "/alerte/create";
 	}
@@ -201,8 +207,6 @@ public class AlerteController {
 		List<AlerteDescription> alerteDescriptions = null;
 		List<AlerteEmise> historiqueAlertes = null;
 		List<Enregistreur> enregistreursCombo;
-		List<TypeAlerte> typesAlerteCombo = new ArrayList<TypeAlerte>(
-				Arrays.asList(TypeAlerte.values()));
 
 		List<TendanceAlerte> tendancesAlerteCombo = new ArrayList<TendanceAlerte>(
 				Arrays.asList(TendanceAlerte.values()));
@@ -250,9 +254,30 @@ public class AlerteController {
 		model.addAttribute("alertes", alerteDescriptions);
 		model.addAttribute("alerte", new AlerteDescription());
 		model.addAttribute("enregistreursCombo", enregistreursCombo);
-		model.addAttribute("typesAlerteCombo", typesAlerteCombo);
 		model.addAttribute("tendancesAlerteCombo", tendancesAlerteCombo);
 		return "/alerte/list";
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "enregistreur/refresh/typeCaptAlerteMesure/{enregistreurId}")
+	public @ResponseBody List<TypeCaptAlerteMesure> refreshTypeCaptAlerteMesuresByEnregistreur(
+			HttpServletRequest request,
+			@PathVariable("enregistreurId") Integer enregistreurId)
+			throws ControllerException {
+		logger.info("--refreshTypeCaptAlerteMesuresByEnregistreur MesureController -- enregistreurId : "
+				+ enregistreurId);
+
+		List<TypeCaptAlerteMesure> allTypeCaptAlerteMesures = new ArrayList<TypeCaptAlerteMesure>();
+		try {
+			capteurService.findAllByEnregistreurId(enregistreurId).forEach(
+					c -> allTypeCaptAlerteMesures.add(c
+							.getTypeCaptAlerteMesure()));
+			;
+
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return allTypeCaptAlerteMesures;
 	}
 
 }

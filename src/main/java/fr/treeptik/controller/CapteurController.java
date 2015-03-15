@@ -1,7 +1,6 @@
 package fr.treeptik.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,10 +23,12 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
+import fr.treeptik.model.TypeOuvrage;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
+import fr.treeptik.service.TypeCaptAlerteMesureService;
 import fr.treeptik.util.DateMesureComparator;
 
 @Controller
@@ -42,6 +43,9 @@ public class CapteurController {
 
 	@Inject
 	private EnregistreurService enregistreurService;
+
+	@Inject
+	private TypeCaptAlerteMesureService typeCaptAlerteMesureService;
 
 	@Inject
 	private MesureService mesureService;
@@ -61,12 +65,14 @@ public class CapteurController {
 
 		Enregistreur enregistreur = new Enregistreur();
 		Capteur capteur = new Capteur();
+		List<TypeCaptAlerteMesure> typeCaptAlerteMesureCombo;
 
-		List<TypeMesureOrTrame> typeMesureOrTramesCombo = new ArrayList<TypeMesureOrTrame>(
-				Arrays.asList(TypeMesureOrTrame.values()));
-		typeMesureOrTramesCombo
-				.removeIf(t -> t == TypeMesureOrTrame.NIVEAUMANUEL);
 		try {
+
+			typeCaptAlerteMesureCombo = typeCaptAlerteMesureService.findAll();
+
+			typeCaptAlerteMesureCombo.removeIf(t -> t.getNom().equals(
+					"NIVEAUMANUEL"));
 
 			enregistreur = enregistreurService.findById(enregistreurId);
 			capteur.setEnregistreur(enregistreur);
@@ -76,7 +82,8 @@ public class CapteurController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		model.addAttribute("typeMesureOrTramesCombo", typeMesureOrTramesCombo);
+		model.addAttribute("typeCaptAlerteMesureCombo",
+				typeCaptAlerteMesureCombo);
 		model.addAttribute("capteur", capteur);
 		model.addAttribute("mesure", new Mesure());
 		return "/capteur/create";
@@ -129,8 +136,8 @@ public class CapteurController {
 				listNiveauxManuels = capteur
 						.getMesures()
 						.stream()
-						.filter(m -> m.getTypeMesureOrTrame().equals(
-								TypeMesureOrTrame.NIVEAUMANUEL))
+						.filter(m -> m.getTypeCaptAlerteMesure().getNom()
+								.equals("NIVEAUMANUEL"))
 						.collect(Collectors.toList());
 			}
 
@@ -159,18 +166,20 @@ public class CapteurController {
 
 		Capteur capteur = null;
 		List<Mesure> listNiveauxManuels = new ArrayList<Mesure>();
-
+		List<TypeCaptAlerteMesure> typeCaptAlerteMesureCombo;
+		
 		try {
 
-			capteur = capteurService.findById(id);
 			List<Mesure> listMesures = mesureService
-					.findByCapteurIdWithFetch(capteur.getId());
+					.findByCapteurIdWithFetch(id);
+			capteur = capteurService.findById(id);
+			typeCaptAlerteMesureCombo = typeCaptAlerteMesureService.findAll();
 
 			if (listMesures != null) {
 				listNiveauxManuels = listMesures
 						.stream()
-						.filter(m -> m.getTypeMesureOrTrame().equals(
-								TypeMesureOrTrame.NIVEAUMANUEL))
+						.filter(m -> m.getTypeCaptAlerteMesure().getNom()
+								.equals("NIVEAUMANUEL"))
 						.collect(Collectors.toList());
 			}
 
@@ -182,7 +191,9 @@ public class CapteurController {
 			throw new ControllerException(e.getMessage(), e);
 		}
 		model.addAttribute("listNiveauxManuels", listNiveauxManuels);
+		
 		model.addAttribute("capteur", capteur);
+		model.addAttribute("typeCaptAlerteMesureCombo", typeCaptAlerteMesureCombo);
 		return "/capteur/create";
 	}
 
@@ -247,9 +258,12 @@ public class CapteurController {
 
 			logger.info("mesure : " + mesure);
 			mesure = mesureService.create(capteur.getNiveauManuel());
+			TypeCaptAlerteMesure typeCaptAlerteMesure = typeCaptAlerteMesureService
+					.findById(capteur.getTypeCaptAlerteMesure().getId());
 			capteur = capteurService.create(capteur);
 			mesure.setCapteur(capteur);
-			mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUMANUEL);
+			mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureService
+					.findByNom("NIVEAUMANUEL"));
 			mesureService.update(mesure);
 
 			logger.info("capteur.getNiveauManuel() : "

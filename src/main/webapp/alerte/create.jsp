@@ -80,7 +80,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="site">Rattacher à un Enregistreur
 										(identifiant DW)</label>
-									<form:select class="form-control chosen-select"
+									<form:select class="form-control chosen"
 										data-placeholder="Choisir un enregistreur ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"

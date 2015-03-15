@@ -7,7 +7,7 @@ import java.util.List;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Point;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 
 public interface MesureService {
 
@@ -30,24 +30,25 @@ public interface MesureService {
 
 	void affectNewNiveauManuel(Integer mesureId) throws ServiceException;
 
-	Mesure conversionSignal_Temperature(Mesure mesureTemp)
+	HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_NiveauEauDeSurface(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException;
 
-	Mesure conversionSignal_NiveauEauDeSurface(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
+	HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_NiveauEauNappeSouterraine(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException;
 
-	Mesure conversionSignal_NiveauEauNappeSouterraine(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
-			throws ServiceException;
-
-	Mesure conversionSignal_Conductivite(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul)
+	HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_Conductivite(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 					throws ServiceException;
 
 	List<Mesure> findByCapteurIdBetweenDates(Integer id, Date dateDebut,
 			Date dateFin) throws ServiceException;
 
 	List<Mesure> findByCapteurIdWithFetch(Integer id) throws ServiceException;
+
+	HashMap<TypeCaptAlerteMesure, Mesure> conversionSignal_Temperature(
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
+			throws ServiceException;
 
 }

@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,14 @@ import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TrameDW;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 import fr.treeptik.model.deveryware.DeviceState;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.DeverywareService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;
 import fr.treeptik.service.TrameDWService;
+import fr.treeptik.service.TypeCaptAlerteMesureService;
 import fr.treeptik.util.DateUnixConverter;
 import fr.treeptik.util.XMLRPCUtils;
 
@@ -34,12 +37,19 @@ import fr.treeptik.util.XMLRPCUtils;
 public class DeverywareServiceImpl implements DeverywareService {
 
 	private Logger logger = Logger.getLogger(DeverywareServiceImpl.class);
+
+	@Inject
+	private Environment env;
 	@Inject
 	private XMLRPCUtils xmlRPCUtils;
 	@Inject
 	private EnregistreurService enregistreurService;
 	@Inject
 	private TrameDWService trameDWService;
+
+	@Inject
+	private TypeCaptAlerteMesureService typeCaptAlerteMesureService;
+
 	@Inject
 	private CapteurService capteurService;
 
@@ -59,7 +69,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * @param mid
 	 * @throws ServiceException
 	 */
-	@Scheduled(fixedRate = 180000)
+	@Scheduled(fixedRate = 1800000)
 	@SuppressWarnings("unchecked")
 	public void getHistory() throws ServiceException {
 		logger.info("--getHistory DeverywareServiceImpl --");
@@ -84,11 +94,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 			 * gps://ORANGE/+33781916177 gps://ORANGE/+33687575529
 			 */
 
-			// Enregistreur enregistreur = enregistreurService
-			// .findByMidWithJoinFetchTrameDWs("gps://ORANGE/+33687575529");
-			// Object[] history =
-			// xmlRPCUtils.getHistory("gps://ORANGE/+33687575529",
-			// sessionKey);
 
 			logger.debug(history.length + " trame(s) History récupérée(s)");
 
@@ -104,8 +109,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 					if (enregistreur.getTrameDWs() != null) {
 
-						if (!this.trameAlreadyExists(enregistreur.getTrameDWs(),
-								trameDW)) {
+						if (!this.trameAlreadyExists(
+								enregistreur.getTrameDWs(), trameDW)) {
 
 							trameDW.setEnregistreur(enregistreur);
 							trameDW = trameDWService.create(trameDW);
@@ -380,11 +385,29 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 	private List<Mesure> transfertTrameToMesures(TrameDW trameDW)
 			throws ServiceException {
-
 		logger.info("--transfertHistoryToTrameDW DeverywareServiceImpl--");
 
+		String analogicTemp = env.getProperty("analogic.temp");
+		String analogicCond = env.getProperty("analogic.cond");
+		String analogicHauteur = env.getProperty("analogic.hauteur");
+		String numTemp = env.getProperty("num.temp");
+		String numCondMicroSiemensCm = env
+				.getProperty("num.cond.micro.siemens.cm");
+		String numCondMilliSiemensCm = env
+				.getProperty("num.cond.milli.siemens.cm");
+		String numHauteurMm = env.getProperty("num.hauteur.mm");
+		String numHauteurCm = env.getProperty("num.hauteur.cm");
+		String numHauteurM = env.getProperty("num.hauteur.m");
+
+		TypeCaptAlerteMesure typeCaptAlerteMesureNiveauEau = typeCaptAlerteMesureService
+				.findByNom("NIVEAUDEAU");
+		TypeCaptAlerteMesure typeCaptAlerteMesureConductivite = typeCaptAlerteMesureService
+				.findByNom("CONDUCTIVITE");
+		TypeCaptAlerteMesure typeCaptAlerteMesureTemperature = typeCaptAlerteMesureService
+				.findByNom("TEMPERATURE");
+
 		ArrayList<Mesure> listMesures = new ArrayList<Mesure>();
-		HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul = new HashMap<TypeMesureOrTrame, Mesure>();
+		HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul = new HashMap<TypeCaptAlerteMesure, Mesure>();
 
 		String valeurTrameDW = trameDW.getConcatenationValeurs();
 		Enregistreur enregistreur = trameDW.getEnregistreur();
@@ -392,11 +415,10 @@ public class DeverywareServiceImpl implements DeverywareService {
 		enregistreur = enregistreurService
 				.findByIdWithJoinCapteurs(enregistreur.getId());
 		List<Capteur> capteurs = enregistreur.getCapteurs();
-		List<TypeMesureOrTrame> listTypeCapteurs = new ArrayList<TypeMesureOrTrame>();
+		List<TypeCaptAlerteMesure> listTypeCapteurs = new ArrayList<TypeCaptAlerteMesure>();
 
 		for (Capteur capteur : capteurs) {
-			listTypeCapteurs.add(capteur.getTypeMesureOrTrame());
-
+			listTypeCapteurs.add(capteur.getTypeCaptAlerteMesure());
 		}
 
 		if (trameDW.getConcatenationValeurs().endsWith("mA")) {
@@ -406,132 +428,148 @@ public class DeverywareServiceImpl implements DeverywareService {
 			logger.info("trame de type ancien : " + valeurTrameDW);
 			mesure.setSignalBrut(Float.parseFloat(valeurTrameDW.substring(0,
 					valeurTrameDW.indexOf("m"))));
-			mesure.setTypeMesureOrTrame(capteur.getTypeMesureOrTrame());
+			mesure.setTypeCaptAlerteMesure(capteur.getTypeCaptAlerteMesure());
 			mesure.setDate(trameDW.getDate());
 			mesure.setCapteur(capteur);
-			hashMapCalcul.put(capteur.getTypeMesureOrTrame(), mesure);
+			hashMapCalcul.put(capteur.getTypeCaptAlerteMesure(), mesure);
 
 			this.redirectMesuresToCalcul(hashMapCalcul, trameDW);
 
 		} else {
 			logger.info("trame de type photospace : " + valeurTrameDW);
 
-			String[] split = valeurTrameDW.split("z");
+			List<String> split = new ArrayList<String>();
+
+			StringTokenizer stringTokenizer = new StringTokenizer(
+					valeurTrameDW, "=_");
+			while (stringTokenizer.hasMoreTokens()) {
+				split.add(stringTokenizer.nextToken());
+			}
+
 			Map<String, String> mapMetricAndValue = new HashMap<>();
 
-			if (split.length > 1) {
+			if (split.size() > 1) {
 
-				for (int i = 0; i < split.length; i++) {
+				for (int i = 0; i < split.size(); i++) {
 					if (i % 2 == 0) {
-						mapMetricAndValue.put(split[i], split[i + 1]);
+						mapMetricAndValue.put(split.get(i), split.get(i + 1));
 					}
 				}
 
-				if (listTypeCapteurs.contains(TypeMesureOrTrame.NIVEAUDEAU)) {
-					if (mapMetricAndValue.containsKey("103Analogic-hauteur")) {
-						Mesure mesure = new Mesure();
+				// 103
+				if (listTypeCapteurs.contains(typeCaptAlerteMesureNiveauEau)) {
+					if (mapMetricAndValue.containsKey(analogicHauteur)) {
 
-						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("103Analogic-hauteur")));
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
-						mesure.setDate(trameDW.getDate());
-						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.NIVEAUDEAU, trameDW
-												.getEnregistreur().getId()));
-
-						hashMapCalcul.put(TypeMesureOrTrame.NIVEAUDEAU, mesure);
-
-					} else if (mapMetricAndValue
-							.containsKey("107Num-Hauteur-mm")) {
 						Mesure mesure = new Mesure();
 						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("107Num-Hauteur-mm")));
-						mesure.setUnite("mm");
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
-						mesure.setDate(trameDW.getDate());
-						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.NIVEAUDEAU, trameDW
-												.getEnregistreur().getId()));
-						hashMapCalcul.put(TypeMesureOrTrame.NIVEAUDEAU, mesure);
-
-					} else if (mapMetricAndValue
-							.containsKey("108Num-Hauteur-cm")) {
-						Mesure mesure = new Mesure();
-						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("108Num-Hauteur-cm")));
-						mesure.setUnite("cm");
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
-						mesure.setDate(trameDW.getDate());
-						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.NIVEAUDEAU, trameDW
-												.getEnregistreur().getId()));
-						hashMapCalcul.put(TypeMesureOrTrame.NIVEAUDEAU, mesure);
-
-					} else if (mapMetricAndValue
-							.containsKey("109Num-Hauteur-m")) {
-						Mesure mesure = new Mesure();
-						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("109Num-Hauteur-m")));
+								.get(analogicHauteur)));
 						mesure.setUnite("m");
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.NIVEAUDEAU);
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureNiveauEau);
 						mesure.setDate(trameDW.getDate());
 						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.NIVEAUDEAU, trameDW
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureNiveauEau, trameDW
 												.getEnregistreur().getId()));
-						hashMapCalcul.put(TypeMesureOrTrame.NIVEAUDEAU, mesure);
+
+						hashMapCalcul
+								.put(typeCaptAlerteMesureNiveauEau, mesure);
+
+						// 107
+					} else if (mapMetricAndValue.containsKey(numHauteurMm)) {
+						Mesure mesure = new Mesure();
+						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
+								.get(numHauteurMm)));
+						mesure.setUnite("mm");
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureNiveauEau);
+						mesure.setDate(trameDW.getDate());
+						mesure.setCapteur(capteurService
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureNiveauEau, trameDW
+												.getEnregistreur().getId()));
+						hashMapCalcul
+								.put(typeCaptAlerteMesureNiveauEau, mesure);
+
+						// 108
+					} else if (mapMetricAndValue.containsKey(numHauteurCm)) {
+						Mesure mesure = new Mesure();
+						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
+								.get(numHauteurCm)));
+						mesure.setUnite("cm");
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureNiveauEau);
+						mesure.setDate(trameDW.getDate());
+						mesure.setCapteur(capteurService
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureNiveauEau, trameDW
+												.getEnregistreur().getId()));
+						hashMapCalcul
+								.put(typeCaptAlerteMesureNiveauEau, mesure);
+
+						// 109
+					} else if (mapMetricAndValue.containsKey(numHauteurM)) {
+						Mesure mesure = new Mesure();
+						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
+								.get(numHauteurM)));
+						mesure.setUnite("m");
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureNiveauEau);
+						mesure.setDate(trameDW.getDate());
+						mesure.setCapteur(capteurService
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureNiveauEau, trameDW
+												.getEnregistreur().getId()));
+						hashMapCalcul
+								.put(typeCaptAlerteMesureNiveauEau, mesure);
 
 					}
 				}
+				// 102
+				if (listTypeCapteurs.contains(typeCaptAlerteMesureConductivite)) {
 
-				if (listTypeCapteurs.contains(TypeMesureOrTrame.CONDUCTIVITE)) {
-
-					if (mapMetricAndValue.containsKey("102Analogic-cond")) {
+					if (mapMetricAndValue.containsKey(analogicCond)) {
 						Mesure mesure = new Mesure();
 						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("102Analogic-cond")));
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
-						mesure.setDate(trameDW.getDate());
-						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.CONDUCTIVITE, trameDW
-												.getEnregistreur().getId()));
-						hashMapCalcul.put(TypeMesureOrTrame.CONDUCTIVITE,
-								mesure);
-
-					} else if (mapMetricAndValue
-							.containsKey("105Num-Cond-µs/cm")) {
-						Mesure mesure = new Mesure();
-						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("105Num-Cond-µs/cm")));
+								.get(analogicCond)));
 						mesure.setUnite("µs/cm");
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureConductivite);
 						mesure.setDate(trameDW.getDate());
 						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.CONDUCTIVITE, trameDW
-												.getEnregistreur().getId()));
-						hashMapCalcul.put(TypeMesureOrTrame.CONDUCTIVITE,
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureConductivite,
+										trameDW.getEnregistreur().getId()));
+						hashMapCalcul.put(typeCaptAlerteMesureConductivite,
 								mesure);
-						mesureService
-								.conversionSignal_Conductivite(hashMapCalcul);
 
+						// 105
 					} else if (mapMetricAndValue
-							.containsKey("106Num-Cond-ms/cm")) {
+							.containsKey(numCondMicroSiemensCm)) {
 						Mesure mesure = new Mesure();
 						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("106Num-Cond-ms/cm")));
-						mesure.setUnite("ms/cm");
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.CONDUCTIVITE);
+								.get(numCondMicroSiemensCm)));
+						mesure.setUnite("µs/cm");
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureConductivite);
 						mesure.setDate(trameDW.getDate());
 						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.CONDUCTIVITE, trameDW
-												.getEnregistreur().getId()));
-						hashMapCalcul.put(TypeMesureOrTrame.CONDUCTIVITE,
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureConductivite,
+										trameDW.getEnregistreur().getId()));
+						hashMapCalcul.put(typeCaptAlerteMesureConductivite,
+								mesure);
+						mesureService
+								.conversionSignal_Conductivite(hashMapCalcul);
+
+						// 106
+					} else if (mapMetricAndValue
+							.containsKey(numCondMilliSiemensCm)) {
+						Mesure mesure = new Mesure();
+						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
+								.get(numCondMilliSiemensCm)));
+						mesure.setUnite("ms/cm");
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureConductivite);
+						mesure.setDate(trameDW.getDate());
+						mesure.setCapteur(capteurService
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureConductivite,
+										trameDW.getEnregistreur().getId()));
+						hashMapCalcul.put(typeCaptAlerteMesureConductivite,
 								mesure);
 						mesureService
 								.conversionSignal_Conductivite(hashMapCalcul);
@@ -539,160 +577,35 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 				}
 
-				// if
-				// (listTypeCapteurs.contains(TypeMesureOrTrame.PLUVIOMETRIE)) {
-				//
-				// if (mapMetricAndValue
-				// .containsKey("110Pluvio-impuls/période")) {
-				// Mesure mesure = new Mesure();
-				// mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("110Pluvio-impuls/période")));
-				// mesure.setUnite("impuls/periode");
-				// mesure.setTypeMesureOrTrame(TypeMesureOrTrame.PLUVIOMETRIE);
-				// mesure.setDate(trameDW.getDate());
-				// mesure.setCapteur(capteurService
-				// .findByEnregistreurAndTypeMesureOrTrame(
-				// TypeMesureOrTrame.PLUVIOMETRIE, trameDW
-				// .getEnregistreur().getId()));
-				// hashMapCalcul.put(TypeMesureOrTrame.PLUVIOMETRIE,
-				// mesure);
-				//
-				// } else if (mapMetricAndValue
-				// .containsKey("114Impuls/period-Q-10")) {
-				// Mesure mesure = new Mesure();
-				// mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("114Impuls/period-Q-10")));
-				// mesure.setUnite("period-Q-10");
-				// mesure.setTypeMesureOrTrame(TypeMesureOrTrame.PLUVIOMETRIE);
-				// mesure.setDate(trameDW.getDate());
-				// mesure.setCapteur(capteurService
-				// .findByEnregistreurAndTypeMesureOrTrame(
-				// TypeMesureOrTrame.PLUVIOMETRIE, trameDW
-				// .getEnregistreur().getId()));
-				// hashMapCalcul.put(TypeMesureOrTrame.PLUVIOMETRIE,
-				// mesure);
-				//
-				// } else if (mapMetricAndValue
-				// .containsKey("115Impuls/period-Q-100")) {
-				// Mesure mesure = new Mesure();
-				// mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("115Impuls/period-Q-100")));
-				// mesure.setUnite("period-Q-100");
-				// mesure.setTypeMesureOrTrame(TypeMesureOrTrame.PLUVIOMETRIE);
-				// mesure.setDate(trameDW.getDate());
-				// mesure.setCapteur(capteurService
-				// .findByEnregistreurAndTypeMesureOrTrame(
-				// TypeMesureOrTrame.PLUVIOMETRIE, trameDW
-				// .getEnregistreur().getId()));
-				// hashMapCalcul.put(TypeMesureOrTrame.PLUVIOMETRIE,
-				// mesure);
-				//
-				// } else if (mapMetricAndValue
-				// .containsKey("116Impuls/period-Q-1000")) {
-				// Mesure mesure = new Mesure();
-				// mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("116Impuls/period-Q-1000")));
-				// mesure.setUnite("period-Q-1000");
-				// mesure.setTypeMesureOrTrame(TypeMesureOrTrame.PLUVIOMETRIE);
-				// mesure.setDate(trameDW.getDate());
-				// mesure.setCapteur(capteurService
-				// .findByEnregistreurAndTypeMesureOrTrame(
-				// TypeMesureOrTrame.PLUVIOMETRIE, trameDW
-				// .getEnregistreur().getId()));
-				//
-				// hashMapCalcul.put(TypeMesureOrTrame.PLUVIOMETRIE,
-				// mesure);
-				//
-				// }
-				//
-				// }
+				if (listTypeCapteurs.contains(typeCaptAlerteMesureTemperature)) {
 
-				if (listTypeCapteurs.contains(TypeMesureOrTrame.TEMPERATURE)) {
-
-					if (mapMetricAndValue.containsKey("101Analogic-temp")) {
+					// 101
+					if (mapMetricAndValue.containsKey(analogicTemp)) {
 						Mesure mesure = new Mesure();
 						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("101Analogic-temp")));
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.TEMPERATURE);
+								.get(analogicTemp)));
+						mesure.setUnite("°C");
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureTemperature);
 						mesure.setDate(trameDW.getDate());
 						mesure.setCapteur(capteurService
-								.findByEnregistreurAndTypeMesureOrTrame(
-										TypeMesureOrTrame.TEMPERATURE, trameDW
-												.getEnregistreur().getId()));
+								.findByEnregistreurAndTypeCaptAlerteMesure(
+										typeCaptAlerteMesureTemperature,
+										trameDW.getEnregistreur().getId()));
 
-						hashMapCalcul
-								.put(TypeMesureOrTrame.TEMPERATURE, mesure);
+						hashMapCalcul.put(typeCaptAlerteMesureTemperature,
+								mesure);
 
-					} else if (mapMetricAndValue.containsKey("104Num-Temp-C")) {
+						// 104
+					} else if (mapMetricAndValue.containsKey(numTemp)) {
 						Mesure mesure = new Mesure();
 						mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-								.get("104Num-Temp-C")));
+								.get(numTemp)));
 						mesure.setUnite("°C");
-						mesure.setTypeMesureOrTrame(TypeMesureOrTrame.TEMPERATURE);
+						mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureTemperature);
 						mesure.setDate(trameDW.getDate());
-						hashMapCalcul
-								.put(TypeMesureOrTrame.TEMPERATURE, mesure);
-
+						hashMapCalcul.put(typeCaptAlerteMesureTemperature,
+								mesure);
 					}
-				}
-				// else if (mapMetricAndValue.containsKey("111Vent-m/s")) {
-				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("111Vent-m/s")));
-				// trameDW.setUnite("m/s");
-				// trameDW.setTypeTrameDW(TypeMesureOrTrame.VENT);
-				//
-				// }
-
-				// if (listTypeCapteurs.contains(TypeMesureOrTrame.DEBIT)) {
-				//
-				// if (mapMetricAndValue.containsKey("112Debit-l/min")) {
-				// Mesure mesure = new Mesure();
-				// mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("112Debit-l/min")));
-				// mesure.setUnite("l/min");
-				// mesure.setTypeMesureOrTrame(TypeMesureOrTrame.DEBIT);
-				// mesure.setDate(trameDW.getDate());
-				// mesure.setCapteur(capteurService
-				// .findByEnregistreurAndTypeMesureOrTrame(
-				// TypeMesureOrTrame.DEBIT, trameDW
-				// .getEnregistreur().getId()));
-				// hashMapCalcul.put(TypeMesureOrTrame.DEBIT, mesure);
-				// }
-				//
-				// else if (mapMetricAndValue.containsKey("113Debit-m3/s")) {
-				// Mesure mesure = new Mesure();
-				// mesure.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("113Debit-m3/s")));
-				// mesure.setUnite("m3/s");
-				// mesure.setTypeMesureOrTrame(TypeMesureOrTrame.DEBIT);
-				// mesure.setDate(trameDW.getDate());
-				// mesure.setCapteur(capteurService
-				// .findByEnregistreurAndTypeMesureOrTrame(
-				// TypeMesureOrTrame.DEBIT, trameDW
-				// .getEnregistreur().getId()));
-				// hashMapCalcul.put(TypeMesureOrTrame.DEBIT, mesure);
-				//
-				// }
-				// }
-				// else if (mapMetricAndValue
-				// .containsKey("117Pression-air-hectopascal")) {
-				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("117Pression-air-hectopascal")));
-				// trameDW.setUnite("hectopascal");
-				// trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
-				//
-				// } else if (mapMetricAndValue
-				// .containsKey("118Pression-air-pascal")) {
-				// trameDW.setSignalBrut(Float.parseFloat(mapMetricAndValue
-				// .get("118Pression-air-pascal")));
-				// trameDW.setUnite("pascal");
-				// trameDW.setTypeTrameDW(TypeMesureOrTrame.PRESSIONAIR);
-				//
-				// }
-
-				else {
-					throw new ServiceException(
-							"ERROR DeverywareServiceImpl -- la trame n'a pas pu être analysée correctement");
 				}
 
 				this.redirectMesuresToCalcul(hashMapCalcul, trameDW);
@@ -703,24 +616,31 @@ public class DeverywareServiceImpl implements DeverywareService {
 	}
 
 	private void redirectMesuresToCalcul(
-			HashMap<TypeMesureOrTrame, Mesure> hashMapCalcul, TrameDW trameDW) {
-		logger.info("--containsSameDate DeverywareServiceImpl -- trameDW : "
-				+ trameDW);
+			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul, TrameDW trameDW)
+			throws ServiceException {
+		logger.info("--redirectMesuresToCalcul DeverywareServiceImpl -- trameDW : "
+				+ trameDW + "types de mesure : " + hashMapCalcul.keySet());
+
+		TypeCaptAlerteMesure typeCaptAlerteMesureNiveauEau = typeCaptAlerteMesureService
+				.findByNom("NIVEAUDEAU");
+		TypeCaptAlerteMesure typeCaptAlerteMesureConductivite = typeCaptAlerteMesureService
+				.findByNom("CONDUCTIVITE");
 
 		try {
-			if (hashMapCalcul.containsKey(TypeMesureOrTrame.NIVEAUDEAU)
+			if (hashMapCalcul.containsKey(typeCaptAlerteMesureNiveauEau)
 					&& trameDW.getEnregistreur().getOuvrage().getTypeOuvrage()
 							.getNom().equalsIgnoreCase("EAUDESURFACE")) {
-
+				mesureService
+						.conversionSignal_NiveauEauDeSurface(hashMapCalcul);
 			}
-
-			else if (hashMapCalcul.containsKey(TypeMesureOrTrame.NIVEAUDEAU)
+			if (hashMapCalcul.containsKey(typeCaptAlerteMesureNiveauEau)
 					&& trameDW.getEnregistreur().getOuvrage().getTypeOuvrage()
 							.getNom().equalsIgnoreCase("NAPPESOUTERRAINE")) {
+
 				mesureService
 						.conversionSignal_NiveauEauNappeSouterraine(hashMapCalcul);
-			} else if (hashMapCalcul
-					.containsKey(TypeMesureOrTrame.CONDUCTIVITE)) {
+			}
+			if (hashMapCalcul.containsKey(typeCaptAlerteMesureConductivite)) {
 				mesureService.conversionSignal_Conductivite(hashMapCalcul);
 			}
 

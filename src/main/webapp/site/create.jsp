@@ -71,7 +71,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="typesSiteCombo">Choisir un type</label>
 									<form:select id="typesSiteCombo" name="typesSiteCombo"
-										path="typeSite" class="form-control"
+										path="typeSite" class="form-control chosen"
 										data-parsley-required="true"
 										data-parsley-required-message="Choix requis"
 										disabled="${readOnlyValue }">
@@ -131,7 +131,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<label for="etablissements">Rattacher à un
 										établissement</label>
 
-									<form:select class="form-control chosen-select"
+									<form:select class="form-control chosen"
 										data-placeholder="Choisir un etablissement ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"

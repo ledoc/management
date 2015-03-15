@@ -42,7 +42,7 @@ public class EnregistreurServiceImpl implements EnregistreurService {
 		logger.info("--CREATE EnregistreurServiceImpl -- enregistreur : "
 				+ enregistreur);
 
-		xmlrpcUtils.addMobile(enregistreur);
+	xmlrpcUtils.addMobile(enregistreur);
 
 		return enregistreurDAO.save(enregistreur);
 	}

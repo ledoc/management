@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import fr.treeptik.model.Capteur;
-import fr.treeptik.model.TypeMesureOrTrame;
+import fr.treeptik.model.TypeCaptAlerteMesure;
 
 public interface CapteurDAO extends JpaRepository<Capteur, Integer> {
 
@@ -16,9 +16,9 @@ public interface CapteurDAO extends JpaRepository<Capteur, Integer> {
 	public Capteur findByIdWithJoinFetchAlertesActives(@Param("id") Integer id)
 			throws DataAccessException;
 
-	@Query("select c from Enregistreur e join e.capteurs c where c.typeMesureOrTrame = :typeMesureOrTrame and e.id = :enregistreurId")
-	Capteur findByEnregistreurIdAndTypeMesureOrTrame(
-			@Param("typeMesureOrTrame") TypeMesureOrTrame typeMesureOrTrame,
+	@Query("select c from Enregistreur e join e.capteurs c where c.typeCaptAlerteMesure = :typeCaptAlerteMesure and e.id = :enregistreurId")
+	Capteur findByEnregistreurIdAndTypeCaptAlerteMesure(
+			@Param("typeCaptAlerteMesure") TypeCaptAlerteMesure typeCaptAlerteMesure,
 			@Param("enregistreurId") Integer enregistreurId)
 			throws DataAccessException;
 

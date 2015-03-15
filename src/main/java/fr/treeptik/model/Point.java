@@ -9,7 +9,7 @@ public class Point implements Serializable {
 
 	private Date date;
 	private Float valeur;
-	private String typeMesureOrTrameDescription;
+	private TypeCaptAlerteMesure typeCaptAlerteMesure;
 	private String mid;
 	private String unite;
 
@@ -34,12 +34,12 @@ public class Point implements Serializable {
 		return "Point [date=" + date + ", valeur=" + valeur + "]";
 	}
 
-	public String getTypeMesureOrTrameDescription() {
-		return typeMesureOrTrameDescription;
+	public TypeCaptAlerteMesure getTypeCaptAlerteMesure() {
+		return typeCaptAlerteMesure;
 	}
 
-	public void setTypeMesureOrTrameDescription(String typeMesureOrTrameDescription) {
-		this.typeMesureOrTrameDescription = typeMesureOrTrameDescription;
+	public void setTypeCaptAlerteMesure(TypeCaptAlerteMesure typeCaptAlerteMesure) {
+		this.typeCaptAlerteMesure = typeCaptAlerteMesure;
 	}
 
 	public String getMid() {

@@ -30,7 +30,6 @@ import fr.treeptik.model.Mesure;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Point;
 import fr.treeptik.model.Site;
-import fr.treeptik.model.TypeMesureOrTrame;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
@@ -123,6 +122,9 @@ public class MesureController {
 		Collections.sort(mesures, new DateMesureComparator());
 		Collections.reverse(mesures);
 
+		mesures.forEach(m -> System.out.println(m));
+		
+		
 		model.addAttribute("alertesActivesCombo", alertesActivesCombo);
 		model.addAttribute("mesures", mesures);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
@@ -248,7 +250,6 @@ public class MesureController {
 		logger.info("--initPointsGraph MesureController");
 
 		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
-		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
 		try {
@@ -268,10 +269,10 @@ public class MesureController {
 			List<Capteur> capteurs = enregistreur.getCapteurs();
 
 			// RETRAIT du capteur de temperature pour l'init
-			capteurs.removeIf(c -> c.getTypeMesureOrTrame() == TypeMesureOrTrame.TEMPERATURE);
-			capteurs.forEach(c -> mesures.addAll(c.getMesures()));
+			capteurs.removeIf(c -> c.getTypeCaptAlerteMesure().getNom()
+					.equals("TEMPERATURE"));
 
-			for (Mesure item : mesures) {
+			for (Mesure item : capteurs.get(0).getMesures()) {
 				points.add(mesureService.transformMesureInPoint(item));
 			}
 			Collections.sort(points, new DatePointComparator());
@@ -318,7 +319,8 @@ public class MesureController {
 			List<Capteur> capteurs = enregistreur.getCapteurs();
 
 			// RETRAIT du capteur de temperature pour l'init
-			capteurs.removeIf(c -> c.getTypeMesureOrTrame() == TypeMesureOrTrame.TEMPERATURE);
+			capteurs.removeIf(c -> c.getTypeCaptAlerteMesure().getNom()
+					.equals("TEMPERATURE"));
 
 			alerteDescriptions = alerteDescriptionService
 					.findAlertesActivesByCapteurId(capteurs.get(0).getId());
@@ -345,6 +347,7 @@ public class MesureController {
 		List<Point> points = new ArrayList<Point>();
 
 		try {
+
 			mesures = mesureService.findByCapteurIdWithFetch(capteurId);
 
 			for (Mesure item : mesures) {
@@ -367,6 +370,7 @@ public class MesureController {
 	 * @return
 	 * @throws ControllerException
 	 */
+
 	@RequestMapping(method = RequestMethod.GET, value = "/capteur/plotLines/{capteurId}")
 	public @ResponseBody AlerteDescription refreshAlertePlotLinesByCapteur(
 			HttpServletRequest request,
@@ -378,6 +382,7 @@ public class MesureController {
 		AlerteDescription alerteDescription = null;
 
 		try {
+
 			alerteDescriptions = alerteDescriptionService
 					.findAlertesActivesByCapteurId(capteurId);
 
@@ -507,7 +512,7 @@ public class MesureController {
 			HttpServletRequest request,
 			@PathVariable("enregistreurId") Integer enregistreurId)
 			throws ControllerException {
-		logger.info("--refreshCapteursByEnregistreur MesureController -- ouvrageId : "
+		logger.info("--refreshCapteursByEnregistreur MesureController -- enregistreurId : "
 				+ enregistreurId);
 
 		List<Capteur> allCapteurs = new ArrayList<Capteur>();
@@ -528,9 +533,8 @@ public class MesureController {
 			@PathVariable("capteurId") Integer capteurId,
 			@PathVariable("dateDebut") Date dateDebut,
 			@PathVariable("dateFin") Date dateFin) throws ControllerException {
-		logger.info("--getEnregistreurPoints MesureController-- capteurId : "
-				+ capteurId + " dateDebut : " + dateDebut + " -- dateFin : "
-				+ dateFin);
+		logger.info("--getEnregistreurPoints MesureController-- "
+				+ " dateDebut : " + dateDebut + " -- dateFin : " + dateFin);
 
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
@@ -555,7 +559,7 @@ public class MesureController {
 		logger.info("--initBinder MesureController --");
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"dd-MM-YYYY HH:mm:ss");
+				"YYYY-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				dateFormat, false));
 	}

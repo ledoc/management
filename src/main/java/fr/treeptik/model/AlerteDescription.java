@@ -24,8 +24,6 @@ public class AlerteDescription implements Serializable {
 	private Boolean activation;
 	private String intitule;
 	@Enumerated(EnumType.STRING)
-	private TypeAlerte typeAlerte;
-	@Enumerated(EnumType.STRING)
 	private TendanceAlerte tendance;
 	private Float seuilPreAlerte;
 	private Float seuilAlerte;
@@ -68,13 +66,6 @@ public class AlerteDescription implements Serializable {
 		this.intitule = intitule;
 	}
 
-	public TypeAlerte getTypeAlerte() {
-		return typeAlerte;
-	}
-
-	public void setTypeAlerte(TypeAlerte typeAlerte) {
-		this.typeAlerte = typeAlerte;
-	}
 
 	public TendanceAlerte getTendance() {
 		return tendance;
@@ -128,7 +119,7 @@ public class AlerteDescription implements Serializable {
 	public String toString() {
 		return "AlerteDescription [id=" + id + ", codeAlerte=" + codeAlerte
 				+ ", activation=" + activation + ", intitule=" + intitule
-				+ ", typeAlerte=" + typeAlerte + ", tendance=" + tendance
+				+  ", tendance=" + tendance
 				+ ", seuilPreAlerte=" + seuilPreAlerte + ", seuilAlerte="
 				+ seuilAlerte + ", aSurveiller=" + aSurveiller
 				+ ", compteurRetourNormal=" + compteurRetourNormal + "]";

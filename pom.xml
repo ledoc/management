@@ -253,6 +253,27 @@
 				<log.level.other>warn</log.level.other>
 				<log.level.hibernate>error</log.level.hibernate>
 				<upload.path>/uploadSolices</upload.path>
+
+				<!-- clés des paramètres de trames -->
+				<analogic.temp>101</analogic.temp>
+				<analogic.cond>102</analogic.cond>
+				<analogic.hauteur>103</analogic.hauteur>
+				<num.temp>104</num.temp>
+				<num.cond.micro.siemens.cm>105</num.cond.micro.siemens.cm>
+				<num.cond.milli.siemens.cm>106</num.cond.milli.siemens.cm>
+				<num.hauteur.mm>107</num.hauteur.mm>
+				<num.hauteur.cm>108</num.hauteur.cm>
+				<num.hauteur.m>109</num.hauteur.m>
+				<pluvio.impuls.periode>110</pluvio.impuls.periode>
+				<vent.m.s>111</vent.m.s>
+				<debit.l.min>112</debit.l.min>
+				<debit.m3.s>113</debit.m3.s>
+				<impuls.period.q.10>114</impuls.period.q.10>
+				<impuls.period.q.100>115</impuls.period.q.100>
+				<impuls.period.q.1000>116</impuls.period.q.1000>
+				<pression.air.hectopascal>117</pression.air.hectopascal>
+				<pression.air.pascal>118</pression.air.pascal>
+
 			</properties>
 		</profile>
 		<profile>
@@ -272,13 +293,35 @@
 
 				<!-- Database -->
 				<database.url>jdbc:mysql://solices-solices-mysql-5-5-1.mysql-5-5.cloud.unit/solices</database.url>
-				<database.user>admin9p87qnpb</database.user>
-				<database.password>esoqcves</database.password>
+				<database.user>admindqgb4hop</database.user>
+				<database.password>e4u4580f</database.password>
 				<!-- Log4J configuration -->
 				<log.level.solices>info</log.level.solices>
 				<log.level.other>info</log.level.other>
 				<log.level.hibernate>error</log.level.hibernate>
 				<upload.path>/cloudunit/uploadSolices</upload.path>
+
+				<!-- clés des paramètres de trames -->
+				<analogic.temp>101</analogic.temp>
+				<analogic.cond>102</analogic.cond>
+				<analogic.hauteur>103</analogic.hauteur>
+				<num.temp>104</num.temp>
+				<num.cond.micro.siemens.cm>105</num.cond.micro.siemens.cm>
+				<num.cond.milli.siemens.cm>106</num.cond.milli.siemens.cm>
+				<num.hauteur.mm>107</num.hauteur.mm>
+				<num.hauteur.cm>108</num.hauteur.cm>
+				<num.hauteur.m>109</num.hauteur.m>
+				<pluvio.impuls.periode>110</pluvio.impuls.periode>
+				<vent.m.s>111</vent.m.s>
+				<debit.l.min>112</debit.l.min>
+				<debit.m3.s>113</debit.m3.s>
+				<impuls.period.q.10>114</impuls.period.q.10>
+				<impuls.period.q.100>115</impuls.period.q.100>
+				<impuls.period.q.1000>116</impuls.period.q.1000>
+				<pression.air.hectopascal>117</pression.air.hectopascal>
+				<pression.air.pascal>118</pression.air.pascal>
+
+
 			</properties>
 		</profile>
 	</profiles>
