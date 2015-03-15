@@ -289,12 +289,12 @@
 				<mail.smtpPort>587</mail.smtpPort>
 
 				<!-- String for mail -->
-				<mail.acquittement.url.prefix>http://solices-solices-solices.eu4.cloudunit.io/alerte/acquittement</mail.acquittement.url.prefix>
+				<mail.acquittement.url.prefix>http://http://ah2d-treeptik-treeptik.eu4.cloudunit.io/alerte/acquittement</mail.acquittement.url.prefix>
 
 				<!-- Database -->
-				<database.url>jdbc:mysql://solices-solices-mysql-5-5-1.mysql-5-5.cloud.unit/solices</database.url>
-				<database.user>admindqgb4hop</database.user>
-				<database.password>e4u4580f</database.password>
+				<database.url>jdbc:mysql://treeptik-ah2d-mysql-5-5-1.mysql-5-5.cloud.unit/ah2d</database.url>
+				<database.user>adminf9i6gigh</database.user>
+				<database.password>90parpv3</database.password>
 				<!-- Log4J configuration -->
 				<log.level.solices>info</log.level.solices>
 				<log.level.other>info</log.level.other>
