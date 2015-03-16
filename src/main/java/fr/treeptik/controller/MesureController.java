@@ -122,9 +122,6 @@ public class MesureController {
 		Collections.sort(mesures, new DateMesureComparator());
 		Collections.reverse(mesures);
 
-		mesures.forEach(m -> System.out.println(m));
-		
-		
 		model.addAttribute("alertesActivesCombo", alertesActivesCombo);
 		model.addAttribute("mesures", mesures);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);

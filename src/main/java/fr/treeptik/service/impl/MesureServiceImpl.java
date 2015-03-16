@@ -64,8 +64,6 @@ public class MesureServiceImpl implements MesureService {
 			Float valeur;
 			Float signalBrut = mesureTemp.getSignalBrut();
 			
-			System.out.println(signalBrut);
-			
 			Capteur capteur = mesureTemp.getCapteur();
 			Enregistreur enregistreur = capteur.getEnregistreur();
 			Float echelleMinCapteur = capteur.getEchelleMinCapteur();
@@ -79,8 +77,6 @@ public class MesureServiceImpl implements MesureService {
 				valeur = signalBrut;
 			}
 
-			System.out.println(valeur);
-			
 			mesureTemp.setValeur(valeur);
 			this.create(mesureTemp);
 

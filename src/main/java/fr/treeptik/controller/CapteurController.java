@@ -251,15 +251,12 @@ public class CapteurController {
 		logger.info("--createNiveauManuel CapteurController -- capteur : "
 				+ capteur);
 
-		System.out.println(capteur.getNiveauManuel().getDate());
 
 		Mesure mesure = new Mesure();
 		try {
 
 			logger.info("mesure : " + mesure);
 			mesure = mesureService.create(capteur.getNiveauManuel());
-			TypeCaptAlerteMesure typeCaptAlerteMesure = typeCaptAlerteMesureService
-					.findById(capteur.getTypeCaptAlerteMesure().getId());
 			capteur = capteurService.create(capteur);
 			mesure.setCapteur(capteur);
 			mesure.setTypeCaptAlerteMesure(typeCaptAlerteMesureService
