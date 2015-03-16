@@ -28,6 +28,8 @@ public class WebConfigurer implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext servletContext = sce.getServletContext();
 
+		logger.debug("Context root path : " + servletContext.getRealPath("/"));
+		System.setProperty("rootPath", servletContext.getRealPath("/"));
 		logger.info("Web application configuration");
 
 		logger.debug("Configuring Spring root application context");
