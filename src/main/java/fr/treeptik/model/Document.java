@@ -11,10 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * @author herve
- *
- */
+
 @SuppressWarnings("serial")
 @Entity
 public class Document implements Serializable {

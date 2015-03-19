@@ -1,21 +1,16 @@
 package fr.treeptik.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,11 +39,8 @@ public class ClientController {
 	private AdministrateurService administrateurService;
 	@Inject
 	private EtablissementService etablissementService;
-
 	@Inject
 	private ClientValidator clientValidator;
-
-	private Map<Integer, Etablissement> etablissementCache;
 
 	/**
 	 * 
@@ -65,11 +57,6 @@ public class ClientController {
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
-		}
-
-		etablissementCache = new HashMap<Integer, Etablissement>();
-		for (Etablissement etablissement : etablissementsCombo) {
-			etablissementCache.put(etablissement.getId(), etablissement);
 		}
 
 		model.addAttribute("client", new Client());
@@ -99,13 +86,6 @@ public class ClientController {
 
 				List<Etablissement> etablissementsCombo = etablissementService
 						.findAll();
-
-				etablissementCache = new HashMap<Integer, Etablissement>();
-
-				for (Etablissement etablissement : etablissementsCombo) {
-					etablissementCache
-							.put(etablissement.getId(), etablissement);
-				}
 
 				model.addAttribute("client", client);
 				model.addAttribute("etablissementsCombo", etablissementsCombo);
@@ -137,17 +117,16 @@ public class ClientController {
 
 		Client client = null;
 		List<Etablissement> etablissementsCombo;
-		etablissementCache = new HashMap<Integer, Etablissement>();
 
 		try {
 
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
 			if (!isAdmin) {
-				
-				
-				client = (Client) request.getSession().getAttribute("userSession");
-				logger.debug("USER LOGIN : " + client.getLogin() );
+
+				client = (Client) request.getSession().getAttribute(
+						"userSession");
+				logger.debug("USER LOGIN : " + client.getLogin());
 
 				if (id != client.getId()) {
 					throw new ControllerException(
@@ -156,11 +135,8 @@ public class ClientController {
 			}
 
 			client = clientService.findByIdWithJoinFetchEtablissements(id);
-			
+
 			etablissementsCombo = etablissementService.findAll();
-			for (Etablissement etablissement : etablissementsCombo) {
-				etablissementCache.put(etablissement.getId(), etablissement);
-			}
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -182,8 +158,7 @@ public class ClientController {
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--delete ClientController--");
-		logger.debug("clientId : " + id);
+		logger.info("--delete ClientController-- clientId : " + id);
 
 		try {
 			clientService.remove(id);
@@ -201,7 +176,7 @@ public class ClientController {
 	 * @return
 	 * @throws ControllerException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
+	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model) throws ControllerException {
 		logger.info("--list ClientController--");
 
@@ -214,49 +189,6 @@ public class ClientController {
 		}
 		model.addAttribute("clients", clients);
 		return "/client/list";
-	}
-
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) throws ControllerException {
-		binder.registerCustomEditor(List.class, "etablissements",
-				new CustomCollectionEditor(List.class) {
-					protected Object convertElement(Object element) {
-						List<Etablissement> etablissements = null;
-						try {
-							etablissementCache = new HashMap<Integer, Etablissement>();
-							etablissements = etablissementService.findAll();
-						} catch (ServiceException e) {
-							logger.error(e.getMessage());
-						}
-
-						for (Etablissement etablissement : etablissements) {
-							etablissementCache.put(etablissement.getId(),
-									etablissement);
-						}
-
-						if (element instanceof Etablissement) {
-							logger.debug("Conversion d'Etablissement en Etablissement: "
-									+ element);
-							return element;
-						}
-						if (element instanceof String
-								|| element instanceof Integer) {
-							Etablissement etablissement;
-							if (element instanceof String) {
-								etablissement = etablissementCache.get(Integer
-										.valueOf((String) element));
-							} else {
-
-								etablissement = etablissementCache.get(element);
-								logger.debug("Recherche d'établissement pour l'Id : "
-										+ element + ": " + etablissement);
-							}
-							return etablissement;
-						}
-						logger.debug("Problème avec l'element : " + element);
-						return null;
-					}
-				});
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/principal/id")

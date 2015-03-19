@@ -97,11 +97,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
 								aria-hidden="true">×</button>
-							<h4 class="modal-title">Confirmation de suppression</h4>
+							<h4 class="modal-title text-primary">Confirmation de suppression</h4>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
-							<p class="text-muted">ATTENTION : Tous les enregistreurs,
+							<p class="text-danger">ATTENTION : Tous les enregistreurs,
 								documents et ouvrages asservis seront supprimés</p>
 						</div>
 						<div class="modal-footer">

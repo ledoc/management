@@ -23,7 +23,6 @@ public class Etablissement implements Serializable {
 	private String nom;
 	// applicatif : par défaut le nom ou l'entité
 	private String codeEtablissement;
-	// latitude/longitude
 	private String coordonneesGeographique;
 	private String coordonneesLambert;
 	private Float latitude;
@@ -35,7 +34,6 @@ public class Etablissement implements Serializable {
 	private String siteWeb;
 	@OneToMany(cascade=CascadeType.REMOVE, mappedBy="etablissement")
 	private List<Site> sites;
-	
 	@ManyToMany(mappedBy="etablissements")
 	private List<Client> clients;
 

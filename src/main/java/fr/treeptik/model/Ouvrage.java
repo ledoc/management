@@ -36,7 +36,7 @@ public class Ouvrage implements Serializable {
 	private Float latitude;
 	private Float longitude;
 	/**
-	 * Nivellement général de la France
+	 * NGF (point repère) = Nivellement général de la France
 	 */
 	// Côte repère NGF : à indiquer
 	private Float coteRepereNGF;
@@ -44,8 +44,8 @@ public class Ouvrage implements Serializable {
 	private String commentaire;
 	// Si l'ouvrage est "lié" à un autre
 	private Boolean rattachement;
-	// Ouvrage auquel il est asservi
-
+	
+	// Ouvrage auquel il est ratttaché
 	@ManyToOne
 	private Ouvrage ouvrageMaitre;
 	@JsonIgnore

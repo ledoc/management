@@ -22,13 +22,12 @@ public class Mesure implements Serializable, Cloneable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
-	@ManyToOne
-	private TypeCaptAlerteMesure typeCaptAlerteMesure;
+	private String unite;
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date date;
-	private String unite;
+	@ManyToOne
+	private TypeCaptAlerteMesure typeCaptAlerteMesure;
 	@JsonIgnore
 	@ManyToOne
 	private Capteur capteur;

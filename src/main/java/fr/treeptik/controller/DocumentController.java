@@ -3,16 +3,13 @@ package fr.treeptik.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.AlerteDescription;
 import fr.treeptik.model.Client;
 import fr.treeptik.model.Document;
 import fr.treeptik.model.Ouvrage;
@@ -47,8 +43,6 @@ public class DocumentController {
 	private OuvrageService ouvrageService;
 	@Inject
 	private ClientService clientService;
-	private Map<Integer, Client> clientsCache;
-	private Map<Integer, Ouvrage> ouvragesCache;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/assign")
 	public String upload(Model model) throws ControllerException {
@@ -60,16 +54,6 @@ public class DocumentController {
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
-		}
-
-		clientsCache = new HashMap<Integer, Client>();
-		for (Client client : clientsCombo) {
-			clientsCache.put(client.getId(), client);
-		}
-
-		ouvragesCache = new HashMap<Integer, Ouvrage>();
-		for (Ouvrage ouvrage : ouvragesCombo) {
-			ouvragesCache.put(ouvrage.getId(), ouvrage);
 		}
 
 		model.addAttribute("clientsCombo", clientsCombo);
@@ -117,15 +101,6 @@ public class DocumentController {
 			ouvragesCombo = ouvrageService.findAll();
 			clientsCombo = clientService.findAll();
 
-			clientsCache = new HashMap<Integer, Client>();
-			for (Client client : clientsCombo) {
-				clientsCache.put(client.getId(), client);
-			}
-
-			ouvragesCache = new HashMap<Integer, Ouvrage>();
-			for (Ouvrage ouvrage : ouvragesCombo) {
-				ouvragesCache.put(ouvrage.getId(), ouvrage);
-			}
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -190,60 +165,6 @@ public class DocumentController {
 
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				new SimpleDateFormat("dd-MM-yyyy"), true));
-
-		binder.registerCustomEditor(List.class, "clients",
-				new CustomCollectionEditor(List.class) {
-					protected Object convertElement(Object element) {
-						if (element instanceof AlerteDescription) {
-							logger.info("Conversion d'un client en client: "
-									+ element);
-							return element;
-						}
-						if (element instanceof String
-								|| element instanceof Integer) {
-							Client client;
-							if (element instanceof String) {
-								client = clientsCache.get(Integer
-										.valueOf((String) element));
-							} else {
-
-								client = clientsCache.get(element);
-								logger.info("Recherche du client pour l'Id : "
-										+ element + ": " + client);
-							}
-							return client;
-						}
-						logger.debug("Problème avec l'élement : " + element);
-						return null;
-					}
-				});
-
-		binder.registerCustomEditor(List.class, "ouvrages",
-				new CustomCollectionEditor(List.class) {
-					protected Object convertElement(Object element) {
-						if (element instanceof AlerteDescription) {
-							logger.info("Conversion d'un ouvrage en ouvrage: "
-									+ element);
-							return element;
-						}
-						if (element instanceof String
-								|| element instanceof Integer) {
-							Ouvrage ouvrage;
-							if (element instanceof String) {
-								ouvrage = ouvragesCache.get(Integer
-										.valueOf((String) element));
-							} else {
-
-								ouvrage = ouvragesCache.get(element);
-								logger.info("Recherche du ouvrage pour l'Id : "
-										+ element + ": " + ouvrage);
-							}
-							return ouvrage;
-						}
-						logger.debug("Problème avec l'élement : " + element);
-						return null;
-					}
-				});
 
 	}
 

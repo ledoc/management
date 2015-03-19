@@ -1,7 +1,7 @@
 INSERT IGNORE INTO `Administrateur`  VALUES (1,'ID-1','administrateur','rvfontbonne@hotmail.com',NULL,'aaa','administrateurNom','adminPreNom','ADMIN',NULL,'0623456789');
 
-INSERT IGNORE INTO `Administrateur`  VALUES (2, 'ID-2', 'pmauzet', 'philippe.mauzet@ah2d.fr', 'p.mauzet@yahoo.fr', 'solices', 'Mauzet', 'philippe', 'ADMIN', '0442513922', '0679468991'),
-INSERT IGNORE INTO `Administrateur`  VALUES (3, 'ID-3', 'pleon', 'pleon@solices.fr', 'pleon2@solices.fr', 'solices', 'Leon', 'philippe', 'ADMIN', '0123456789', '0623456789'),
+INSERT IGNORE INTO `Administrateur`  VALUES (2, 'ID-2', 'pmauzet', 'philippe.mauzet@ah2d.fr', 'p.mauzet@yahoo.fr', 'solices', 'Mauzet', 'philippe', 'ADMIN', '0442513922', '0679468991');
+INSERT IGNORE INTO `Administrateur`  VALUES (3, 'ID-3', 'pleon', 'pleon@solices.fr', 'pleon2@solices.fr', 'solices', 'Leon', 'philippe', 'ADMIN', '0123456789', '0623456789');
 INSERT IGNORE INTO `Administrateur`  VALUES (4, 'ID-4', 'nserano', 'nserano@solices.fr', 'nserano2@solices.fr', 'solices', 'Serano', 'nicolas', 'ADMIN', '0123456789', '0623456789');
 
 INSERT IGNORE INTO `Client` VALUES (1,'ID-1','client','h.fontbonne@treeptik.fr','client2@solices.fr','client','clientnom01','chef','clientprenom01','CLIENT','0187575529','0687575529');

@@ -76,11 +76,7 @@ public class Enregistreur implements Serializable {
 	 */
 	@JsonIgnore
 	private Boolean valid = true;
-	/**
-	 * TODO : trouver la classe de cette bete là
-	 */
 
-	// private Class[] seamless;
 	@JsonIgnore
 	private Integer period;
 	@JsonIgnore
@@ -110,7 +106,6 @@ public class Enregistreur implements Serializable {
 	public Enregistreur(HashMap<String, Object> xmlrpcHashMap) {
 		super();
 		this.valid = (boolean) xmlrpcHashMap.get("valid");
-		// this.seamless = xmlrpcHashMap.get("seamless");
 		this.period = (int) xmlrpcHashMap.get("period");
 		this.localizableStatus = (int) xmlrpcHashMap.get("localizableStatus");
 		this.clientName = (String) xmlrpcHashMap.get("clientName");

@@ -2,6 +2,11 @@ package fr.treeptik.model;
 
 import java.util.Map;
 
+/**
+ * Objet utiliser pour construire les pointsd de la google map
+ * @author herve
+ *
+ */
 public class Marker {
 
 	private float lat;

@@ -24,7 +24,6 @@ import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
 import fr.treeptik.model.TypeCaptAlerteMesure;
-import fr.treeptik.model.TypeOuvrage;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.MesureService;

@@ -25,7 +25,6 @@ public class Client implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	// Nom + numero
 	@Column(unique=true)
 	private String identifiant;
 	private String nom;

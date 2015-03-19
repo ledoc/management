@@ -3,6 +3,13 @@ package fr.treeptik.model;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 
+ * Objet représentant les points du graphique
+ * 
+ * @author herve
+ *
+ */
 public class Point implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -22,14 +22,11 @@ public class Site implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	private String nom;
+	private String codeSite;
 	// site ou secteur
 	@Enumerated(EnumType.STRING)
 	private TypeSite typeSite;
-	private String nom;
-
-	// A défaut, S (site) ou T (secteur), département et numéro d’ordre de
-	// création ex: S-77-01.
-	private String codeSite;
 	private String departement;
 	private String coordonneesGeographique;
 	private String coordonneesLambert;
@@ -37,11 +34,9 @@ public class Site implements Serializable {
 	private Float longitude;
 	// Station météo : code Météo France et coordonnées géographiques ;
 	private String stationMeteo;
-	
 	@JsonIgnore
 	@ManyToOne
 	private Etablissement etablissement;
-
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.REMOVE, mappedBy="site")
 	private List<Ouvrage> ouvrages;

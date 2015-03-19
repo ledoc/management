@@ -31,12 +31,11 @@ public class Capteur implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	@ManyToOne
-	private Enregistreur enregistreur;
-
 	// Ce qui va être mesuré
 	@ManyToOne
 	private TypeCaptAlerteMesure typeCaptAlerteMesure;
+	@ManyToOne
+	private Enregistreur enregistreur;
 
 	private Float echelleMaxCapteur;
 	private Float echelleMinCapteur;
@@ -55,7 +54,6 @@ public class Capteur implements Serializable {
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "capteur")
 	private List<AlerteEmise> alerteEmises;
-
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL }, mappedBy = "capteur")
 	private List<Mesure> mesures;
