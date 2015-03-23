@@ -13,9 +13,11 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import fr.treeptik.generic.interfaces.HasGeoCoords;
+
 @SuppressWarnings("serial")
 @Entity
-public class Ouvrage implements Serializable {
+public class Ouvrage implements Serializable, HasGeoCoords {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -12,9 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import fr.treeptik.generic.interfaces.HasGeoCoords;
+
 @SuppressWarnings("serial")
 @Entity
-public class Etablissement implements Serializable {
+public class Etablissement implements Serializable, HasGeoCoords {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

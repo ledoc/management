@@ -1,6 +1,7 @@
 package fr.treeptik.service;
 
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.generic.interfaces.HasGeoCoords;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Marker;
 import fr.treeptik.model.Ouvrage;
@@ -14,4 +15,6 @@ public interface MapService {
 			throws ServiceException;
 	
 	Marker transformSiteInMarker(Site site) throws ServiceException;
+
+	boolean isGeoLocalised(HasGeoCoords coord);
 }

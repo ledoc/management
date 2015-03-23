@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.generic.interfaces.HasGeoCoords;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Marker;
 import fr.treeptik.model.Ouvrage;
@@ -72,5 +73,10 @@ public class MapServiceImpl implements MapService {
 		Map<String, String> infoWindow = new HashMap<String, String>();
 		marker.setInfoWindow(infoWindow);
 		return marker;
+	}
+
+	@Override
+	public boolean isGeoLocalised(HasGeoCoords coord) {
+		return coord.getLongitude() != null && coord.getLatitude() != null;
 	}
 }

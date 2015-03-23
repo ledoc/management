@@ -72,14 +72,20 @@ public class MapController {
 			}
 
 			for (Site item : sitesCombo) {
-				markers.add(mapService.transformSiteInMarker(item));
+				if(mapService.isGeoLocalised(item)){
+					markers.add(mapService.transformSiteInMarker(item));
+				}
 			}
 			for (Ouvrage item : ouvragesCombo) {
-				markers.add(mapService.transformOuvrageInMarker(item));
+				if(mapService.isGeoLocalised(item)){
+					markers.add(mapService.transformOuvrageInMarker(item));
+				}
 			}
 
 			for (Etablissement item : etablissementsCombo) {
-				markers.add(mapService.transformEtablissementInMarker(item));
+				if(mapService.isGeoLocalised(item)){
+					markers.add(mapService.transformEtablissementInMarker(item));
+				}
 			}
 
 		} catch (ServiceException e) {
@@ -124,14 +130,20 @@ public class MapController {
 			}
 
 			for (Site item : sitesCombo) {
-				markers.add(mapService.transformSiteInMarker(item));
+				if(mapService.isGeoLocalised(item)){
+					markers.add(mapService.transformSiteInMarker(item));
+				}
 			}
 			for (Ouvrage item : ouvragesCombo) {
-				markers.add(mapService.transformOuvrageInMarker(item));
+				if(mapService.isGeoLocalised(item)){
+					markers.add(mapService.transformOuvrageInMarker(item));
+				}
 			}
 
 			for (Etablissement item : etablissementsCombo) {
-				markers.add(mapService.transformEtablissementInMarker(item));
+				if(mapService.isGeoLocalised(item)){
+					markers.add(mapService.transformEtablissementInMarker(item));
+				}
 			}
 
 		} catch (ServiceException e) {

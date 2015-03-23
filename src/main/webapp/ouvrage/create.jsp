@@ -14,8 +14,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 </jsp:include>
 
 
-
-
 <!-- Seulement une visualisation pour les clients -->
 <sec:authorize ifAllGranted="ADMIN">
 	<c:set var="readOnlyValue" value="false"></c:set>
@@ -36,6 +34,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<c:set var="labelCreateUpdate" value="OK" />
 	<c:set var="textCreateUpdate" value="Détails" />
 </sec:authorize>
+
+<script src="../../template/js/parsley/geo.js"></script>
+<script type="text/javascript">
+	window.ParsleyConfig = {
+		validators : {
+			coordsValidrequired : {
+				fn : validateGeoCoords,
+				priority : 32
+			}
+		}
+	};
+</script>
 
 <section class="layout">
 	<!-- /sidebar -->
@@ -130,8 +140,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-required-message="Champ requis"
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum"
+										data-parsley-coordsValidrequired="true"
+										data-parsley-coordsValidrequired-message="Les coordonnées doivent être écrites de type [Lat/Long] avec des longitudes et des latitudes de valeurs numériques"
+										onchange="javascript:activateNappeOrSurface();"
 										readonly="${readOnlyValue }" />
 								</div>
+
 								<div class="form-group">
 									<label for="coordonneesLambert">Coordonnées
 										géographiques (format Lambert93)</label>
@@ -331,7 +345,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
 								aria-hidden="true">×</button>
-							<h4 class="modal-title text-primary">Confirmation de suppression</h4>
+							<h4 class="modal-title text-primary">Confirmation de
+								suppression</h4>
 						</div>
 						<div class="modal-body">
 							<p>Supprimer cette ligne ?</p>
@@ -351,6 +366,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<!-- /content wrapper -->
 		<a class="exit-offscreen"></a>
 		<jsp:include page="/template/footer.jsp" />
+
+
 
 		<script type="text/javascript">
 			$(document).ready(function() {
