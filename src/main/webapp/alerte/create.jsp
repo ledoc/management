@@ -43,7 +43,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate} d'une
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}&nbspd'une
 							Alerte</h1>
 						<p class="text-muted">Permet de ${sentenceCreateUpdate} une
 							alerte</p>
