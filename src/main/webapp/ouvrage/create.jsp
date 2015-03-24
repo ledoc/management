@@ -13,7 +13,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<jsp:param value="Solices - Détail Ouvrage" name="titreOnglet" />
 </jsp:include>
 
-
 <!-- Seulement une visualisation pour les clients -->
 <sec:authorize ifAllGranted="ADMIN">
 	<c:set var="readOnlyValue" value="false"></c:set>

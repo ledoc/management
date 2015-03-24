@@ -94,12 +94,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="typeAlerte">Type de l'alerte</label>
 									<form:select id="typeAlerte" name="typeAlerte"
-										path="capteur.typeMesureOrTrame" data-parsley-required="true"
+										path="capteur.typeCaptAlerteMesure.id" data-parsley-required="true"
 										data-parsley-required-message="Champ requis"
 										class="form-control chosen" disabled="${readOnlyValue }">
 										<form:option value="" label="--- Choisir un type ---" />
-										<form:options items="${typesMesureOrTrameCombo}"
-											itemLabel="description" />
+										<form:options items="${typeCaptAlerteMesureCombo}"
+											itemValue="id"  itemLabel="description" />
 									</form:select>
 								</div>
 								<div class="form-group">
