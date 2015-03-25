@@ -1,5 +1,6 @@
 package fr.treeptik.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -75,6 +76,9 @@ public class Marker {
 	}
 
 	public Map<String, String> getInfoWindow() {
+		if(infoWindow == null) {
+			infoWindow = new HashMap<String, String>();
+		}
 		return infoWindow;
 	}
 

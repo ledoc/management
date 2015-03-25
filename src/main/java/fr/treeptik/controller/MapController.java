@@ -25,6 +25,7 @@ import fr.treeptik.service.EtablissementService;
 import fr.treeptik.service.MapService;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
+import fr.treeptik.model.assembler.MarkerAssembler;
 
 @Controller
 @RequestMapping("/carto")
@@ -40,17 +41,18 @@ public class MapController {
 	private SiteService siteService;
 	@Inject
 	private OuvrageService ouvrageService;
+	
+	private MarkerAssembler markerAssembler = new MarkerAssembler();
 
-	@RequestMapping(method = RequestMethod.GET, value = "/carto")
+
+    @RequestMapping(method = RequestMethod.GET, value = "/carto")
 	public String goToCarto(Model model, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--goToCarto MapController--");
 
-		List<Marker> markers = new ArrayList<Marker>();
 		List<Site> sitesCombo = null;
 		List<Etablissement> etablissementsCombo = null;
 		List<Ouvrage> ouvragesCombo = null;
-
 		try {
 
 			Boolean isAdmin = request.isUserInRole("ADMIN");
@@ -70,24 +72,6 @@ public class MapController {
 						.findByClientLogin(userLogin);
 				ouvragesCombo = ouvrageService.findByClientLogin(userLogin);
 			}
-
-			for (Site item : sitesCombo) {
-				if(mapService.isGeoLocalised(item)){
-					markers.add(mapService.transformSiteInMarker(item));
-				}
-			}
-			for (Ouvrage item : ouvragesCombo) {
-				if(mapService.isGeoLocalised(item)){
-					markers.add(mapService.transformOuvrageInMarker(item));
-				}
-			}
-
-			for (Etablissement item : etablissementsCombo) {
-				if(mapService.isGeoLocalised(item)){
-					markers.add(mapService.transformEtablissementInMarker(item));
-				}
-			}
-
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -110,7 +94,6 @@ public class MapController {
 		List<Ouvrage> ouvragesCombo = null;
 
 		try {
-
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
 
@@ -131,21 +114,20 @@ public class MapController {
 
 			for (Site item : sitesCombo) {
 				if(mapService.isGeoLocalised(item)){
-					markers.add(mapService.transformSiteInMarker(item));
+					markers.add(markerAssembler.fromSite(item));
 				}
 			}
 			for (Ouvrage item : ouvragesCombo) {
 				if(mapService.isGeoLocalised(item)){
-					markers.add(mapService.transformOuvrageInMarker(item));
+					markers.add(markerAssembler.fromOuvrage(item));
 				}
 			}
 
 			for (Etablissement item : etablissementsCombo) {
 				if(mapService.isGeoLocalised(item)){
-					markers.add(mapService.transformEtablissementInMarker(item));
+					markers.add(markerAssembler.fromEtablissement(item));
 				}
 			}
-
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -159,15 +141,11 @@ public class MapController {
 			throws ControllerException {
 		logger.info("--localizeOuvrage MapController-- ouvrageId : "
 				+ ouvrageId);
-
 		Marker marker = new Marker();
 		try {
 			Ouvrage ouvrage = ouvrageService.findById(ouvrageId);
-
 			logger.debug("-- ouvrage : " + ouvrage);
-
-			marker = mapService.transformOuvrageInMarker(ouvrage);
-
+			marker = markerAssembler.fromOuvrage(ouvrage);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -185,7 +163,7 @@ public class MapController {
 			Site site = siteService.findById(siteId);
 			logger.debug("--site : " + site);
 
-			marker = mapService.transformSiteInMarker(site);
+			marker = markerAssembler.fromSite(site);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -208,7 +186,7 @@ public class MapController {
 
 			logger.debug("--etablissement : " + etablissement);
 
-			marker = mapService.transformEtablissementInMarker(etablissement);
+			marker = markerAssembler.fromEtablissement(etablissement);
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
