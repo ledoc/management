@@ -7,7 +7,9 @@ import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Marker;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MarkerAssembler {
 
 	private static final String MARKER_TYPE_OUVRAGE = "ouvrage";

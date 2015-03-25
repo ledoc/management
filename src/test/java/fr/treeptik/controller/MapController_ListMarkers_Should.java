@@ -1,34 +1,32 @@
 package fr.treeptik.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import fr.treeptik.exception.ControllerException;
+import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.*;
+import fr.treeptik.model.assembler.MarkerAssembler;
+import fr.treeptik.service.EtablissementService;
+import fr.treeptik.service.MapService;
+import fr.treeptik.service.OuvrageService;
+import fr.treeptik.service.SiteService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import fr.treeptik.exception.ControllerException;
-import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Etablissement;
-import fr.treeptik.model.Marker;
-import fr.treeptik.model.Ouvrage;
-import fr.treeptik.model.Site;
-import fr.treeptik.model.TypeOuvrage;
-import fr.treeptik.service.EtablissementService;
-import fr.treeptik.service.MapService;
-import fr.treeptik.service.OuvrageService;
-import fr.treeptik.service.SiteService;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 public class MapController_ListMarkers_Should {
 
@@ -58,6 +56,9 @@ public class MapController_ListMarkers_Should {
 	@Mock
 	OuvrageService ouvrageService;
 
+    @Mock
+    MarkerAssembler markerAssembler;
+
 	@Mock
 	HttpServletRequest request;
 
@@ -77,6 +78,7 @@ public class MapController_ListMarkers_Should {
 		SecurityContextHolder.setContext(context);
 
 		when(request.isUserInRole("ADMIN")).thenReturn(false);
+
 	}
 
 	@Test
@@ -141,6 +143,17 @@ public class MapController_ListMarkers_Should {
 		when(mapService.isGeoLocalised(ouvrage1)).thenReturn(true);
 		when(mapService.isGeoLocalised(ouvrage2)).thenReturn(false);
 		when(mapService.isGeoLocalised(ouvrage3)).thenReturn(true);
+
+
+        Marker marker1 = new Marker();
+        marker1.setItemId(OUVRAGE_ID_1);
+        when(markerAssembler.fromOuvrage(ouvrage1)).thenReturn(marker1);
+        Marker marker2 = new Marker();
+        marker2.setItemId(OUVRAGE_ID_2);
+        when(markerAssembler.fromOuvrage(ouvrage2)).thenReturn(marker2);
+        Marker marker3 = new Marker();
+        marker3.setItemId(OUVRAGE_ID_3);
+        when(markerAssembler.fromOuvrage(ouvrage3)).thenReturn(marker3);
 	}
 
 	private Ouvrage ouvrageWithMinValue() {
@@ -168,6 +181,16 @@ public class MapController_ListMarkers_Should {
 		when(mapService.isGeoLocalised(site1)).thenReturn(true);
 		when(mapService.isGeoLocalised(site2)).thenReturn(false);
 		when(mapService.isGeoLocalised(site3)).thenReturn(true);
+
+        Marker marker1 = new Marker();
+        marker1.setItemId(SITE_ID_1);
+        when(markerAssembler.fromSite(site1)).thenReturn(marker1);
+        Marker marker2 = new Marker();
+        marker2.setItemId(SITE_ID_2);
+        when(markerAssembler.fromSite(site2)).thenReturn(marker2);
+        Marker marker3 = new Marker();
+        marker3.setItemId(SITE_ID_3);
+        when(markerAssembler.fromSite(site3)).thenReturn(marker3);
 	}
 	
 	private Site siteWithMinValue() {
@@ -196,6 +219,17 @@ public class MapController_ListMarkers_Should {
 		when(mapService.isGeoLocalised(etablissement1)).thenReturn(true);
 		when(mapService.isGeoLocalised(etablissement2)).thenReturn(false);
 		when(mapService.isGeoLocalised(etablissement3)).thenReturn(true);
+
+
+        Marker marker1 = new Marker();
+        marker1.setItemId(ETABLISSEMENT_ID_1);
+        when(markerAssembler.fromEtablissement(etablissement1)).thenReturn(marker1);
+        Marker marker2 = new Marker();
+        marker2.setItemId(ETABLISSEMENT_ID_2);
+        when(markerAssembler.fromEtablissement(etablissement2)).thenReturn(marker2);
+        Marker marker3 = new Marker();
+        marker3.setItemId(ETABLISSEMENT_ID_3);
+        when(markerAssembler.fromEtablissement(etablissement3)).thenReturn(marker3);
 	}
 	
 	private Etablissement etablissementWithMinValue() {

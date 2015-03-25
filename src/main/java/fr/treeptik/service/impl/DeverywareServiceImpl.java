@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 
+import fr.treeptik.model.assembler.EnregistreurAssembler;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,6 +57,9 @@ public class DeverywareServiceImpl implements DeverywareService {
 	@Inject
 	private MesureService mesureService;
 
+    @Inject
+    private EnregistreurAssembler enregistreurAssembler;
+
 	public String openSession() throws Exception {
 
 		String sessionKey = xmlRPCUtils.openSession();
@@ -66,7 +70,6 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * la (ou l'une) des méthodes pour récupérer l'ampérage renvoyé par tous les
 	 * enregistreurs
 	 * 
-	 * @param mid
 	 * @throws ServiceException
 	 */
 	@Scheduled(fixedRate = 1800000)
@@ -155,8 +158,8 @@ public class DeverywareServiceImpl implements DeverywareService {
 
 			@SuppressWarnings("unchecked")
 			HashMap<String, Object> enregistreurHashMap = (HashMap<String, Object>) enregistreurXmlRpc;
-			Enregistreur enregistreur = new Enregistreur(enregistreurHashMap);
-			enregistreursFromDW.add(enregistreur);
+			//Enregistreur enregistreur = new Enregistreur(enregistreurHashMap);
+			enregistreursFromDW.add(enregistreurAssembler.fromXmlrpcHashMap(enregistreurHashMap));
 
 		}
 		return enregistreursFromDW;
@@ -654,7 +657,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 	 * Check si une trameDW de l'enregistreur n'a pas la même date et valeur que
 	 * celle parsée renvoie TRUE si c'est le cas
 	 * 
-	 * @param list
+	 * @param trameDWs
 	 * @param trameDW
 	 * @return
 	 */

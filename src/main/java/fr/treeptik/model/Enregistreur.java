@@ -98,24 +98,8 @@ public class Enregistreur implements Serializable {
 	private Ouvrage ouvrage;
 
 	// private String server;	
-	
-	public Enregistreur() {
-		super();
-	}
-	
-	public Enregistreur(HashMap<String, Object> xmlrpcHashMap) {
-		super();
-		this.valid = (boolean) xmlrpcHashMap.get("valid");
-		this.period = (int) xmlrpcHashMap.get("period");
-		this.localizableStatus = (int) xmlrpcHashMap.get("localizableStatus");
-		this.clientName = (String) xmlrpcHashMap.get("clientName");
-		this.mid = (String) xmlrpcHashMap.get("mid");
-		this.until = (int) xmlrpcHashMap.get("until");
-		this.pid = (String) xmlrpcHashMap.get("pid");
-		this.comment = (String) xmlrpcHashMap.get("comment");
-		this.type = (String) xmlrpcHashMap.get("type");
-		this.userName = (String) xmlrpcHashMap.get("userName");
-	}
+
+
 
 	public Integer getId() {
 		return id;

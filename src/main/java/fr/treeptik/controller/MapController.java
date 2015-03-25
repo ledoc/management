@@ -1,11 +1,16 @@
 package fr.treeptik.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-
+import fr.treeptik.exception.ControllerException;
+import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Etablissement;
+import fr.treeptik.model.Marker;
+import fr.treeptik.model.Ouvrage;
+import fr.treeptik.model.Site;
+import fr.treeptik.model.assembler.MarkerAssembler;
+import fr.treeptik.service.EtablissementService;
+import fr.treeptik.service.MapService;
+import fr.treeptik.service.OuvrageService;
+import fr.treeptik.service.SiteService;
 import org.apache.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,17 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import fr.treeptik.exception.ControllerException;
-import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Etablissement;
-import fr.treeptik.model.Marker;
-import fr.treeptik.model.Ouvrage;
-import fr.treeptik.model.Site;
-import fr.treeptik.service.EtablissementService;
-import fr.treeptik.service.MapService;
-import fr.treeptik.service.OuvrageService;
-import fr.treeptik.service.SiteService;
-import fr.treeptik.model.assembler.MarkerAssembler;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/carto")
@@ -41,8 +39,9 @@ public class MapController {
 	private SiteService siteService;
 	@Inject
 	private OuvrageService ouvrageService;
-	
-	private MarkerAssembler markerAssembler = new MarkerAssembler();
+
+    @Inject
+	private MarkerAssembler markerAssembler;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/carto")

@@ -9,6 +9,8 @@ import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Ouvrage;
 import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeOuvrage;
+import org.springframework.stereotype.Component;
+
 
 public class MarkerAssembler_Should {
 	MarkerAssembler markerAssembler = new MarkerAssembler();
