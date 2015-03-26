@@ -112,9 +112,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				<div class="box-tab no-b p15 bg-white shadow">
 					<ul class="nav nav-tabs no-b">
 						<li id="ongletQuantitatif" class="active"><a
-							href="#quantitatif" data-toggle="tab">Données quantitatives</a></li>
+							href="#quantitatif" data-toggle="tab">Graphe</a></li>
 						<li><a id="ongletQualitatif" href="#qualitatif"
-							data-toggle="tab">Données qualitatives</a></li>
+							data-toggle="tab">Chroniques</a></li>
 					</ul>
 					<div class="tab-content text-center no-shadow">
 						<div class="descriptionEntities">
