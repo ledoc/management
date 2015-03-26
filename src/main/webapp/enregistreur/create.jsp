@@ -153,6 +153,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										id="commentaire" path="commentaire" placeholder=""
 										data-parsley-trigger="change" data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum"
+										data-parsley-maxcheck="255"
+										data-parsley-maxcheck-message="255 caractères maximum"
 										readonly="${readOnlyValue }" />
 								</div>
 
