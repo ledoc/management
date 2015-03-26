@@ -24,8 +24,7 @@ var mesures = function() {
 									},
 									rangeSelector : {
 										selected : false,
-										inputDateFormat : '%d/%m/%Y',
-										inputEditDateFormat : '%d/%m/%Y'
+										inputEnabled : false
 									},
 									subtitle : {
 										text : ''
