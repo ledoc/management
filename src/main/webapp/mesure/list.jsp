@@ -311,7 +311,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													$ouvrage
 															.attr(
 																	'data-placeholder',
-																	'Filtrer par Ouvrage');
+																	'Filtrer par ouvrage');
 													$
 															.each(
 																	listOuvrage,
