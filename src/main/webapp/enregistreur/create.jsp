@@ -136,7 +136,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										readonly="${readOnlyValue }" />
 								</div>
 								<div class="form-group">
-									<label for="altitude">Altitude (mètres)</label>
+									<label for="altitude">Altitude de la mesure (mètres)</label>
 									<form:input type="text" class="form-control" id="altitude"
 										path="altitude" placeholder="" data-parsley-trigger="change"
 										step="any" data-parsley-type="number"
