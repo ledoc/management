@@ -31,6 +31,7 @@ var mesures = function() {
 									},
 
 									xAxis : [ {
+										minRange : 3600000,
 										type : 'datetime',
 										dateTimeLabelFormats : {
 											month : '%d %m',
