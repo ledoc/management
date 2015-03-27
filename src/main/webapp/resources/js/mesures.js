@@ -11,6 +11,14 @@ var mesures = function() {
 
 			// chart constructor
 			function loadGraph(unite) {
+			Highcharts.setOptions(
+			{
+                global:
+                {
+                    timezoneOffset: -60
+                }
+            });
+
 				$chart
 						.highcharts(
 								'StockChart',
