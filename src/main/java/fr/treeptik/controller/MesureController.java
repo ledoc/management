@@ -1,14 +1,13 @@
 package fr.treeptik.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import fr.treeptik.controller.fake.FakeMesureController;
+import fr.treeptik.model.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,13 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.AlerteDescription;
-import fr.treeptik.model.Capteur;
-import fr.treeptik.model.Enregistreur;
-import fr.treeptik.model.Mesure;
-import fr.treeptik.model.Ouvrage;
-import fr.treeptik.model.Point;
-import fr.treeptik.model.Site;
 import fr.treeptik.service.AlerteDescriptionService;
 import fr.treeptik.service.CapteurService;
 import fr.treeptik.service.EnregistreurService;
@@ -62,6 +54,8 @@ public class MesureController {
 
 	@Inject
 	private MesureService mesureService;
+
+    private FakeMesureController fakeMesureController = new FakeMesureController();
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}/{capteurId}")
 	public String delete(Model model, @PathVariable("id") Integer id,
@@ -246,6 +240,7 @@ public class MesureController {
 
 		logger.info("--initPointsGraph MesureController");
 
+        /*
 		List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
 		List<Point> points = new ArrayList<Point>();
 
@@ -277,7 +272,8 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return points;
+		return points;*/
+        return fakeMesureController.data();
 	}
 
 	/**
@@ -285,7 +281,6 @@ public class MesureController {
 	 * capteur de temperature
 	 * 
 	 * @param request
-	 * @param enregistreurId
 	 * @return
 	 * @throws ControllerException
 	 */
@@ -340,6 +335,7 @@ public class MesureController {
 			throws ControllerException {
 		logger.info("--getCapteurPoints MesureController--");
 
+        /*
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
@@ -355,7 +351,8 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return points;
+		return points;*/
+        return fakeMesureController.data();
 	}
 
 	/**
@@ -533,6 +530,7 @@ public class MesureController {
 		logger.info("--getEnregistreurPoints MesureController-- "
 				+ " dateDebut : " + dateDebut + " -- dateFin : " + dateFin);
 
+        /*
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
@@ -548,7 +546,8 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return points;
+		return points;*/
+        return fakeMesureController.dataWithDateComparator(dateDebut, dateFin);
 	}
 
 	@InitBinder
