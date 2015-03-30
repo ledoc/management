@@ -156,7 +156,8 @@ public class ClientController {
 			client = clientService.findByIdWithJoinFetchEtablissements(id);
 
 			etablissementsCombo = etablissementService.findAll();
-			for (Etablissement etablissement : etablissementsCombo) {
+            etablissementCache = new HashMap<Integer, Etablissement>();
+            for (Etablissement etablissement : etablissementsCombo) {
 				etablissementCache.put(etablissement.getId(), etablissement);
 			}
 			

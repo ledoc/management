@@ -75,9 +75,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<i class="fa fa-check"></i>
 									</button>
 								</div>
-								<h3 class="h5 p15 mt0 mb0">
-									<b>Conductivité</b>
-								</h3>
 
 								<div class="form-group ml15 mr15">
 									<select id="alerte" class="form-control display-options"
@@ -117,10 +114,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							data-toggle="tab">Chroniques</a></li>
 					</ul>
 					<div class="tab-content text-center no-shadow">
-						<div class="descriptionEntities">
-							<span class="codeOuvrage text-muted hidden-sm hidden-xs h4"></span><span
-								class="description text-primary h5" style="vertical-align: top"></span>
-						</div>
+
 						<div class="tab-pane fade active in" id="quantitatif">
 							<div id="charts"></div>
 						</div>
