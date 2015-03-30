@@ -296,8 +296,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													enregistreur</a>
 											</div>
 										</c:if>
-
 									</sec:authorize>
+									<h5>Liste des capteurs liés à l’ouvrage</h5>
 									<table class="table table-striped no-m">
 										<thead>
 											<tr>
