@@ -143,7 +143,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 															<th>Ouvrage</th>
 															<th>Enregistreur (mid)</th>
 															<th>Type</th>
-															<th class="nosort nosearch">Actions</th>
+                                                            <sec:authorize ifAllGranted="ADMIN">
+															    <th class="nosort nosearch">Actions</th>
+                                                            </sec:authorize>
 														</tr>
 													</thead>
 													<tbody>
@@ -161,11 +163,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 																		value="${mesure.capteur.enregistreur.mid}" /></td>
 																<td><c:out
 																		value="${mesure.typeCaptAlerteMesure.description}" /></td>
-																<td><a data-url="${urlAffectAsNewNiveauManuel}"
-																	data-toggle="modal" data-target="#confirmModal"
-																	class="btn btn-outline btn-success btn-xs js-confirm-btn">
-																		<i class="fa fa-check"></i>
-																</a></td>
+                                                                <sec:authorize ifAllGranted="ADMIN">
+                                                                    <td><a data-url="${urlAffectAsNewNiveauManuel}"
+                                                                        data-toggle="modal" data-target="#confirmModal"
+                                                                        class="btn btn-outline btn-success btn-xs js-confirm-btn">
+                                                                            <i class="fa fa-check"></i>
+                                                                    </a></td>
+                                                                </sec:authorize>
 															</tr>
 														</c:forEach>
 													</tbody>
