@@ -241,8 +241,7 @@ var mesures = function() {
 								+ capteurId, function(data) {
 							var point = data[0];
 							var unite = ''
-							if (point.unite != null) {
-
+							if (point != null && point.unite != null) {
 								unite = point.unite;
 							}
 							loadGraph(unite);
