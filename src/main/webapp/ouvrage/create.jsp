@@ -297,7 +297,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<table class="table table-striped no-m">
 										<thead>
 											<tr>
-												<th>MID</th>
+												<th>Nom</th>
 												<th>% Batterie</th>
 												<sec:authorize ifAllGranted="ADMIN">
 													<th class="nosort nosearch">Actions</th>
@@ -314,7 +314,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													value="/mesure/list/enregistreur/${enregistreur.id}" />
 												<tr>
 													<td class="text-primary"><a
-														href="${urlEnregistreurUpdate}">${enregistreur.mid}</a></td>
+														href="${urlEnregistreurUpdate}">${enregistreur.nom}</a></td>
 													<td><c:out value="${enregistreur.niveauBatterie}" /></td>
 													<sec:authorize ifAllGranted="ADMIN">
 														<td><a data-url="${urlEnregistreurDelete}"
