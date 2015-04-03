@@ -20,19 +20,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<c:if test="${empty enregistreur.id}">
 		<c:set var="sentenceCreateUpdate" value="créer" />
 		<c:set var="labelCreateUpdate" value="Créer" />
-		<c:set var="textCreateUpdate" value="Création" />
+		<c:set var="textCreateUpdate" value="Création d'un Enregistreur" />
 	</c:if>
 	<c:if test="${not empty enregistreur.id}">
 		<c:set var="sentenceCreateUpdate" value="mettre à jour" />
 		<c:set var="labelCreateUpdate" value="Mettre à jour" />
-		<c:set var="textCreateUpdate" value="Mise à jour" />
+		<c:set var="textCreateUpdate" value="Mise à jour d'un Enregistreur" />
 	</c:if>
 </sec:authorize>
 <sec:authorize ifAllGranted="CLIENT">
 	<c:set var="readOnlyValue" value="true"></c:set>
 	<c:set var="sentenceCreateUpdate" value="visualiser" />
 	<c:set var="labelCreateUpdate" value="OK" />
-	<c:set var="textCreateUpdate" value="Détails" />
+	<c:set var="textCreateUpdate" value="Information Enregistreur" />
 </sec:authorize>
 
 <section class="layout">
@@ -45,8 +45,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<div class="panel">
 					<header class="panel-heading no-b col-lg-offset-2">
-						<h1 class="h3 text-primary mt0">${textCreateUpdate}&nbspd'un
-							Enregistreur</h1>
+						<h1 class="h3 text-primary mt0">${textCreateUpdate}</h1>
 						<sec:authorize ifAllGranted="ADMIN">
 							<c:if test="${empty enregistreur.id}">
 								<p class="text-muted">Pour ajouter un ou des capteurs
