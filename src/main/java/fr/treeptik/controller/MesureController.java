@@ -1,5 +1,6 @@
 package fr.treeptik.controller;
 
+import fr.treeptik.controller.fake.FakeMesureController;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.*;
@@ -45,6 +46,9 @@ public class MesureController {
 
     @Inject
     private MesureService mesureService;
+
+    private FakeMesureController fakeMesureController = new FakeMesureController();
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/delete/{id}/{capteurId}")
     public String delete(Model model, @PathVariable("id") Integer id,
@@ -236,6 +240,7 @@ public class MesureController {
 
         logger.info("--initPointsGraph MesureController");
 
+        /*
         List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
 		List<Point> points = new ArrayList<Point>();
 
@@ -267,7 +272,8 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return points;
+		return points;*/
+        return fakeMesureController.data();
     }
 
     /**
@@ -333,6 +339,7 @@ public class MesureController {
             throws ControllerException {
         logger.info("--getCapteurPoints MesureController--");
 
+        /*
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
@@ -348,7 +355,8 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return points;
+		return points;*/
+        return fakeMesureController.data();
     }
 
     /**
@@ -542,6 +550,7 @@ public class MesureController {
         logger.info("--getEnregistreurPoints MesureController-- "
                 + " dateDebut : " + dateDebut + " -- dateFin : " + dateFin);
 
+        /*
 		List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
@@ -557,7 +566,9 @@ public class MesureController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return points;
+		return points;*/
+        return fakeMesureController.dataWithDateComparator(dateDebut, dateFin);
+
     }
 
     @InitBinder
