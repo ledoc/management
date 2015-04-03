@@ -126,14 +126,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				
 				console.log('ouvrage selectionné ' + $ouvrage.selected)
 				console.log('site selectionné ' + $site.selected)
-			})
+			});
 
 			$site.change(function() {
 				$etablissement.val(0);
 				$ouvrage.val(0);
-				
-				
-				
 				$ouvrage.chosen({
 					disable_search_threshold : 10
 				}).trigger("chosen:updated");
@@ -144,7 +141,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				
 				console.log('ouvrage selectionné ' + $ouvrage.selected)
 				console.log('etab selectionné ' + $etablissement.selected)
-			})
+			});
 
 			$ouvrage.change(function() {
 				$etablissement.val(0);
@@ -161,5 +158,5 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 				console.log('etablissement selectionné ' + $etablissement.selected)
 				console.log('site selectionné ' + $site.selected)
 
-			})
+			});
 		</script>

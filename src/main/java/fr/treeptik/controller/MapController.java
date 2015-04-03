@@ -29,7 +29,8 @@ import java.util.List;
 @RequestMapping("/carto")
 public class MapController {
 
-	private Logger logger = Logger.getLogger(MapController.class);
+    public static final String SESSION_ATTRIBUT_MARKER = "marker";
+    private Logger logger = Logger.getLogger(MapController.class);
 
 	@Inject
 	private MapService mapService;
@@ -39,10 +40,8 @@ public class MapController {
 	private SiteService siteService;
 	@Inject
 	private OuvrageService ouvrageService;
-
     @Inject
 	private MarkerAssembler markerAssembler;
-
 
     @RequestMapping(method = RequestMethod.GET, value = "/carto")
 	public String goToCarto(Model model, HttpServletRequest request)
@@ -81,6 +80,7 @@ public class MapController {
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		return "/carto/carto";
 	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/allItems")
 	public @ResponseBody List<Marker> getAllItems(HttpServletRequest request)
@@ -136,7 +136,7 @@ public class MapController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/ouvrage/{ouvrageId}")
 	public @ResponseBody Marker localizeOuvrage(
-			@PathVariable("ouvrageId") Integer ouvrageId)
+			@PathVariable("ouvrageId") Integer ouvrageId, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--localizeOuvrage MapController-- ouvrageId : "
 				+ ouvrageId);
@@ -145,6 +145,7 @@ public class MapController {
 			Ouvrage ouvrage = ouvrageService.findById(ouvrageId);
 			logger.debug("-- ouvrage : " + ouvrage);
 			marker = markerAssembler.fromOuvrage(ouvrage);
+            setSession(request, marker);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -154,7 +155,7 @@ public class MapController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/site/{siteId}")
 	public @ResponseBody Marker localizeSite(
-			@PathVariable("siteId") Integer siteId) throws ControllerException {
+			@PathVariable("siteId") Integer siteId, HttpServletRequest request) throws ControllerException {
 		logger.info("--localizeOuvrage MapController-- siteId : " + siteId);
 
 		Marker marker = new Marker();
@@ -163,7 +164,7 @@ public class MapController {
 			logger.debug("--site : " + site);
 
 			marker = markerAssembler.fromSite(site);
-
+            setSession(request, marker);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -173,7 +174,7 @@ public class MapController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/etablissement/{etablissementId}")
 	public @ResponseBody Marker localizeEtablissement(
-			@PathVariable("etablissementId") Integer etablissementId)
+			@PathVariable("etablissementId") Integer etablissementId, HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--localizeEtablissement MapController-- etablissementId : "
 				+ etablissementId);
@@ -186,11 +187,30 @@ public class MapController {
 			logger.debug("--etablissement : " + etablissement);
 
 			marker = markerAssembler.fromEtablissement(etablissement);
-
+            setSession(request, marker);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 		return marker;
 	}
+
+    @RequestMapping(method = RequestMethod.GET, value = "/init")
+    public @ResponseBody Marker localizeEtablissement(HttpServletRequest request)
+            throws ControllerException {
+        logger.info("--init MapController--");
+        return getSession(request);
+    }
+
+    private Marker getSession(HttpServletRequest request)  {
+        Marker marker = (Marker) request.getSession().getAttribute(SESSION_ATTRIBUT_MARKER);
+        if(marker != null){
+            return marker;
+        }
+        return new Marker();
+    }
+
+    private void setSession(HttpServletRequest request, Marker marker){
+        request.getSession().setAttribute(SESSION_ATTRIBUT_MARKER, marker);
+    }
 }

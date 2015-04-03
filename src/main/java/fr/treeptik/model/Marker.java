@@ -60,7 +60,10 @@ public class Marker {
 	}
 
 	public String getType() {
-		return type;
+		if(type == null){
+            type= "";
+        }
+        return type;
 	}
 
 	public void setType(String type) {

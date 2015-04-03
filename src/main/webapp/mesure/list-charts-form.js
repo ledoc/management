@@ -10,7 +10,7 @@ $(document).ready(
         });
 
         $('#tableMesures').attr('class',
-            "table table-striped list no-m")
+            "table table-striped list no-m");
         //select box pour le nombre de résultats à afficher
         $('.chosen').chosen({
             width : "80px",
@@ -20,10 +20,10 @@ $(document).ready(
 
 $('#ongletQualitatif').click(function() {
     switchToList()
-})
+});
 $('#ongletQuantitatif').click(function() {
     switchToGraph()
-})
+});
 
 function switchToGraph() {
     $('.sidePanelForGraph').attr('style', 'display: block;');

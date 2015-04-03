@@ -10,13 +10,27 @@ var googlemap = function() {
 	var cartoUrl = $('.cartoUrl').attr('href');
 	var resourcesUrl = $('.resourcesUrl').attr('href');
 
-	var ouvrageUrl = $('.ouvrageUrl').attr('href');
-	var etablissementUrl = $('.etablissementUrl').attr('href');
-	var siteUrl = $('.siteUrl').attr('href');
-	var url;
-	var content;
+    var etablissement_object = {
+        value:'etablissement',
+        select_chosen : $('#etablissement'),
+        url: $('.etablissementUrl').attr('href')
+    };
 
-	return {
+    var site_object = {
+        value:'site',
+        select_chosen : $('#site'),
+        url: $('.siteUrl').attr('href')
+    };
+
+    var ouvrage_object = {
+        value:'ouvrage',
+        select_chosen : $('#ouvrage'),
+        url: $('.ouvrageUrl').attr('href')
+    };
+
+    var objects =  [ouvrage_object, site_object, etablissement_object];
+
+    return {
 		init : function() {
 
 			if (!$('#map').length) {
@@ -32,109 +46,72 @@ var googlemap = function() {
 			});
 
 			$.getJSON(cartoUrl + '/allItems', null, function(listMarkers) {
+                map.removeMarkers();
 				$.each(listMarkers, function(index, marker) {
-					if (marker.type == 'ouvrage') {
-						url = ouvrageUrl;
-						
-						content = startContent + marker.itemName
-								+ middleContent + url + marker.itemId
-								+ endContentOuvrage;
-						
-					}
-					if (marker.type == 'etablissement') {
-						url = etablissementUrl;
-						
-						content = startContent + marker.itemName
-								+ middleContent + url + marker.itemId
-								+ endContent;
-
-					}
-					if (marker.type == 'site') {
-						url = siteUrl;
-
-						content = startContent + marker.itemName
-								+ middleContent + url + marker.itemId
-								+ endContent;
-
-					}
-					marker.infoWindow.content = content;
-					marker.icon = { 
-							scaledSize:new google.maps.Size(22,32),
-							url : (resourcesUrl + marker.iconPath)
-								};
+                    map.addMarker(updateMarker(marker));
 				});
-				map.addMarkers(listMarkers);
 			});
 
-			$('#etablissement').chosen().change(
-					function() {
-						var id = $(this).val();
-						map.removeMarkers();
-						$.getJSON(cartoUrl + '/etablissement/' + id, null,
-								function(marker) {
-									url = etablissementUrl;
-									marker.icon = { 
-											scaledSize:new google.maps.Size(22,32),
-											url : (resourcesUrl + marker.iconPath)
-												};
-									
-									marker.infoWindow.content = startContent
-											+ marker.itemName + middleContent
-											+ url + marker.itemId + endContent;
+            $.getJSON(cartoUrl + '/init', null, function(marker) {
+                if(isValid(marker)){
+                    setCenter(map, marker);
 
-									map.addMarker(marker);
-									map.setCenter(marker.lat, marker.lng);
-									map.zoomIn(1);
-								});
-					});
+                    $.each( objects, function( index, object ){
+                        if (marker.type == object.value) {
+                            object.select_chosen.val(marker.itemId);
+                            object.select_chosen.trigger("chosen:updated");
+                        }
+                    });
+                }
+            });
 
-			$('#site').chosen().change(
-					function() {
-						var id = $(this).val();
-						map.removeMarkers();
+            $.each( objects, function( index, object ){
+                object.select_chosen.chosen().change(
+                    function() {
+                        $.getJSON(cartoUrl + '/' + object.value + '/' + $(this).val(), null,
+                            function(marker) {
+                                setCenter(map, marker);
+                            });
+                    });
+                console.log("plop4");
+            });
 
-						$.getJSON(cartoUrl + '/site/' + id, null, function(
-								marker) {
-							url = siteUrl;
+            function isValid(marker) {
+                return marker.lat != 0.0 && marker.lng != 0.0;
+            }
 
-							marker.icon = { 
-									scaledSize:new google.maps.Size(22,32),
-									url : (resourcesUrl + marker.iconPath)
-										};
-							
-							marker.infoWindow.content = startContent
-									+ marker.itemName + middleContent + url
-									+ marker.itemId + endContent;
+            function setCenter(map, marker) {
+                map.setCenter(marker.lat, marker.lng);
+                map.zoomIn(1);
+            }
 
-							map.addMarker(marker);
-							map.setCenter(marker.lat, marker.lng);
-							map.zoomIn(1);
-						});
-					});
+            function updateMarker(marker) {
+                marker.infoWindow.content = infoContent(marker);
+                marker.icon = icon(marker);
+                return marker;
+            }
 
-			$('#ouvrage').chosen().change(
-					function() {
-						var id = $(this).val();
-						map.removeMarkers();
-						$.getJSON(cartoUrl + '/ouvrage/' + id, null, function(
-								marker) {
+            function infoContent(marker) {
+                return startContent + marker.itemName
+                    + middleContent + urlFromMarker(marker) + marker.itemId
+                    + endContent;
+            }
 
-							url = ouvrageUrl;
+            function icon(marker){
+                return {
+                    scaledSize:new google.maps.Size(22,32),
+                    url : (resourcesUrl + marker.iconPath)
+                };
+            }
 
-							marker.icon = { 
-									scaledSize:new google.maps.Size(22,32),
-									url : (resourcesUrl + marker.iconPath)
-										};
-							
-							marker.infoWindow.content = startContent
-									+ marker.itemName + middleContent + url
-									+ marker.itemId + endContentOuvrage;
-
-							map.addMarker(marker);
-							map.setCenter(marker.lat, marker.lng);
-							map.zoomIn(1);
-						});
-					});
+            function urlFromMarker(marker) {
+                $.each( objects, function( index, object ){
+                    if (marker.type == object.value) {
+                        return object.url;
+                    }
+                });
+                return "";
+            }
 		}
 	};
 }();
@@ -144,3 +121,5 @@ $(function() {
 	googlemap.init();
 
 });
+
+
