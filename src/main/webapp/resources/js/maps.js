@@ -73,7 +73,6 @@ var googlemap = function() {
                                 setCenter(map, marker);
                             });
                     });
-                console.log("plop4");
             });
 
             function isValid(marker) {
@@ -82,7 +81,7 @@ var googlemap = function() {
 
             function setCenter(map, marker) {
                 map.setCenter(marker.lat, marker.lng);
-                map.zoomIn(1);
+                map.setZoom(12);
             }
 
             function updateMarker(marker) {

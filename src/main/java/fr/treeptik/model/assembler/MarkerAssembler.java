@@ -31,7 +31,7 @@ public class MarkerAssembler {
 
 		marker.setItemId(ouvrage.getId());
 		marker.setTitle(ouvrage.getCodeOuvrage());
-		marker.setItemName(ouvrage.getTypeOuvrage().getDescription());
+		marker.setItemName(ouvrage.getNom());
 		return marker;
 	}
 
