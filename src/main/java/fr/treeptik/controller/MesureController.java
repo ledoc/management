@@ -97,8 +97,15 @@ public class MesureController {
             for (Enregistreur enregistreur : enregistreursCombo) {
                 enregistreur = enregistreurService
                         .findByIdWithJoinCapteurs(enregistreur.getId());
-                for (Capteur capteur : enregistreur.getCapteurs())
-                    mesures.addAll(capteur.getMesures());
+                for (Capteur capteur : enregistreur.getCapteurs()) {
+                    List<Mesure> mesuresCapteur = new ArrayList<>(capteur.getMesures());
+                    for(Mesure mesure : mesuresCapteur){
+                        if(mesure.getTypeCaptAlerteMesure().getDescription().equals("conductivité")){
+                            mesure.setValeur(mesure.getValeur() * 1000);
+                        }
+                    }
+                    mesures.addAll(mesuresCapteur);
+                }
             }
 
         } catch (ServiceException e) {
