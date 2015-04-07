@@ -113,7 +113,7 @@ var googlemap = function() {
             }
 
             function urlGraphFromOuvrage(marker) { //
-                return "/solices/mesure/list/" + marker.itemId;
+                return "../mesure/list/" + marker.itemId;
             }
 
 
