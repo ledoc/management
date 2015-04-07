@@ -3,11 +3,16 @@ var googlemap = function() {
 	var map;
 	var startContent = '<h6 class="mt10 mb0">';
 	var middleContent = '</h6><div class="mt10 mb10"><a href="'
-	var endContentOuvrage = '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-edit"></i></a>'
-			+ '<a class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-line-chart"></i></a></div>';
 	var endContent = '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-edit"></i></a></div>';
 
-	var cartoUrl = $('.cartoUrl').attr('href');
+    var endContentOuvrage = '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-edit"></i></a>'
+        + '<a  href="/solices/mesure/list" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-line-chart"></i></a></div>';
+    var endContentOuvrageBefore = '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-edit"></i></a>'
+        + '<a  href="';
+    var endContentOuvrageAfter = '" class="btn btn-primary btn-sm btn-outline mr5"><i class="fa fa-line-chart"></i></a></div>';
+
+
+    var cartoUrl = $('.cartoUrl').attr('href');
 	var resourcesUrl = $('.resourcesUrl').attr('href');
 
     var etablissement_object = {
@@ -91,9 +96,13 @@ var googlemap = function() {
             }
 
             function infoContent(marker) {
+                var endContentByType = endContent;
+                if (marker.type == ouvrage_object.value) {
+                    endContentByType = endContentOuvrageBefore + urlGraphFromOuvrage(marker) + endContentOuvrageAfter;
+                }
                 return startContent + marker.itemName
                     + middleContent + urlFromMarker(marker) + marker.itemId
-                    + endContent;
+                    + endContentByType;
             }
 
             function icon(marker){
@@ -103,13 +112,20 @@ var googlemap = function() {
                 };
             }
 
+            function urlGraphFromOuvrage(marker) { //
+                return "/solices/mesure/list/" + marker.itemId;
+            }
+
+
+
             function urlFromMarker(marker) {
+                var url = ""
                 $.each( objects, function( index, object ){
                     if (marker.type == object.value) {
-                        return object.url;
+                        url = object.url;
                     }
                 });
-                return "";
+                return url;
             }
 		}
 	};

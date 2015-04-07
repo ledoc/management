@@ -6,7 +6,6 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.*;
 import fr.treeptik.service.*;
 import fr.treeptik.util.DateMesureComparator;
-import fr.treeptik.util.DatePointComparator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +46,9 @@ public class MesureController {
     @Inject
     private MesureService mesureService;
 
+    @Inject
+    private ProjectService projectService;
+
     private FakeMesureController fakeMesureController = new FakeMesureController();
 
 
@@ -66,61 +68,64 @@ public class MesureController {
         return "redirect:/capteur/update/" + capteurId;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
-    public String list(Model model, HttpServletRequest request)
-            throws ControllerException {
+
+    @RequestMapping(method = RequestMethod.GET, value = "/list/{id}")
+    public String list(Model model, HttpServletRequest request, @PathVariable("id") Integer id) throws ControllerException {
         logger.info("--list MesureController--");
 
-        List<Site> sitesCombo;
-        List<Ouvrage> ouvragesCombo;
-        List<Enregistreur> enregistreursCombo = new ArrayList<Enregistreur>();
-        List<Mesure> mesures = new ArrayList<Mesure>();
-        List<AlerteDescription> alertesActivesCombo = new ArrayList<AlerteDescription>();
-
+        Project project = new Project();
         try {
-            Boolean isAdmin = request.isUserInRole("ADMIN");
-            logger.debug("USER ROLE ADMIN : " + isAdmin);
-            if (isAdmin) {
-                enregistreursCombo = enregistreurService.findAll();
-                sitesCombo = siteService.findAll();
-                ouvragesCombo = ouvrageService.findAll();
-
-            } else {
-                String userLogin = SecurityContextHolder.getContext()
-                        .getAuthentication().getName();
-                logger.debug("USER LOGIN : " + userLogin);
-                enregistreursCombo = enregistreurService.findAll();
-                sitesCombo = siteService.findByClientLogin(userLogin);
-                ouvragesCombo = ouvrageService.findByClientLogin(userLogin);
-            }
-
-            for (Enregistreur enregistreur : enregistreursCombo) {
-                enregistreur = enregistreurService
-                        .findByIdWithJoinCapteurs(enregistreur.getId());
-                for (Capteur capteur : enregistreur.getCapteurs()) {
-                    List<Mesure> mesuresCapteur = new ArrayList<>(capteur.getMesures());
-                    for(Mesure mesure : mesuresCapteur){
-                        if(mesure.getTypeCaptAlerteMesure().getDescription().equals("conductivité")){
-                            mesure.setValeur(mesure.getValeur() * 1000);
-                        }
-                    }
-                    mesures.addAll(mesuresCapteur);
-                }
-            }
-
+            project = projectService.find(request.isUserInRole("ADMIN")
+                    , SecurityContextHolder.getContext().getAuthentication().getName());
+            //TODO: test + unit test !!!!
         } catch (ServiceException e) {
             logger.error(e.getMessage());
             throw new ControllerException(e.getMessage(), e);
         }
 
-        Collections.sort(mesures, new DateMesureComparator());
-        Collections.reverse(mesures);
+        for(Mesure mesure : project.getMesures()){
+            mesureService.convertForDisplay(mesure);
+        }
 
-        model.addAttribute("alertesActivesCombo", alertesActivesCombo);
-        model.addAttribute("mesures", mesures);
-        model.addAttribute("ouvragesCombo", ouvragesCombo);
-        model.addAttribute("sitesCombo", sitesCombo);
-        model.addAttribute("enregistreursCombo", enregistreursCombo);
+        Collections.sort(project.getMesures(), new DateMesureComparator());
+        Collections.reverse(project.getMesures());
+
+        model.addAttribute("alertesActivesCombo", new ArrayList<AlerteDescription>());
+        model.addAttribute("mesures", project.getMesures());
+        model.addAttribute("ouvragesCombo", project.getOuvrages());
+        model.addAttribute("sitesCombo", project.getSites());
+        model.addAttribute("enregistreursCombo", project.getEnregistreurs());
+        return "/mesure/list";
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
+    public String list(Model model, HttpServletRequest request)
+            throws ControllerException {
+        logger.info("--list MesureController--");
+
+        Project project = new Project();
+        try {
+            project = projectService.find(request.isUserInRole("ADMIN")
+                    , SecurityContextHolder.getContext().getAuthentication().getName());
+            //TODO: test + unit test !!!!
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            throw new ControllerException(e.getMessage(), e);
+        }
+
+        for(Mesure mesure : project.getMesures()){
+            mesureService.convertForDisplay(mesure);
+        }
+
+        Collections.sort(project.getMesures(), new DateMesureComparator());
+        Collections.reverse(project.getMesures());
+
+        model.addAttribute("alertesActivesCombo", new ArrayList<AlerteDescription>());
+        model.addAttribute("mesures", project.getMesures());
+        model.addAttribute("ouvragesCombo", project.getOuvrages());
+        model.addAttribute("sitesCombo", project.getSites());
+        model.addAttribute("enregistreursCombo", project.getEnregistreurs());
         return "/mesure/list";
     }
 
@@ -347,7 +352,7 @@ public class MesureController {
         logger.info("--getCapteurPoints MesureController--");
 
         /*
-		List<Mesure> mesures = new ArrayList<Mesure>();
+        List<Mesure> mesures = new ArrayList<Mesure>();
 		List<Point> points = new ArrayList<Point>();
 
 		try {

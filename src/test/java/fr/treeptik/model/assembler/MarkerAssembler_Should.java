@@ -47,11 +47,9 @@ public class MarkerAssembler_Should {
 	@Test
 	public void fromOuvrage_fillItemName() {
 		Ouvrage ouvrage = ouvrageWithMinValue();
-		TypeOuvrage type = new TypeOuvrage();
-		type.setDescription("anyTypeDescription");
-		ouvrage.setTypeOuvrage(type);
+        ouvrage.setNom("anyName");
 		assertThat(markerAssembler.fromOuvrage(ouvrage).getItemName(),
-				is("anyTypeDescription"));
+				is("anyName"));
 	}
 
 	@Test

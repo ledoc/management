@@ -30,7 +30,8 @@ import fr.treeptik.util.CheckAlerteUtils;
 @Service
 public class MesureServiceImpl implements MesureService {
 
-	@Inject
+    public static final String DESCRIPTION_CONDUCTIVITÉ = "conductivité";
+    @Inject
 	private MesureDAO mesureDAO;
 
 	@Inject
@@ -86,7 +87,9 @@ public class MesureServiceImpl implements MesureService {
 		return hashMapCalcul;
 	}
 
-	/**
+
+
+    /**
 	 * CONDUCTIVITE
 	 */
 	@Override
@@ -530,4 +533,11 @@ public class MesureServiceImpl implements MesureService {
 		this.findByIdWithFetch(mesureId);
 
 	}
+
+    @Override
+    public void convertForDisplay(Mesure mesure) {
+        if (mesure.getTypeCaptAlerteMesure().getDescription().equals(DESCRIPTION_CONDUCTIVITÉ)) {
+            mesure.setValeur(mesure.getValeur() * 1000);
+        }
+    }
 }

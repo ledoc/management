@@ -51,4 +51,5 @@ public interface MesureService {
 			HashMap<TypeCaptAlerteMesure, Mesure> hashMapCalcul)
 			throws ServiceException;
 
+    void convertForDisplay(Mesure mesure);
 }
