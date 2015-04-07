@@ -34,17 +34,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<c:set var="textCreateUpdate" value="Détails" />
 </sec:authorize>
 
-<script src="../../template/js/parsley/geo.js"></script>
-<script type="text/javascript">
-	window.ParsleyConfig = {
-		validators : {
-			coordsValidrequired : {
-				fn : validateGeoCoords,
-				priority : 32
-			}
-		}
-	};
-</script>
+
 
 <section class="layout">
 	<!-- /sidebar -->
@@ -365,8 +355,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<a class="exit-offscreen"></a>
 		<jsp:include page="/template/footer.jsp" />
 
-
-
+        <script src="../../template/js/parsley/geo.js"></script>
+        <script type="text/javascript">
+            window.ParsleyConfig = {
+                validators : {
+                    coordsValidrequired : {
+                        fn : validateGeoCoords,
+                        priority : 32
+                    }
+                }
+            };
+        </script>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				activateNappeOrSurface();
