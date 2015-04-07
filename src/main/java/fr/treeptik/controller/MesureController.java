@@ -1,11 +1,11 @@
 package fr.treeptik.controller;
 
-import fr.treeptik.controller.fake.FakeMesureController;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.*;
 import fr.treeptik.service.*;
 import fr.treeptik.util.DateMesureComparator;
+import fr.treeptik.util.DatePointComparator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,9 +49,6 @@ public class MesureController {
     @Inject
     private ProjectService projectService;
 
-    private FakeMesureController fakeMesureController = new FakeMesureController();
-
-
     @RequestMapping(method = RequestMethod.GET, value = "/delete/{id}/{capteurId}")
     public String delete(Model model, @PathVariable("id") Integer id,
                          @PathVariable("capteurId") Integer capteurId)
@@ -83,7 +80,7 @@ public class MesureController {
             throw new ControllerException(e.getMessage(), e);
         }
 
-        for(Mesure mesure : project.getMesures()){
+        for (Mesure mesure : project.getMesures()) {
             mesureService.convertForDisplay(mesure);
         }
 
@@ -114,7 +111,7 @@ public class MesureController {
             throw new ControllerException(e.getMessage(), e);
         }
 
-        for(Mesure mesure : project.getMesures()){
+        for (Mesure mesure : project.getMesures()) {
             mesureService.convertForDisplay(mesure);
         }
 
@@ -252,40 +249,38 @@ public class MesureController {
 
         logger.info("--initPointsGraph MesureController");
 
-        /*
         List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
-		List<Point> points = new ArrayList<Point>();
+        List<Point> points = new ArrayList<Point>();
 
-		try {
-			Boolean isAdmin = request.isUserInRole("ADMIN");
-			logger.debug("USER ROLE ADMIN : " + isAdmin);
-			if (isAdmin) {
-				allEnregistreurs = enregistreurService.findAll();
-			} else {
-				String userLogin = SecurityContextHolder.getContext()
-						.getAuthentication().getName();
-				logger.debug("USER LOGIN : " + userLogin);
-				allEnregistreurs = enregistreurService.findAll();
-			}
-			Enregistreur enregistreur = allEnregistreurs.get(0);
-			enregistreur = enregistreurService
-					.findByIdWithJoinCapteurs(enregistreur.getId());
-			List<Capteur> capteurs = enregistreur.getCapteurs();
+        try {
+            Boolean isAdmin = request.isUserInRole("ADMIN");
+            logger.debug("USER ROLE ADMIN : " + isAdmin);
+            if (isAdmin) {
+                allEnregistreurs = enregistreurService.findAll();
+            } else {
+                String userLogin = SecurityContextHolder.getContext()
+                        .getAuthentication().getName();
+                logger.debug("USER LOGIN : " + userLogin);
+                allEnregistreurs = enregistreurService.findAll();
+            }
+            Enregistreur enregistreur = allEnregistreurs.get(0);
+            enregistreur = enregistreurService
+                    .findByIdWithJoinCapteurs(enregistreur.getId());
+            List<Capteur> capteurs = enregistreur.getCapteurs();
 
-			// RETRAIT du capteur de temperature pour l'init
-			capteurs.removeIf(c -> c.getTypeCaptAlerteMesure().getNom()
-					.equals("TEMPERATURE"));
+            // RETRAIT du capteur de temperature pour l'init
+            capteurs.removeIf(c -> c.getTypeCaptAlerteMesure().getNom()
+                    .equals("TEMPERATURE"));
 
-			for (Mesure item : capteurs.get(0).getMesures()) {
-				points.add(mesureService.transformMesureInPoint(item));
-			}
-			Collections.sort(points, new DatePointComparator());
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return points;*/
-        return fakeMesureController.data();
+            for (Mesure item : capteurs.get(0).getMesures()) {
+                points.add(mesureService.transformMesureInPoint(item));
+            }
+            Collections.sort(points, new DatePointComparator());
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            throw new ControllerException(e.getMessage(), e);
+        }
+        return points;
     }
 
     /**
@@ -351,24 +346,22 @@ public class MesureController {
             throws ControllerException {
         logger.info("--getCapteurPoints MesureController--");
 
-        /*
         List<Mesure> mesures = new ArrayList<Mesure>();
-		List<Point> points = new ArrayList<Point>();
+        List<Point> points = new ArrayList<Point>();
 
-		try {
+        try {
 
-			mesures = mesureService.findByCapteurIdWithFetch(capteurId);
+            mesures = mesureService.findByCapteurIdWithFetch(capteurId);
 
-			for (Mesure item : mesures) {
-				points.add(mesureService.transformMesureInPoint(item));
-			}
-			Collections.sort(points, new DatePointComparator());
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return points;*/
-        return fakeMesureController.data();
+            for (Mesure item : mesures) {
+                points.add(mesureService.transformMesureInPoint(item));
+            }
+            Collections.sort(points, new DatePointComparator());
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            throw new ControllerException(e.getMessage(), e);
+        }
+        return points;
     }
 
     /**
@@ -562,24 +555,22 @@ public class MesureController {
         logger.info("--getEnregistreurPoints MesureController-- "
                 + " dateDebut : " + dateDebut + " -- dateFin : " + dateFin);
 
-        /*
-		List<Mesure> mesures = new ArrayList<Mesure>();
-		List<Point> points = new ArrayList<Point>();
+        List<Mesure> mesures = new ArrayList<Mesure>();
+        List<Point> points = new ArrayList<Point>();
 
-		try {
-			mesures = mesureService.findByCapteurIdBetweenDates(capteurId,
-					dateDebut, dateFin);
+        try {
+            mesures = mesureService.findByCapteurIdBetweenDates(capteurId,
+                    dateDebut, dateFin);
 
-			for (Mesure item : mesures) {
-				points.add(mesureService.transformMesureInPoint(item));
-			}
-			Collections.sort(points, new DatePointComparator());
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return points;*/
-        return fakeMesureController.dataWithDateComparator(dateDebut, dateFin);
+            for (Mesure item : mesures) {
+                points.add(mesureService.transformMesureInPoint(item));
+            }
+            Collections.sort(points, new DatePointComparator());
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            throw new ControllerException(e.getMessage(), e);
+        }
+        return points;
 
     }
 
