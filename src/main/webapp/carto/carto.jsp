@@ -62,7 +62,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									class="form-control js-find-location  text-uppercase">
 									<option value="0"></option>
 									<c:forEach items="${ouvragesCombo}" var="ouvrage">
-										<option value="${ouvrage.id}">${ouvrage.codeOuvrage}</option>
+										<option value="${ouvrage.id}">${ouvrage.nom}</option>
 									</c:forEach>
 								</select>
 							</div>
