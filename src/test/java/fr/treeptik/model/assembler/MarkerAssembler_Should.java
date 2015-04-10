@@ -86,45 +86,6 @@ public class MarkerAssembler_Should {
 				is("anySiteName"));
 	}
 
-	@Test
-	public void fromEtablissement_fillItemId() {
-		Etablissement etablissement = etablissementWithMinValue();
-		etablissement.setId(3456);
-		assertThat(
-				markerAssembler.fromEtablissement(etablissement).getItemId(),
-				is(3456));
-	}
-
-	@Test
-	public void fromEtablissement_fillLat() {
-		Etablissement etablissement = etablissementWithMinValue();
-		assertThat(markerAssembler.fromEtablissement(etablissement).getLat(),
-				is((float) 5.0));
-	}
-
-	@Test
-	public void fromEtablissement_fillLng() {
-		Etablissement etablissement = etablissementWithMinValue();
-		assertThat(markerAssembler.fromEtablissement(etablissement).getLng(),
-				is((float) 6.0));
-	}
-
-	@Test
-	public void fromEtablissement_fillTitle() {
-		Etablissement etablissement = etablissementWithMinValue();
-		etablissement.setCodeEtablissement("anyCodeEtablissement");
-		assertThat(markerAssembler.fromEtablissement(etablissement).getTitle(),
-				is("anyCodeEtablissement"));
-	}
-
-	@Test
-	public void fromEtablissement_fillItemName() {
-		Etablissement etablissement = etablissementWithMinValue();
-		etablissement.setNom("anyEtablissementName");
-		assertThat(markerAssembler.fromEtablissement(etablissement)
-				.getItemName(), is("anyEtablissementName"));
-	}
-
 	private Ouvrage ouvrageWithMinValue() {
 		Ouvrage ouvrage = new Ouvrage();
 		ouvrage.setCoordonneesGeographique("1.0/2.0");

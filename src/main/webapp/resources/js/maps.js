@@ -15,12 +15,6 @@ var googlemap = function() {
     var cartoUrl = $('.cartoUrl').attr('href');
 	var resourcesUrl = $('.resourcesUrl').attr('href');
 
-    var etablissement_object = {
-        value:'etablissement',
-        select_chosen : $('#etablissement'),
-        url: $('.etablissementUrl').attr('href')
-    };
-
     var site_object = {
         value:'site',
         select_chosen : $('#site'),
@@ -33,7 +27,7 @@ var googlemap = function() {
         url: $('.ouvrageUrl').attr('href')
     };
 
-    var objects =  [ouvrage_object, site_object, etablissement_object];
+    var objects =  [ouvrage_object, site_object];
 
     return {
 		init : function() {

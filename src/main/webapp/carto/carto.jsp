@@ -30,24 +30,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<a class="ouvrageUrl" href="${ouvrageUrl}"></a>
 						<c:url var="siteUrl" value="/site/update/" />
 						<a class="siteUrl" href="${siteUrl}"></a>
-						<c:url var="etablissementUrl" value="/etablissement/update/" />
-						<a class="etablissementUrl" href="${etablissementUrl}"></a>
-
 						<h3 class="h5 p15">
 							<strong>Filtrer par:</strong>
 						</h3>
 					</header>
 					<nav role="navigation">
 						<div class="no-padding">
-							<div class="form-group ml15 mr15">
-								<select id="etablissement" data-placeholder="Etablissement"
-									class="form-control js-find-location text-uppercase">
-									<option value="O"></option>
-									<c:forEach items="${etablissementsCombo}" var="etablissement">
-										<option value="${etablissement.id}">${etablissement.codeEtablissement}</option>
-									</c:forEach>
-								</select>
-							</div>
 							<div class="form-group ml15 mr15">
 								<select id="site" data-placeholder="Site"
 									class="form-control js-find-location  text-uppercase">
@@ -88,17 +76,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
         <script src="${urlResources}/plugins/gmaps.js"></script>
 
 		<script type="text/javascript">
-			var $etablissement = $('#etablissement');
 			var $site = $('#site');
 			var $ouvrage = $('#ouvrage');
 			
 			
 			$(function() {
-			$etablissement.chosen({
-				allow_single_deselect : true
-			}, {
-				disable_search_threshold : 10
-			});
+
 			
 			$site.chosen({
 				allow_single_deselect : true
@@ -114,51 +97,23 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 			});
 
-			$etablissement.change(function() {
-				$site.val(0);
-				$ouvrage.val(0);
-
-				$ouvrage.chosen({
-					disable_search_threshold : 10
-				}).trigger("chosen:updated");
-
-				$site.chosen({
-					disable_search_threshold : 10
-				}).trigger("chosen:updated");
-				
-				console.log('ouvrage selectionné ' + $ouvrage.selected)
-				console.log('site selectionné ' + $site.selected)
-			});
 
 			$site.change(function() {
-				$etablissement.val(0);
 				$ouvrage.val(0);
 				$ouvrage.chosen({
 					disable_search_threshold : 10
 				}).trigger("chosen:updated");
-
-				$etablissement.chosen({
-					disable_search_threshold : 10
-				}).trigger("chosen:updated");
 				
 				console.log('ouvrage selectionné ' + $ouvrage.selected)
-				console.log('etab selectionné ' + $etablissement.selected)
 			});
 
 			$ouvrage.change(function() {
-				$etablissement.val(0);
 				$site.val(0);
 				
 				$site.chosen({
 					disable_search_threshold : 10
 				}).trigger("chosen:updated");
-
-				$etablissement.chosen({
-					disable_search_threshold : 10
-				}).trigger("chosen:updated");
-				
-				console.log('etablissement selectionné ' + $etablissement.selected)
-				console.log('site selectionné ' + $site.selected)
+                console.log('site selectionné ' + $site.selected)
 
 			});
 		</script>
