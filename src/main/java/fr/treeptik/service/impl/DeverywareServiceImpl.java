@@ -57,8 +57,7 @@ public class DeverywareServiceImpl implements DeverywareService {
 	@Inject
 	private MesureService mesureService;
 
-    @Inject
-    private EnregistreurAssembler enregistreurAssembler;
+    private EnregistreurAssembler enregistreurAssembler = new EnregistreurAssembler();
 
 	public String openSession() throws Exception {
 

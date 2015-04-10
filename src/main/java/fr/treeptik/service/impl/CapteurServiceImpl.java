@@ -86,8 +86,14 @@ public class CapteurServiceImpl implements CapteurService {
 	@Override
 	public List<Capteur> findAllByEnregistreurId(Integer enregistreurId)
 			throws ServiceException {
-		logger.info("--findByTypeCaptAlerteMesure CapteurServiceImpl --");
+		logger.info("--findAllByEnregistreurId CapteurServiceImpl --");
 		return capteurDAO.findAllByEnregistreurId(enregistreurId);
 	}
+
+    @Override
+    public List<Capteur> findAllByOuvrageId(Integer ouvrageId) throws ServiceException {
+        logger.info("--findAllByOuvrageId CapteurServiceImpl --");
+        return capteurDAO.findAllByOuvrageId(ouvrageId);
+    }
 
 }

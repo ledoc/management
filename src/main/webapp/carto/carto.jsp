@@ -82,8 +82,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 		<a class="exit-offscreen"></a>
 		<!-- end page content -->
 		<jsp:include page="/template/footer.jsp" />
-
-
+        <c:url var="urlResources" value="/resources" />
+        <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+        <script src="${urlResources}/js/maps.js"></script>
+        <script src="${urlResources}/plugins/gmaps.js"></script>
 
 		<script type="text/javascript">
 			var $etablissement = $('#etablissement');

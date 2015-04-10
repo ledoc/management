@@ -268,10 +268,8 @@ public class AlerteController {
 
 		List<TypeCaptAlerteMesure> allTypeCaptAlerteMesures = new ArrayList<TypeCaptAlerteMesure>();
 		try {
-			capteurService.findAllByEnregistreurId(enregistreurId).forEach(
-					c -> allTypeCaptAlerteMesures.add(c
-							.getTypeCaptAlerteMesure()));
-			;
+			capteurService.findAllByEnregistreurId(enregistreurId)
+                    .forEach(c -> allTypeCaptAlerteMesures.add(c.getTypeCaptAlerteMesure()));
 
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());

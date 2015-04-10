@@ -116,8 +116,6 @@ var googlemap = function() {
                 return "../mesure/list/" + marker.itemId;
             }
 
-
-
             function urlFromMarker(marker) {
                 var url = ""
                 $.each( objects, function( index, object ){
@@ -134,7 +132,6 @@ var googlemap = function() {
 $(function() {
 	"use strict";
 	googlemap.init();
-
 });
 
 
