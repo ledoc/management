@@ -62,7 +62,7 @@ public class FakeMesureController {
 
     private TypeCaptAlerteMesure type() {
         TypeCaptAlerteMesure type = new TypeCaptAlerteMesure();
-        type.setDescription("");
+        type.setDescription("Niveau d'eau");
         return type;
     }
 }

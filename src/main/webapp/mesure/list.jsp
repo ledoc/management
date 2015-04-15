@@ -361,7 +361,7 @@ var mesures = function () {
                                     .update(
                                     {
                                         title: {
-                                            text: typeCaptAlerteMesure,
+                                            text: typeCaptAlerteMesure
                                         },
                                         labels: {
 
@@ -376,7 +376,7 @@ var mesures = function () {
                     data: serieData,
                     name: typeCaptAlerteMesure,
                     tooltip: {
-                        valueSuffix: unite,
+                        valueSuffix: unite
                     }
                 })
             }
