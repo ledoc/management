@@ -2,9 +2,13 @@ package fr.treeptik.model.assembler;
 
 
 import fr.treeptik.model.Enregistreur;
+import fr.treeptik.shared.dto.capteur.CapteurDTO;
+import fr.treeptik.shared.dto.capteur.EnregistreurDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class EnregistreurAssembler {
@@ -33,6 +37,28 @@ public class EnregistreurAssembler {
         enregistreur.setType((String) xmlrpcHashMap.get(PARAMETER_TYPE));
         enregistreur.setUserName((String) xmlrpcHashMap.get(PARAMETER_USER_NAME));
        return enregistreur;
+    }
+
+    public List<EnregistreurDTO> toDTOs(List<Enregistreur> beans) {
+        List<EnregistreurDTO> list = new ArrayList<EnregistreurDTO>();
+        for (Enregistreur bean : beans) {
+            list.add(toDTO(bean));
+        }
+        return list;
+    }
+
+    private EnregistreurDTO toDTO(Enregistreur bean) {
+        EnregistreurDTO dto = new EnregistreurDTO();
+        dto.setId(bean.getId());
+        dto.setName(bean.getNom());
+        List<CapteurDTO> capteurs = new ArrayList<CapteurDTO>();
+        CapteurDTO capteur = new CapteurDTO();
+        capteur.setId(1);
+        capteur.setName("capteur1");
+        capteurs.add(capteur);
+
+        dto.setCapteurs(capteurs);
+        return dto;
     }
 
 }

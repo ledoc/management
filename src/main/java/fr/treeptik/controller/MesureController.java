@@ -3,7 +3,15 @@ package fr.treeptik.controller;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.*;
+import fr.treeptik.model.assembler.CapteurAssembler;
+import fr.treeptik.model.assembler.EnregistreurAssembler;
+import fr.treeptik.model.assembler.OuvrageAssembler;
+import fr.treeptik.model.assembler.SiteAssembler;
 import fr.treeptik.service.*;
+import fr.treeptik.shared.dto.capteur.CapteurDTO;
+import fr.treeptik.shared.dto.capteur.OuvrageDTO;
+import fr.treeptik.shared.dto.capteur.SiteDTO;
+import fr.treeptik.shared.dto.graph.GraphDTO;
 import fr.treeptik.util.DateMesureComparator;
 import fr.treeptik.util.DatePointComparator;
 import org.apache.log4j.Logger;
@@ -46,8 +54,10 @@ public class MesureController {
     @Inject
     private MesureService mesureService;
 
-    @Inject
-    private ProjectService projectService;
+    private CapteurAssembler capteurAssembler = new CapteurAssembler();
+    private EnregistreurAssembler enregistreurAssembler = new EnregistreurAssembler();
+    private OuvrageAssembler ouvrageAssembler = new OuvrageAssembler(enregistreurAssembler);
+    private SiteAssembler siteAssembler = new SiteAssembler(ouvrageAssembler);
 
     @RequestMapping(method = RequestMethod.GET, value = "/delete/{id}/{capteurId}")
     public String delete(Model model, @PathVariable("id") Integer id,
@@ -65,65 +75,52 @@ public class MesureController {
         return "redirect:/capteur/update/" + capteurId;
     }
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "/list/{id}")
-    public String list(Model model, HttpServletRequest request, @PathVariable("id") Integer id) throws ControllerException {
+    @RequestMapping(method = RequestMethod.GET, value = "/list/{ouvrageId}")
+    public String list(Model model, HttpServletRequest request, @PathVariable("ouvrageId") Integer ouvrageId) throws ControllerException {
         logger.info("--list MesureController--");
-
-        Project project = new Project();
-        try {
-            project = projectService.find(request.isUserInRole("ADMIN")
-                    , SecurityContextHolder.getContext().getAuthentication().getName());
-            //TODO: test + unit test !!!!
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
-        }
-
-        for (Mesure mesure : project.getMesures()) {
-            mesureService.convertForDisplay(mesure);
-        }
-
-        Collections.sort(project.getMesures(), new DateMesureComparator());
-        Collections.reverse(project.getMesures());
-
-        model.addAttribute("alertesActivesCombo", new ArrayList<AlerteDescription>());
-        model.addAttribute("mesures", project.getMesures());
-        model.addAttribute("ouvragesCombo", project.getOuvrages());
-        model.addAttribute("sitesCombo", project.getSites());
-        model.addAttribute("enregistreursCombo", project.getEnregistreurs());
+        List<Mesure> mesures = mesures(request.isUserInRole("ADMIN"), SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("mesures", mesures);
+        model.addAttribute("ouvrageId", ouvrageId);
         return "/mesure/list";
     }
-
 
     @RequestMapping(method = RequestMethod.GET, value = {"/list", "/"})
     public String list(Model model, HttpServletRequest request)
             throws ControllerException {
         logger.info("--list MesureController--");
+        List<Mesure> mesures = mesures(request.isUserInRole("ADMIN"), SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("mesures", mesures);
+        return "/mesure/list";
+    }
 
-        Project project = new Project();
+    private List<Mesure> mesures(boolean isAdmin, String userLogin) throws ControllerException {
+        List<Mesure> mesures = new ArrayList<>();
         try {
-            project = projectService.find(request.isUserInRole("ADMIN")
-                    , SecurityContextHolder.getContext().getAuthentication().getName());
-            //TODO: test + unit test !!!!
+            logger.debug("USER ROLE ADMIN : " + isAdmin);
+            List<Enregistreur> enregistreurs = new ArrayList<Enregistreur>();
+            if (isAdmin) {
+                enregistreurs = enregistreurService.findAll();
+            } else {
+                logger.debug("USER LOGIN : " + userLogin);
+                enregistreurs = enregistreurService.findByClientLogin(userLogin);
+            }
+            for (Enregistreur enregistreur : enregistreurs) {
+                enregistreur = enregistreurService.findByIdWithJoinCapteurs(enregistreur.getId());
+                for (Capteur capteur : enregistreur.getCapteurs()) {
+                    mesures.addAll(capteur.getMesures());
+                }
+            }
         } catch (ServiceException e) {
             logger.error(e.getMessage());
             throw new ControllerException(e.getMessage(), e);
         }
 
-        for (Mesure mesure : project.getMesures()) {
+        for(Mesure mesure : project.getMesures()){
             mesureService.convertForDisplay(mesure);
         }
-
-        Collections.sort(project.getMesures(), new DateMesureComparator());
-        Collections.reverse(project.getMesures());
-
-        model.addAttribute("alertesActivesCombo", new ArrayList<AlerteDescription>());
-        model.addAttribute("mesures", project.getMesures());
-        model.addAttribute("ouvragesCombo", project.getOuvrages());
-        model.addAttribute("sitesCombo", project.getSites());
-        model.addAttribute("enregistreursCombo", project.getEnregistreurs());
-        return "/mesure/list";
+        Collections.sort(mesures, new DateMesureComparator());
+        Collections.reverse(mesures);
+        return mesures;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/affect/niveau/manuel/{mesureId}")
@@ -143,94 +140,85 @@ public class MesureController {
         return "redirect:/mesure/list";
     }
 
+
     @RequestMapping(method = RequestMethod.GET, value = "/init/site")
     public
     @ResponseBody
-    List<Site> initSiteCombobox(HttpServletRequest request)
+    List<SiteDTO> initSite(HttpServletRequest request)
             throws ControllerException {
-
-        logger.info("--initSiteCombobox MesureController");
-
-        List<Site> allSites = new ArrayList<Site>();
-        try {
-
-            Boolean isAdmin = request.isUserInRole("ADMIN");
-            logger.debug("USER ROLE ADMIN : " + isAdmin);
-            if (isAdmin) {
-                allSites = siteService.findAll();
-            } else {
-                String userLogin = SecurityContextHolder.getContext()
-                        .getAuthentication().getName();
-                logger.debug("USER LOGIN : " + userLogin);
-                allSites = siteService.findByClientLogin(userLogin);
-            }
-
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
-        }
-
-        return allSites;
-
+        logger.info("--initSite MesureController");
+        return siteAssembler.toDTOs(sitesWithOuvrage(request.isUserInRole("ADMIN"), SecurityContextHolder.getContext().getAuthentication().getName()));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/init/ouvrage")
-    public
-    @ResponseBody
-    List<Ouvrage> initOuvrageCombobox(
-            HttpServletRequest request) throws ControllerException {
-
-        logger.info("--initOuvrageCombobox MesureController");
-
-        List<Ouvrage> allOuvrages = new ArrayList<Ouvrage>();
+    private List<Site> sitesWithOuvrage(Boolean isAdmin, String userLogin) throws ControllerException {
         try {
-            Boolean isAdmin = request.isUserInRole("ADMIN");
             logger.debug("USER ROLE ADMIN : " + isAdmin);
             if (isAdmin) {
-                allOuvrages = ouvrageService.findAll();
-            } else {
-                String userLogin = SecurityContextHolder.getContext()
-                        .getAuthentication().getName();
-                logger.debug("USER LOGIN : " + userLogin);
-                allOuvrages = ouvrageService.findByClientLogin(userLogin);
+                return siteService.findAll();
             }
-
-            logger.debug("liste d'ouvrage renvoyée : " + allOuvrages);
+            logger.debug("USER LOGIN : " + userLogin);
+            return siteService.findByClientLogin(userLogin);
         } catch (ServiceException e) {
             logger.error(e.getMessage());
             throw new ControllerException(e.getMessage(), e);
         }
-        return allOuvrages;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/init/enregistreur")
+    @RequestMapping(method = RequestMethod.GET, value = "/site/refresh/ouvrage/{siteId}")
     public
     @ResponseBody
-    List<Enregistreur> initEnregistreurCombobox(
-            HttpServletRequest request) throws ControllerException {
+    List<OuvrageDTO> refreshOuvrage(HttpServletRequest request, @PathVariable("siteId") int siteId)
+            throws ControllerException {
+        logger.info("--refreshEnregistreur MesureController");
+        return ouvrageAssembler.toDTOs(ouvragesFromSiteId(siteId));
+    }
 
-        logger.info("--initEnregistreurCombobox MesureController");
-
-        List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
+    private List<Ouvrage> ouvragesFromSiteId(int siteId) {
         try {
-            Boolean isAdmin = request.isUserInRole("ADMIN");
-            logger.debug("USER ROLE ADMIN : " + isAdmin);
-            if (isAdmin) {
-                allEnregistreurs = enregistreurService.findAll();
-            } else {
-                String userLogin = SecurityContextHolder.getContext()
-                        .getAuthentication().getName();
-                logger.debug("USER LOGIN : " + userLogin);
-                allEnregistreurs = enregistreurService.findAll();
-            }
-            logger.debug("liste des Enregistreurs renvoyée : "
-                    + allEnregistreurs);
+            Site site = siteService.findByIdWithJoinFetchOuvrages(siteId);
+            return site.getOuvrages();
         } catch (ServiceException e) {
             logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
+            return new ArrayList<Ouvrage>();
         }
-        return allEnregistreurs;
+    }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/ouvrage/refresh/capteur/{ouvrageId}")
+    public
+    @ResponseBody
+    List<CapteurDTO> refreshCapteur(HttpServletRequest request, @PathVariable("ouvrageId") int ouvrageId)
+            throws ControllerException {
+        logger.info("--refreshEnregistreur MesureController");
+        return capteurAssembler.toDTOs(capteursFromOuvrageId(ouvrageId));
+    }
+
+    private List<Capteur> capteursFromOuvrageId(int ouvrageId) {
+        try {
+            return capteurService.findAllByOuvrageId(ouvrageId);
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            return new ArrayList<Capteur>();
+        }
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/init/site/ouvrage/{ouvrageId}")
+    public
+    @ResponseBody
+    SiteDTO initWithOuvrageId(HttpServletRequest request, @PathVariable("ouvrageId") int ouvrageId)
+            throws ControllerException {
+        logger.info("--refreshEnregistreur MesureController");
+        return siteAssembler.toDTO(siteFromOuvrageId(ouvrageId));
+    }
+
+    private Site siteFromOuvrageId(int ouvrageId) {
+        try {
+            Ouvrage ouvrage = ouvrageService.findById(ouvrageId);
+            return siteService.findByIdWithJoinFetchOuvrages(ouvrage.getSite().getId());
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            return new Site();
+        }
     }
 
     /**
@@ -244,7 +232,7 @@ public class MesureController {
     @RequestMapping(method = RequestMethod.GET, value = "/init/graph/points")
     public
     @ResponseBody
-    List<Point> initPointsGraph(HttpServletRequest request)
+    GraphDTO initPointsGraph(HttpServletRequest request)
             throws ControllerException {
 
         logger.info("--initPointsGraph MesureController");
@@ -340,7 +328,7 @@ public class MesureController {
     @RequestMapping(method = RequestMethod.GET, value = "/capteur/points/{capteurId}")
     public
     @ResponseBody
-    List<Point> getCapteurPoints(
+    GraphDTO getCapteurPoints(
             HttpServletRequest request,
             @PathVariable("capteurId") Integer capteurId)
             throws ControllerException {
@@ -423,30 +411,6 @@ public class MesureController {
             throw new ControllerException(e.getMessage(), e);
         }
         return alerteDescription;
-
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "site/refresh/ouvrage/{siteId}")
-    public
-    @ResponseBody
-    List<Ouvrage> refreshOuvrageBySite(
-            HttpServletRequest request, @PathVariable("siteId") Integer siteId)
-            throws ControllerException {
-        logger.info("--refreshOuvrageBySite MesureController -- siteId : "
-                + siteId);
-
-        List<Ouvrage> allOuvrages = new ArrayList<Ouvrage>();
-        Site site;
-        try {
-            site = siteService.findByIdWithJoinFetchOuvrages(siteId);
-
-            allOuvrages = site.getOuvrages();
-
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
-        }
-        return allOuvrages;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "capteur/refresh/alerte/{capteurId}")
@@ -474,80 +438,10 @@ public class MesureController {
         return allAlertesActives;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "site/refresh/enregistreur/{siteId}")
-    public
-    @ResponseBody
-    List<Enregistreur> refreshEnregistreurBySite(
-            HttpServletRequest request, @PathVariable("siteId") Integer siteId)
-            throws ControllerException {
-        logger.info("--refreshEnregistreurBySite MesureController -- siteId : "
-                + siteId);
-
-        List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
-        try {
-
-            allEnregistreurs = enregistreurService.findBySiteId(siteId);
-
-            logger.debug("liste d'enregistreur renvoyée : " + allEnregistreurs);
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
-        }
-        return allEnregistreurs;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "ouvrage/refresh/enregistreur/{ouvrageId}")
-    public
-    @ResponseBody
-    List<Enregistreur> refreshEnregistreurByOuvrage(
-            HttpServletRequest request,
-            @PathVariable("ouvrageId") Integer ouvrageId)
-            throws ControllerException {
-        logger.info("--refreshEnregistreurByOuvrage MesureController -- ouvrageId : "
-                + ouvrageId);
-
-        List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
-        Ouvrage ouvrage;
-        try {
-            ouvrage = ouvrageService
-                    .findByIdWithJoinFetchEnregistreurs(ouvrageId);
-
-            allEnregistreurs = ouvrage.getEnregistreurs();
-
-            logger.debug("liste d'enregistreur renvoyée : " + allEnregistreurs);
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
-        }
-        return allEnregistreurs;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "enregistreur/refresh/capteur/{enregistreurId}")
-    public
-    @ResponseBody
-    List<Capteur> refreshCapteursByEnregistreur(
-            HttpServletRequest request,
-            @PathVariable("enregistreurId") Integer enregistreurId)
-            throws ControllerException {
-        logger.info("--refreshCapteursByEnregistreur MesureController -- enregistreurId : "
-                + enregistreurId);
-
-        List<Capteur> allCapteurs = new ArrayList<Capteur>();
-        try {
-            allCapteurs = capteurService
-                    .findAllByEnregistreurId(enregistreurId);
-
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            throw new ControllerException(e.getMessage(), e);
-        }
-        return allCapteurs;
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/capteur/points/{capteurId}/{dateDebut}/{dateFin}")
     public
     @ResponseBody
-    List<Point> getCapteurPointsByDate(
+    GraphDTO getCapteurPointsByDate(
             HttpServletRequest request,
             @PathVariable("capteurId") Integer capteurId,
             @PathVariable("dateDebut") Date dateDebut,
@@ -555,8 +449,9 @@ public class MesureController {
         logger.info("--getEnregistreurPoints MesureController-- "
                 + " dateDebut : " + dateDebut + " -- dateFin : " + dateFin);
 
-        List<Mesure> mesures = new ArrayList<Mesure>();
-        List<Point> points = new ArrayList<Point>();
+        /*
+		List<Mesure> mesures = new ArrayList<Mesure>();
+		List<Point> points = new ArrayList<Point>();
 
         try {
             mesures = mesureService.findByCapteurIdBetweenDates(capteurId,

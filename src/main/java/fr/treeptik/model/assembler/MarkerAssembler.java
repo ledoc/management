@@ -35,19 +35,6 @@ public class MarkerAssembler {
 		return marker;
 	}
 
-	public Marker fromEtablissement(Etablissement etablissement) {
-		logger.info("assemble from Etablissement to Marker : " + etablissement);
-		Marker marker = new Marker();
-		marker.setType(MARKER_TYPE_ETABLISSEMENT);
-		marker.setIconPath(ICON_MAP_ETABLISSEMENT);
-		writeFromHasGeoCoords(marker, etablissement);
-
-		marker.setItemId(etablissement.getId());
-		marker.setTitle(etablissement.getCodeEtablissement());
-		marker.setItemName(etablissement.getNom());
-		return marker;
-	}
-
 	public Marker fromSite(Site site) {
 		logger.info("assemble from Site to Marker : " + site);
 		Marker marker = new Marker();

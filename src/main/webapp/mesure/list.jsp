@@ -48,13 +48,6 @@
                         </div>
 
                         <div class="form-group ml15 mr15">
-                            <select id="enregistreur" name="enregistreur"
-                                    data-placeholder="Filtrer par ENREGISTREUR"
-                                    class="form-control">
-                            </select>
-                        </div>
-
-                        <div class="form-group ml15 mr15">
                             <select id="capteur" name="capteur"
                                     data-placeholder="choix CAPTEUR" class="form-control">
                             </select>
@@ -67,13 +60,6 @@
 
                         <div class="form-group ml15 mr15">
                             <input id="dateFin" type="date" class="form-control"/>
-                        </div>
-
-                        <div class="form-group ml15 mr15">
-                            <button id="confirmBetweenDate" disabled="disabled"
-                                    class="btn btn-outline btn-success btn-xs ">
-                                <i class="fa fa-check"></i>
-                            </button>
                         </div>
 
                         <div class="form-group ml15 mr15">
@@ -98,7 +84,7 @@
                         </h3>
 
                         <div class="ml15 mr15">
-                            <div id="map"></div>
+                            <a href="../carto/carto"><div id="map"></div></a>
                         </div>
                     </div>
                 </nav>
@@ -120,7 +106,6 @@
                 </div>
                 <div class="tab-pane fade text-left" id="qualitatif">
 
-
                     <!-- content wrapper -->
                     <div class="content-wrap clearfix pt15">
                         <div class="col-lg-12 col-md-12 col-xs-12">
@@ -131,7 +116,6 @@
                                 </header>
                                 <div class="panel-body">
                                     <c:if test="${empty mesures }">
-
                                         <H2>Ooops !&nbsp;Liste vide.</H2>
                                     </c:if>
                                     <c:if test="${not empty mesures }">
@@ -173,7 +157,6 @@
                                                 </tr>
                                             </c:forEach>
                                             </tbody>
-
                                         </table>
                                     </c:if>
                                 </div>
@@ -216,12 +199,17 @@
 <!-- end page content -->
 <jsp:include page="/template/footer.jsp"/>
 
+<c:url var="urlResources" value="/resources" />
+<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script src="${urlResources}/js/maps.js"></script>
+<script src="${urlResources}/plugins/gmaps.js"></script>
+
 <script type="text/javascript">
 
-var mesures = function() {
+var mesures = function () {
 
     return {
-        init : function() {
+        init: function () {
             var relayUrl = $('.relayUrl').attr('href');
             var reversed = true, $chart = $('#charts'), $reverseBtn = $('#js-reverseChart'), $rangePicker = $('#js-range-selector'), chartHeight = $(
                     '.tools-inner').innerHeight() / 1.5, chart;
@@ -233,8 +221,7 @@ var mesures = function() {
             function loadGraph(unite) {
                 Highcharts.setOptions(
                         {
-                            global:
-                            {
+                            global: {
                                 timezoneOffset: -60
                             }
                         });
@@ -243,46 +230,50 @@ var mesures = function() {
                         .highcharts(
                         'StockChart',
                         {
-                            chart : {
-                                zoomType : 'xy',
-                                height : chartHeight
+                            chart: {
+                                zoomType: 'xy',
+                                height: chartHeight
                             },
-                            title : {
-                                text : ''
+                            title: {
+                                text: ''
                             },
-                            rangeSelector : {
-                                selected : false,
-                                inputEnabled : false
+                            rangeSelector: {
+                                selected: false,
+                                inputEnabled: false
                             },
-                            subtitle : {
-                                text : ''
+                            subtitle: {
+                                text: ''
                             },
 
-                            xAxis : [ {
-                                minRange : 3600000,
-                                type : 'datetime',
-                                dateTimeLabelFormats : {
-                                    month : '%d %m',
-                                    year : '%b'
+                            xAxis: [
+                                {
+                                    minRange: 3600000,
+                                    type: 'datetime',
+                                    dateTimeLabelFormats: {
+                                        month: '%d %m',
+                                        year: '%b'
+                                    }
                                 }
-                            } ],
-                            yAxis : [ { // Primary yAxis
-                                labels : {
-                                    style : {
-                                        color : '#94ECD9'
-                                    }
-                                },
-                                title : {
-                                    style : {
-                                        color : '#94ECD9'
-                                    }
-                                },
-                                min : 0,
-                                opposite : false
+                            ],
+                            yAxis: [
+                                { // Primary yAxis
+                                    labels: {
+                                        style: {
+                                            color: '#94ECD9'
+                                        }
+                                    },
+                                    title: {
+                                        style: {
+                                            color: '#94ECD9'
+                                        }
+                                    },
+                                    min: 0,
+                                    opposite: false
 
-                            } ],
-                            tooltip : {
-                                formatter : function() {
+                                }
+                            ],
+                            tooltip: {
+                                formatter: function () {
 
                                     var s = '<b>'
                                             + Highcharts
@@ -291,47 +282,50 @@ var mesures = function() {
                                                     this.x)
                                             + '</b>';
 
-                                    $.each(this.points, function() {
+                                    $.each(this.points, function () {
                                         s += '<br/>' + this.y + ' '
                                                 + unite;
                                     });
 
                                     return s
                                 },
-                                backgroundColor : {
-                                    linearGradient : {
-                                        x1 : 0,
-                                        y1 : 0,
-                                        x2 : 0,
-                                        y2 : 1
+                                backgroundColor: {
+                                    linearGradient: {
+                                        x1: 0,
+                                        y1: 0,
+                                        x2: 0,
+                                        y2: 1
                                     },
-                                    stops : [ [ 0, 'white' ],
-                                        [ 1, '#EEE' ] ]
+                                    stops: [
+                                        [ 0, 'white' ],
+                                        [ 1, '#EEE' ]
+                                    ]
                                 },
-                                borderColor : 'gray',
-                                borderWidth : 1
+                                borderColor: 'gray',
+                                borderWidth: 1
                             },
-                            legend : {
-                                enabled : true,
-                                verticalAlign : 'top',
-                                title : {
-                                    text : 'Cliquez sur la légende pour afficher / cacher une courbe',
-                                    style : {
-                                        fontWeight : 'normal',
-                                        color : '#b3b3b3'
+                            legend: {
+                                enabled: true,
+                                verticalAlign: 'top',
+                                title: {
+                                    text: 'Cliquez sur la légende pour afficher / cacher une courbe',
+                                    style: {
+                                        fontWeight: 'normal',
+                                        color: '#b3b3b3'
                                     }
                                 },
-                                backgroundColor : (Highcharts.theme && Highcharts.theme.legendBackgroundColor)
+                                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor)
                                         || '#FFFFFF'
                             },
-                            series : [
+                            series: [
 
                                 {
-                                    type : 'line',
-                                    data : [],
-                                    yAxis : 0,
-                                    color : '#94ECD9'
-                                } ]
+                                    type: 'line',
+                                    data: [],
+                                    yAxis: 0,
+                                    color: '#94ECD9'
+                                }
+                            ]
                         });
 
                 // render chart
@@ -341,37 +335,31 @@ var mesures = function() {
             }
 
             // get data
-            function updateSerie(index, data) {
+            function updateSerie(index, graph) {
                 var serieData = [];
-                var typeCaptAlerteMesure;
-                var unite = '';
-                $
-                        .each(
-                        data,
-                        function(i, line) {
+                var graphName = graph.name;
+                var unite = graph.unite;
+                $.each(
+                        graph.points,
+                        function (i, line) {
                             var item = {};
-                            typeCaptAlerteMesure = line.typeCaptAlerteMesure.description;
-                            if (line.unite != null) {
-
-                                unite = line.unite;
-                            }
                             item.x = moment(line.date);
                             item.y = parseFloat(line.valeur);
                             $('.description')
                                     .text(
                                             line.mid
                                             + ' > '
-                                            + typeCaptAlerteMesure);
+                                            + graphName);
 
                             chart.yAxis[0]
                                     .update(
                                     {
-                                        title : {
-                                            text : typeCaptAlerteMesure,
+                                        title: {
+                                            text: graphName
                                         },
-                                        labels : {
+                                        labels: {
 
-                                            format : '{value} '
+                                            format: '{value} '
                                                     + unite
                                         }
 
@@ -379,35 +367,27 @@ var mesures = function() {
                             serieData.push(item);
                         });
                 chart.series[index].update({
-                    data : serieData,
-                    name : typeCaptAlerteMesure,
-                    tooltip : {
-                        valueSuffix : unite,
+                    data: serieData,
+                    name: graphName,
+                    tooltip: {
+                        valueSuffix: unite
                     }
-                })
-            }
-            ;
+                });
+            };
 
             /**
              * SECTION D'INTIALISTAION DU GRAPH
              */
 
                 // initialise le graph avec les valeurs d'un capteur
-            $.getJSON(relayUrl + '/init/graph/points', function(data) {
-                var point = data[0];
-                var unite = ''
-                console.log(point);
-                if (point.unite != null) {
-
-                    unite = point.unite;
-                }
-                loadGraph(unite);
-                updateSerie(0, data);
+            $.getJSON(relayUrl + '/init/graph/points', function (graph) {
+                loadGraph(graph.unite);
+                updateSerie(0, graph);
 
             });
 
             // initialise le graph avec les alertes d'un capteur
-            $.getJSON(relayUrl + '/init/graph/plotLines/', function(alerte) {
+            $.getJSON(relayUrl + '/init/graph/plotLines/', function (alerte) {
 
                 if (alerte.tendance == 'INFERIEUR') {
                     var alignPreAlerte = 'top';
@@ -423,29 +403,29 @@ var mesures = function() {
                 }
 
                 chart.yAxis[0].addPlotLine({
-                    id : 1,
-                    value : alerte.seuilPreAlerte,
-                    color : '#E68A00',
-                    width : 1,
-                    zIndex : 4,
-                    label : {
-                        text : 'pré-alerte',
-                        verticalAlign : alignPreAlerte,
-                        y : yPrealerte,
-                        x : 0
+                    id: 1,
+                    value: alerte.seuilPreAlerte,
+                    color: '#E68A00',
+                    width: 1,
+                    zIndex: 4,
+                    label: {
+                        text: 'pré-alerte',
+                        verticalAlign: alignPreAlerte,
+                        y: yPrealerte,
+                        x: 0
                     }
                 });
                 chart.yAxis[0].addPlotLine({
-                    id : 1,
-                    value : alerte.seuilAlerte,
-                    color : '#A30000',
-                    width : 1,
-                    zIndex : 4,
-                    label : {
-                        text : 'alerte',
-                        verticalAlign : alignAlerte,
-                        y : yAlerte,
-                        x : 0
+                    id: 1,
+                    value: alerte.seuilAlerte,
+                    color: '#A30000',
+                    width: 1,
+                    zIndex: 4,
+                    label: {
+                        text: 'alerte',
+                        verticalAlign: alignAlerte,
+                        y: yAlerte,
+                        x: 0
                     }
                 });
             });
@@ -455,17 +435,12 @@ var mesures = function() {
              */
 
             $('#capteur').chosen().change(
-                    function() {
+                    function () {
                         var capteurId = $(this).val();
                         $.getJSON(relayUrl + '/capteur/points/'
-                                + capteurId, function(data) {
-                            var point = data[0];
-                            var unite = ''
-                            if (point != null && point.unite != null) {
-                                unite = point.unite;
-                            }
-                            loadGraph(unite);
-                            updateSerie(0, data);
+                                + capteurId, function (graph) {
+                            loadGraph(graph.unite);
+                            updateSerie(0, graph);
 
                         });
                     });
@@ -475,10 +450,10 @@ var mesures = function() {
              */
 
             $('#capteur').chosen().change(
-                    function() {
+                    function () {
                         var capteurId = $(this).val();
                         $.getJSON(relayUrl + '/capteur/plotLines/'
-                                + capteurId, function(alerte) {
+                                + capteurId, function (alerte) {
 
                             if (alerte.tendance == 'INFERIEUR') {
                                 var alignPreAlerte = 'top';
@@ -495,29 +470,29 @@ var mesures = function() {
 
                             removeAlert(1);
                             chart.yAxis[0].addPlotLine({
-                                id : 1,
-                                value : alerte.seuilPreAlerte,
-                                color : '#E68A00',
-                                width : 1,
-                                zIndex : 4,
-                                label : {
-                                    text : 'pré-alerte',
-                                    verticalAlign : alignPreAlerte,
-                                    y : yPrealerte,
-                                    x : 0
+                                id: 1,
+                                value: alerte.seuilPreAlerte,
+                                color: '#E68A00',
+                                width: 1,
+                                zIndex: 4,
+                                label: {
+                                    text: 'pré-alerte',
+                                    verticalAlign: alignPreAlerte,
+                                    y: yPrealerte,
+                                    x: 0
                                 }
                             });
                             chart.yAxis[0].addPlotLine({
-                                id : 1,
-                                value : alerte.seuilAlerte,
-                                color : '#A30000',
-                                width : 1,
-                                zIndex : 4,
-                                label : {
-                                    text : 'alerte',
-                                    verticalAlign : alignAlerte,
-                                    y : yAlerte,
-                                    x : 0
+                                id: 1,
+                                value: alerte.seuilAlerte,
+                                color: '#A30000',
+                                width: 1,
+                                zIndex: 4,
+                                label: {
+                                    text: 'alerte',
+                                    verticalAlign: alignAlerte,
+                                    y: yAlerte,
+                                    x: 0
                                 }
                             });
                         });
@@ -528,10 +503,10 @@ var mesures = function() {
              */
 
             $('#alerte').chosen().change(
-                    function() {
+                    function () {
                         var id = $(this).val();
                         $.getJSON(relayUrl + '/change/alerte/plotLines/' + id,
-                                function(alerte) {
+                                function (alerte) {
 
                                     console.log(alerte.tendance);
 
@@ -550,141 +525,110 @@ var mesures = function() {
                                     console.log(yPrealerte);
                                     removeAlert(1);
                                     chart.yAxis[0].addPlotLine({
-                                        id : 1,
-                                        value : alerte.seuilPreAlerte,
-                                        color : '#E68A00',
-                                        width : 1,
-                                        zIndex : 4,
-                                        label : {
-                                            text : 'pré-alerte',
-                                            verticalAlign : alignPreAlerte,
-                                            y : yPrealerte,
-                                            x : 0
+                                        id: 1,
+                                        value: alerte.seuilPreAlerte,
+                                        color: '#E68A00',
+                                        width: 1,
+                                        zIndex: 4,
+                                        label: {
+                                            text: 'pré-alerte',
+                                            verticalAlign: alignPreAlerte,
+                                            y: yPrealerte,
+                                            x: 0
                                         }
                                     });
                                     chart.yAxis[0].addPlotLine({
-                                        id : 1,
-                                        value : alerte.seuilAlerte,
-                                        color : '#A30000',
-                                        width : 1,
-                                        zIndex : 4,
-                                        label : {
-                                            text : 'alerte',
-                                            verticalAlign : alignAlerte,
-                                            y : yAlerte,
-                                            x : 0
+                                        id: 1,
+                                        value: alerte.seuilAlerte,
+                                        color: '#A30000',
+                                        width: 1,
+                                        zIndex: 4,
+                                        label: {
+                                            text: 'alerte',
+                                            verticalAlign: alignAlerte,
+                                            y: yAlerte,
+                                            x: 0
                                         }
                                     });
                                 });
-                    });
-
-            $('#confirmBetweenDate').click(
-                    function() {
-                        var urlBase = $('.relayUrl').attr('href');
-                        var capteurId = $("#capteur").val();
-                        var dateDebut = $("#dateDebut").val();
-                        var dateFin = $("#dateFin").val();
-                        var url = urlBase + '/capteur/points' + '/'
-                                + capteurId + '/' + dateDebut + '/'
-                                + dateFin;
-
-                        $.getJSON(url, function(data) {
-                            updateSerie(1, data);
-                            chart.xAxis[0].setExtremes(moment(dateDebut),
-                                    moment(dateFin))
-                        });
-
                     });
 
             function removeAlert(plotLineId) {
                 return chart.yAxis[0].removePlotLine(plotLineId);
             }
 
-            $('#js-show-alerts').chosen().change(function(e, params) {
+            $('#js-show-alerts').chosen().change(function (e, params) {
                 console.log($(this).textContent);
                 showAlert($(this).text(), params.selected)
             });
 
             // reverse rainfall chart
-            $reverseBtn.on('ifUnchecked', function(e) {
+            $reverseBtn.on('ifUnchecked', function (e) {
                 chart.yAxis[1].update({
-                    reversed : false
+                    reversed: false
                 });
                 reversed = false;
             });
-            $reverseBtn.on('ifChecked', function(e) {
+            $reverseBtn.on('ifChecked', function (e) {
                 chart.yAxis[1].update({
-                    reversed : true
+                    reversed: true
                 });
                 reversed = true;
             });
 
             // change waterlevel chart display
 
-            $('#js-change-water-display').chosen().change(function(e) {
+            $('#js-change-water-display').chosen().change(function (e) {
                 chart.series[1].update({
-                    type : $(this).val()
+                    type: $(this).val()
                 })
             });
 
             // change rainfall chart display
-            $('#js-change-rainfall-display').chosen().change(function(e) {
+            $('#js-change-rainfall-display').chosen().change(function (e) {
                 chart.series[0].update({
-                    type : $(this).val()
+                    type: $(this).val()
                 })
             });
         }
     };
 }();
 
-$(function() {
+$(function () {
     "use strict";
     mesures.init();
 
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $(document).ready(
-        function() {
-            $.fn.dataTable.moment( 'dd-MM-yyyy HH:mm:ss' );
+        function () {
+            $.fn.dataTable.moment('dd-MM-yyyy HH:mm:ss');
             $('#tableMesures').DataTable({
-                "columnDefs" : [ {
-                    "sType" : "datetime-moment",
-                    "targets" : [ 0 ]
-                } ],
-                "order" : [ [ 0, 'desc' ] ]
+                "columnDefs": [
+                    {
+                        "sType": "datetime-moment",
+                        "targets": [ 0 ]
+                    }
+                ],
+                "order": [
+                    [ 0, 'desc' ]
+                ]
             });
 
             $('#tableMesures').attr('class',
                     "table table-striped list no-m");
             //select box pour le nombre de résultats à afficher
             $('.chosen').chosen({
-                width : "80px",
-                disable_search_threshold : 10
+                width: "80px",
+                disable_search_threshold: 10
             });
         });
 
-$('#ongletQualitatif').click(function() {
+$('#ongletQualitatif').click(function () {
     switchToList()
 });
-$('#ongletQuantitatif').click(function() {
+$('#ongletQuantitatif').click(function () {
     switchToGraph()
 });
 
@@ -707,460 +651,73 @@ function switchToList() {
 }
 
 $('#confirmModal').modal();
-$('#confirmModal').on('show.bs.modal', function(e) {
+$('#confirmModal').on('show.bs.modal', function (e) {
     var url = $(e.relatedTarget).data('url');
     var $confirmButton = $('#js-confirm-button');
     $confirmButton.attr('href', url);
 });
 
-$(function() {
-    initListSite();
-    initListOuvrage();
-    initListEnregistreur();
+
+var $site = $('#site');
+var $ouvrage = $('#ouvrage');
+var $capteur = $('#capteur');
+
+$(function () {
+    $.getJSON($('.relayUrl').attr('href') + '/init/site',
+            null, function (listSite) {
+                fillSelect($site, listSite);
+                <c:if test="${not empty ouvrageId }">
+                    setOuvrage(${ouvrageId});
+                </c:if>
+            });
 });
 
-function checkAllFieldsHaveValues() {
+$site.chosen().change(function () {
+    $.getJSON($('.relayUrl').attr('href') + '/site/refresh/ouvrage/' + $(this).val(),
+            null, function (listOuvrage) {
+                fillSelect($ouvrage, listOuvrage);
+                $capteur.empty();
+                $capteur.val(-1);
+                $capteur.trigger("chosen:updated");
+            });
+});
 
-    var capteurVal = $('#capteur').val();
-    var dateDebutVal = $('#dateDebut').val();
-    var dateFinVal = $('#dateFin').val();
-    console.log('capteur : ' + capteurVal);
-    console.log('dateDebut : ' + dateDebutVal);
-    console.log('dateFin : ' + dateFinVal);
+$ouvrage.chosen().change(function () {
+    refreshCapteur($(this).val());
+});
 
-    if ((capteurVal && capteurVal != 'NONE') && dateDebutVal
-            && dateFinVal) {
+$capteur.chosen();
 
-        $('#confirmBetweenDate').attr('disabled', false);
-    } else {
-        $('#confirmBetweenDate').attr('disabled', true);
-    }
+function refreshCapteur(ouvrageId){
+    $.getJSON($('.relayUrl').attr('href') + '/ouvrage/refresh/capteur/' + ouvrageId,
+            null, function (listCapteur) {
+                fillSelect($capteur, listCapteur);
+            });
 }
 
-// Modifie la selectBox ouvrage filtrer par le site
-
-$("#site")
-        .change(
-
-        function() {
-            var $ouvrage = $('#ouvrage');
-            $
-                    .get(
-                            $('.relayUrl').attr('href')
-                            + '/site/refresh/ouvrage/'
-                            + $(this).val(),
-                    null,
-                    function(listOuvrage) {
-                        var output = [];
-                        $ouvrage
-                                .attr(
-                                'data-placeholder',
-                                'Filtrer par ouvrage');
-                        $
-                                .each(
-                                listOuvrage,
-                                function(
-                                        index,
-                                        ouvrage) {
-                                    var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
-                                            + ouvrage.codeOuvrage
-                                            + '</option>';
-                                    output
-                                            .push(tpl);
-                                });
-                        $ouvrage.html(output
-                                .join(''));
-                        if (!listOuvrage.length) {
-                            $ouvrage
-                                    .attr(
-                                    'data-placeholder',
-                                    'Aucun ouvrage pour ce Site');
-                        }
-
-                        $ouvrage.selected = false;
-                        $ouvrage
-                                .chosen(
-                                {
-                                    disable_search_threshold : 10
-                                })
-                                .trigger(
-                                "chosen:updated");
-                    });
-
+function fillSelect(select, list){
+    select.empty();
+    $.each(list, function (index, item) {
+        var $option = $('<option>', {
+            value: item.id,
+            text: item.name
         });
-// Modifie la selectBox enregistreur filtrer par le site
-$("#site")
-        .change(
-        function() {
-            $('.codeOuvrage').text('');
-            var $enregistreur = $('#enregistreur');
-            $
-                    .get(
-                            $('.relayUrl').attr('href')
-                            + '/site/refresh/enregistreur/'
-                            + $(this).val(),
-                    null,
-                    function(listEnregistreur) {
-                        var output = [];
-                        $enregistreur
-                                .attr(
-                                'data-placeholder',
-                                'Choisir l\'ENREGISTREUR');
-                        $
-                                .each(
-                                listEnregistreur,
-                                function(
-                                        index,
-                                        enregistreur) {
-                                    var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-                                            + enregistreur.mid
-                                            + '</option>';
-                                    output
-                                            .push(tpl);
-                                });
-                        $enregistreur.html(output
-                                .join(''));
-                        if (!listEnregistreur.length) {
-                            $enregistreur
-                                    .attr(
-                                    'data-placeholder',
-                                    'Aucun enregistreur pour ce filtre');
+        select.append($option);
+    });
+    select.val(-1);
+    select.trigger("chosen:updated");
+}
 
-                        }
-
-                        $enregistreur.selected = false;
-                        $enregistreur
-                                .chosen(
-                                {
-                                    disable_search_threshold : 10
-                                })
-                                .trigger(
-                                "chosen:updated");
-                        checkAllFieldsHaveValues();
-                    });
-
-        });
-
-$("#ouvrage").change(function() {
-    $('#site').selected = false, initListSite()
-});
-
-// Modifie la selectBox enregistreur filtrer par l'ouvrage
-$("#ouvrage")
-        .change(
-        function(e) {
-            var currentOuvrage = e.currentTarget.innerText;
-            var $enregistreur = $('#enregistreur');
-            var $site = $('#site');
-
-            if (!currentOuvrage) {
-                return;
-
-            } else {
-                $('.codeOuvrage').text(
-                                currentOuvrage + ' > ');
-            }
-            $
-                    .get(
-                            $('.relayUrl').attr('href')
-                            + '/ouvrage/refresh/enregistreur/'
-                            + $(this).val(),
-                    null,
-                    function(listEnregistreur) {
-                        var output = [];
-                        $enregistreur
-                                .attr(
-                                'data-placeholder',
-                                'Choisir l\'ENREGISTREUR');
-                        $
-                                .each(
-                                listEnregistreur,
-                                function(
-                                        index,
-                                        enregistreur) {
-                                    var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-                                            + enregistreur.mid
-                                            + '</option>';
-                                    output
-                                            .push(tpl);
-                                });
-                        $enregistreur.html(output
-                                .join(''));
-                        if (!listEnregistreur.length) {
-                            $enregistreur
-                                    .attr(
-                                    'data-placeholder',
-                                    'Aucun enregistreur pour ce filtre');
-
-                        }
-
-                        $enregistreur.selected = false;
-                        $enregistreur
-                                .chosen(
-                                {
-                                    disable_search_threshold : 10
-                                })
-                                .trigger(
-                                "chosen:updated");
-                        checkAllFieldsHaveValues()
-                    });
-
-        });
-
-$("#dateDebut").change(function() {
-    checkAllFieldsHaveValues()
-});
-$("#dateFin").change(function() {
-    checkAllFieldsHaveValues()
-});
-$("#enregistreur").change(function() {
-    $('#site').selected = false;
-    $('#ouvrage').selected = false;
-    checkAllFieldsHaveValues();
-    initListSite();
-    initListOuvrage();
-});
-
-$("#enregistreur")
-        .change(
-        function() {
-
-            var $capteur = $('#capteur');
-
-            $
-                    .getJSON(
-                            $('.relayUrl').attr('href')
-                            + '/enregistreur/refresh/capteur/'
-                            + $(this).val(),
-                    null,
-                    function(listCapteur) {
-                        var output = []
-                        $
-                                .each(
-                                listCapteur,
-                                function(
-                                        index,
-                                        capteur) {
-                                    var tpl = '<option value="NONE"></option><option value="' + capteur.id + '">'
-                                            + capteur.typeCaptAlerteMesure.description
-                                            + '</option>';
-                                    output
-                                            .push(tpl);
-                                });
-                        $capteur
-                                .attr(
-                                'data-placeholder',
-                                'Choisir le capteur');
-                        $capteur.html(output
-                                .join(''));
-                        $capteur
-                                .chosen(
-                                {
-                                    allow_single_deselect : true
-                                },
-                                {
-                                    disable_search_threshold : 10
-                                });
-                        $capteur
-                                .trigger("chosen:updated");
-                    });
-        });
-
-$("#capteur")
-        .change(
-        function() {
-
-            var $alerte = $('#alerte');
-
-            $
-                    .get(
-                            $('.relayUrl').attr('href')
-                            + '/capteur/refresh/alerte/'
-                            + $(this).val(),
-                    null,
-                    function(listAlerte) {
-                        var output = [];
-                        $alerte
-                                .attr(
-                                'data-placeholder',
-                                'Choisir l\'Alerte');
-                        $
-                                .each(
-                                listAlerte,
-                                function(
-                                        index,
-                                        alerte) {
-                                    var tpl = '<option value="NONE"></option><option value="' + alerte.id + '">'
-                                            + alerte.codeAlerte
-                                            + '</option>';
-                                    output
-                                            .push(tpl);
-                                });
-                        $alerte.html(output
-                                .join(''));
-                        if (!listAlerte.length) {
-                            $alerte
-                                    .attr(
-                                    'data-placeholder',
-                                    'Aucune alerte active');
-
-                        }
-                        $alerte.selected = false;
-                        $alerte
-                                .chosen(
-                                {
-                                    disable_search_threshold : 10
-                                })
-                                .trigger(
-                                "chosen:updated");
-                    });
-
-        })
-
-$("#capteur")
-        .change(
-        function() {
-            var $alerte = $('#alerte');
-            $('#site').selected = false,
-                    $('#ouvrage').selected = false,
-                    checkAllFieldsHaveValues(),
-                    initListSite(),
-                    initListOuvrage(),
-                    $
-                            .get(
-                                    $('.relayUrl').attr(
-                                            'href')
-                                    + '/capteur/refresh/alerte/'
-                                    + $(this).val(),
-                            null,
-                            function(listAlerte) {
-                                var output = [];
-                                $alerte
-                                        .attr(
-                                        'data-placeholder',
-                                        'Choisir l\'Alerte');
-                                $
-                                        .each(
-                                        listAlerte,
-                                        function(
-                                                index,
-                                                alerte) {
-                                            var tpl = '<option value="NONE"></option><option value="' + alerte.id + '">'
-                                                    + alerte.codeAlerte
-                                                    + '</option>';
-                                            output
-                                                    .push(tpl);
-                                        });
-                                $alerte.html(output
-                                        .join(''));
-                                if (!listAlerte.length) {
-                                    $alerte
-                                            .attr(
-                                            'data-placeholder',
-                                            'Aucune alerte active');
-
-                                }
-                                $alerte.selected = false;
-                                $alerte
-                                        .chosen(
-                                        {
-                                            disable_search_threshold : 10
-                                        })
-                                        .trigger(
-                                        "chosen:updated");
-                            });
-
-        })
-
-function initListSite() {
-
-    var $site = $('#site');
-
-    $
-            .getJSON(
-                    $('.relayUrl').attr('href') + '/init/site',
-            null,
-            function(listSite) {
-
-                var output = []
-                $
-                        .each(
-                        listSite,
-                        function(index, site) {
-                            var tpl = '<option value="NONE"></option><option value="' + site.id + '">'
-                                    + site.codeSite
-                                    + '</option>';
-                            output.push(tpl);
-                        });
-                $site.html(output.join(''));
-                $site.chosen({
-                    allow_single_deselect : true
-                }, {
-                    disable_search_threshold : 10
-                });
+function setOuvrage(ouvrageId){
+    $.getJSON($('.relayUrl').attr('href') + '/init/site/ouvrage/' + ouvrageId,
+            null, function (site) {
+                $site.val(site.id);
                 $site.trigger("chosen:updated");
-            });
-};
-
-function initListOuvrage() {
-
-    var $ouvrage = $('#ouvrage');
-
-    $
-            .getJSON(
-                    $('.relayUrl').attr('href') + '/init/ouvrage',
-            null,
-            function(listOuvrage) {
-
-                var output = []
-                $
-                        .each(
-                        listOuvrage,
-                        function(index, ouvrage) {
-                            var tpl = '<option value="NONE"></option><option value="' + ouvrage.id + '">'
-                                    + ouvrage.codeOuvrage
-                                    + '</option>';
-                            output.push(tpl);
-                        });
-                $ouvrage.html(output.join(''));
-                $ouvrage.chosen({
-                    allow_single_deselect : true
-                }, {
-                    disable_search_threshold : 10
-                });
+                fillSelect($ouvrage, site.ouvrages);
+                $ouvrage.val(ouvrageId);
                 $ouvrage.trigger("chosen:updated");
+                refreshCapteur(ouvrageId);
             });
-};
+}
 
-function initListEnregistreur() {
-
-    var $enregistreur = $('#enregistreur');
-
-    $
-            .getJSON(
-                    $('.relayUrl').attr('href')
-                    + '/init/enregistreur',
-            null,
-            function(listEnregistreur) {
-
-                var output = []
-                $
-                        .each(
-                        listEnregistreur,
-                        function(index,
-                                 enregistreur) {
-                            var tpl = '<option value="NONE"></option><option value="' + enregistreur.id + '">'
-                                    + enregistreur.mid
-                                    + '</option>';
-                            output.push(tpl);
-                        });
-                $enregistreur.html(output.join(''));
-                $enregistreur.chosen({
-                    allow_single_deselect : true
-                }, {
-                    disable_search_threshold : 10
-                });
-                $enregistreur.trigger("chosen:updated");
-            });
-};
 </script>

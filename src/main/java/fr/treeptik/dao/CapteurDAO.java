@@ -27,4 +27,6 @@ public interface CapteurDAO extends JpaRepository<Capteur, Integer> {
 			@Param("enregistreurId") Integer enregistreurId)
 			throws DataAccessException;
 
+    @Query("select c from Ouvrage o join o.enregistreurs e join e.capteurs c  where o.id = :ouvrageId")
+    List<Capteur> findAllByOuvrageId(@Param("ouvrageId") Integer ouvrageId)throws DataAccessException;
 }

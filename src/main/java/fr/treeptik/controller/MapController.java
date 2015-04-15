@@ -76,7 +76,6 @@ public class MapController {
 		}
 
 		model.addAttribute("sitesCombo", sitesCombo);
-		model.addAttribute("etablissementsCombo", etablissementsCombo);
 		model.addAttribute("ouvragesCombo", ouvragesCombo);
 		return "/carto/carto";
 	}
@@ -89,7 +88,6 @@ public class MapController {
 
 		List<Marker> markers = new ArrayList<Marker>();
 		List<Site> sitesCombo = null;
-		List<Etablissement> etablissementsCombo = null;
 		List<Ouvrage> ouvragesCombo = null;
 
 		try {
@@ -99,15 +97,12 @@ public class MapController {
 			if (isAdmin) {
 				sitesCombo = siteService.findAll();
 				ouvragesCombo = ouvrageService.findAll();
-				etablissementsCombo = etablissementService.findAll();
 			} else {
 				String userLogin = SecurityContextHolder.getContext()
 						.getAuthentication().getName();
 				logger.debug("USER LOGIN : " + userLogin);
 
 				sitesCombo = siteService.findByClientLogin(userLogin);
-				etablissementsCombo = etablissementService
-						.findByClientLogin(userLogin);
 				ouvragesCombo = ouvrageService.findByClientLogin(userLogin);
 			}
 
@@ -122,11 +117,6 @@ public class MapController {
 				}
 			}
 
-			for (Etablissement item : etablissementsCombo) {
-				if(mapService.isGeoLocalised(item)){
-					markers.add(markerAssembler.fromEtablissement(item));
-				}
-			}
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -164,29 +154,6 @@ public class MapController {
 			logger.debug("--site : " + site);
 
 			marker = markerAssembler.fromSite(site);
-            setSession(request, marker);
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return marker;
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/etablissement/{etablissementId}")
-	public @ResponseBody Marker localizeEtablissement(
-			@PathVariable("etablissementId") Integer etablissementId, HttpServletRequest request)
-			throws ControllerException {
-		logger.info("--localizeEtablissement MapController-- etablissementId : "
-				+ etablissementId);
-
-		Marker marker = new Marker();
-		try {
-			Etablissement etablissement = etablissementService
-					.findById(etablissementId);
-
-			logger.debug("--etablissement : " + etablissement);
-
-			marker = markerAssembler.fromEtablissement(etablissement);
             setSession(request, marker);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());

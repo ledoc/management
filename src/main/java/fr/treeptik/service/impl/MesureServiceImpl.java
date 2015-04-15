@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.persistence.PersistenceException;
 
+import fr.treeptik.shared.dto.graph.PointGraphDTO;
 import org.apache.log4j.Logger;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
 import fr.treeptik.model.Mesure;
-import fr.treeptik.model.Point;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.model.TypeCaptAlerteMesure;
 import fr.treeptik.service.CapteurService;
@@ -502,17 +502,15 @@ public class MesureServiceImpl implements MesureService {
 	}
 
 	@Override
-	public Point transformMesureInPoint(Mesure item) throws ServiceException {
+	public PointGraphDTO transformMesureInPoint(Mesure item) throws ServiceException {
 
-		Point point = new Point();
+        PointGraphDTO point = new PointGraphDTO();
 		try {
-			point.setMid(item.getCapteur().getEnregistreur().getMid());
-			point.setTypeCaptAlerteMesure(item.getCapteur()
-					.getTypeCaptAlerteMesure());
+			//point.setMid(item.getCapteur().getEnregistreur().getMid());
+			//point.setTypeCaptAlerteMesure(item.getCapteur().getTypeCaptAlerteMesure());
+            //point.setUnite(item.getUnite());
 			point.setDate(item.getDate());
 			point.setValeur(item.getValeur());
-			point.setUnite(item.getUnite());
-
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);

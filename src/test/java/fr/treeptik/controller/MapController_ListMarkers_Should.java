@@ -40,10 +40,6 @@ public class MapController_ListMarkers_Should {
 	private static final int OUVRAGE_ID_2 = 12;
 	private static final int OUVRAGE_ID_3 = 13;
 
-	private static final int ETABLISSEMENT_ID_1 = 21;
-	private static final int ETABLISSEMENT_ID_2 = 22;
-	private static final int ETABLISSEMENT_ID_3 = 23;
-
 	@Mock
 	MapService mapService;
 
@@ -101,30 +97,19 @@ public class MapController_ListMarkers_Should {
 		assertThat(list.get(1).getItemId(), is(OUVRAGE_ID_3));
 	}
 
-	@Test
-	public void serviceGetAllItems_convertEtablissementsInMarkers_IfEtablissementGeoLocalised()
-			throws ControllerException, ServiceException {
-		configEtablissements();
-		List<Marker> list = mapController.getAllItems(request);
-		assertThat(list.size(), is(2));
-		assertThat(list.get(0).getItemId(), is(ETABLISSEMENT_ID_1));
-		assertThat(list.get(1).getItemId(), is(ETABLISSEMENT_ID_3));
-	}
+
 
 	@Test
 	public void serviceGetAllItems_convertAllInMarkers()
 			throws ControllerException, ServiceException {
 		configOuvrages();
 		configSites();
-		configEtablissements();
 		List<Marker> list = mapController.getAllItems(request);
-		assertThat(list.size(), is(6));
+		assertThat(list.size(), is(4));
 		assertThat(list.get(0).getItemId(), is(SITE_ID_1));
 		assertThat(list.get(1).getItemId(), is(SITE_ID_3));
 		assertThat(list.get(2).getItemId(), is(OUVRAGE_ID_1));
 		assertThat(list.get(3).getItemId(), is(OUVRAGE_ID_3));
-		assertThat(list.get(4).getItemId(), is(ETABLISSEMENT_ID_1));
-		assertThat(list.get(5).getItemId(), is(ETABLISSEMENT_ID_3));
 	}
 
 	private void configOuvrages() throws ServiceException {
@@ -202,42 +187,6 @@ public class MapController_ListMarkers_Should {
 	}
 
 
-	private void configEtablissements() throws ServiceException {
-		List<Etablissement> etablissements = new ArrayList<Etablissement>();
-		Etablissement etablissement1 = etablissementWithMinValue();
-		etablissement1.setId(ETABLISSEMENT_ID_1);
-		etablissements.add(etablissement1);
-		Etablissement etablissement2 = etablissementWithMinValue();
-		etablissement2.setId(ETABLISSEMENT_ID_2);
-		etablissements.add(etablissement2);
-		Etablissement etablissement3 = etablissementWithMinValue();
-		etablissement3.setId(ETABLISSEMENT_ID_3);
-		etablissements.add(etablissement3);
-		when(etablissementService.findByClientLogin(USER_LOGIN)).thenReturn(
-				etablissements);
 
-		when(mapService.isGeoLocalised(etablissement1)).thenReturn(true);
-		when(mapService.isGeoLocalised(etablissement2)).thenReturn(false);
-		when(mapService.isGeoLocalised(etablissement3)).thenReturn(true);
-
-
-        Marker marker1 = new Marker();
-        marker1.setItemId(ETABLISSEMENT_ID_1);
-        when(markerAssembler.fromEtablissement(etablissement1)).thenReturn(marker1);
-        Marker marker2 = new Marker();
-        marker2.setItemId(ETABLISSEMENT_ID_2);
-        when(markerAssembler.fromEtablissement(etablissement2)).thenReturn(marker2);
-        Marker marker3 = new Marker();
-        marker3.setItemId(ETABLISSEMENT_ID_3);
-        when(markerAssembler.fromEtablissement(etablissement3)).thenReturn(marker3);
-	}
-	
-	private Etablissement etablissementWithMinValue() {
-		Etablissement etablissement = new Etablissement();
-		etablissement.setCoordonneesGeographique("1.0/2.0");
-		etablissement.setLatitude();
-		etablissement.setLongitude();
-		return etablissement;
-	}
 
 }

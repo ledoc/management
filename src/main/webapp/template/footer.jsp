@@ -38,8 +38,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- /core scripts -->
 
 <!-- page level scripts -->
-<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script src="${urlResources}/plugins/gmaps.js"></script>
+
 <script src="${urlResources}/plugins/chosen/chosen.jquery.min.js"></script>
 <script src="${urlResources}/plugins/datatables/jquery.dataTables.js"></script>
 <script src="${urlResources}/plugins/datatables/datetime-moment.js"></script>
@@ -59,7 +58,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!-- page script -->
 <script src="${urlResources}/js/datatables.js"></script>
-<script src="${urlResources}/js/maps.js"></script>
 <script src="${urlResources}/js/pickers.js"></script>
 <!-- /page script -->
 

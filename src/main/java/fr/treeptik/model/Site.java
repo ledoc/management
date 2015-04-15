@@ -1,6 +1,7 @@
 package fr.treeptik.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -95,9 +96,7 @@ public class Site implements Serializable, HasGeoCoords {
 		this.setLatitude();
 		this.setLongitude();
 	}
-	
-	
-	
+
 	public String getCoordonneesLambert() {
 		return coordonneesLambert;
 	}
@@ -133,7 +132,10 @@ public class Site implements Serializable, HasGeoCoords {
 	}
 
 	public List<Ouvrage> getOuvrages() {
-		return ouvrages;
+		if(ouvrages == null){
+            ouvrages = new ArrayList<Ouvrage>();
+        }
+        return ouvrages;
 	}
 	
 	public Etablissement getEtablissement() {

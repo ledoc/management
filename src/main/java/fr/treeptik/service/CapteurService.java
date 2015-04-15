@@ -28,4 +28,7 @@ public interface CapteurService {
 	List<Capteur> findAllByEnregistreurId(Integer enregistreurId)
 			throws ServiceException;
 
+    List<Capteur> findAllByOuvrageId(Integer capteurId)
+            throws ServiceException;
+
 }

@@ -2,6 +2,7 @@ package fr.treeptik.dao;
 
 import java.util.List;
 
+import fr.treeptik.model.Site;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +26,5 @@ public interface OuvrageDAO extends JpaRepository<Ouvrage, Integer> {
 	
 	@Query("select o from Client c join c.etablissements e join e.sites s join s.ouvrages o where c.id = :userId")
 	public List<Ouvrage> findByClientId(@Param("userId") Integer userId) throws DataAccessException;
-	
+
 }
