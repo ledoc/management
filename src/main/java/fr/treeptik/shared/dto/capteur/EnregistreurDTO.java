@@ -1,4 +1,4 @@
-package fr.treeptik.shared.mesure.dto.request;
+package fr.treeptik.shared.dto.capteur;
 
 
 import java.util.List;

@@ -1,9 +1,7 @@
 package fr.treeptik.model.assembler;
 
 import fr.treeptik.model.Capteur;
-import fr.treeptik.model.Enregistreur;
-import fr.treeptik.shared.mesure.dto.request.CapteurDTO;
-import fr.treeptik.shared.mesure.dto.request.EnregistreurDTO;
+import fr.treeptik.shared.dto.capteur.CapteurDTO;
 
 import java.util.ArrayList;
 import java.util.List;

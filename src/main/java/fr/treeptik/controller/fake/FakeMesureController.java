@@ -1,11 +1,10 @@
 package fr.treeptik.controller.fake;
 
 
-import fr.treeptik.model.Point;
-import fr.treeptik.model.TypeCaptAlerteMesure;
+import fr.treeptik.shared.dto.graph.GraphDTO;
+import fr.treeptik.shared.dto.graph.PointGraphDTO;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,27 +18,35 @@ public class FakeMesureController {
         this.list = fakeMesureControllerDataListBuilder.create();
     }
 
-    public List<Point> dataWithDateComparator(Date dateBegin, Date dateEnd) {
-        List<Point> points = new ArrayList<Point>();
+    public GraphDTO dataWithDateComparator(Date dateBegin, Date dateEnd) {
+        GraphDTO graph = new GraphDTO();
+        graph.setName("Niveau d'eau");
+        graph.setMid("MID ?");
+        graph.setUnite("Unité ?");
+        List<PointGraphDTO> points = new ArrayList<PointGraphDTO>();
         for (FakeMesureControllerData eachData : list) {
             if (isDateValidWithBeginAndEndDates(eachData, dateBegin, dateEnd)
                     && isDateValidWithNow(eachData)) {
                 points.add(point(eachData));
             }
         }
-        return points;
+        graph.setPoints(points);
+        return graph;
     }
 
-
-
-    public List<Point> data() {
-        List<Point> points = new ArrayList<Point>();
+    public GraphDTO data() {
+        GraphDTO graph = new GraphDTO();
+        graph.setName("Niveau d'eau");
+        graph.setMid("MID");
+        graph.setUnite("Unité de Valeur");
+        List<PointGraphDTO> points = new ArrayList<PointGraphDTO>();
         for (FakeMesureControllerData eachData : list) {
             if (isDateValidWithNow(eachData)) {
                 points.add(point(eachData));
             }
         }
-        return points;
+        graph.setPoints(points);
+        return graph;
     }
 
     private boolean isDateValidWithNow(FakeMesureControllerData data) {
@@ -52,17 +59,12 @@ public class FakeMesureController {
     }
 
 
-    private Point point(FakeMesureControllerData data) {
-        Point point = new Point();
+    private PointGraphDTO point(FakeMesureControllerData data) {
+        PointGraphDTO point = new PointGraphDTO();
         point.setValeur(data.getValue());
         point.setDate(data.getDate());
-        point.setTypeCaptAlerteMesure(type());
         return point;
     }
 
-    private TypeCaptAlerteMesure type() {
-        TypeCaptAlerteMesure type = new TypeCaptAlerteMesure();
-        type.setDescription("Niveau d'eau");
-        return type;
-    }
+
 }

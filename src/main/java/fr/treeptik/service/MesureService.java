@@ -6,8 +6,8 @@ import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Mesure;
-import fr.treeptik.model.Point;
 import fr.treeptik.model.TypeCaptAlerteMesure;
+import fr.treeptik.shared.dto.graph.PointGraphDTO;
 
 public interface MesureService {
 
@@ -24,7 +24,7 @@ public interface MesureService {
 
 	List<Mesure> findAllDetails() throws ServiceException;
 
-	Point transformMesureInPoint(Mesure item) throws ServiceException;
+	PointGraphDTO transformMesureInPoint(Mesure item) throws ServiceException;
 
 	Mesure findByIdWithFetch(Integer id) throws ServiceException;
 

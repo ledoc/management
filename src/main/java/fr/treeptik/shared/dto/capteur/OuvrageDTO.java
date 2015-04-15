@@ -1,13 +1,12 @@
-package fr.treeptik.shared.mesure.dto.request;
-
+package fr.treeptik.shared.dto.capteur;
 
 import java.util.List;
 
-public class SiteDTO {
+public class OuvrageDTO {
 
     private int id;
     private String name;
-    private List<OuvrageDTO> ouvrages;
+    private List<EnregistreurDTO> enregistreur;
 
     public int getId() {
         return id;
@@ -25,11 +24,11 @@ public class SiteDTO {
         this.name = name;
     }
 
-    public List<OuvrageDTO> getOuvrages() {
-        return ouvrages;
+    public void setEnregistreur(List<EnregistreurDTO> enregistreur) {
+        this.enregistreur = enregistreur;
     }
 
-    public void setOuvrages(List<OuvrageDTO> ouvrages) {
-        this.ouvrages = ouvrages;
+    public List<EnregistreurDTO> getEnregistreur() {
+        return enregistreur;
     }
 }

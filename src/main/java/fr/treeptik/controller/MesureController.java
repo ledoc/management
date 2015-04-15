@@ -9,9 +9,10 @@ import fr.treeptik.model.assembler.EnregistreurAssembler;
 import fr.treeptik.model.assembler.OuvrageAssembler;
 import fr.treeptik.model.assembler.SiteAssembler;
 import fr.treeptik.service.*;
-import fr.treeptik.shared.mesure.dto.request.CapteurDTO;
-import fr.treeptik.shared.mesure.dto.request.OuvrageDTO;
-import fr.treeptik.shared.mesure.dto.request.SiteDTO;
+import fr.treeptik.shared.dto.capteur.CapteurDTO;
+import fr.treeptik.shared.dto.capteur.OuvrageDTO;
+import fr.treeptik.shared.dto.capteur.SiteDTO;
+import fr.treeptik.shared.dto.graph.GraphDTO;
 import fr.treeptik.util.DateMesureComparator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -233,7 +234,7 @@ public class MesureController {
     @RequestMapping(method = RequestMethod.GET, value = "/init/graph/points")
     public
     @ResponseBody
-    List<Point> initPointsGraph(HttpServletRequest request)
+    GraphDTO initPointsGraph(HttpServletRequest request)
             throws ControllerException {
 
         logger.info("--initPointsGraph MesureController");
@@ -331,7 +332,7 @@ public class MesureController {
     @RequestMapping(method = RequestMethod.GET, value = "/capteur/points/{capteurId}")
     public
     @ResponseBody
-    List<Point> getCapteurPoints(
+    GraphDTO getCapteurPoints(
             HttpServletRequest request,
             @PathVariable("capteurId") Integer capteurId)
             throws ControllerException {
@@ -446,7 +447,7 @@ public class MesureController {
     @RequestMapping(method = RequestMethod.GET, value = "/capteur/points/{capteurId}/{dateDebut}/{dateFin}")
     public
     @ResponseBody
-    List<Point> getCapteurPointsByDate(
+    GraphDTO getCapteurPointsByDate(
             HttpServletRequest request,
             @PathVariable("capteurId") Integer capteurId,
             @PathVariable("dateDebut") Date dateDebut,

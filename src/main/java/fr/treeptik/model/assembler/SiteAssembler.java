@@ -2,7 +2,7 @@ package fr.treeptik.model.assembler;
 
 
 import fr.treeptik.model.Site;
-import fr.treeptik.shared.mesure.dto.request.SiteDTO;
+import fr.treeptik.shared.dto.capteur.SiteDTO;
 import org.hibernate.Hibernate;
 
 import java.util.ArrayList;

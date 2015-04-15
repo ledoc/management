@@ -335,33 +335,27 @@ var mesures = function () {
             }
 
             // get data
-            function updateSerie(index, data) {
+            function updateSerie(index, graph) {
                 var serieData = [];
-                var typeCaptAlerteMesure;
-                var unite = '';
-                $
-                        .each(
-                        data,
+                var graphName = graph.name;
+                var unite = graph.unite;
+                $.each(
+                        graph.points,
                         function (i, line) {
                             var item = {};
-                            typeCaptAlerteMesure = line.typeCaptAlerteMesure.description;
-                            if (line.unite != null) {
-
-                                unite = line.unite;
-                            }
                             item.x = moment(line.date);
                             item.y = parseFloat(line.valeur);
                             $('.description')
                                     .text(
                                             line.mid
                                             + ' > '
-                                            + typeCaptAlerteMesure);
+                                            + graphName);
 
                             chart.yAxis[0]
                                     .update(
                                     {
                                         title: {
-                                            text: typeCaptAlerteMesure
+                                            text: graphName
                                         },
                                         labels: {
 
@@ -374,29 +368,21 @@ var mesures = function () {
                         });
                 chart.series[index].update({
                     data: serieData,
-                    name: typeCaptAlerteMesure,
+                    name: graphName,
                     tooltip: {
                         valueSuffix: unite
                     }
-                })
-            }
-            ;
+                });
+            };
 
             /**
              * SECTION D'INTIALISTAION DU GRAPH
              */
 
                 // initialise le graph avec les valeurs d'un capteur
-            $.getJSON(relayUrl + '/init/graph/points', function (data) {
-                var point = data[0];
-                var unite = ''
-                console.log(point);
-                if (point.unite != null) {
-
-                    unite = point.unite;
-                }
-                loadGraph(unite);
-                updateSerie(0, data);
+            $.getJSON(relayUrl + '/init/graph/points', function (graph) {
+                loadGraph(graph.unite);
+                updateSerie(0, graph);
 
             });
 
@@ -452,14 +438,9 @@ var mesures = function () {
                     function () {
                         var capteurId = $(this).val();
                         $.getJSON(relayUrl + '/capteur/points/'
-                                + capteurId, function (data) {
-                            var point = data[0];
-                            var unite = ''
-                            if (point != null && point.unite != null) {
-                                unite = point.unite;
-                            }
-                            loadGraph(unite);
-                            updateSerie(0, data);
+                                + capteurId, function (graph) {
+                            loadGraph(graph.unite);
+                            updateSerie(0, graph);
 
                         });
                     });

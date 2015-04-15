@@ -2,10 +2,8 @@ package fr.treeptik.model.assembler;
 
 
 import fr.treeptik.model.Enregistreur;
-import fr.treeptik.model.Site;
-import fr.treeptik.shared.mesure.dto.request.CapteurDTO;
-import fr.treeptik.shared.mesure.dto.request.EnregistreurDTO;
-import fr.treeptik.shared.mesure.dto.request.SiteDTO;
+import fr.treeptik.shared.dto.capteur.CapteurDTO;
+import fr.treeptik.shared.dto.capteur.EnregistreurDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
