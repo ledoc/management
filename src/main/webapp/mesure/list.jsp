@@ -84,7 +84,7 @@
                         </h3>
 
                         <div class="ml15 mr15">
-                            <div id="map"></div>
+                            <a href="../carto/carto"><div id="map"></div></a>
                         </div>
                     </div>
                 </nav>
