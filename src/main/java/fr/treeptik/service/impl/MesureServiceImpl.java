@@ -506,9 +506,6 @@ public class MesureServiceImpl implements MesureService {
 
         PointGraphDTO point = new PointGraphDTO();
 		try {
-			//point.setMid(item.getCapteur().getEnregistreur().getMid());
-			//point.setTypeCaptAlerteMesure(item.getCapteur().getTypeCaptAlerteMesure());
-            //point.setUnite(item.getUnite());
 			point.setDate(item.getDate());
 			point.setValeur(item.getValeur());
 		} catch (PersistenceException e) {

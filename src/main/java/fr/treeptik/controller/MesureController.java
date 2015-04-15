@@ -12,6 +12,7 @@ import fr.treeptik.shared.dto.capteur.CapteurDTO;
 import fr.treeptik.shared.dto.capteur.OuvrageDTO;
 import fr.treeptik.shared.dto.capteur.SiteDTO;
 import fr.treeptik.shared.dto.graph.GraphDTO;
+import fr.treeptik.shared.dto.graph.PointGraphDTO;
 import fr.treeptik.util.DateMesureComparator;
 import fr.treeptik.util.DatePointComparator;
 import org.apache.log4j.Logger;
@@ -115,7 +116,7 @@ public class MesureController {
             throw new ControllerException(e.getMessage(), e);
         }
 
-        for(Mesure mesure : project.getMesures()){
+        for (Mesure mesure : mesures) {
             mesureService.convertForDisplay(mesure);
         }
         Collections.sort(mesures, new DateMesureComparator());
@@ -236,9 +237,10 @@ public class MesureController {
             throws ControllerException {
 
         logger.info("--initPointsGraph MesureController");
+        GraphDTO graph = new GraphDTO();
 
         List<Enregistreur> allEnregistreurs = new ArrayList<Enregistreur>();
-        List<Point> points = new ArrayList<Point>();
+        List<PointGraphDTO> points = new ArrayList<PointGraphDTO>();
 
         try {
             Boolean isAdmin = request.isUserInRole("ADMIN");
@@ -260,15 +262,21 @@ public class MesureController {
             capteurs.removeIf(c -> c.getTypeCaptAlerteMesure().getNom()
                     .equals("TEMPERATURE"));
 
-            for (Mesure item : capteurs.get(0).getMesures()) {
-                points.add(mesureService.transformMesureInPoint(item));
+            graph.setMid(enregistreur.getMid());
+            if(!capteurs.get(0).getMesures().isEmpty()){
+                graph.setName(capteurs.get(0).getTypeCaptAlerteMesure().getDescription());
+                graph.setUnite(capteurs.get(0).getMesures().get(0).getUnite());
+                for (Mesure item : capteurs.get(0).getMesures()) {
+                    points.add(mesureService.transformMesureInPoint(item));
+                }
+                Collections.sort(points, new DatePointComparator());
             }
-            Collections.sort(points, new DatePointComparator());
         } catch (ServiceException e) {
             logger.error(e.getMessage());
             throw new ControllerException(e.getMessage(), e);
         }
-        return points;
+        graph.setPoints(points);
+        return graph;
     }
 
     /**
@@ -335,21 +343,25 @@ public class MesureController {
         logger.info("--getCapteurPoints MesureController--");
 
         List<Mesure> mesures = new ArrayList<Mesure>();
-        List<Point> points = new ArrayList<Point>();
-
+        GraphDTO graph = new GraphDTO();
+        List<PointGraphDTO> points = new ArrayList<PointGraphDTO>();
         try {
-
             mesures = mesureService.findByCapteurIdWithFetch(capteurId);
-
-            for (Mesure item : mesures) {
-                points.add(mesureService.transformMesureInPoint(item));
+            if(!mesures.isEmpty()){
+                graph.setMid(mesures.get(0).getCapteur().getEnregistreur().getMid());
+                graph.setName(mesures.get(0).getCapteur().getTypeCaptAlerteMesure().getDescription());
+                graph.setUnite(mesures.get(0).getUnite());
+                for (Mesure item : mesures) {
+                    points.add(mesureService.transformMesureInPoint(item));
+                }
+                Collections.sort(points, new DatePointComparator());
             }
-            Collections.sort(points, new DatePointComparator());
         } catch (ServiceException e) {
             logger.error(e.getMessage());
             throw new ControllerException(e.getMessage(), e);
         }
-        return points;
+        graph.setPoints(points);
+        return graph;
     }
 
     /**
@@ -449,23 +461,30 @@ public class MesureController {
         logger.info("--getEnregistreurPoints MesureController-- "
                 + " dateDebut : " + dateDebut + " -- dateFin : " + dateFin);
 
-        /*
+
+        GraphDTO graph = new GraphDTO();
 		List<Mesure> mesures = new ArrayList<Mesure>();
-		List<Point> points = new ArrayList<Point>();
+		List<PointGraphDTO> points = new ArrayList<PointGraphDTO>();
 
         try {
             mesures = mesureService.findByCapteurIdBetweenDates(capteurId,
                     dateDebut, dateFin);
-
-            for (Mesure item : mesures) {
-                points.add(mesureService.transformMesureInPoint(item));
+            if(!mesures.isEmpty()){
+                graph.setMid(mesures.get(0).getCapteur().getEnregistreur().getMid());
+                graph.setName(mesures.get(0).getCapteur().getTypeCaptAlerteMesure().getDescription());
+                graph.setUnite(mesures.get(0).getUnite());
+                for (Mesure item : mesures) {
+                    points.add(mesureService.transformMesureInPoint(item));
+                }
+                Collections.sort(points, new DatePointComparator());
             }
-            Collections.sort(points, new DatePointComparator());
+
         } catch (ServiceException e) {
             logger.error(e.getMessage());
             throw new ControllerException(e.getMessage(), e);
         }
-        return points;
+        graph.setPoints(points);
+        return graph;
 
     }
 
