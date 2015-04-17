@@ -29,7 +29,7 @@ import fr.treeptik.model.Client;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.service.AdministrateurService;
 import fr.treeptik.service.ClientService;
-import fr.treeptik.service.EtablissementService;
+import fr.treeptik.service.SeanceService;
 import fr.treeptik.spring.ClientValidator;
 
 @Controller
@@ -43,7 +43,7 @@ public class ClientController {
 	@Inject
 	private AdministrateurService administrateurService;
 	@Inject
-	private EtablissementService etablissementService;
+	private SeanceService etablissementService;
 	@Inject
 	private ClientValidator clientValidator;
 

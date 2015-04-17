@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Enregistreur;
-import fr.treeptik.model.Ouvrage;
+import fr.treeptik.model.Repas;
 import fr.treeptik.model.Site;
-import fr.treeptik.model.TypeOuvrage;
+import fr.treeptik.model.Aliment;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
 import fr.treeptik.service.SiteService;
@@ -51,11 +51,11 @@ public class OuvrageController {
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForm(Model model) throws ControllerException {
 		logger.info("--initForm OuvrageController--");
-		List<Ouvrage> ouvragesCombo;
-		List<TypeOuvrage> typesOuvrageCombo;
+		List<Repas> ouvragesCombo;
+		List<Aliment> typesOuvrageCombo;
 		List<Enregistreur> enregistreursCombo;
 		List<Site> sitesCombo;
-		Ouvrage ouvrage = new Ouvrage();
+		Repas ouvrage = new Repas();
 
 		try {
 			sitesCombo = siteService.findAll();
@@ -75,7 +75,7 @@ public class OuvrageController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Ouvrage ouvrage, BindingResult result)
+	public String create(@ModelAttribute Repas ouvrage, BindingResult result)
 			throws ControllerException {
 		logger.info(result.getAllErrors());
 
@@ -102,11 +102,11 @@ public class OuvrageController {
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
 		logger.info("--update OuvrageController-- ouvrageId : " + id);
-		Ouvrage ouvrage = null;
-		List<Ouvrage> ouvragesCombo;
+		Repas ouvrage = null;
+		List<Repas> ouvragesCombo;
 		List<Enregistreur> enregistreursCombo;
 		List<Site> sitesCombo;
-		List<TypeOuvrage> typesOuvrageCombo;
+		List<Aliment> typesOuvrageCombo;
 
 		
 		try {
@@ -153,7 +153,7 @@ public class OuvrageController {
 			throws ControllerException {
 		logger.info("--list OuvrageController--");
 
-		List<Ouvrage> ouvrages = null;
+		List<Repas> ouvrages = null;
 		try {
 			Boolean isAdmin = request.isUserInRole("ADMIN");
 			logger.debug("USER ROLE ADMIN : " + isAdmin);
@@ -174,12 +174,12 @@ public class OuvrageController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/init/type/ouvrage")
-	public @ResponseBody List<TypeOuvrage> initSelectTypeOuvrage()
+	public @ResponseBody List<Aliment> initSelectTypeOuvrage()
 			throws ControllerException {
 
 		logger.info("--initSelectTypeOuvrage OuvrageController");
 
-		List<TypeOuvrage> allTypeOuvrage = new ArrayList<TypeOuvrage>();
+		List<Aliment> allTypeOuvrage = new ArrayList<Aliment>();
 		try {
 			allTypeOuvrage = typeOuvrageService.findAll();
 			logger.debug("liste des types d'ouvrage renvoyée : "

@@ -22,7 +22,7 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.model.Site;
 import fr.treeptik.model.TypeSite;
-import fr.treeptik.service.EtablissementService;
+import fr.treeptik.service.SeanceService;
 import fr.treeptik.service.SiteService;
 
 @Controller
@@ -35,7 +35,7 @@ public class SiteController {
 	@Inject
 	private SiteService siteService;
 	@Inject
-	private EtablissementService etablissementService;
+	private SeanceService etablissementService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForm(Model model) throws ControllerException {

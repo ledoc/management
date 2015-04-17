@@ -15,7 +15,7 @@
 	<appender name="global-log" class="org.apache.log4j.RollingFileAppender">
 		<param name="maxFileSize" value="2000KB" />
 		<param name="MaxBackupIndex" value="10" />
-		<param name="File" value="${catalina.home}/logs/solices-msg.log" />
+		<param name="File" value="${catalina.home}/logs/management-msg.log" />
 		<param name="threshold" value="info" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
@@ -37,7 +37,7 @@
 	<appender name="errors-log" class="org.apache.log4j.RollingFileAppender">
 		<param name="maxFileSize" value="2000KB" />
 		<param name="MaxBackupIndex" value="10" />
-		<param name="File" value="${catalina.home}/logs/solices-errors.log" />
+		<param name="File" value="${catalina.home}/logs/management-errors.log" />
 		<param name="threshold" value="error" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
@@ -46,13 +46,9 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="fr.treeptik.util.LoginAuditAspect" additivity="false">
-		<level value="info" />
-		<appender-ref ref="audit-log"/>
-	</logger>
 	
 	<logger name="fr.treeptik">
-		<level value="${log.level.solices}" />
+		<level value="${log.level.management}" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
@@ -65,7 +61,7 @@
 	</logger>
 
 	<logger name="org.hibernate.SQL">
-		<level value="${log.level.solices}" />
+		<level value="${log.level.management}" />
 	</logger>
 
 

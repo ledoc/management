@@ -21,22 +21,18 @@ import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Client;
 import fr.treeptik.model.Etablissement;
 import fr.treeptik.service.ClientService;
-import fr.treeptik.service.EtablissementService;
+import fr.treeptik.service.SeanceService;
 import fr.treeptik.spring.ClientCustomEditor;
 
 @Controller
 @RequestMapping("/etablissement")
-public class EtablissementController {
+public class AlimentController {
 
 	private Logger logger = Logger.getLogger(EtablissementController.class);
 
 	@Inject
-	private EtablissementService etablissementService;
-	@Inject
-	private ClientService clientService;
+	private SeanceService etablissementService;
 
-	@Inject
-	private ClientCustomEditor clientCustomEditor;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {

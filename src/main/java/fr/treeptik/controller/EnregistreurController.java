@@ -20,7 +20,7 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Capteur;
 import fr.treeptik.model.Enregistreur;
-import fr.treeptik.model.Ouvrage;
+import fr.treeptik.model.Repas;
 import fr.treeptik.model.TypeEnregistreur;
 import fr.treeptik.service.EnregistreurService;
 import fr.treeptik.service.OuvrageService;
@@ -45,7 +45,7 @@ public class EnregistreurController {
 				+ ouvrageId);
 
 		Enregistreur enregistreur = new Enregistreur();
-		Ouvrage ouvrage = new Ouvrage();
+		Repas ouvrage = new Repas();
 
 		try {
 			ouvrage = ouvrageService.findById(ouvrageId);
@@ -79,7 +79,7 @@ public class EnregistreurController {
 		logger.debug(result.getAllErrors());
 		logger.info("--create EnregistreurController-- enregistreur : "
 				+ enregistreur);
-		Ouvrage ouvrage = new Ouvrage();
+		Repas ouvrage = new Repas();
 		try {
 
 			ouvrage = ouvrageService
