@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -13,8 +11,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.View;
@@ -30,8 +26,6 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import fr.treeptik.spring.SessionHandlerInterceptor;
-
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "fr.treeptik.controller" })
@@ -43,9 +37,6 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 
 	// 10 Mo max file size
 	private static final int MAX_UPLOAD_SIZE = 300 * 1000 * 1000;
-
-	@Inject
-	private SessionHandlerInterceptor sessionHandlerInterceptor;
 
 	@Bean
 	public ViewResolver contentNegotiatingViewResolver() {
@@ -102,9 +93,6 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 		logger.debug("Creating requestMappingHandlerMapping");
 		RequestMappingHandlerMapping requestMappingHandlerMapping = new RequestMappingHandlerMapping();
 		requestMappingHandlerMapping.setUseSuffixPatternMatch(true);
-		Object[] interceptors = { localeChangeInterceptor(),
-				sessionHandlerInterceptor };
-		requestMappingHandlerMapping.setInterceptors(interceptors);
 		return requestMappingHandlerMapping;
 	}
 
@@ -113,6 +101,5 @@ public class DispatcherServletConfiguration extends WebMvcConfigurerAdapter {
 			DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
-
 
 }

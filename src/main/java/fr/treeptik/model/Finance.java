@@ -12,18 +12,18 @@ import javax.persistence.TemporalType;
 
 @SuppressWarnings("serial")
 @Entity
-public class ActionFinance implements Serializable {
+public class Finance implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private String typeDepense;
+	private String categorie;
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	private Double montant;
 	private String commentaire;
 
-	public ActionFinance() {
+	public Finance() {
 		super();
 	}
 
@@ -35,12 +35,12 @@ public class ActionFinance implements Serializable {
 		this.id = id;
 	}
 
-	public String getTypeDepense() {
-		return typeDepense;
+	public String getCategorie() {
+		return categorie;
 	}
 
-	public void setTypeDepense(String typeDepense) {
-		this.typeDepense = typeDepense;
+	public void setCategorie(String categorie) {
+		this.categorie = categorie;
 	}
 
 	public Date getDate() {
@@ -65,6 +65,13 @@ public class ActionFinance implements Serializable {
 
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
+	}
+
+	@Override
+	public String toString() {
+		return "Finance [id=" + id + ", categorie=" + categorie + ", date="
+				+ date + ", montant=" + montant + ", commentaire="
+				+ commentaire + "]";
 	}
 
 }

@@ -2,11 +2,13 @@ package fr.treeptik.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -18,7 +20,8 @@ public class Seance implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private Integer numeroDeSequence;
-	private String typeExercice;
+	@OneToMany
+	private Set<Exercice> exercices;
 	private Integer nombreSerie;
 	private Integer nombreRepetition;
 	private String commentaire;
@@ -45,12 +48,12 @@ public class Seance implements Serializable {
 		this.numeroDeSequence = numeroDeSequence;
 	}
 
-	public String getTypeExercice() {
-		return typeExercice;
+	public Set<Exercice> getExercices() {
+		return exercices;
 	}
 
-	public void setTypeExercice(String typeExercice) {
-		this.typeExercice = typeExercice;
+	public void setExercices(Set<Exercice> exercices) {
+		this.exercices = exercices;
 	}
 
 	public Integer getNombreSerie() {

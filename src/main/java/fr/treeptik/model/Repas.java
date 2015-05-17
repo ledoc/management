@@ -2,14 +2,16 @@ package fr.treeptik.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 
 @SuppressWarnings("serial")
 @Entity
@@ -21,8 +23,11 @@ public class Repas implements Serializable {
 	private TypeRepas typeRepas;
 	@Temporal(TemporalType.DATE)
 	private Date date;
-	private Map<Aliment, Integer> quantiteParAliment;
-
+	private Double calories;
+	@OneToMany
+	private List<Plat> plats;
+	
+	
 	public Repas() {
 		super();
 	}
@@ -51,12 +56,21 @@ public class Repas implements Serializable {
 		this.date = date;
 	}
 
-	public Map<Aliment, Integer> getQuantiteParAliment() {
-		return quantiteParAliment;
+	public Double getCalories() {
+		return calories;
 	}
 
-	public void setQuantiteParAliment(Map<Aliment, Integer> quantiteParAliment) {
-		this.quantiteParAliment = quantiteParAliment;
+	public void setCalories(Double calories) {
+		this.calories = calories;
 	}
+
+	public List<Plat> getPlats() {
+		return plats;
+	}
+
+	public void setPlats(List<Plat> plats) {
+		this.plats = plats;
+	}
+
 
 }

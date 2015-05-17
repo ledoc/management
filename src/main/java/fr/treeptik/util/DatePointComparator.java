@@ -1,9 +1,8 @@
 package fr.treeptik.util;
 
-import fr.treeptik.shared.dto.graph.PointGraphDTO;
-
 import java.util.Comparator;
 
+import fr.treeptik.model.PointGraphDTO;
 
 public class DatePointComparator implements Comparator<PointGraphDTO> {
 

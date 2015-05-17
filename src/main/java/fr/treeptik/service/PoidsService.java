@@ -9,9 +9,9 @@ public interface PoidsService {
 
 	Poids findById(Integer id) throws ServiceException;
 
-	Poids create(Poids aliement) throws ServiceException;
+	Poids create(Poids poids) throws ServiceException;
 
-	Poids update(Poids aliement) throws ServiceException;
+	Poids update(Poids poids) throws ServiceException;
 
 	List<Poids> findAll() throws ServiceException;
 

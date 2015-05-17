@@ -9,9 +9,9 @@ public interface AlimentService {
 
 	Aliment findById(Integer id) throws ServiceException;
 
-	Aliment create(Aliment aliement) throws ServiceException;
+	Aliment create(Aliment aliment) throws ServiceException;
 
-	Aliment update(Aliment aliement) throws ServiceException;
+	Aliment update(Aliment aliment) throws ServiceException;
 
 	List<Aliment> findAll() throws ServiceException;
 

@@ -99,7 +99,6 @@ public class WebConfigurer implements ServletContextListener {
 		FilterRegistration.Dynamic springSecurityFilter = servletContext
 				.addFilter("springSecurityFilterChain",
 						new DelegatingFilterProxy());
-		springSecurityFilter.addMappingForUrlPatterns(disps, false, "/*");
 		springSecurityFilter.setAsyncSupported(true);
 	}
 

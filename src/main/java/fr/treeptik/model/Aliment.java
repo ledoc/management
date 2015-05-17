@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Aliment {
@@ -13,6 +14,8 @@ public class Aliment {
 	private Long id;
 	private String nom;
 	private Integer calories;
+	@ManyToOne
+	private Repas repas;
 
 	public Long getId() {
 		return id;
