@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Poids;
+import fr.treeptik.model.PointGraphDTO;
 
 public interface PoidsService {
 
@@ -16,5 +17,7 @@ public interface PoidsService {
 	List<Poids> findAll() throws ServiceException;
 
 	void remove(Integer id) throws ServiceException;
+
+	PointGraphDTO transformPoidsInPoint(Poids poids) throws ServiceException;
 
 }

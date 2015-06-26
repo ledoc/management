@@ -18,6 +18,7 @@ public class Finance implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String categorie;
+	private TypePayment typePayment;
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	private Double montant;
@@ -41,6 +42,16 @@ public class Finance implements Serializable {
 
 	public void setCategorie(String categorie) {
 		this.categorie = categorie;
+	}
+
+	
+	
+	public TypePayment getTypePayment() {
+		return typePayment;
+	}
+
+	public void setTypePayment(TypePayment typePayment) {
+		this.typePayment = typePayment;
 	}
 
 	public Date getDate() {

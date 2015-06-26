@@ -16,88 +16,99 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Aliment;
+import fr.treeptik.model.Plat;
 import fr.treeptik.service.AlimentService;
+import fr.treeptik.service.PlatService;
 
 @Controller
-@RequestMapping("/aliment")
-public class AlimentController {
+@RequestMapping("/plat")
+public class PlatController {
 
-	private Logger logger = Logger.getLogger(AlimentController.class);
+	private Logger logger = Logger.getLogger(PlatController.class);
 
+	@Inject
+	private PlatService platService;
+	
 	@Inject
 	private AlimentService alimentService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
-		logger.info("--create formulaire AlimentController--");
+		logger.info("--create formulaire PlatController--");
 
-		model.addAttribute("aliment", new Aliment());
-		return "/aliment/create";
+		List<Aliment> alimentCombo = null;
+		try {
+			alimentCombo = alimentService.findAll();
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("alimentCombo", alimentCombo);
+		model.addAttribute("plat", new Plat());
+		return "/plat/create";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Aliment aliment)
+	public String create(@ModelAttribute Plat plat)
 			throws ControllerException {
-		logger.info("--create AlimentController-- aliment : " + aliment);
+		logger.info("--create PlatController-- plat : " + plat);
 
 		try {
-			alimentService.update(aliment);
+			platService.update(plat);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		return "redirect:/aliment/list";
+		return "redirect:/plat/list";
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--update AlimentController-- alimentId : " + id);
+		logger.info("--update PlatController-- platId : " + id);
 
-		Aliment aliment = null;
+		Plat plat = null;
 
 		try {
-			aliment = alimentService.findById(id);
+			plat = platService.findById(id);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("aliment", aliment);
-		return "/aliment/create";
+		model.addAttribute("plat", plat);
+		return "/plat/create";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--delete AlimentController-- alimentId : " + id);
+		logger.info("--delete PlatController-- platId : " + id);
 
 		try {
-			alimentService.remove(id);
+			platService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/aliment/list";
+		return "redirect:/plat/list";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
-		logger.info("--list AlimentController--");
+		logger.info("--list PlatController--");
 
-		List<Aliment> aliments = null;
+		List<Plat> plats = null;
 		try {
-			aliments = alimentService.findAll();
+			plats = platService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("aliments", aliments);
-		return "/aliment/list";
+		model.addAttribute("plats", plats);
+		return "/plat/list";
 	}
-	
-	
-	
 }

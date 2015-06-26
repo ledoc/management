@@ -14,14 +14,8 @@
 		<spring.version>4.1.0.RELEASE</spring.version>
 		<spring.security.version>3.2.5.RELEASE</spring.security.version>
 		<maven.compiler.plugin>3.1</maven.compiler.plugin>
-
 		<!-- DataSource configuration -->
-
 		<datasource.class.name>com.mysql.jdbc.jdbc2.optional.MysqlDataSource</datasource.class.name>
-		<deveryware.url>https://xmlrpc.deveryware.net:11110/</deveryware.url>
-		<deveryware.username>test-ah2d-sp</deveryware.username>
-		<!-- & remplacée par &amp; (caractère spécial) -->
-		<deveryware.password>sm_vmtwny[p55x4=9[&amp;53&amp;h8</deveryware.password>
 
 	</properties>
 
@@ -245,11 +239,9 @@
 				<mail.socketFactoryPort>587</mail.socketFactoryPort>
 				<mail.smtpPort>587</mail.smtpPort>
 
-				<!-- String for mail -->
-				<mail.acquittement.url.prefix>http://localhost:8080/management/alerte/acquittement</mail.acquittement.url.prefix>
 
 				<!-- Database -->
-				<database.url>jdbc:mysql://localhost:3306/management?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false</database.url>
+				<database.url>jdbc:mysql://localhost:3306/gestion?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false</database.url>
 				<database.user>root</database.user>
 				<database.password>root</database.password>
 
@@ -259,25 +251,6 @@
 				<log.level.hibernate>error</log.level.hibernate>
 				<upload.path>/uploadmanagement</upload.path>
 
-				<!-- clés des paramètres de trames -->
-				<analogic.temp>101</analogic.temp>
-				<analogic.cond>102</analogic.cond>
-				<analogic.hauteur>103</analogic.hauteur>
-				<num.temp>104</num.temp>
-				<num.cond.micro.siemens.cm>105</num.cond.micro.siemens.cm>
-				<num.cond.milli.siemens.cm>106</num.cond.milli.siemens.cm>
-				<num.hauteur.mm>107</num.hauteur.mm>
-				<num.hauteur.cm>108</num.hauteur.cm>
-				<num.hauteur.m>109</num.hauteur.m>
-				<pluvio.impuls.periode>110</pluvio.impuls.periode>
-				<vent.m.s>111</vent.m.s>
-				<debit.l.min>112</debit.l.min>
-				<debit.m3.s>113</debit.m3.s>
-				<impuls.period.q.10>114</impuls.period.q.10>
-				<impuls.period.q.100>115</impuls.period.q.100>
-				<impuls.period.q.1000>116</impuls.period.q.1000>
-				<pression.air.hectopascal>117</pression.air.hectopascal>
-				<pression.air.pascal>118</pression.air.pascal>
 
 			</properties>
 		</profile>

@@ -1,5 +1,7 @@
 package fr.treeptik.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,89 +17,92 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Aliment;
-import fr.treeptik.service.AlimentService;
+import fr.treeptik.model.Repas;
+import fr.treeptik.model.TypeRepas;
+import fr.treeptik.service.RepasService;
 
 @Controller
-@RequestMapping("/aliment")
-public class AlimentController {
+@RequestMapping("/repas")
+public class RepasController {
 
-	private Logger logger = Logger.getLogger(AlimentController.class);
+	private Logger logger = Logger.getLogger(RepasController.class);
 
 	@Inject
-	private AlimentService alimentService;
+	private RepasService repasService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
-		logger.info("--create formulaire AlimentController--");
+		logger.info("--create formulaire RepasController--");
 
-		model.addAttribute("aliment", new Aliment());
-		return "/aliment/create";
+		List<TypeRepas> typesRepasCombo = new ArrayList<TypeRepas>(
+				Arrays.asList(TypeRepas.values()));
+		
+		
+		model.addAttribute("typesRepasCombo", typesRepasCombo);
+		model.addAttribute("repas", new Repas());
+		return "/repas/create";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Aliment aliment)
+	public String create(@ModelAttribute Repas repas)
 			throws ControllerException {
-		logger.info("--create AlimentController-- aliment : " + aliment);
+		logger.info("--create RepasController-- repas : " + repas);
 
 		try {
-			alimentService.update(aliment);
+			repasService.update(repas);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		return "redirect:/aliment/list";
+		return "redirect:/repas/list";
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--update AlimentController-- alimentId : " + id);
+		logger.info("--update RepasController-- repasId : " + id);
 
-		Aliment aliment = null;
+		Repas repas = null;
 
 		try {
-			aliment = alimentService.findById(id);
+			repas = repasService.findById(id);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("aliment", aliment);
-		return "/aliment/create";
+		model.addAttribute("repas", repas);
+		return "/repas/create";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--delete AlimentController-- alimentId : " + id);
+		logger.info("--delete RepasController-- repasId : " + id);
 
 		try {
-			alimentService.remove(id);
+			repasService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/aliment/list";
+		return "redirect:/repas/list";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
-		logger.info("--list AlimentController--");
+		logger.info("--list RepasController--");
 
-		List<Aliment> aliments = null;
+		List<Repas> listRepas = null;
 		try {
-			aliments = alimentService.findAll();
+			listRepas = repasService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("aliments", aliments);
-		return "/aliment/list";
+		model.addAttribute("listRepas", listRepas);
+		return "/repas/list";
 	}
-	
-	
-	
 }

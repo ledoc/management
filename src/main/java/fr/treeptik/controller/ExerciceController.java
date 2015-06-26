@@ -15,89 +15,87 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Aliment;
-import fr.treeptik.service.AlimentService;
+import fr.treeptik.model.Exercice;
+import fr.treeptik.service.ExerciceService;
 
 @Controller
-@RequestMapping("/aliment")
-public class AlimentController {
+@RequestMapping("/exercice")
+public class ExerciceController {
 
-	private Logger logger = Logger.getLogger(AlimentController.class);
+	private Logger logger = Logger.getLogger(ExerciceController.class);
 
 	@Inject
-	private AlimentService alimentService;
+	private ExerciceService exerciceService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
-		logger.info("--create formulaire AlimentController--");
+		logger.info("--create formulaire ExerciceController--");
 
-		model.addAttribute("aliment", new Aliment());
-		return "/aliment/create";
+		
+		model.addAttribute("exercice", new Exercice());
+		return "/exercice/create";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Aliment aliment)
+	public String create(@ModelAttribute Exercice exercice)
 			throws ControllerException {
-		logger.info("--create AlimentController-- aliment : " + aliment);
+		logger.info("--create ExerciceController-- exercice : " + exercice);
 
 		try {
-			alimentService.update(aliment);
+			exerciceService.update(exercice);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		return "redirect:/aliment/list";
+		return "redirect:/exercice/list";
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--update AlimentController-- alimentId : " + id);
+		logger.info("--update ExerciceController-- exerciceId : " + id);
 
-		Aliment aliment = null;
+		Exercice exercice = null;
 
 		try {
-			aliment = alimentService.findById(id);
+			exercice = exerciceService.findById(id);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("aliment", aliment);
-		return "/aliment/create";
+		model.addAttribute("exercice", exercice);
+		return "/exercice/create";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--delete AlimentController-- alimentId : " + id);
+		logger.info("--delete ExerciceController-- exerciceId : " + id);
 
 		try {
-			alimentService.remove(id);
+			exerciceService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/aliment/list";
+		return "redirect:/exercice/list";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
-		logger.info("--list AlimentController--");
+		logger.info("--list ExerciceController--");
 
-		List<Aliment> aliments = null;
+		List<Exercice> listExercice = null;
 		try {
-			aliments = alimentService.findAll();
+			listExercice = exerciceService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("aliments", aliments);
-		return "/aliment/list";
+		model.addAttribute("listExercice", listExercice);
+		return "/exercice/list";
 	}
-	
-	
-	
 }

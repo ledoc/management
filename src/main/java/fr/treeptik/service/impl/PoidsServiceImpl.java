@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.PoidsDAO;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Finance;
 import fr.treeptik.model.Poids;
+import fr.treeptik.model.PointGraphDTO;
 import fr.treeptik.service.PoidsService;
 
 @Service
@@ -74,5 +76,20 @@ public class PoidsServiceImpl implements PoidsService {
 		}
 		return listPoids;
 	}
+
+	@Override
+	public PointGraphDTO transformPoidsInPoint(Poids item) throws ServiceException {
+
+			
+	        PointGraphDTO point = new PointGraphDTO();
+			try {
+				point.setDate(item.getDate());
+				point.setValeur(item.getValeur());
+			} catch (PersistenceException e) {
+				logger.error("Error MesureService : " + e);
+				throw new ServiceException(e.getLocalizedMessage(), e);
+			}
+			return point;
+		}
 
 }
