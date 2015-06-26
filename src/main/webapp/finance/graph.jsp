@@ -23,51 +23,6 @@
 
 		<!-- content wrapper -->
 		<div class="content-wrap bg-default clearfix row">
-			<div class="sidePanelForGraph col-lg-2 col-md-3 col-xs-12 tools">
-				<div class="bg-white shadow pb15">
-					<div class="tools-inner">
-						<nav role="navigation">
-							<div class="no-padding">
-								<h3 class="h5 p15 mt0 mb0">
-									<b>Sélection</b>
-								</h3>
-
-
-								<div class="form-group ml15 mr15">
-									<label>Dates</label> <input id="dateDebut" type="date"
-										class="form-control" />
-								</div>
-
-								<div class="form-group ml15 mr15">
-									<input id="dateFin" type="date" class="form-control" />
-								</div>
-
-
-								<div class="form-group ml15 mr15">
-									<select data-placeholder="Options d'affichage"
-										class="chosen form-control display-options"
-										id="js-change-water-display">
-										<option value=""></option>
-										<option value="spline">Courbe</option>
-										<option value="column">Histogramme</option>
-									</select>
-								</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-								<div>&nbsp</div>
-
-
-							</div>
-						</nav>
-					</div>
-				</div>
-			</div>
 			<div class="mainPanel col-lg-10 col-md-9 col-xs-12">
 
 
@@ -96,10 +51,15 @@
 		<script type="text/javascript">
 			var resourcesUrl = $('.resourcesUrl').attr('href');
 			var relayUrl = $('.relayUrl').attr('href');
-
 			var $chart = $('#charts');
-			var chartHeight = $('.tools-inner').innerHeight() / 1.5;
+			Highcharts.setOptions({
+				global : {
+					timezoneOffset : -60
+				}
+			});
 
+			loadGraph();
+			
 			$(document).ready(function() {
 
 				$('#ongletQualitatif').click(function() {
@@ -111,26 +71,21 @@
 
 				$.getJSON(relayUrl + '/init/graph/points', function(graph) {
 
-					loadGraph();
 					updateSerie(0, graph);
 				});
 
 			});
 
 			function loadGraph() {
-				Highcharts.setOptions({
-					global : {
-						timezoneOffset : -60
-					}
-				});
-
+				var $chart = $('#charts');
 				$chart
 						.highcharts(
 								'StockChart',
 								{
 									chart : {
 										zoomType : 'xy',
-										height : chartHeight
+										height : $('.tools-inner')
+										.innerHeight()
 									},
 									title : {
 										text : ''
@@ -153,37 +108,24 @@
 									} ],
 									yAxis : [ { // Primary yAxis
 										labels : {
+											text : 'Montant',
+											format : '{value} ' + '€',
 											style : {
 												color : '#94ECD9'
 											}
 										},
-										top : '100%',
 										height : '100%',
 										title : {
+											text : 'suivi des Finances',
 											style : {
 												color : '#94ECD9'
 											}
 										},
-										min : 0,
 										opposite : false
 
 									} ],
 									tooltip : {
-										formatter : function() {
-
-											var s = '<b>'
-													+ Highcharts
-															.dateFormat(
-																	' %d/%m/%Y %H:%M:%S',
-																	this.x)
-													+ '</b>';
-
-											$.each(this.points, function() {
-												s += '<br/>' + this.y;
-											});
-
-											return s
-										},
+										shared : true,
 										backgroundColor : {
 											linearGradient : {
 												x1 : 0,
@@ -213,6 +155,10 @@
 									series : [
 
 									{
+										tooltip : {
+											valueSuffix : ' ' + '€',
+											xDateFormat : ' %d/%m/%Y'
+										},
 										type : 'line',
 										data : [],
 										yAxis : 0,
@@ -225,27 +171,14 @@
 			// get data
 			function updateSerie(index, graph) {
 				var serieData = [];
-				var graphName = graph.name;
 				$.each(graph, function(i, line) {
 					var item = {};
-					item.x = moment(line.date);
+					item.x = moment(line.date).unix() * 1000,
 					item.y = parseFloat(line.valeur);
-
-					chart.yAxis[0].update({
-						title : {
-							text : graphName
-						},
-						labels : {
-
-							format : '{value} '
-						}
-
-					}, true);
 					serieData.push(item);
 				});
 				chart.series[index].update({
 					data : serieData,
-					name : graphName,
 				});
 			};
 
