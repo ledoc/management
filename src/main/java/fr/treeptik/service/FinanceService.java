@@ -2,10 +2,11 @@ package fr.treeptik.service;
 
 import java.util.List;
 
+import fr.treeptik.dto.PointCamenbertDTO;
+import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Bilan;
 import fr.treeptik.model.Finance;
-import fr.treeptik.model.PointGraphDTO;
 
 public interface FinanceService {
 
@@ -26,16 +27,25 @@ public interface FinanceService {
 	List<String> listAllCategories() throws ServiceException;
 
 	List<Finance> listAllByCategorie(String categorie) throws ServiceException;
-
+	
 	Double sumByCategorie(String categorie) throws ServiceException;
 
 	List<Bilan> listAllBilans() throws ServiceException;
 
 	PointGraphDTO transformFinanceInPoint(Finance item)
 			throws ServiceException;
-
+	
+	PointCamenbertDTO transformBilanInCamenbertPoint(Bilan item)
+			throws ServiceException;
+	
+	PointGraphDTO transformBilanInGraphPoint(Bilan item)
+			throws ServiceException;
+	
+	
 	Double countBeforeMonthAverage() throws ServiceException;
 
 	Double countBeforeMonthSum() throws ServiceException;
 
+	Double selectLastTotal() throws ServiceException;
+	
 }

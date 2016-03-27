@@ -16,16 +16,16 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:url var="urlResources" value="/resources" />
 
 <!-- Seulement une visualisation pour les clients -->
-	<c:if test="${empty aliment.id}">
-		<c:set var="sentenceCreateUpdate" value="créer" />
-		<c:set var="labelCreateUpdate" value="Créer" />
-		<c:set var="textCreateUpdate" value="Création" />
-	</c:if>
-	<c:if test="${not empty aliment.id}">
-		<c:set var="sentenceCreateUpdate" value="mettre à jour" />
-		<c:set var="labelCreateUpdate" value="Mettre à jour" />
-		<c:set var="textCreateUpdate" value="Mise à jour" />
-	</c:if>
+<c:if test="${empty aliment.id}">
+	<c:set var="sentenceCreateUpdate" value="créer" />
+	<c:set var="labelCreateUpdate" value="Créer" />
+	<c:set var="textCreateUpdate" value="Création" />
+</c:if>
+<c:if test="${not empty aliment.id}">
+	<c:set var="sentenceCreateUpdate" value="mettre à jour" />
+	<c:set var="labelCreateUpdate" value="Mettre à jour" />
+	<c:set var="textCreateUpdate" value="Mise à jour" />
+</c:if>
 
 <section class="layout">
 	<!-- /sidebar -->
@@ -68,10 +68,38 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis" />
 								</div>
+								<div class="form-group">
+									<label for="proteine">Protéines</label>
+									<form:input type="text" class="form-control" id="proteine"
+										path="proteine" placeholder="" data-parsley-trigger="change" />
+								</div>
+								<div class="form-group">
+									<label for="glucide">Glucides</label>
+									<form:input type="text" class="form-control" id="glucide"
+										path="glucide" placeholder=""
+										data-parsley-trigger="change"
+										 />
+								</div>
+								<div class="form-group">
+									<label for="lipide">Lipides</label>
+									<form:input type="text" class="form-control" id="lipide"
+										path="lipide" placeholder=""
+										data-parsley-trigger="change"
+										/>
+								</div>
+								<div class="form-group">
+									<label for="bcaa">BCAA</label>
+									<form:input type="text" class="form-control" id="bcaa"
+										path="bcaa" placeholder=""
+										data-parsley-trigger="change"
+										/>
+								</div>
+								
+
 								<div class="pull-right">
 									<a href="<c:url  value="/aliment/list" />"
 										class="btn btn-default btn-outline">Retour</a>
-										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
 								</div>
 							</div>
 						</form:form>

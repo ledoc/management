@@ -21,11 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Finance;
 import fr.treeptik.model.Poids;
-import fr.treeptik.model.PointGraphDTO;
 import fr.treeptik.service.PoidsService;
 import fr.treeptik.util.DatePointComparator;
 

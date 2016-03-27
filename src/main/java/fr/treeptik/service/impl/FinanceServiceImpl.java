@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.FinanceDAO;
+import fr.treeptik.dto.PointCamenbertDTO;
+import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Bilan;
 import fr.treeptik.model.Finance;
-import fr.treeptik.model.PointGraphDTO;
 import fr.treeptik.service.FinanceService;
 import fr.treeptik.util.Utils;
 
@@ -37,29 +38,34 @@ public class FinanceServiceImpl implements FinanceService {
 	@Override
 	public List<String> listAllCategories() throws ServiceException {
 		return financeDAO.listAllCategories();
-		
+
 	}
+
 	@Override
-	public List<Finance> listAllByCategorie(String categorie) throws ServiceException {
+	public List<Finance> listAllByCategorie(String categorie)
+			throws ServiceException {
 		return financeDAO.listAllByCategorie(categorie);
 	}
-	
+
 	@Override
 	public List<Bilan> listAllBilans() throws ServiceException {
 		List<Bilan> listBilans = new ArrayList<>();
 		List<String> listOfCategories = listAllCategories();
 		for (String categorieTemp : listOfCategories) {
-			listBilans.add(new Bilan(categorieTemp, sumByCategorie(categorieTemp)));
+			Double sumByCategorie = sumByCategorie(categorieTemp);
+			if (sumByCategorie != null) {
+				listBilans.add(new Bilan(categorieTemp, sumByCategorie));
+			}
 		}
-		
+
 		return listBilans;
 	}
-	
+
 	@Override
 	public Double sumByCategorie(String categorie) throws ServiceException {
 		return financeDAO.sumByCategorie(categorie);
 	}
-	
+
 	@Override
 	public Double countBeforeMonthSum() throws ServiceException {
 		Double sum = 0.0D;
@@ -78,10 +84,10 @@ public class FinanceServiceImpl implements FinanceService {
 		findBetweenDates.forEach(f -> System.out.println(f.getMontant()));
 		sum = findBetweenDates.stream().mapToDouble(f -> f.getMontant()).sum();
 		sum = Utils.round(sum, 2);
-		
+
 		return sum;
 	}
-	
+
 	@Override
 	public Double countMonthSum() throws ServiceException {
 		Double sum = 0.0D;
@@ -91,12 +97,12 @@ public class FinanceServiceImpl implements FinanceService {
 		calendar.setTime(now);
 		calendar.add(Calendar.MONTH, -1);
 		Date dateDebut = calendar.getTime();
-		
+
 		List<Finance> findBetweenDates = financeDAO.findBetweenDates(dateDebut,
 				now);
 		findBetweenDates.forEach(f -> System.out.println(f.getMontant()));
 		sum = findBetweenDates.stream().mapToDouble(f -> f.getMontant()).sum();
-		
+
 		sum = Utils.round(sum, 2);
 		return sum;
 	}
@@ -111,14 +117,15 @@ public class FinanceServiceImpl implements FinanceService {
 		Date dateFin = calendar.getTime();
 		calendar.add(Calendar.MONTH, -1);
 		Date dateDebut = calendar.getTime();
-		long days = TimeUnit.DAYS.convert((dateFin.getTime() - dateDebut.getTime()),
+		long days = TimeUnit.DAYS.convert(
+				(dateFin.getTime() - dateDebut.getTime()),
 				TimeUnit.MILLISECONDS);
 		Double avg = countSum / days;
-		
+
 		avg = Utils.round(avg, 2);
 		return avg;
 	}
-	
+
 	@Override
 	public Double countMonthAverage() throws ServiceException {
 		Double countMonthSum = countMonthSum();
@@ -127,8 +134,8 @@ public class FinanceServiceImpl implements FinanceService {
 		calendar.setTime(now);
 		calendar.add(Calendar.MONTH, -1);
 		Date dateDebut = calendar.getTime();
-		long days = TimeUnit.DAYS.convert((now.getTime() - dateDebut.getTime()),
-				TimeUnit.MILLISECONDS);
+		long days = TimeUnit.DAYS.convert(
+				(now.getTime() - dateDebut.getTime()), TimeUnit.MILLISECONDS);
 		Double avg = countMonthSum / days;
 		avg = Utils.round(avg, 2);
 		return avg;
@@ -183,18 +190,57 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 
 	@Override
-	public PointGraphDTO transformFinanceInPoint(Finance item) throws ServiceException {
+	public PointGraphDTO transformFinanceInPoint(Finance item)
+			throws ServiceException {
 
-		
-        PointGraphDTO point = new PointGraphDTO();
+		PointGraphDTO point = new PointGraphDTO();
 		try {
 			point.setDate(item.getDate());
-			point.setValeur(item.getMontant());
+			point.setValeur(item.getTotal());
 		} catch (PersistenceException e) {
 			logger.error("Error MesureService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
 		return point;
 	}
-	
+
+	@Override
+	public PointCamenbertDTO transformBilanInCamenbertPoint(Bilan item)
+			throws ServiceException {
+		if (item.getSomme() != null) {
+
+			PointCamenbertDTO point = new PointCamenbertDTO();
+			try {
+				point.setCategorie(item.getCategorie());
+				point.setValeur(Math.abs(item.getSomme()));
+			} catch (PersistenceException e) {
+				logger.error("Error MesureService : " + e);
+				throw new ServiceException(e.getLocalizedMessage(), e);
+			}
+			return point;
+		}
+		return null;
+	}
+
+	@Override
+	public PointGraphDTO transformBilanInGraphPoint(Bilan item)
+			throws ServiceException {
+
+		PointGraphDTO point = new PointGraphDTO();
+		try {
+			point.setCategorie(item.getCategorie());
+			point.setValeur(item.getSomme());
+		} catch (PersistenceException e) {
+			logger.error("Error MesureService : " + e);
+			throw new ServiceException(e.getLocalizedMessage(), e);
+		}
+		return point;
+	}
+
+	@Override
+	public Double selectLastTotal() throws ServiceException {
+		logger.info("--selectLastTotal FinanceService --");
+		return financeDAO.selectLastTotal();
+	}
+
 }

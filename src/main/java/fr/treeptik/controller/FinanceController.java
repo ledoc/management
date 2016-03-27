@@ -23,11 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fr.treeptik.dto.PointCamenbertDTO;
+import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Bilan;
 import fr.treeptik.model.Finance;
-import fr.treeptik.model.PointGraphDTO;
 import fr.treeptik.model.TypePayment;
 import fr.treeptik.service.FinanceService;
 import fr.treeptik.util.DatePointComparator;
@@ -66,7 +67,9 @@ public class FinanceController {
 		logger.info("--create FinanceController-- finance : " + finance);
 
 		try {
-			System.out.println(finance.getDate());
+			Double lastTotal = financeService.selectLastTotal();
+			Double newTotal = lastTotal + finance.getMontant();
+			finance.setTotal(newTotal);
 			financeService.update(finance);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
@@ -175,17 +178,52 @@ public class FinanceController {
 	 * @return
 	 * @throws ControllerException
 	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/init/camenbert/points")
+	public @ResponseBody List<PointCamenbertDTO> initPointsCamenbert(
+			HttpServletRequest request) throws ControllerException {
+
+		logger.info("--initPointsCamenbert MesureController");
+
+		List<Bilan> bilans = new ArrayList<>();
+		List<PointCamenbertDTO> points = new ArrayList<>();
+
+		try {
+			
+
+
+				bilans = financeService.listAllBilans();
+				for (Bilan bilan : bilans) {
+					points.add(financeService.transformBilanInCamenbertPoint(bilan));
+				}	
+			
+			System.out.println(points);
+				
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return points;
+	}
+
+	
+	/**
+	 *
+	 * @param request
+	 * @return
+	 * @throws ControllerException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/init/graph/points")
 	public @ResponseBody List<PointGraphDTO> initPointsGraph(
 			HttpServletRequest request) throws ControllerException {
 
 		logger.info("--initPointsGraph MesureController");
 
-		List<Finance> allFinances = new ArrayList<>();
 		List<PointGraphDTO> points = new ArrayList<>();
 
 		try {
-			allFinances = financeService.findAll();
+			
+			
+			List<Finance> allFinances = financeService.findAll();
 
 			for (Finance finance : allFinances) {
 				points.add(financeService.transformFinanceInPoint(finance));
@@ -198,7 +236,8 @@ public class FinanceController {
 		}
 		return points;
 	}
-
+	
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		logger.info("--initBinder MesureController --");

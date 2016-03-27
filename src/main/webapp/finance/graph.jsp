@@ -27,15 +27,18 @@
 
 
 				<ul class="nav nav-tabs no-b">
-					<li id="ongletQuantitatif"><a href="#quantitatif"
-						class="active" data-toggle="tab">Graphe</a></li>
-					<li><a id="ongletQualitatif" href="#qualitatif"
+					<li id="ongletRepartition"><a href="#repartition"
+						class="active" data-toggle="tab">Répartitions</a></li>
+					<li><a id="ongletChronique" href="#chronique"
 						data-toggle="tab">Chroniques</a></li>
 				</ul>
 				<div class="tab-content text-center no-shadow">
 
-					<div class="tab-pane fade active in" id="quantitatif">
-						<div id="charts"></div>
+					<div class="tab-pane fade active in" id="repartition">
+						<div id="chartsCamenbert"></div>
+					</div>
+					<div class="tab-pane fade active in" id="chronique">
+						<div id="chartsGraph"></div>
 					</div>
 				</div>
 			</div>
@@ -51,41 +54,133 @@
 		<script type="text/javascript">
 			var resourcesUrl = $('.resourcesUrl').attr('href');
 			var relayUrl = $('.relayUrl').attr('href');
-			var $chart = $('#charts');
+			var $chartsCamenbert = $('#chartsCamenbert');
+			var $chartsGraph = $('#chartsGraph');
 			Highcharts.setOptions({
 				global : {
 					timezoneOffset : -60
 				}
 			});
 
-			loadGraph();
-			
-			$(document).ready(function() {
+			$(document).ready(
+					function() {
 
-				$('#ongletQualitatif').click(function() {
-					switchToList()
+						loadGraphCamenbert();
+						$.getJSON(relayUrl + '/init/camenbert/points',
+								function(graph) {
+
+									updateSerieCamenbert("categorie", graph);
+								});
+
+						$('#ongletChronique').click(
+								loadGraph(),
+								function() {
+									$.getJSON(relayUrl + '/init/graph/points',
+											function(graph) {
+
+												updateSerieGraph(
+														"categorie", graph);
+											});
+								});
+						$('#ongletRepartition').click(
+								function() {
+									$.getJSON(relayUrl
+											+ '/init/camenbert/points',
+											function(graph) {
+
+										updateSerieCamenbert(
+														"categorie", graph);
+											});
+								});
+
+					});
+
+			function loadGraphCamenbert() {
+				var $chartsCamenbert = $('#chartsCamenbert');
+
+				// Radialize the colors
+				Highcharts.getOptions().colors = Highcharts.map(Highcharts
+						.getOptions().colors, function(color) {
+					return {
+						radialGradient : {
+							cx : 0.5,
+							cy : 0.3,
+							r : 0.7
+						},
+						stops : [
+								[ 0, color ],
+								[
+										1,
+										Highcharts.Color(color).brighten(-0.3)
+												.get('rgb') ] // darken
+						]
+					};
 				});
-				$('#ongletQuantitatif').click(function() {
-					switchToGraph()
+
+				// Build the chart
+				$chartsCamenbert
+						.highcharts({
+							chart : {
+								plotBackgroundColor : null,
+								plotBorderWidth : null,
+								plotShadow : false,
+								type : 'pie'
+							},
+							title : {
+								text : 'Répartition par catégorie Total'
+							},
+							tooltip : {
+								pointFormat : '{series.name}: <b>{point.y:.1f} €</b>'
+							},
+							plotOptions : {
+								pie : {
+									allowPointSelect : true,
+									cursor : 'pointer',
+									dataLabels : {
+										enabled : true,
+										format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+										style : {
+											color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+													|| 'black'
+										},
+										connectorColor : 'silver'
+									}
+								}
+							},
+							series : [ {
+								name : "categorie",
+								data : []
+							} ]
+						});
+
+				chartsCamenbert = $chartsCamenbert.highcharts();
+
+			}
+
+			// get data
+			function updateSerieCamenbert(index, graph) {
+				var serieData = [];
+				$.each(graph, function(i, line) {
+					var item = {};
+					item.name = line.categorie,
+							item.y = parseFloat(line.valeur);
+					serieData.push(item);
 				});
-
-				$.getJSON(relayUrl + '/init/graph/points', function(graph) {
-
-					updateSerie(0, graph);
+				chartsCamenbert.series[0].update({
+					data : serieData,
 				});
-
-			});
+			};
 
 			function loadGraph() {
-				var $chart = $('#charts');
-				$chart
+				var $chartsGraph = $('#chartsGraph');
+				$chartsGraph
 						.highcharts(
 								'StockChart',
 								{
 									chart : {
 										zoomType : 'xy',
 										height : $('.tools-inner')
-										.innerHeight()
+												.innerHeight()
 									},
 									title : {
 										text : ''
@@ -165,39 +260,24 @@
 										color : '#94ECD9'
 									} ]
 								});
-				chart = $chart.highcharts();
+				chartsGraph = $chartsGraph.highcharts();
 			}
 
 			// get data
-			function updateSerie(index, graph) {
+			function updateSerieGraph(index, graph) {
 				var serieData = [];
 				$.each(graph, function(i, line) {
 					var item = {};
 					item.x = moment(line.date).unix() * 1000,
-					item.y = parseFloat(line.valeur);
+							item.y = parseFloat(line.valeur);
 					serieData.push(item);
 				});
-				chart.series[index].update({
+				
+				console.log(serieData);
+				chartsGraph.series[0].update({
 					data : serieData,
 				});
 			};
-
-
-			function switchToGraph() {
-				$('.sidePanelForGraph').attr('style', 'display: block;');
-				$('.mainPanel').attr('class',
-						"mainPanel col-lg-10 col-md-9 col-xs-12");
-				$('.sidePanelForGraph').show();
-
-			}
-
-			function switchToList() {
-				$('.sidePanelForGraph').attr('style', 'display: none;');
-				$('.mainPanel').attr('class',
-						"mainPanel col-lg-12 col-md-12 col-xs-12");
-				$('.sidePanelForGraph').hide();
-
-			}
 
 			function executeIfExist(fct) {
 				if (fct != undefined && typeof fct == 'function') {

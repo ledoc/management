@@ -22,7 +22,9 @@ public interface FinanceDAO extends JpaRepository<Finance, Integer> {
 	@Query("select distinct f.categorie from Finance f")
 	List<String> listAllCategories() throws DataAccessException;
 	
-	
-	@Query("select sum(f.montant) from Finance f where f.categorie=:categorie")
+	@Query("select sum(f.montant) from Finance f where f.categorie=:categorie and f.revenu=false")
 	Double sumByCategorie(@Param("categorie") String categorie) throws DataAccessException;
+	
+	@Query("select f.total from Finance f where f.id=(select max(f.id) from f)")
+	Double selectLastTotal() throws DataAccessException;
 }

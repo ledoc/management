@@ -54,7 +54,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 
 								<div class="form-group">
-									<label for="typePayment">Analogique / numérique</label>
+									<label for="typePayment">Type paiement</label>
 									<form:select id="typePayment" path="typePayment"
 										data-parsley-required="true"
 										data-parsley-required-message="Choix requis"

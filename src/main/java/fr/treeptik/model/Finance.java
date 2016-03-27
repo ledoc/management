@@ -19,10 +19,12 @@ public class Finance implements Serializable {
 	private Integer id;
 	private String categorie;
 	private TypePayment typePayment;
+	private Boolean revenu;
 	@Temporal(TemporalType.DATE)
 	private Date date;
 	private Double montant;
 	private String commentaire;
+	private Double total;
 
 	public Finance() {
 		super();
@@ -76,6 +78,22 @@ public class Finance implements Serializable {
 
 	public void setCommentaire(String commentaire) {
 		this.commentaire = commentaire;
+	}
+	
+	public Boolean getRevenu() {
+		return revenu;
+	}
+	
+	public void setRevenu(Boolean revenu) {
+		this.revenu = revenu;
+	}
+	
+	public Double getTotal() {
+		return total;
+	}
+
+	public void setTotal(Double total) {
+		this.total = total;
 	}
 
 	@Override

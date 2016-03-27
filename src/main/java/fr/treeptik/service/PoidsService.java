@@ -2,9 +2,10 @@ package fr.treeptik.service;
 
 import java.util.List;
 
+import fr.treeptik.dto.PointCamenbertDTO;
+import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Poids;
-import fr.treeptik.model.PointGraphDTO;
 
 public interface PoidsService {
 

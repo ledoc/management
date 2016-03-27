@@ -13,15 +13,9 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!-- end layout -->
 <footer class="bg-white clearfix mt15 pt15 pb15">
 	<div class="col-lg-6 col-md-6 col-xs-6">
-		<p>&copy; AH2D 2015</p>
+		<p>&copy;ledocApps</p>
 	</div>
 
-	<div class="col-lg-6 col-md-6 col-xs-6 text-right">
-		<a class="btn btn-social btn-xs btn-facebook mr5"><i
-			class="fa fa-facebook"></i>Facebook </a> <a
-			class="btn btn-social btn-xs btn-twitter mr5"><i
-			class="fa fa-twitter"></i>Twitter </a>
-	</div>
 </footer>
 </div>
 <!-- end app -->

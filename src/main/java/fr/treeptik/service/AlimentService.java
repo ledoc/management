@@ -7,7 +7,7 @@ import fr.treeptik.model.Aliment;
 
 public interface AlimentService {
 
-	Aliment findById(Integer id) throws ServiceException;
+	Aliment findById(Long id) throws ServiceException;
 
 	Aliment create(Aliment aliment) throws ServiceException;
 
@@ -15,6 +15,7 @@ public interface AlimentService {
 
 	List<Aliment> findAll() throws ServiceException;
 
-	void remove(Integer id) throws ServiceException;
+	void remove(Long id) throws ServiceException;
+
 
 }

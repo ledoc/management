@@ -43,6 +43,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<tr>
 										<th>Nom</th>
 										<th>Calories</th>
+										<th>Protéines</th>
+										<th>Glucides</th>
+										<th>Lipides</th>
+										<th>BCAA</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -53,8 +57,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlAlimentUpdate"
 											value="/aliment/update/${aliment.id}" />
 										<tr>
-											<td class="text-primary"><a href="${urlAlimentUpdate}">${aliment.nom}}</a></td>
+											<td class="text-primary"><a href="${urlAlimentUpdate}">${aliment.nom}</a></td>
 											<td><c:out value="${aliment.calories}" /></td>
+											<td><c:out value="${aliment.proteine}" /></td>
+											<td><c:out value="${aliment.glucide}" /></td>
+											<td><c:out value="${aliment.lipide}" /></td>
+											<td><c:out value="${aliment.bcaa}" /></td>
 											<td><a data-url="${urlAlimentDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">

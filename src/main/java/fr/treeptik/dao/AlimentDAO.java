@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import fr.treeptik.model.Aliment;
 
 public interface AlimentDAO extends
-		JpaRepository<Aliment, Integer> {
+		JpaRepository<Aliment, Long> {
 
 
 }

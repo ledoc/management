@@ -1,12 +1,16 @@
-package fr.treeptik.model;
+package fr.treeptik.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class PointGraphDTO implements Serializable {
+public class PointCamenbertDTO implements Serializable {
 
-    private Date date;
+	private static final long serialVersionUID = 1L;
+	
+	
+	private Date date;
     private Double valeur;
+    private String categorie;
 
     public Date getDate() {
         return date;
@@ -24,7 +28,15 @@ public class PointGraphDTO implements Serializable {
         this.valeur = valeur;
     }
 
-    @Override
+    public String getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(String categorie) {
+		this.categorie = categorie;
+	}
+
+	@Override
     public String toString() {
         return "Point [date=" + date + ", valeur=" + valeur + "]";
     }

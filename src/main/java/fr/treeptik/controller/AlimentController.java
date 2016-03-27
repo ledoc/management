@@ -52,7 +52,7 @@ public class AlimentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id)
+	public String update(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--update AlimentController-- alimentId : " + id);
 
@@ -69,7 +69,7 @@ public class AlimentController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id)
+	public String delete(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--delete AlimentController-- alimentId : " + id);
 

@@ -13,6 +13,10 @@ public class Aliment {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String nom;
+	private Float proteine;
+	private Float lipide;
+	private Float glucide;
+	private Float bcaa;
 	private Integer calories;
 	@ManyToOne
 	private Repas repas;
@@ -39,6 +43,46 @@ public class Aliment {
 
 	public void setCalories(Integer calories) {
 		this.calories = calories;
+	}
+
+	public Float getProteine() {
+		return proteine;
+	}
+
+	public void setProteine(Float proteine) {
+		this.proteine = proteine;
+	}
+
+	public Float getLipide() {
+		return lipide;
+	}
+
+	public void setLipide(Float lipide) {
+		this.lipide = lipide;
+	}
+
+	public Float getGlucide() {
+		return glucide;
+	}
+
+	public void setGlucide(Float glucide) {
+		this.glucide = glucide;
+	}
+
+	public Float getBcaa() {
+		return bcaa;
+	}
+
+	public void setBcaa(Float bcaa) {
+		this.bcaa = bcaa;
+	}
+
+	public Repas getRepas() {
+		return repas;
+	}
+
+	public void setRepas(Repas repas) {
+		this.repas = repas;
 	}
 
 }

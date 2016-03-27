@@ -23,7 +23,7 @@ public class AlimentServiceImpl implements AlimentService {
 	private Logger logger = Logger.getLogger(AlimentServiceImpl.class);
 
 	@Override
-	public Aliment findById(Integer id) throws ServiceException {
+	public Aliment findById(Long id) throws ServiceException {
 		return alimentDAO.findOne(id);
 	}
 
@@ -52,7 +52,7 @@ public class AlimentServiceImpl implements AlimentService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE AlimentService -- alimentId : " + id);
 		try {
 			alimentDAO.delete(id);
