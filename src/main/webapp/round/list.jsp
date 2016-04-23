@@ -9,8 +9,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	uri="http://www.springframework.org/security/tags"%>
 
 <jsp:include page="/template/header.jsp">
-	<jsp:param value="active" name="menuAlimentActive" />
-	<jsp:param value="Solices - Liste Aliment" name="titreOnglet" />
+	<jsp:param value="active" name="menuRoundActive" />
+	<jsp:param value="Solices - Liste Round" name="titreOnglet" />
 </jsp:include>
 
 <section class="layout">
@@ -22,49 +22,47 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 			<div class="col-lg-12 col-md-12 col-xs-12">
 				<section class="panel">
 					<header class="panel-heading no-b">
-						<h1 class="h3 text-primary mt0">Liste des aliments</h1>
+						<h1 class="h3 text-primary mt0">Liste des rounds</h1>
 
 						<div class="pull-right mb15">
 
-							<a href="<c:url  value="/aliment/create" />"
-								class="btn btn-outline btn-primary btn-m">Créer un aliment</a>
+							<a href="<c:url  value="/round/create" />"
+								class="btn btn-outline btn-primary btn-m">Créer un round</a>
 						</div>
 					</header>
 					<div class="panel-body">
 
-						<c:if test="${empty aliments }">
+						<c:if test="${empty listRound }">
 
 							<H2>Ooops !&nbsp;Liste vide.</H2>
 						</c:if>
-						<c:if test="${not empty aliments }">
+						<c:if test="${not empty listRound }">
 
 							<table class="table table-striped list no-m">
 								<thead>
 									<tr>
-										<th>Nom</th>
-										<th>Calories</th>
-										<th>Protéines</th>
-										<th>Glucides</th>
-										<th>Lipides</th>
-										<th>BCAA</th>
+										<th>Date</th>
+										<th>numeroDeSequence</th>
+										<th>Exercice</th>
+										<th>nombreSerie</th>
+										<th>nombreRepetition</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${aliments}" var="aliment">
-										<c:url var="urlAlimentDelete"
-											value="/aliment/delete/${aliment.id}" />
-										<c:url var="urlAlimentUpdate"
-											value="/aliment/update/${aliment.id}" />
+									<c:forEach items="${listRound}" var="round">
+										<c:url var="urlRoundDelete"
+											value="/round/delete/${round.id}" />
+										<c:url var="urlRoundUpdate"
+											value="/round/update/${round.id}" />
 										<tr>
-											<td class="text-primary"><a href="${urlAlimentUpdate}">${aliment.nom}</a></td>
-											<td><c:out value="${aliment.nutritionBilan.calories}" /></td>
-											<td><c:out value="${aliment.nutritionBilan.proteine}" /></td>
-											<td><c:out value="${aliment.nutritionBilan.glucide}" /></td>
-											<td><c:out value="${aliment.nutritionBilan.lipide}" /></td>
-											<td><c:out value="${aliment.nutritionBilan.bcaa}" /></td>
-											<td><a data-url="${urlAlimentDelete}"
-												data-toggle="modal" data-target="#confirmModal"
+											<td class="text-primary"><a href="${urlRoundUpdate}">${round.date}</a></td>
+											<td><c:out value="${round.numeroDeSequence}" /></td>
+											<td><c:out value="${round.exercice.nom}" /></td>
+											<td><c:out value="${round.nombreSerie}" /></td>
+											<td><c:out value="${round.nombreRepetition}" /></td>
+											<td><a data-url="${urlRoundDelete}" data-toggle="modal"
+												data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">
 													<i class="fa fa-remove"></i>
 											</a></td>

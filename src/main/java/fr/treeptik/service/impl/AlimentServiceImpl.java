@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.treeptik.dao.AlimentDAO;
+import fr.treeptik.dao.NutritionBilanDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Aliment;
+import fr.treeptik.model.NutritionBilan;
 import fr.treeptik.service.AlimentService;
 
 @Service
@@ -19,6 +21,9 @@ public class AlimentServiceImpl implements AlimentService {
 
 	@Inject
 	private AlimentDAO alimentDAO;
+	
+	@Inject
+	private NutritionBilanDAO nutritionBilanDAO;
 
 	private Logger logger = Logger.getLogger(AlimentServiceImpl.class);
 
@@ -29,25 +34,49 @@ public class AlimentServiceImpl implements AlimentService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Aliment create(Aliment Aliment) throws ServiceException {
+	public Aliment create(Aliment aliment) throws ServiceException {
+		aliment = buildNutritionBilanForAliment(aliment);
+System.out.println(aliment);
 		logger.info("--CREATE AlimentService --");
-		logger.debug("Aliment : " + Aliment);
-		return alimentDAO.save(Aliment);
+		logger.debug("Aliment : " + aliment);
+		nutritionBilanDAO.save(aliment.getNutritionBilan());
+		aliment = alimentDAO.save(aliment);
+		
+		return aliment;
+	}
+
+	public Aliment buildNutritionBilanForAliment(Aliment aliment) {
+
+		NutritionBilan nutritionBilan = new NutritionBilan(
+				adjustToUnity(aliment, aliment.getProteine()),
+				adjustToUnity(aliment, aliment.getLipide()),
+				adjustToUnity(aliment, aliment.getGlucide()),
+				adjustToUnity(aliment, aliment.getBcaa()),
+				adjustToUnity(aliment, aliment.getCalories()));
+//		nutritionBilan = nutritionBilanDAO.save(nutritionBilan);
+		aliment.setNutritionBilan(nutritionBilan);
+
+		return aliment;
+	}
+
+	private Float adjustToUnity(Aliment aliment, Float value) {
+		value = value / aliment.getQuantite();
+		return value;
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Aliment update(Aliment Aliment) throws ServiceException {
+	public Aliment update(Aliment aliment) throws ServiceException {
 		logger.info("--UPDATE AlimentService --");
-		logger.debug("Aliment : " + Aliment);
+		logger.debug("Aliment : " + aliment);
 		try {
 
-			Aliment = alimentDAO.save(Aliment);
+			aliment = alimentDAO.save(aliment);
 		} catch (PersistenceException e) {
 			logger.error("Error AlimentService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
-		return Aliment;
+		return aliment;
 	}
 
 	@Override

@@ -68,7 +68,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 
 								<div class="form-group">
-									<label for="quantite">Qunatité</label>
+									<label for="quantite">Quantité</label>
 									<form:input type="text" class="form-control" id="quantite"
 										path="quantite" placeholder="" data-parsley-required="true"
 										data-parsley-trigger="change"

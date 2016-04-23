@@ -83,12 +83,14 @@
 						class="${param.menuFinanceActive}">Finances</a></li>
 					<li><a href="<c:url  value="/aliment/list" />"
 						class="${param.menuAlimentActive}">Aliments</a></li>
-						<li><a href="<c:url  value="/aliment/list" />"
-						class="${param.menuPlatActive}">Plats</a></li>
 					<li><a href="<c:url  value="/plat/list" />"
+						class="${param.menuPlatActive}">Plats</a></li>
+					<li><a href="<c:url  value="/repas/list" />"
 						class="${param.menuRepasActive}">Repas</a></li>
 					<li><a href="<c:url  value="/exercice/list" />"
 						class="${param.menuExerciceActive}">Exercices</a></li>
+					<li><a href="<c:url  value="/round/list" />"
+						class="${param.menuRoundActive}">Rounds</a></li>
 					<li><a href="<c:url  value="/seance/list" />"
 						class="${param.menuSeanceActive}">Séances</a></li>
 					<li><a href="<c:url  value="/poids/list" />"

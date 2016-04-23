@@ -2,62 +2,33 @@ package fr.treeptik.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 @Entity
-public class Aliment {
-
+public class NutritionBilan {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue
 	private Long id;
-	private String nom;
-	private Float quantite;
-	@OneToOne
-	private NutritionBilan nutritionBilan;
-	@Transient
 	private Float proteine;
-	@Transient
 	private Float lipide;
-	@Transient
 	private Float glucide;
-	@Transient
 	private Float bcaa;
-	@Transient
 	private Float calories;
 
-	public Long getId() {
-		return id;
+	
+	
+	public NutritionBilan() {
+		super();
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public Float getQuantite() {
-		return quantite;
-	}
-
-	public void setQuantite(Float quantite) {
-		this.quantite = quantite;
-	}
-
-	public NutritionBilan getNutritionBilan() {
-		return nutritionBilan;
-	}
-
-	public void setNutritionBilan(NutritionBilan nutritionBilan) {
-		this.nutritionBilan = nutritionBilan;
+	public NutritionBilan(Float proteine, Float lipide, Float glucide,
+			Float bcaa, Float calories) {
+		super();
+		this.proteine = proteine;
+		this.lipide = lipide;
+		this.glucide = glucide;
+		this.bcaa = bcaa;
+		this.calories = calories;
 	}
 
 	public Float getProteine() {
@@ -110,7 +81,6 @@ public class Aliment {
 		result = prime * result + ((glucide == null) ? 0 : glucide.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lipide == null) ? 0 : lipide.hashCode());
-		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
 		result = prime * result
 				+ ((proteine == null) ? 0 : proteine.hashCode());
 		return result;
@@ -124,7 +94,7 @@ public class Aliment {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Aliment other = (Aliment) obj;
+		NutritionBilan other = (NutritionBilan) obj;
 		if (bcaa == null) {
 			if (other.bcaa != null)
 				return false;
@@ -150,11 +120,6 @@ public class Aliment {
 				return false;
 		} else if (!lipide.equals(other.lipide))
 			return false;
-		if (nom == null) {
-			if (other.nom != null)
-				return false;
-		} else if (!nom.equals(other.nom))
-			return false;
 		if (proteine == null) {
 			if (other.proteine != null)
 				return false;
@@ -165,11 +130,9 @@ public class Aliment {
 
 	@Override
 	public String toString() {
-		return "Aliment [id=" + id + ", nom=" + nom + ", quantite=" + quantite
-				+ ", nutritionBilan=" + nutritionBilan + "]";
+		return "NutritionBilan [id=" + id + ", proteine=" + proteine
+				+ ", lipide=" + lipide + ", glucide=" + glucide + ", bcaa="
+				+ bcaa + ", calories=" + calories + "]";
 	}
 
-	
-	
-	
 }

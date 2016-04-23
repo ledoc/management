@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Exercice;
+import fr.treeptik.model.Round;
 import fr.treeptik.model.Seance;
-import fr.treeptik.service.ExerciceService;
+import fr.treeptik.service.RoundService;
 import fr.treeptik.service.SeanceService;
 
 @Controller
@@ -30,21 +30,21 @@ public class SeanceController {
 	private SeanceService seanceService;
 	
 	@Inject
-	private ExerciceService exerciceService;
+	private RoundService roundService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
 		logger.info("--create formulaire SeanceController--");
 
-		List<Exercice> exerciceCombo = null;
+		List<Round> roundCombo = null;
 		try {
-			exerciceCombo = exerciceService.findAll();
+			roundCombo = roundService.findAll();
 		} catch (ServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		model.addAttribute("exerciceCombo", exerciceCombo);
+		model.addAttribute("roundCombo", roundCombo);
 		model.addAttribute("seance", new Seance());
 		return "/seance/create";
 	}

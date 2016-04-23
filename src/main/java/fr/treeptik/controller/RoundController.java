@@ -1,7 +1,5 @@
 package fr.treeptik.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,102 +15,96 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Plat;
-import fr.treeptik.model.Repas;
-import fr.treeptik.model.TypeRepas;
-import fr.treeptik.service.PlatService;
-import fr.treeptik.service.RepasService;
+import fr.treeptik.model.Exercice;
+import fr.treeptik.model.Round;
+import fr.treeptik.service.ExerciceService;
+import fr.treeptik.service.RoundService;
 
 @Controller
-@RequestMapping("/repas")
-public class RepasController {
+@RequestMapping("/round")
+public class RoundController {
 
-	private Logger logger = Logger.getLogger(RepasController.class);
+	private Logger logger = Logger.getLogger(RoundController.class);
 
 	@Inject
-	private RepasService repasService;
-	@Inject
-	private PlatService platService;
+	private RoundService roundService;
 	
+	@Inject
+	private ExerciceService exerciceService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
-		logger.info("--create formulaire RepasController--");
-
+		logger.info("--create formulaire RoundController--");
 		try {
-		List<TypeRepas> typesRepasCombo = new ArrayList<TypeRepas>(
-				Arrays.asList(TypeRepas.values()));
-		
-			List<Plat> listPlatCombo = platService.findAll();
-		model.addAttribute("typesRepasCombo", typesRepasCombo);
-		model.addAttribute("listPlatCombo", listPlatCombo);
-		model.addAttribute("repas", new Repas());
+			List<Exercice> exercices = exerciceService.findAll();
+		model.addAttribute("exerciceCombo", exercices);
+		model.addAttribute("round", new Round());
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
-		return "/repas/create";
+		return "/round/create";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Repas repas)
+	public String create(@ModelAttribute Round round)
 			throws ControllerException {
-		logger.info("--create RepasController-- repas : " + repas);
+		logger.info("--create RoundController-- round : " + round);
 
 		try {
-			repasService.create(repas);
+			roundService.update(round);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		return "redirect:/repas/list";
+		return "redirect:/round/list";
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String update(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--update RepasController-- repasId : " + id);
+		logger.info("--update RoundController-- roundId : " + id);
 
-		Repas repas = null;
+		Round round = null;
 
 		try {
-			repas = repasService.findById(id);
+			round = roundService.findById(id);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("repas", repas);
-		return "/repas/create";
+		model.addAttribute("round", round);
+		return "/round/create";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Integer id)
 			throws ControllerException {
-		logger.info("--delete RepasController-- repasId : " + id);
+		logger.info("--delete RoundController-- roundId : " + id);
 
 		try {
-			repasService.remove(id);
+			roundService.remove(id);
 		} catch (NumberFormatException | ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "redirect:/repas/list";
+		return "redirect:/round/list";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
-		logger.info("--list RepasController--");
+		logger.info("--list RoundController--");
 
-		List<Repas> listRepas = null;
+		List<Round> listRound = null;
 		try {
-			listRepas = repasService.findAll();
+			listRound = roundService.findAll();
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("listRepas", listRepas);
-		return "/repas/list";
+		model.addAttribute("listRound", listRound);
+		return "/round/list";
 	}
 }

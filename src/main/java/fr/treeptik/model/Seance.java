@@ -18,12 +18,11 @@ public class Seance implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	private Integer numeroDeSequence;
+	private Long id;
+	
 	@OneToMany
-	private Set<Exercice> exercices;
-	private Integer nombreSerie;
-	private Integer nombreRepetition;
+	private Set<Round> rounds;
+	
 	private String commentaire;
 	@Temporal(TemporalType.DATE)
 	private Date date;
@@ -32,44 +31,21 @@ public class Seance implements Serializable {
 		super();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getNumeroDeSequence() {
-		return numeroDeSequence;
+
+	public Set<Round> getRounds() {
+		return rounds;
 	}
 
-	public void setNumeroDeSequence(Integer numeroDeSequence) {
-		this.numeroDeSequence = numeroDeSequence;
-	}
-
-	public Set<Exercice> getExercices() {
-		return exercices;
-	}
-
-	public void setExercices(Set<Exercice> exercices) {
-		this.exercices = exercices;
-	}
-
-	public Integer getNombreSerie() {
-		return nombreSerie;
-	}
-
-	public void setNombreSerie(Integer nombreSerie) {
-		this.nombreSerie = nombreSerie;
-	}
-
-	public Integer getNombreRepetition() {
-		return nombreRepetition;
-	}
-
-	public void setNombreRepetition(Integer nombreRepetition) {
-		this.nombreRepetition = nombreRepetition;
+	public void setRounds(Set<Round> rounds) {
+		this.rounds = rounds;
 	}
 
 	public String getCommentaire() {

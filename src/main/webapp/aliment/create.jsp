@@ -60,7 +60,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										data-parsley-mincheck="2"
 										data-parsley-mincheck-message="2 caractères minimum" />
 								</div>
-
+								<div class="form-group">
+									<label for="quantite">Quantité Référence</label>
+									<form:input type="text" class="form-control" id="quantite"
+										path="quantite" placeholder="" data-parsley-required="true"
+										data-parsley-trigger="change"
+										data-parsley-required-message="Champ requis" />
+								</div>
 								<div class="form-group">
 									<label for="calories">Calories</label>
 									<form:input type="text" class="form-control" id="calories"
@@ -76,25 +82,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<div class="form-group">
 									<label for="glucide">Glucides</label>
 									<form:input type="text" class="form-control" id="glucide"
-										path="glucide" placeholder=""
-										data-parsley-trigger="change"
-										 />
+										path="glucide" placeholder="" data-parsley-trigger="change" />
 								</div>
 								<div class="form-group">
 									<label for="lipide">Lipides</label>
 									<form:input type="text" class="form-control" id="lipide"
-										path="lipide" placeholder=""
-										data-parsley-trigger="change"
-										/>
+										path="lipide" placeholder="" data-parsley-trigger="change" />
 								</div>
 								<div class="form-group">
 									<label for="bcaa">BCAA</label>
 									<form:input type="text" class="form-control" id="bcaa"
-										path="bcaa" placeholder=""
-										data-parsley-trigger="change"
-										/>
+										path="bcaa" placeholder="" data-parsley-trigger="change" />
 								</div>
-								
+
 
 								<div class="pull-right">
 									<a href="<c:url  value="/aliment/list" />"

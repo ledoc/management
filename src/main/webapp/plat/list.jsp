@@ -42,7 +42,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								<thead>
 									<tr>
 										<th>Aliment</th>
-										<th>Quantié</th>
+										<th>Quantité</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -52,7 +52,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlPlatUpdate" value="/plat/update/${plat.id}" />
 										<tr>
 											<td class="text-primary"><a href="${urlPlatUpdate}">${plat.aliment.nom}</a></td>
-											<td><c:out value="${plat.quantité}" /></td>
+											<td><c:out value="${plat.quantite}" /></td>
 											<td><a data-url="${urlPlatDelete}" data-toggle="modal"
 												data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">

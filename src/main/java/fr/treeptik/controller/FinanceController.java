@@ -68,8 +68,10 @@ public class FinanceController {
 
 		try {
 			Double lastTotal = financeService.selectLastTotal();
+			if (finance.getTypePayment() != TypePayment.LIQUIDE) {
 			Double newTotal = lastTotal + finance.getMontant();
 			finance.setTotal(newTotal);
+			}
 			financeService.update(finance);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());

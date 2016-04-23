@@ -63,33 +63,17 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 								</div>
 
 								<div class="form-group">
-									<label for="exercice">Exercice</label>
+									<label for="exercices">Round</label>
 
 									<form:select class="form-control chosen"
 										data-placeholder="Choisir un exercice ..."
 										data-parsley-required="true" data-parsley-trigger="change"
 										data-parsley-required-message="Champ requis"
-										path="exercice.id">
+										path="exercices">
 										<form:option value="">--- Choisir un exercice ---</form:option>
-										<form:options items="${exerciceCombo}" itemValue="id"
+										<form:options items="${roundCombo}" itemValue="id"
 											itemLabel="nom" />
 									</form:select>
-								</div>
-
-								<div class="form-group">
-									<label for="nombreSerie">nombre Serie</label>
-									<form:input type="text" class="form-control" id="nombreSerie"
-										path="nombreSerie" placeholder="" data-parsley-required="true"
-										data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis" />
-								</div>
-
-								<div class="form-group">
-									<label for="nombreRepetition">nombreRepetition</label>
-									<form:input type="text" class="form-control" id="nombreRepetition"
-										path="nombreRepetition" placeholder="" data-parsley-required="true"
-										data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis" />
 								</div>
 
 								<div class="form-group">

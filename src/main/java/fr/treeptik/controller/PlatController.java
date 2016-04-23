@@ -40,7 +40,6 @@ public class PlatController {
 		try {
 			alimentCombo = alimentService.findAll();
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -108,7 +107,7 @@ public class PlatController {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		model.addAttribute("plats", plats);
+		model.addAttribute("listPlat", plats);
 		return "/plat/list";
 	}
 }

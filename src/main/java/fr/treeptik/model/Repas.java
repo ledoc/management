@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -19,11 +20,13 @@ public class Repas implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
+	private String nom;
 	private TypeRepas typeRepas;
 	@Temporal(TemporalType.DATE)
 	private Date date;
-	private Double calories;
+	@OneToOne
+	private NutritionBilan nutritionBilan;
 	@OneToMany
 	private List<Plat> plats;
 	
@@ -32,12 +35,20 @@ public class Repas implements Serializable {
 		super();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
 	public TypeRepas getTypeRepas() {
@@ -56,12 +67,12 @@ public class Repas implements Serializable {
 		this.date = date;
 	}
 
-	public Double getCalories() {
-		return calories;
+	public NutritionBilan getNutritionBilan() {
+		return nutritionBilan;
 	}
 
-	public void setCalories(Double calories) {
-		this.calories = calories;
+	public void setNutritionBilan(NutritionBilan nutritionBilan) {
+		this.nutritionBilan = nutritionBilan;
 	}
 
 	public List<Plat> getPlats() {

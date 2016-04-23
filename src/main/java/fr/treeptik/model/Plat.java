@@ -4,16 +4,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Plat {
 
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Long id;
 	private Integer quantite;
 	@ManyToOne
 	private Aliment aliment;
+	@OneToOne
+	private NutritionBilan nutritionBilan;
+	
+	
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public Integer getQuantite() {
 		return quantite;
 	}
@@ -26,9 +39,11 @@ public class Plat {
 	public void setAliment(Aliment aliment) {
 		this.aliment = aliment;
 	}
-	
-	
-	
-	
+	public NutritionBilan getNutritionBilan() {
+		return nutritionBilan;
+	}
+	public void setNutritionBilan(NutritionBilan nutritionBilan) {
+		this.nutritionBilan = nutritionBilan;
+	}
 	
 }

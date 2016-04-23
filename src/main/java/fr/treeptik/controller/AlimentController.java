@@ -41,7 +41,7 @@ public class AlimentController {
 		logger.info("--create AlimentController-- aliment : " + aliment);
 
 		try {
-			alimentService.update(aliment);
+			alimentService.create(aliment);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
