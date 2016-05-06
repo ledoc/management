@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.treeptik.dao.AlimentDAO;
 import fr.treeptik.dao.NutritionBilanDAO;
 import fr.treeptik.dao.PlatDAO;
 import fr.treeptik.exception.ServiceException;
@@ -21,16 +22,17 @@ import fr.treeptik.service.PlatService;
 public class PlatServiceImpl implements PlatService {
 
 	@Inject
+	private AlimentDAO alimentDAO;
+	@Inject
 	private PlatDAO platDAO;
-	
+
 	@Inject
 	private NutritionBilanDAO nutritionBilanDAO;
-
 
 	private Logger logger = Logger.getLogger(PlatServiceImpl.class);
 
 	@Override
-	public Plat findById(Integer id) throws ServiceException {
+	public Plat findById(Long id) throws ServiceException {
 		return platDAO.findOne(id);
 	}
 
@@ -39,33 +41,36 @@ public class PlatServiceImpl implements PlatService {
 	public Plat create(Plat plat) throws ServiceException {
 		logger.info("--CREATE PlatService --");
 		logger.debug("plat : " + plat);
-		
+
 		plat = buildNutrionBilanForPlat(plat);
-		
+
 		return platDAO.save(plat);
 	}
-	
+
 	private Plat buildNutrionBilanForPlat(Plat plat) {
 		Aliment aliment = plat.getAliment();
+		aliment = alimentDAO.findOne(aliment.getId());
+		System.out.println(aliment);
 		NutritionBilan nutritionBilanAliment = aliment.getNutritionBilan();
-		NutritionBilan nutritionBilan = new NutritionBilan(
-				adjustToQuantity(plat, nutritionBilanAliment.getProteine()),
-				adjustToQuantity(plat, nutritionBilanAliment.getLipide()),
-				adjustToQuantity(plat, nutritionBilanAliment.getGlucide()),
-				adjustToQuantity(plat, nutritionBilanAliment.getBcaa()),
-				adjustToQuantity(plat, nutritionBilanAliment.getCalories()));
-		
+		nutritionBilanAliment = nutritionBilanDAO.findOne(nutritionBilanAliment
+				.getId());
+		NutritionBilan nutritionBilan = new NutritionBilan(adjustToQuantity(
+				plat, nutritionBilanAliment.getProteine()), adjustToQuantity(
+				plat, nutritionBilanAliment.getLipide()), adjustToQuantity(
+				plat, nutritionBilanAliment.getGlucide()), adjustToQuantity(
+				plat, nutritionBilanAliment.getBcaa()), adjustToQuantity(plat,
+				nutritionBilanAliment.getCalories()));
+
 		nutritionBilan = nutritionBilanDAO.save(nutritionBilan);
-		aliment.setNutritionBilan(nutritionBilan);
-		
-		
+		plat.setNutritionBilan(nutritionBilan);
+
 		nutritionBilanDAO.save(nutritionBilan);
-		
+
 		return plat;
 	}
 
 	private Float adjustToQuantity(Plat plat, Float value) {
-		value = value / plat.getQuantite();
+		value = value * plat.getQuantite();
 		return value;
 	}
 
@@ -87,7 +92,7 @@ public class PlatServiceImpl implements PlatService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE PlatService -- platId : " + id);
 		try {
 			platDAO.delete(id);

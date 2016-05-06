@@ -7,7 +7,7 @@ import fr.treeptik.model.Seance;
 
 public interface SeanceService {
 
-	Seance findById(Integer id) throws ServiceException;
+	Seance findById(Long id) throws ServiceException;
 
 	Seance create(Seance seance) throws ServiceException;
 
@@ -15,6 +15,6 @@ public interface SeanceService {
 
 	List<Seance> findAll() throws ServiceException;
 
-	void remove(Integer id) throws ServiceException;
+	void remove(Long id) throws ServiceException;
 
 }

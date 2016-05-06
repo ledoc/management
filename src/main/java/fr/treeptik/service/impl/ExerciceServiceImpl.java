@@ -23,7 +23,7 @@ public class ExerciceServiceImpl implements ExerciceService {
 	private Logger logger = Logger.getLogger(ExerciceServiceImpl.class);
 
 	@Override
-	public Exercice findById(Integer id) throws ServiceException {
+	public Exercice findById(Long id) throws ServiceException {
 		return exerciceDAO.findOne(id);
 	}
 
@@ -52,7 +52,7 @@ public class ExerciceServiceImpl implements ExerciceService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE ExerciceService -- exerciceId : " + id);
 		try {
 			exerciceDAO.delete(id);

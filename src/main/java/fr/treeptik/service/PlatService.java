@@ -7,7 +7,7 @@ import fr.treeptik.model.Plat;
 
 public interface PlatService {
 
-	Plat findById(Integer id) throws ServiceException;
+	Plat findById(Long id) throws ServiceException;
 
 	Plat create(Plat plat) throws ServiceException;
 
@@ -15,6 +15,6 @@ public interface PlatService {
 
 	List<Plat> findAll() throws ServiceException;
 
-	void remove(Integer id) throws ServiceException;
+	void remove(Long id) throws ServiceException;
 
 }

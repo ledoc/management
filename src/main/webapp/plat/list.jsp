@@ -25,7 +25,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des plat</h1>
 
 						<div class="pull-right mb15">
-
+							<a href="<c:url  value="/plat/download/report" />"
+								class="btn btn-outline btn-primary btn-m">Export CSV</a>
 							<a href="<c:url  value="/plat/create" />"
 								class="btn btn-outline btn-primary btn-m">Créer un plat</a>
 						</div>
@@ -41,8 +42,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<table class="table table-striped list no-m">
 								<thead>
 									<tr>
+									<th>Nom</th>
 										<th>Aliment</th>
 										<th>Quantité</th>
+										<th>Calories</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -51,8 +54,10 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlPlatDelete" value="/plat/delete/${plat.id}" />
 										<c:url var="urlPlatUpdate" value="/plat/update/${plat.id}" />
 										<tr>
+											<td><c:out value="${plat.nom}" /></td>
 											<td class="text-primary"><a href="${urlPlatUpdate}">${plat.aliment.nom}</a></td>
 											<td><c:out value="${plat.quantite}" /></td>
+											<td><c:out value="${plat.nutritionBilan.calories}" /></td>
 											<td><a data-url="${urlPlatDelete}" data-toggle="modal"
 												data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">

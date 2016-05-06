@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import fr.treeptik.model.Round;
 
 public interface RoundDAO extends
-		JpaRepository<Round, Integer> {
+		JpaRepository<Round, Long> {
 
 
 }

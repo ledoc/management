@@ -54,13 +54,19 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<div class="col-md-4 col-lg-4 col-md-4 col-xs-12 col-lg-offset-2">
 
 								<div class="form-group">
-									<label for="aliment">Aliment</label>
+
+									<div class="form-group">
+										<label for="quantite">Nom</label>
+										<form:input type="text" class="form-control" id="nom"
+											path="nom" placeholder="" data-parsley-required="true"
+											data-parsley-trigger="change"
+											data-parsley-required-message="Champ requis" />
+									</div>
 
 									<form:select class="form-control chosen"
 										data-placeholder="Choisir un aliment ..."
 										data-parsley-required="true" data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis"
-										path="aliment.id">
+										data-parsley-required-message="Champ requis" path="aliment.id">
 										<form:option value="">--- Choisir un aliment ---</form:option>
 										<form:options items="${alimentCombo}" itemValue="id"
 											itemLabel="nom" />

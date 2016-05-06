@@ -17,8 +17,9 @@ import fr.treeptik.dao.FinanceDAO;
 import fr.treeptik.dto.PointCamenbertDTO;
 import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Bilan;
+import fr.treeptik.model.BilanFinance;
 import fr.treeptik.model.Finance;
+import fr.treeptik.model.TypePayment;
 import fr.treeptik.service.FinanceService;
 import fr.treeptik.util.Utils;
 
@@ -31,7 +32,7 @@ public class FinanceServiceImpl implements FinanceService {
 	private Logger logger = Logger.getLogger(FinanceServiceImpl.class);
 
 	@Override
-	public Finance findById(Integer id) throws ServiceException {
+	public Finance findById(Long id) throws ServiceException {
 		return financeDAO.findOne(id);
 	}
 
@@ -48,13 +49,13 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 
 	@Override
-	public List<Bilan> listAllBilans() throws ServiceException {
-		List<Bilan> listBilans = new ArrayList<>();
+	public List<BilanFinance> listAllBilans() throws ServiceException {
+		List<BilanFinance> listBilans = new ArrayList<>();
 		List<String> listOfCategories = listAllCategories();
 		for (String categorieTemp : listOfCategories) {
 			Double sumByCategorie = sumByCategorie(categorieTemp);
 			if (sumByCategorie != null) {
-				listBilans.add(new Bilan(categorieTemp, sumByCategorie));
+				listBilans.add(new BilanFinance(categorieTemp, sumByCategorie));
 			}
 		}
 
@@ -143,30 +144,35 @@ public class FinanceServiceImpl implements FinanceService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Finance create(Finance Finance) throws ServiceException {
+	public Finance create(Finance finance) throws ServiceException {
 		logger.info("--CREATE FinanceService --");
-		logger.debug("Finance : " + Finance);
-		return financeDAO.save(Finance);
+		logger.debug("Finance : " + finance);
+		if(finance.getTypePayment() == TypePayment.SALAIRE) {
+			finance.setRevenu(true);
+		} else {
+			finance.setRevenu(false);
+		}
+		return financeDAO.save(finance);
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public Finance update(Finance Finance) throws ServiceException {
+	public Finance update(Finance finance) throws ServiceException {
 		logger.info("--UPDATE FinanceService --");
-		logger.debug("Finance : " + Finance);
+		logger.debug("Finance : " + finance);
 		try {
 
-			Finance = financeDAO.save(Finance);
+			finance = financeDAO.save(finance);
 		} catch (PersistenceException e) {
 			logger.error("Error FinanceService : " + e);
 			throw new ServiceException(e.getLocalizedMessage(), e);
 		}
-		return Finance;
+		return finance;
 	}
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE FinanceService -- financeId : " + id);
 		try {
 			financeDAO.delete(id);
@@ -205,7 +211,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 
 	@Override
-	public PointCamenbertDTO transformBilanInCamenbertPoint(Bilan item)
+	public PointCamenbertDTO transformBilanInCamenbertPoint(BilanFinance item)
 			throws ServiceException {
 		if (item.getSomme() != null) {
 
@@ -223,7 +229,7 @@ public class FinanceServiceImpl implements FinanceService {
 	}
 
 	@Override
-	public PointGraphDTO transformBilanInGraphPoint(Bilan item)
+	public PointGraphDTO transformBilanInGraphPoint(BilanFinance item)
 			throws ServiceException {
 
 		PointGraphDTO point = new PointGraphDTO();
@@ -240,7 +246,11 @@ public class FinanceServiceImpl implements FinanceService {
 	@Override
 	public Double selectLastTotal() throws ServiceException {
 		logger.info("--selectLastTotal FinanceService --");
-		return financeDAO.selectLastTotal();
+		Double selectLastTotal = financeDAO.selectLastTotal();
+		if (selectLastTotal == null) {
+			selectLastTotal = 0D;
+		}
+		return selectLastTotal;
 	}
 
 }

@@ -23,7 +23,7 @@ public class NutritionBilanServiceImpl implements NutritionBilanService {
 	private Logger logger = Logger.getLogger(NutritionBilanServiceImpl.class);
 
 	@Override
-	public NutritionBilan findById(Integer id) throws ServiceException {
+	public NutritionBilan findById(Long id) throws ServiceException {
 		return nutritionBilanDAO.findOne(id);
 	}
 
@@ -52,7 +52,7 @@ public class NutritionBilanServiceImpl implements NutritionBilanService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE NutritionBilanService -- nutritionBilanId : " + id);
 		try {
 			nutritionBilanDAO.delete(id);

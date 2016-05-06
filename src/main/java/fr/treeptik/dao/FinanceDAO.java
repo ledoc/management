@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import fr.treeptik.model.Finance;
 
-public interface FinanceDAO extends JpaRepository<Finance, Integer> {
+public interface FinanceDAO extends JpaRepository<Finance, Long> {
 
 	@Query("select f from Finance f  where f.date BETWEEN :dateDebut AND :dateFin")
 	List<Finance> findBetweenDates(@Param("dateDebut") Date dateDebut,

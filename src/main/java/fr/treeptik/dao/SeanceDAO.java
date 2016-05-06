@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import fr.treeptik.model.Seance;
 
 public interface SeanceDAO extends
-		JpaRepository<Seance, Integer> {
+		JpaRepository<Seance, Long> {
 
 
 }

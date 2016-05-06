@@ -1,9 +1,14 @@
 package fr.treeptik.controller;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -17,6 +22,7 @@ import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Aliment;
 import fr.treeptik.service.AlimentService;
+import fr.treeptik.service.impl.ExportCSV;
 
 @Controller
 @RequestMapping("/aliment")
@@ -26,6 +32,9 @@ public class AlimentController {
 
 	@Inject
 	private AlimentService alimentService;
+	
+	@Inject
+	private ExportCSV exportCSV;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
@@ -97,7 +106,27 @@ public class AlimentController {
 		model.addAttribute("aliments", aliments);
 		return "/aliment/list";
 	}
-	
-	
-	
+
+	@RequestMapping(value = "/download/report", method = RequestMethod.GET)
+	public String downloadCSV(HttpServletResponse response)
+			throws ServiceException, IOException {
+
+		String report = exportCSV.exportAlimentCSV();
+
+		response.setContentType("text/csv");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String beginDateString = simpleDateFormat.format(new Date());
+		String reportName = beginDateString +"-Aliment" + ".csv";
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"",
+				reportName);
+		response.setHeader(headerKey, headerValue);
+
+		ServletOutputStream outputStream = response.getOutputStream();
+		outputStream.print(report);
+		outputStream.flush();
+		outputStream.close();
+		return "redirect:/aliment/list";
+	}
+
 }

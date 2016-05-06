@@ -31,6 +31,16 @@ public class NutritionBilan {
 		this.calories = calories;
 	}
 
+	
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Float getProteine() {
 		return proteine;
 	}

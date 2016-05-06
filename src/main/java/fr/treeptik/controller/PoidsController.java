@@ -62,7 +62,7 @@ public class PoidsController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id)
+	public String update(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--update PoidsController-- poidsId : " + id);
 
@@ -79,7 +79,7 @@ public class PoidsController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id)
+	public String delete(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--delete PoidsController-- poidsId : " + id);
 

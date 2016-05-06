@@ -24,7 +24,7 @@ public class PoidsServiceImpl implements PoidsService {
 	private Logger logger = Logger.getLogger(PoidsServiceImpl.class);
 
 	@Override
-	public Poids findById(Integer id) throws ServiceException {
+	public Poids findById(Long id) throws ServiceException {
 		return poidsDAO.findOne(id);
 	}
 
@@ -53,7 +53,7 @@ public class PoidsServiceImpl implements PoidsService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE PoidsService -- poidsId : " + id);
 		try {
 			poidsDAO.delete(id);

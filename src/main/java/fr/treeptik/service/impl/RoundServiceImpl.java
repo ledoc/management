@@ -23,7 +23,7 @@ public class RoundServiceImpl implements RoundService {
 	private Logger logger = Logger.getLogger(RoundServiceImpl.class);
 
 	@Override
-	public Round findById(Integer id) throws ServiceException {
+	public Round findById(Long id) throws ServiceException {
 		return roundDAO.findOne(id);
 	}
 
@@ -52,7 +52,7 @@ public class RoundServiceImpl implements RoundService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE RoundService -- roundId : " + id);
 		try {
 			roundDAO.delete(id);

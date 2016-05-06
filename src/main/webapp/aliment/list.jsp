@@ -25,7 +25,8 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des aliments</h1>
 
 						<div class="pull-right mb15">
-
+							<a href="<c:url  value="/aliment/download/report" />"
+								class="btn btn-outline btn-primary btn-m">Export CSV</a>
 							<a href="<c:url  value="/aliment/create" />"
 								class="btn btn-outline btn-primary btn-m">Créer un aliment</a>
 						</div>
@@ -46,7 +47,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<th>Protéines</th>
 										<th>Glucides</th>
 										<th>Lipides</th>
-										<th>BCAA</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -62,7 +62,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											<td><c:out value="${aliment.nutritionBilan.proteine}" /></td>
 											<td><c:out value="${aliment.nutritionBilan.glucide}" /></td>
 											<td><c:out value="${aliment.nutritionBilan.lipide}" /></td>
-											<td><c:out value="${aliment.nutritionBilan.bcaa}" /></td>
 											<td><a data-url="${urlAlimentDelete}"
 												data-toggle="modal" data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">

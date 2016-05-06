@@ -1,11 +1,11 @@
 package fr.treeptik.model;
 
-public class Bilan {
+public class BilanFinance {
 
 	private String categorie;
 	private Double somme;
 
-	public Bilan(String categorie, Double somme) {
+	public BilanFinance(String categorie, Double somme) {
 		super();
 		this.categorie = categorie;
 		this.somme = somme;

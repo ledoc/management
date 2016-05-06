@@ -7,7 +7,7 @@ import fr.treeptik.model.Round;
 
 public interface RoundService {
 
-	Round findById(Integer id) throws ServiceException;
+	Round findById(Long id) throws ServiceException;
 
 	Round create(Round round) throws ServiceException;
 
@@ -15,6 +15,6 @@ public interface RoundService {
 
 	List<Round> findAll() throws ServiceException;
 
-	void remove(Integer id) throws ServiceException;
+	void remove(Long id) throws ServiceException;
 
 }

@@ -7,7 +7,7 @@ import fr.treeptik.model.Exercice;
 
 public interface ExerciceService {
 
-	Exercice findById(Integer id) throws ServiceException;
+	Exercice findById(Long id) throws ServiceException;
 
 	Exercice create(Exercice exercice) throws ServiceException;
 
@@ -15,6 +15,6 @@ public interface ExerciceService {
 
 	List<Exercice> findAll() throws ServiceException;
 
-	void remove(Integer id) throws ServiceException;
+	void remove(Long id) throws ServiceException;
 
 }

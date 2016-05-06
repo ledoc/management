@@ -89,13 +89,6 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<form:input type="text" class="form-control" id="lipide"
 										path="lipide" placeholder="" data-parsley-trigger="change" />
 								</div>
-								<div class="form-group">
-									<label for="bcaa">BCAA</label>
-									<form:input type="text" class="form-control" id="bcaa"
-										path="bcaa" placeholder="" data-parsley-trigger="change" />
-								</div>
-
-
 								<div class="pull-right">
 									<a href="<c:url  value="/aliment/list" />"
 										class="btn btn-default btn-outline">Retour</a>

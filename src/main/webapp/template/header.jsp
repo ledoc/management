@@ -27,6 +27,8 @@
 
 <!-- page level plugin styles -->
 <link rel="stylesheet"
+	href="${urlResources}/css/management.css">
+<link rel="stylesheet"
 	href="${urlResources}/plugins/chosen/chosen.min.css">
 <link rel="stylesheet"
 	href="${urlResources}/plugins/datatables/jquery.dataTables.css">

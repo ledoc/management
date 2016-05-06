@@ -6,8 +6,11 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.propertyeditors.CustomCollectionEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
+import fr.treeptik.model.Plat;
 import fr.treeptik.model.Round;
 import fr.treeptik.model.Seance;
+import fr.treeptik.service.PlatService;
 import fr.treeptik.service.RoundService;
 import fr.treeptik.service.SeanceService;
 
@@ -66,7 +71,7 @@ public class SeanceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id)
+	public String update(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--update SeanceController-- seanceId : " + id);
 
@@ -83,7 +88,7 @@ public class SeanceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id)
+	public String delete(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--delete SeanceController-- seanceId : " + id);
 

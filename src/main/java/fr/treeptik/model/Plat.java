@@ -12,6 +12,7 @@ public class Plat {
 	@Id
 	@GeneratedValue
 	private Long id;
+	private String nom;
 	private Integer quantite;
 	@ManyToOne
 	private Aliment aliment;
@@ -27,6 +28,12 @@ public class Plat {
 		this.id = id;
 	}
 	
+	public String getNom() {
+		return nom;
+	}
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
 	public Integer getQuantite() {
 		return quantite;
 	}
@@ -44,6 +51,16 @@ public class Plat {
 	}
 	public void setNutritionBilan(NutritionBilan nutritionBilan) {
 		this.nutritionBilan = nutritionBilan;
+	}
+	@Override
+	public String toString() {
+		return "Plat ["
+				+ (id != null ? "id=" + id + ", " : "")
+				+ (nom != null ? "nom=" + nom + ", " : "")
+				+ (quantite != null ? "quantite=" + quantite + ", " : "")
+				+ (aliment != null ? "aliment=" + aliment + ", " : "")
+				+ (nutritionBilan != null ? "nutritionBilan=" + nutritionBilan
+						: "") + "]";
 	}
 	
 }

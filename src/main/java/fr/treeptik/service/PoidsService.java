@@ -9,7 +9,7 @@ import fr.treeptik.model.Poids;
 
 public interface PoidsService {
 
-	Poids findById(Integer id) throws ServiceException;
+	Poids findById(Long id) throws ServiceException;
 
 	Poids create(Poids poids) throws ServiceException;
 
@@ -17,7 +17,7 @@ public interface PoidsService {
 
 	List<Poids> findAll() throws ServiceException;
 
-	void remove(Integer id) throws ServiceException;
+	void remove(Long id) throws ServiceException;
 
 	PointGraphDTO transformPoidsInPoint(Poids poids) throws ServiceException;
 

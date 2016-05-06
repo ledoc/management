@@ -2,7 +2,7 @@ package fr.treeptik.model;
 
 public enum TypeRepas {
 	
-	PETITDEJEUNER("petit déjeuner"), MIDI("midi"), SOIR("soir");
+	PETITDEJEUNER("petit déjeuner"), MIDI("midi"), SOIR("soir"),AUTRE("autre");
 	
 	private String description;
 

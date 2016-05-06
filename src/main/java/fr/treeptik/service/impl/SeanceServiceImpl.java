@@ -23,7 +23,7 @@ public class SeanceServiceImpl implements SeanceService {
 	private Logger logger = Logger.getLogger(SeanceServiceImpl.class);
 
 	@Override
-	public Seance findById(Integer id) throws ServiceException {
+	public Seance findById(Long id) throws ServiceException {
 		return seanceDAO.findOne(id);
 	}
 
@@ -53,7 +53,7 @@ public class SeanceServiceImpl implements SeanceService {
 
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
-	public void remove(Integer id) throws ServiceException {
+	public void remove(Long id) throws ServiceException {
 		logger.info("--DELETE SeanceService -- seanceId : " + id);
 		try {
 			seanceDAO.delete(id);

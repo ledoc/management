@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import fr.treeptik.model.Poids;
 
 public interface PoidsDAO extends
-		JpaRepository<Poids, Integer> {
+		JpaRepository<Poids, Long> {
 
 
 }

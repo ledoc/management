@@ -25,8 +25,11 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 						<h1 class="h3 text-primary mt0">Liste des repas</h1>
 
 						<div class="pull-right mb15">
-
-							<a href="<c:url  value="/repas/create" />"
+													<a href="<c:url  value="/repas/download/report" />"
+								class="btn btn-outline btn-primary btn-m">Export CSV</a>
+							<a href="<c:url  value="/repas/graph" />"
+								class="btn btn-outline btn-primary btn-m">Graph</a> <a
+								href="<c:url  value="/repas/create" />"
 								class="btn btn-outline btn-primary btn-m">Créer un repas</a>
 						</div>
 					</header>
@@ -41,9 +44,13 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<table class="table table-striped list no-m">
 								<thead>
 									<tr>
+										<th>Nom</th>
 										<th>Date</th>
 										<th>Repas</th>
 										<th>Calories</th>
+										<th>Protéines</th>
+										<th>Glucides</th>
+										<th>Lipides</th>
 										<th class="nosort nosearch">Actions</th>
 									</tr>
 								</thead>
@@ -52,9 +59,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<c:url var="urlRepasDelete" value="/repas/delete/${repas.id}" />
 										<c:url var="urlRepasUpdate" value="/repas/update/${repas.id}" />
 										<tr>
-											<td class="text-primary"><a href="${urlRepasUpdate}">${repas.date}</a></td>
-											<td><c:out value="${repas.typeRepas}" /></td>
-											<td><c:out value="${repas.calories}" /></td>
+											<td class="text-primary"><a href="${urlRepasUpdate}">${repas.nom}</a></td>
+											<td><c:out value="${repas.date}" /></td>
+
+											<td><c:out value="${repas.typeRepas.description}" /></td>
+											<td><c:out value="${repas.nutritionBilan.calories}" /></td>
+											<td><c:out value="${repas.nutritionBilan.proteine}" /></td>
+											<td><c:out value="${repas.nutritionBilan.glucide}" /></td>
+											<td><c:out value="${repas.nutritionBilan.lipide}" /></td>
 											<td><a data-url="${urlRepasDelete}" data-toggle="modal"
 												data-target="#confirmModal"
 												class="btn btn-outline btn-danger btn-xs js-confirm-btn">

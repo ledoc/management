@@ -39,7 +39,6 @@ public class AlimentServiceImpl implements AlimentService {
 System.out.println(aliment);
 		logger.info("--CREATE AlimentService --");
 		logger.debug("Aliment : " + aliment);
-		nutritionBilanDAO.save(aliment.getNutritionBilan());
 		aliment = alimentDAO.save(aliment);
 		
 		return aliment;
@@ -53,13 +52,16 @@ System.out.println(aliment);
 				adjustToUnity(aliment, aliment.getGlucide()),
 				adjustToUnity(aliment, aliment.getBcaa()),
 				adjustToUnity(aliment, aliment.getCalories()));
-//		nutritionBilan = nutritionBilanDAO.save(nutritionBilan);
+		nutritionBilan = nutritionBilanDAO.save(nutritionBilan);
 		aliment.setNutritionBilan(nutritionBilan);
 
 		return aliment;
 	}
 
 	private Float adjustToUnity(Aliment aliment, Float value) {
+		if(value == null) {
+			value = 0F;
+		}
 		value = value / aliment.getQuantite();
 		return value;
 	}

@@ -27,7 +27,7 @@ import fr.treeptik.dto.PointCamenbertDTO;
 import fr.treeptik.dto.PointGraphDTO;
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.Bilan;
+import fr.treeptik.model.BilanFinance;
 import fr.treeptik.model.Finance;
 import fr.treeptik.model.TypePayment;
 import fr.treeptik.service.FinanceService;
@@ -42,6 +42,18 @@ public class FinanceController {
 	@Inject
 	private FinanceService financeService;
 
+	
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		logger.info("--initBinder FinanceController --");
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, false));
+	}
+	
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
 		logger.info("--create formulaire FinanceController--");
@@ -72,7 +84,7 @@ public class FinanceController {
 			Double newTotal = lastTotal + finance.getMontant();
 			finance.setTotal(newTotal);
 			}
-			financeService.update(finance);
+			financeService.create(finance);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -83,7 +95,7 @@ public class FinanceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Integer id)
+	public String update(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--update FinanceController-- financeId : " + id);
 		Finance finance = null;
@@ -103,7 +115,7 @@ public class FinanceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
-	public String delete(Model model, @PathVariable("id") Integer id)
+	public String delete(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--delete FinanceController-- financeId : " + id);
 
@@ -159,7 +171,7 @@ public class FinanceController {
 			throws ControllerException {
 		logger.info("--list FinanceController--");
 
-		List<Bilan> bilans = new ArrayList<>();
+		List<BilanFinance> bilans = new ArrayList<>();
 
 		try {
 
@@ -173,9 +185,6 @@ public class FinanceController {
 	}
 
 	/**
-	 * On initialise avec la premiere alerte du premier capteur en retirant le
-	 * capteur de temperature
-	 *
 	 * @param request
 	 * @return
 	 * @throws ControllerException
@@ -186,7 +195,7 @@ public class FinanceController {
 
 		logger.info("--initPointsCamenbert MesureController");
 
-		List<Bilan> bilans = new ArrayList<>();
+		List<BilanFinance> bilans = new ArrayList<>();
 		List<PointCamenbertDTO> points = new ArrayList<>();
 
 		try {
@@ -194,7 +203,7 @@ public class FinanceController {
 
 
 				bilans = financeService.listAllBilans();
-				for (Bilan bilan : bilans) {
+				for (BilanFinance bilan : bilans) {
 					points.add(financeService.transformBilanInCamenbertPoint(bilan));
 				}	
 			
@@ -239,16 +248,5 @@ public class FinanceController {
 		return points;
 	}
 	
-	
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		logger.info("--initBinder MesureController --");
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-		System.out.println("initBinder");
-
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(
-				dateFormat, false));
-	}
 }
