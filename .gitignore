@@ -103,5 +103,3 @@ pom.xml.releaseBackup
 pom.xml.next
 release.properties
 
-### Fichier temporaire du Makefile ###
-cuimage
