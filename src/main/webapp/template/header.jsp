@@ -87,7 +87,7 @@
 						class="${param.menuAlimentActive}">Aliments</a></li>
 					<li><a href="<c:url  value="/plat/list" />"
 						class="${param.menuPlatActive}">Plats</a></li>
-					<li><a href="<c:url  value="/repas/list" />"
+					<li><a href="<c:url  value="/repasdate/list" />"
 						class="${param.menuRepasActive}">Repas</a></li>
 					<li><a href="<c:url  value="/exercice/list" />"
 						class="${param.menuExerciceActive}">Exercices</a></li>

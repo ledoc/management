@@ -1,7 +1,6 @@
 package fr.treeptik.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import fr.treeptik.dao.NutritionBilanDAO;
 import fr.treeptik.dao.RepasDAO;
 import fr.treeptik.exception.ServiceException;
-import fr.treeptik.model.BilanRepas;
 import fr.treeptik.model.NutritionBilan;
 import fr.treeptik.model.Plat;
 import fr.treeptik.model.Repas;
@@ -34,7 +32,7 @@ public class RepasServiceImpl implements RepasService {
 	public Repas findById(Long id) throws ServiceException {
 		return repasDAO.findOne(id);
 	}
-	
+
 	@Override
 	public Repas findByIdWithListPlat(Long id) throws ServiceException {
 		return repasDAO.findByIdWithListPlat(id);
@@ -45,7 +43,7 @@ public class RepasServiceImpl implements RepasService {
 	public Repas create(Repas repas) throws ServiceException {
 		logger.info("--CREATE RepasService --");
 		logger.debug("repas : " + repas);
-		if(repas.getListPlats() != null && !repas.getListPlats().isEmpty()) {
+		if (repas.getListPlats() != null && !repas.getListPlats().isEmpty()) {
 			repas = buildNutrionBilanForRepas(repas);
 		}
 
@@ -85,7 +83,7 @@ public class RepasServiceImpl implements RepasService {
 		logger.info("--UPDATE RepasService -- repas " + repas);
 		logger.debug("repas : " + repas);
 		try {
-			if(repas.getListPlats() != null && !repas.getListPlats().isEmpty()) {
+			if (repas.getListPlats() != null && !repas.getListPlats().isEmpty()) {
 				repas = buildNutrionBilanForRepas(repas);
 			}
 
@@ -121,7 +119,7 @@ public class RepasServiceImpl implements RepasService {
 		}
 		return listRepas;
 	}
-	
+
 	@Override
 	public List<Repas> findAllWithListPlat() throws ServiceException {
 		logger.info("--FINDALL RepasService --");
@@ -134,45 +132,24 @@ public class RepasServiceImpl implements RepasService {
 		}
 		return listRepas;
 	}
-			
+
 	@Override
-	public List<BilanRepas> createBilanByDate()
+	public Boolean checkRepasExist(List<Plat> listPlats)
 			throws ServiceException {
-		List<BilanRepas> listBilanRepas = new ArrayList<BilanRepas>();
-		List<Repas> allRepas = findAll();
-		List<Date> listDatesOfRepas = listDatesOfRepas();
-
-		for (Date date : listDatesOfRepas) {
-			BilanRepas bilanRepas = new BilanRepas();
-			bilanRepas.setDate(date);
-			Double sommeCalories = 0D;
-			Double sommeProteines = 0D;
-			Double sommeGlucides = 0D;
-			Double sommeLipides = 0D;
-
-			for (Repas repas : allRepas) {
-				if (date.equals(repas.getDate())) {
-					NutritionBilan nutritionBilan = repas.getNutritionBilan();
-					sommeCalories += nutritionBilan.getCalories();
-					sommeProteines += nutritionBilan.getProteine();
-					sommeGlucides += nutritionBilan.getGlucide();
-					sommeLipides += nutritionBilan.getLipide();
-				
-				}
-			}
-			
-			bilanRepas.setSommeCalories(sommeCalories);
-			bilanRepas.setSommeProteines(sommeProteines);
-			bilanRepas.setSommeGlucides(sommeGlucides);
-			bilanRepas.setSommeLipides(sommeLipides);
-			listBilanRepas.add(bilanRepas);
+		logger.info("--checkRepasExist RepasService -- listplats = "+ listPlats);
+		
+		List<Long> listPlatsId = new ArrayList<Long>();
+		
+		for (Plat plat : listPlats) {
+		listPlatsId.add(plat.getId());	
 		}
+		Long count = repasDAO.countRepasWithListPlats(listPlatsId);
+		if (count != 0L) {
+			return true;
+		} else {
+			return false;
 
-		return listBilanRepas;
-	}
-
-	private List<Date> listDatesOfRepas() {
-		return repasDAO.listAllDatesOfRepas();
+		}
 	}
 
 }

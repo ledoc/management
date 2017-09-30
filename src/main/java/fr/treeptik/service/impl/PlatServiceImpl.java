@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,6 +105,7 @@ public class PlatServiceImpl implements PlatService {
 	}
 
 	@Override
+	@Cacheable("default")
 	public List<Plat> findAll() throws ServiceException {
 		logger.info("--FINDALL PlatService --");
 		List<Plat> plats;

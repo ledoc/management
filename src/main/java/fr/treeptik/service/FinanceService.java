@@ -47,5 +47,7 @@ public interface FinanceService {
 	Double countBeforeMonthSum() throws ServiceException;
 
 	Double selectLastTotal() throws ServiceException;
+
+	void reaffectAllTotal() throws ServiceException;
 	
 }

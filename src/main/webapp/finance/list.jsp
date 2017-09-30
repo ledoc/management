@@ -28,13 +28,15 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							<p class="text-muted">Somme/moyenne du mois précédent :
 							${sumOfBeforeMonth} / ${averageOfBeforeMonth}</p>
 						<div class="pull-right mb15">
+						<a
+								href="<c:url  value="/finance/create" />"
+								class="btn btn-outline btn-primary btn-m">enregistrer une opération</a>
 									<a href="<c:url  value="/finance/graph" />"
 								class="btn btn-outline btn-primary btn-m">Graph</a>				
 							<a href="<c:url  value="/finance/bilan" />"
 								class="btn btn-outline btn-primary btn-m">Vue des bilans</a> <a
-								href="<c:url  value="/finance/create" />"
-								class="btn btn-outline btn-primary btn-m">enregistrer
-								opération</a>
+								href="<c:url  value="/finance/reaffect/total" />"
+								class="btn btn-outline btn-danger btn-m">réaligner les totaux</a>
 						</div>
 					</header>
 					<div class="panel-body">

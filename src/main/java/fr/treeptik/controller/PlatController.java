@@ -14,19 +14,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.treeptik.exception.ControllerException;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Aliment;
 import fr.treeptik.model.Plat;
 import fr.treeptik.model.Repas;
+import fr.treeptik.model.RepasDate;
 import fr.treeptik.service.AlimentService;
 import fr.treeptik.service.PlatService;
+import fr.treeptik.service.RepasDateService;
 import fr.treeptik.service.RepasService;
 import fr.treeptik.service.impl.ExportCSV;
 
@@ -40,10 +42,12 @@ public class PlatController {
 	private PlatService platService;
 	@Inject
 	private RepasService repasService;
-	
+	@Inject
+	private RepasDateService repasDateService;
+
 	@Inject
 	private AlimentService alimentService;
-	
+
 	@Inject
 	private ExportCSV exportCSV;
 
@@ -57,46 +61,88 @@ public class PlatController {
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
-		
+
 		model.addAttribute("alimentCombo", alimentCombo);
 		model.addAttribute("plat", new Plat());
 		return "/plat/create";
 	}
 
-	@RequestMapping(value = "/create/{repasId}", method = RequestMethod.POST)
-	public String create(@ModelAttribute Plat plat , @PathVariable(value="repasId") Long repasId)
+	@RequestMapping(method = RequestMethod.POST, value = "/create/isolated")
+	public String createIsolated(@ModelAttribute Plat plat,
+			BindingResult errors, HttpServletRequest request)
 			throws ControllerException {
-		logger.info("--create PlatController-- repasId : " + repasId);
-		logger.info("--create PlatController-- plat : " + plat);
+		logger.info("--createIsolated PlatController--");
+
+		{
+			if (errors.hasErrors()) {
+				errors.getAllErrors().forEach(
+						e -> System.out.println(e.getDefaultMessage()));
+			}
+		}
 
 		try {
-			Repas repas = null;
-			if (repasId == 0) {
-				repas = new Repas();
-			}else {
-				repas = repasService.findByIdWithListPlat(repasId);
-			}
-			plat = platService.create(plat);
-			List<Plat> listPlats = repas.getListPlats();
-			if(listPlats == null ){
-				listPlats = new ArrayList<Plat>();
-			}
-			
-			
-			listPlats.add(plat);
-			repas.setListPlats(listPlats);
-			if (repasId == null) {
-				repas = repasService.create(repas);
-			}else {
-				repas = repasService.update(repas);
-			}
-			repasId = repas.getId();
+			platService.create(plat);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		return "redirect:/repas/update/" + repasId;
+		return "redirect:/plat/list";
+
+	}
+
+	@RequestMapping(value = "/create/{repasId}/{repasDateId}", method = RequestMethod.POST)
+	public String create(@ModelAttribute Plat plat,
+			@PathVariable("repasId") Long repasId,
+			@PathVariable("repasDateId") Long repasDateId)
+			throws ControllerException {
+		logger.info("--create PlatController-- repasId : " + repasId);
+		logger.info("--create PlatController-- repasDateId : " + repasDateId);
+		logger.info("--create PlatController-- plat : " + plat);
+
+		try {
+			RepasDate repasDate = null;
+			Repas repas = null;
+
+			if (repasDateId == 0) {
+				repasDate = new RepasDate();
+			} else {
+				repasDate = repasDateService.findById(repasDateId);
+			}
+
+			if (repasId == 0) {
+				repas = new Repas();
+			} else {
+				repas = repasService.findByIdWithListPlat(repasId);
+			}
+			repasDate.setRepas(repas);
+			plat = platService.create(plat);
+			List<Plat> listPlats = repas.getListPlats();
+			if (listPlats == null) {
+				listPlats = new ArrayList<Plat>();
+			}
+
+			listPlats.add(plat);
+			repas.setListPlats(listPlats);
+			if (repasId == 0) {
+				repas = repasService.create(repas);
+			} else {
+				repas = repasService.update(repas);
+			}
+			repasDate.setRepas(repas);
+			if (repasDateId == 0) {
+				repasDate = repasDateService.create(repasDate);
+			} else {
+				repasDate = repasDateService.update(repasDate);
+			}
+			repasId = repas.getId();
+			repasDateId = repasDate.getId();
+		} catch (ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+
+		return "redirect:/repasdate/update/" + repasId + "/" + repasDateId;
 
 	}
 
@@ -146,7 +192,7 @@ public class PlatController {
 		model.addAttribute("listPlat", plats);
 		return "/plat/list";
 	}
-	
+
 	@RequestMapping(value = "/download/report", method = RequestMethod.GET)
 	public String downloadCSV(HttpServletResponse response)
 			throws ServiceException, IOException {
@@ -156,7 +202,7 @@ public class PlatController {
 		response.setContentType("text/csv");
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String beginDateString = simpleDateFormat.format(new Date());
-		String reportName = beginDateString +"-Plat" + ".csv";
+		String reportName = beginDateString + "-Plat" + ".csv";
 		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"",
 				reportName);
@@ -168,5 +214,5 @@ public class PlatController {
 		outputStream.close();
 		return "redirect:/plat/list";
 	}
-	
+
 }

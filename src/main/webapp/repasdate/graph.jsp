@@ -17,9 +17,9 @@
 	<section class="main-content" id="carto">
 
 
-		<c:url var="repasUrl" value="/repas" />
-		<a class="relayUrl" href="${repasUrl}"></a> <a class="resourcesUrl"
-			href="${resourcesUrl}"></a>
+		<c:url var="repasDateUrl" value="/repasdate" />
+		<a class="relayUrl" href="${repasDateUrl}"></a> <a
+			class="resourcesUrl" href="${resourcesUrl}"></a>
 
 		<!-- content wrapper -->
 		<div class="content-wrap bg-default clearfix row">
@@ -27,9 +27,9 @@
 
 
 				<ul class="nav nav-tabs no-b">
-					<li id="ongletChronique"><a href="#chronique"
-						class="active" data-toggle="tab">Chroniques</a></li>
-					
+					<li id="ongletChronique"><a href="#chronique" class="active"
+						data-toggle="tab">Chroniques</a></li>
+
 				</ul>
 				<div class="tab-content text-center no-shadow">
 
@@ -59,11 +59,9 @@
 
 			$(document).ready(function() {
 				loadGraph();
-				$('#ongletChronique').click(loadGraph(), function() {
-					$.getJSON(relayUrl + '/init/graph/points', function(graph) {
+				$.getJSON(relayUrl + '/init/graph/points', function(graph) {
 
-						updateSerieGraph(graph);
-					});
+					updateSerieGraph(graph);
 				});
 			});
 
@@ -108,7 +106,7 @@
 										},
 										height : '100%',
 										title : {
-											text : 'suivi des Quantité',
+											text : 'suivi nutritionnel',
 											style : {
 												color : '#94ECD9'
 											}

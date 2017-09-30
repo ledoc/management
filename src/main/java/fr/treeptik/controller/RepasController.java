@@ -34,7 +34,6 @@ import fr.treeptik.model.Aliment;
 import fr.treeptik.model.BilanRepas;
 import fr.treeptik.model.Plat;
 import fr.treeptik.model.Repas;
-import fr.treeptik.model.TypeRepas;
 import fr.treeptik.service.AlimentService;
 import fr.treeptik.service.PlatService;
 import fr.treeptik.service.RepasService;
@@ -87,8 +86,6 @@ public class RepasController {
 		logger.info("--create formulaire RepasController--");
 
 		try {
-			List<TypeRepas> typesRepasCombo = new ArrayList<TypeRepas>(
-					Arrays.asList(TypeRepas.values()));
 			List<Aliment> listAlimentCombo = null;
 			List<Plat> listPlatCombo = null;
 			try {
@@ -102,7 +99,6 @@ public class RepasController {
 			model.addAttribute("listAlimentCombo", listAlimentCombo);
 			model.addAttribute("plat", new Plat());
 			List<Repas> listRepasCombo = repasService.findAllWithListPlat();
-			model.addAttribute("typesRepasCombo", typesRepasCombo);
 			model.addAttribute("listRepasCombo", listRepasCombo);
 			model.addAttribute("repas", new Repas());
 		} catch (ServiceException e) {
@@ -111,7 +107,7 @@ public class RepasController {
 		return "/repas/create";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping( value = "/create", method = RequestMethod.POST )
 	public String create(@ModelAttribute Repas repas,
 			BindingResult bindingResult) throws ControllerException {
 		logger.info("--create RepasController-- repas : " + repas);
@@ -124,22 +120,16 @@ public class RepasController {
 		}
 
 		try {
-			if (repas.getCopyRepasId() != null) {
-				Repas copyRepas = repasService.findByIdWithListPlat(repas
-						.getCopyRepasId());
-				Date date = repas.getDate();
-				repas = new Repas(copyRepas);
-				repas.setDate(date);
-			}
 			repasService.create(repas);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
 
-		return "redirect:/repas/list";
+		return "redirect:/repas/create";
 
 	}
+	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
 	public String doUpdate(Model model, @PathVariable("id") Long id)
@@ -148,8 +138,6 @@ public class RepasController {
 
 		Repas repas = null;
 		List<Plat> listPlatCombo = null;
-		List<TypeRepas> typesRepasCombo = new ArrayList<TypeRepas>(
-				Arrays.asList(TypeRepas.values()));
 		List<Aliment> listAlimentCombo = null;
 		List<Repas> listRepasCombo = null;
 		try {
@@ -165,14 +153,13 @@ public class RepasController {
 			model.addAttribute("plat", new Plat());
 			model.addAttribute("listPlatCombo", listPlatCombo);
 			model.addAttribute("listAlimentCombo", listAlimentCombo);
-			model.addAttribute("typesRepasCombo", typesRepasCombo);
 			model.addAttribute("listRepasCombo", listRepasCombo);
 			logger.info("--send To Form RepasController-- repas : " + repas);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
 		}
-		return "/repas/create";
+		return "/repasdate/create";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
@@ -205,37 +192,7 @@ public class RepasController {
 		return "/repas/list";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = { "/graph" })
-	public String graph(Model model, HttpServletRequest request)
-			throws ControllerException {
-		logger.info("--graph RepasController--");
 
-		return "/repas/graph";
-	}
-
-	/**
-	 *
-	 * @param request
-	 * @return
-	 * @throws ControllerException
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/init/graph/points")
-	public @ResponseBody List<BilanRepas> initPointsGraphRepas(
-			HttpServletRequest request) throws ControllerException {
-
-		logger.info("--initPointsGraph RepasController");
-
-		List<BilanRepas> listAllBilanRepas = new ArrayList<BilanRepas>();
-		try {
-			listAllBilanRepas = repasService.createBilanByDate();
-
-			Collections.sort(listAllBilanRepas, new DateBilanRepasComparator());
-		} catch (ServiceException e) {
-			logger.error(e.getMessage());
-			throw new ControllerException(e.getMessage(), e);
-		}
-		return listAllBilanRepas;
-	}
 
 	@RequestMapping(value = "/download/report", method = RequestMethod.GET)
 	public String downloadCSV(HttpServletResponse response)

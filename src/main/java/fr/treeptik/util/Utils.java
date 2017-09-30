@@ -9,7 +9,7 @@ public class Utils {
 	public static double round(double unrounded, int precision)
 	{
 	    BigDecimal bd = new BigDecimal(unrounded);
-	    BigDecimal rounded = bd.setScale(precision, RoundingMode.CEILING);
+	    BigDecimal rounded = bd.setScale(precision, RoundingMode.HALF_EVEN);
 	    return rounded.doubleValue();
 	}
 }

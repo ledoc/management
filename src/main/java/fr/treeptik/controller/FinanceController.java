@@ -42,8 +42,6 @@ public class FinanceController {
 	@Inject
 	private FinanceService financeService;
 
-	
-	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		logger.info("--initBinder FinanceController --");
@@ -52,8 +50,7 @@ public class FinanceController {
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(
 				dateFormat, false));
 	}
-	
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public String initForms(Model model) throws ControllerException {
 		logger.info("--create formulaire FinanceController--");
@@ -79,12 +76,11 @@ public class FinanceController {
 		logger.info("--create FinanceController-- finance : " + finance);
 
 		try {
-			Double lastTotal = financeService.selectLastTotal();
-			if (finance.getTypePayment() != TypePayment.LIQUIDE) {
-			Double newTotal = lastTotal + finance.getMontant();
-			finance.setTotal(newTotal);
+			if (finance.getId() != null) {
+				financeService.update(finance);
+			} else {
+				financeService.create(finance);
 			}
-			financeService.create(finance);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -95,7 +91,7 @@ public class FinanceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/update/{id}")
-	public String update(Model model, @PathVariable("id") Long id)
+	public String doUpdate(Model model, @PathVariable("id") Long id)
 			throws ControllerException {
 		logger.info("--update FinanceController-- financeId : " + id);
 		Finance finance = null;
@@ -128,6 +124,21 @@ public class FinanceController {
 		return "redirect:/finance/list";
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/reaffect/total")
+	public String reaffectAllTotal(Model model)
+			throws ControllerException {
+		logger.info("--reaffectAllTotal FinanceController--");
+
+		try {
+			financeService.reaffectAllTotal();
+		} catch (NumberFormatException | ServiceException e) {
+			logger.error(e.getMessage());
+			throw new ControllerException(e.getMessage(), e);
+		}
+		return "redirect:/finance/list";
+	}
+	
+	
 	@RequestMapping(method = RequestMethod.GET, value = { "/list", "/" })
 	public String list(Model model, HttpServletRequest request)
 			throws ControllerException {
@@ -199,16 +210,14 @@ public class FinanceController {
 		List<PointCamenbertDTO> points = new ArrayList<>();
 
 		try {
-			
 
+			bilans = financeService.listAllBilans();
+			for (BilanFinance bilan : bilans) {
+				points.add(financeService.transformBilanInCamenbertPoint(bilan));
+			}
 
-				bilans = financeService.listAllBilans();
-				for (BilanFinance bilan : bilans) {
-					points.add(financeService.transformBilanInCamenbertPoint(bilan));
-				}	
-			
 			System.out.println(points);
-				
+
 		} catch (ServiceException e) {
 			logger.error(e.getMessage());
 			throw new ControllerException(e.getMessage(), e);
@@ -216,7 +225,6 @@ public class FinanceController {
 		return points;
 	}
 
-	
 	/**
 	 *
 	 * @param request
@@ -232,8 +240,7 @@ public class FinanceController {
 		List<PointGraphDTO> points = new ArrayList<>();
 
 		try {
-			
-			
+
 			List<Finance> allFinances = financeService.findAll();
 
 			for (Finance finance : allFinances) {
@@ -247,6 +254,5 @@ public class FinanceController {
 		}
 		return points;
 	}
-	
 
 }

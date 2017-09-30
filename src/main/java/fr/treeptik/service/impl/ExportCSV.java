@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 import fr.treeptik.dao.AlimentDAO;
 import fr.treeptik.dao.PlatDAO;
-import fr.treeptik.dao.RepasDAO;
+import fr.treeptik.dao.RepasDateDAO;
 import fr.treeptik.exception.ServiceException;
 import fr.treeptik.model.Aliment;
 import fr.treeptik.model.Plat;
-import fr.treeptik.model.Repas;
+import fr.treeptik.model.RepasDate;
 import fr.treeptik.util.CSVUtils;
 
 @Component
@@ -24,7 +24,7 @@ public class ExportCSV {
 	@Inject
 	private PlatDAO platDAO;
 	@Inject
-	private RepasDAO repasDAO;
+	private RepasDateDAO repasDateDAO;
 
 	
 	@Inject
@@ -76,13 +76,13 @@ public class ExportCSV {
 		String report = null;
 		try {
 
-			List<Repas> listRepas = repasDAO.findAllWithListPlat();
-			if (!listRepas.isEmpty()) {
+			List<RepasDate> listRepasDate = repasDateDAO.findAllWithListPlat();
+			if (!listRepasDate.isEmpty()) {
 				List<String> listTitle = csvUtils.doAlimentHeaderCSV();
 				String headersCSV = String.join(";", listTitle);
 				StringBuilder builder = new StringBuilder(headersCSV);
 				builder.append("\n");
-				report = csvUtils.doRepasCSV(listRepas, builder);
+				report = csvUtils.doRepasDateCSV(listRepasDate, builder);
 			}
 		} catch (DataAccessException e) {
 			throw new ServiceException(e.getLocalizedMessage(), e);

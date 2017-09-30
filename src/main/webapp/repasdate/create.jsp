@@ -17,12 +17,12 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!-- Seulement une visualisation pour les clients -->
 <c:set var="readOnlyValue" value="false"></c:set>
-<c:if test="${empty repas.id}">
+<c:if test="${empty repasDate.id}">
 	<c:set var="sentenceCreateUpdate" value="créer" />
 	<c:set var="labelCreateUpdate" value="Créer" />
 	<c:set var="textCreateUpdate" value="Création" />
 </c:if>
-<c:if test="${not empty repas.id}">
+<c:if test="${not empty repasDate.id}">
 	<c:set var="sentenceCreateUpdate" value="mettre à jour" />
 	<c:set var="labelCreateUpdate" value="Mettre à jour" />
 	<c:set var="textCreateUpdate" value="Mise à jour" />
@@ -43,69 +43,76 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 					<div class="panel-body">
 						<div class="col-md-6 col-lg-6 col-md-6 col-xs-12 col-lg-offset-2">
-							<fieldset class="fsStyle">
+							<!-- 							<fieldset class="fsStyle"> -->
 
-								<legend class="legendStyle"
-									style="width: auto; border-bottom: 0px">
-									<a data-toggle="collapse" data-target="#formPlat" href="#">Créer
-										un nouveau plat pour ce repas?</a>
-								</legend>
-								<div class="row collapse" id="formPlat">
-									<c:if test="${not empty repas.id}">
-										<c:url var="createPlat" value="/plat/create/${repas.id}" />
-									</c:if>
-									<c:if test="${empty repas.id}">
-										<c:url var="createPlat" value="/plat/create/0" />
-									</c:if>
-									<form:form id="form" method="POST" action="${createPlat}"
-										modelAttribute="plat" role="form"
-										class="parsley-form form-inline" data-validate="parsley"
-										data-show-errors="true">
+							<!-- 								<legend class="legendStyle" -->
+							<!-- 									style="width: auto; border-bottom: 0px"> -->
+							<!-- 									<a data-toggle="collapse" data-target="#formPlat" href="#">Créer -->
+							<!-- 										un nouveau plat pour ce repas?</a> -->
+							<!-- 								</legend> -->
+							<!-- 								<div class="row collapse" id="formPlat"> -->
+							<c:if test="${not empty repasDate.id}">
+								<c:set var="repasDateId" value="${repasDate.id}" />
+							</c:if>
+							<c:if test="${empty repasDate.id}">
+								<c:set var="repasDateId" value="0" />
+							</c:if>
+							<c:if test="${not empty repasDate.repas.id}">
+								<c:set var="repasId" value="${repasDate.repas.id}" />
+							</c:if>
+							<c:if test="${empty repasDate.repas.id}">
+								<c:set var="repasId" value="0" />
+							</c:if>
 
-										<form:hidden path="id" />
+								<c:url var="createPlat"
+									value="/plat/create/${repasId}/${repasDateId}" />
+							<form:form id="form" method="POST" action="${createPlat}"
+								modelAttribute="plat" role="form"
+								class="parsley-form form-inline" data-validate="parsley"
+								data-show-errors="true">
 
-										<div
-											class="col-md-12 col-lg-12 col-md-12 col-xs-12 col-lg-offset-2">
+								<form:hidden path="id" />
+								<div
+									class="col-md-12 col-lg-12 col-md-12 col-xs-12 col-lg-offset-2">
 
-											<div class="form-group">
-												<label class="sr-only" for="nom">Nom</label>
-												<form:input type="text" class="form-control" id="nomPlat"
-													path="nom" placeholder="Nom" data-parsley-trigger="change" />
-											</div>
+									<div class="form-group">
+										<label class="sr-only" for="nom">Nom</label>
+										<form:input type="text" class="form-control" id="nomPlat"
+											path="nom" placeholder="Nom" data-parsley-trigger="change" />
+									</div>
 
-											<div class="form-group" style="margin-top: -10px">
-												<label class="sr-only" for="nom">Aliment</label>
-												<form:select class="form-control chosen"
-													style="min-width: 200px; width:200px"
-													data-placeholder="Choisir un aliment ..." path="aliment.id">
-													<form:option value="">--- Choisir un aliment ---</form:option>
-													<form:options items="${listAlimentCombo}" itemValue="id"
-														itemLabel="nom" />
-												</form:select>
-											</div>
+									<div class="form-group">
+										<label class="sr-only" for="nom">Aliment</label>
+										<form:select class="form-control chosen"
+											data-placeholder="Choisir un aliment ..." path="aliment.id">
+											<form:option value="">--- Choisir un aliment ---</form:option>
+											<form:options items="${listAlimentCombo}" itemValue="id"
+												itemLabel="nom" />
+										</form:select>
+									</div>
 
-											<div class="form-group">
-												<label class="sr-only" for="quantite">Quantité</label>
-												<form:input type="text" class="form-control" id="quantite"
-													path="quantite" placeholder="Quantité"
-													data-parsley-trigger="change" />
-											</div>
+									<div class="form-group">
+										<label class="sr-only" for="quantite">Quantité</label>
+										<form:input type="text" class="form-control" id="quantite"
+											path="quantite" placeholder="Quantité"
+											data-parsley-trigger="change" />
+									</div>
 
-											<div>
-												<a href="<c:url  value="/plat/list" />"
-													class="btn btn-default btn-outline">Retour</a>
-												<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
-											</div>
-										</div>
-									</form:form>
+									<div>
+										<a href="<c:url  value="/plat/list" />"
+											class="btn btn-default btn-outline">Retour</a>
+										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+									</div>
 								</div>
-							</fieldset>
+							</form:form>
+							<!-- 								</div> -->
+							<!-- 							</fieldset> -->
 						</div>
 
 						<div class="panel-body">
-							<c:url var="createRepas" value="/repas/create" />
-							<form:form id="form" method="POST" action="${createRepas}"
-								modelAttribute="repas" role="form" class="parsley-form"
+							<c:url var="createRepasDate" value="/repasdate/create" />
+							<form:form id="form" method="POST" action="${createRepasDate}"
+								modelAttribute="repasDate" role="form" class="parsley-form"
 								data-validate="parsley" data-show-errors="true">
 
 								<div class="col-md-6 col-lg-6 col-md-6 col-xs-12 ">
@@ -116,6 +123,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 											repas.</p>
 									</header>
 									<form:hidden path="id" />
+										<form:hidden path="repas.id" />
 								</div>
 								<div
 									class="col-md-6 col-lg-6 col-md-6 col-xs-12 col-lg-offset-2">
@@ -125,14 +133,14 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<div class="form-group">
 										<label for="nom">Nom</label>
 										<form:input type="text" class="form-control" id="nom"
-											path="nom" placeholder="" />
+											path="repas.nom" placeholder="" />
 									</div>
 									<div class="form-group">
-										<c:if test="${empty repas.listPlats }">
+										<c:if test="${empty repasDate.repas.listPlats }">
 
 											<H2>Ooops !&nbsp;Liste vide.</H2>
 										</c:if>
-										<c:if test="${not empty repas.listPlats }">
+										<c:if test="${not empty repasDate.repas.listPlats }">
 
 											<table class="table table-striped list no-m">
 												<thead>
@@ -144,7 +152,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 													</tr>
 												</thead>
 												<tbody>
-													<c:forEach items="${repas.listPlats}" var="plat">
+													<c:forEach items="${repasDate.repas.listPlats}" var="plat">
 														<c:url var="urlPlatDelete" value="/plat/delete/${plat.id}" />
 														<c:url var="urlPlatUpdate" value="/plat/update/${plat.id}" />
 														<tr>
@@ -176,7 +184,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<form:select class="form-control chosen"
 											data-placeholder="--- Copier un repas??? ---"
 											path="copyRepasId">
-											<form:option value="--- Copier un repas??? ---"></form:option>
+											<form:option label="--- Copier un repas??? ---" value="0"></form:option>
 											<form:options items="${listRepasCombo}" itemLabel="nom"
 												itemValue="id" />
 										</form:select>
@@ -185,25 +193,18 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 										<label for="repasCopy">List Plat</label>
 
 										<form:select class="form-control chosen"
-											data-placeholder="--- List des plats ---" path="listPlats">
+											data-placeholder="--- List des plats ---"
+											path="repas.listPlats">
 											<form:options items="${listPlatCombo}" itemLabel="nom"
 												itemValue="id" />
 										</form:select>
 									</div>
-									<div class="form-group">
-										<label for="repas">Repas</label>
 
-										<form:select class="form-control chosen"
-											data-placeholder="--- Choisir un repas ---" path="typeRepas">
-											<form:option value="-- Choisir un repas ---"></form:option>
-											<form:options items="${typesRepasCombo}"
-												itemLabel="description" />
-										</form:select>
-									</div>
 									<div class="pull-right">
-										<a href="<c:url  value="/repas/list" />"
+										<a href="<c:url  value="/repasdate/list" />"
 											class="btn btn-default btn-outline">Retour</a>
-										<button type="submit" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+										<button type="submit" name="returnToList" value="returnToList" class="btn btn-outline btn-primary">${labelCreateUpdate}</button>
+										<button type="submit" name="createAnother" value="createAnother" class="btn btn-outline btn-primary">save and reset</button>
 									</div>
 								</div>
 							</form:form>

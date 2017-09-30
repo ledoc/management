@@ -44,7 +44,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 							plat.</p>
 					</header>
 					<div class="panel-body">
-						<c:url var="createPlat" value="/plat/create" />
+						<c:url var="createPlat" value="/plat/create/isolated" />
 						<form:form id="form" method="POST" action="${createPlat}"
 							modelAttribute="plat" role="form" class="parsley-form"
 							data-validate="parsley" data-show-errors="true">

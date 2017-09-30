@@ -69,9 +69,7 @@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 									<form:input type="text" class="form-control" id="montant"
 										path="montant" placeholder="" data-parsley-required="true"
 										data-parsley-trigger="change"
-										data-parsley-required-message="Champ requis"
-										data-parsley-mincheck="2"
-										data-parsley-mincheck-message="2 caractères minimum" />
+										data-parsley-required-message="Champ requis" />
 								</div>
 								<div class="form-group">
 									<label for="date">Date</label>

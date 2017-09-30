@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class AlimentController {
 
 	@Inject
 	private AlimentService alimentService;
-	
+
 	@Inject
 	private ExportCSV exportCSV;
 
@@ -45,10 +46,18 @@ public class AlimentController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(@ModelAttribute Aliment aliment)
+	public String create(@ModelAttribute Aliment aliment,BindingResult errors,
+			HttpServletRequest request)
 			throws ControllerException {
 		logger.info("--create AlimentController-- aliment : " + aliment);
 
+		{
+			if (errors.hasErrors()) {
+				errors.getAllErrors().forEach(
+						e -> System.out.println(e.getDefaultMessage()));
+			}
+		}
+		
 		try {
 			alimentService.create(aliment);
 		} catch (ServiceException e) {
@@ -116,7 +125,7 @@ public class AlimentController {
 		response.setContentType("text/csv");
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String beginDateString = simpleDateFormat.format(new Date());
-		String reportName = beginDateString +"-Aliment" + ".csv";
+		String reportName = beginDateString + "-Aliment" + ".csv";
 		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"",
 				reportName);

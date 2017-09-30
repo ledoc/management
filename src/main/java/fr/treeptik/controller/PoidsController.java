@@ -77,6 +77,11 @@ public class PoidsController {
 		model.addAttribute("poids", poids);
 		return "/poids/create";
 	}
+	
+	
+	
+	
+	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/delete/{id}")
 	public String delete(Model model, @PathVariable("id") Long id)

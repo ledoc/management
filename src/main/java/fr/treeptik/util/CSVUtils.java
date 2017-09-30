@@ -10,6 +10,7 @@ import fr.treeptik.model.Aliment;
 import fr.treeptik.model.NutritionBilan;
 import fr.treeptik.model.Plat;
 import fr.treeptik.model.Repas;
+import fr.treeptik.model.RepasDate;
 
 @Component
 public class CSVUtils {
@@ -26,7 +27,7 @@ public class CSVUtils {
 		return headers;
 	}
 
-	public List<String> doRepasHeaderCSV() {
+	public List<String> doRepasDateHeaderCSV() {
 		List<String> headers = Arrays.asList("Nom", "Date",
 				"Protéines", "Glucides", "Lipides");
 		return headers;
@@ -61,14 +62,15 @@ public class CSVUtils {
 		return csv;
 	}
 
-	public String doRepasCSV(List<Repas> listRepas, StringBuilder builder) {
+	public String doRepasDateCSV(List<RepasDate> listRepasDate, StringBuilder builder) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		for (Repas repas : listRepas) {
+		for (RepasDate repasDate : listRepasDate) {
+			Repas repas = repasDate.getRepas();
 			NutritionBilan nutritionBilan = repas.getNutritionBilan();
 			builder.append(repas.getNom() + ";");
-			builder.append(sdf.format(repas.getDate()) + ";");
+			builder.append(sdf.format(repasDate.getDate()) + ";");
 
 			toNutrtionBilanCSV(builder, nutritionBilan, null);
 			List<Plat> listPlat = repas.getListPlats();
