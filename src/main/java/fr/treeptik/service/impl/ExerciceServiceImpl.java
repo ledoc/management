@@ -34,7 +34,9 @@ public class ExerciceServiceImpl implements ExerciceService {
 		logger.debug("Exercice : " + Exercice);
 		return exerciceDAO.save(Exercice);
 	}
-
+	
+	
+//update test
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Exercice update(Exercice Exercice) throws ServiceException {
