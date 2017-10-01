@@ -36,7 +36,7 @@ public class ExerciceServiceImpl implements ExerciceService {
 	}
 	
 	
-//update test
+
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Exercice update(Exercice Exercice) throws ServiceException {
