@@ -35,6 +35,7 @@ public class ExerciceServiceImpl implements ExerciceService {
 		return exerciceDAO.save(Exercice);
 	}
 
+	// update exercice
 	@Override
 	@Transactional(rollbackFor = ServiceException.class)
 	public Exercice update(Exercice Exercice) throws ServiceException {
